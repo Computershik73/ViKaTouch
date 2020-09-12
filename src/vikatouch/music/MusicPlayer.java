@@ -51,6 +51,8 @@ public class MusicPlayer extends MainScreen
 	public boolean stop = false;
 	public boolean loop = false;
 	public boolean random = false;
+	public boolean inSeekMode = false;
+	public long seekTime;
 	
 	// кэш для рисования
 	public String title = "Track name";
@@ -78,8 +80,8 @@ public class MusicPlayer extends MainScreen
 		try
 		{
 			Image sheet = Image.createImage("/playerbtns.png");
-			buttons = new Image[6];
-			for(int i = 0; i < 6; i++)
+			buttons = new Image[7];
+			for(int i = 0; i < 7; i++)
 			{
 				buttons[i] = Image.createImage(sheet, i*50, 0, 50, 50, 0);
 			}
@@ -415,6 +417,12 @@ public class MusicPlayer extends MainScreen
 		{
 			if(isReady)
 			{
+				if(inSeekMode)
+				{
+					checkSeekTime();
+					inSeekMode = false;
+					player.setMediaTime(seekTime);
+				}
 				player.start();
 				isPlaying = true;
 			}
@@ -425,47 +433,50 @@ public class MusicPlayer extends MainScreen
 		}
 	}
 	
+	public void checkSeekTime()
+	{
+		if(seekTime<1L) seekTime = 1L;
+		if(seekTime>(getC().length-5)*1000000L)
+		{
+			seekTime = (getC().length-5)*1000000L;
+		}
+	}
+	
 	public void next()
 	{
-		if(random)
+		if(inSeekMode)
 		{
-			Random r = new Random();
-			current = r.nextInt(playlist.uiItems.length);
+			seekTime += 5000000L;
+			checkSeekTime();
 		}
 		else
 		{
-			current++;
-			if(current>=playlist.uiItems.length) current = 0;
+			if(random)
+			{
+				Random r = new Random();
+				current = r.nextInt(playlist.uiItems.length);
+			}
+			else
+			{
+				current++;
+				if(current>=playlist.uiItems.length) current = 0;
+			}
+			loadTrack();
 		}
-		loadTrack();
 	}
 	
 	public void prev()
 	{
-		current--;
-		if(current<0) current = playlist.uiItems.length - 1;
-		loadTrack();
-	}
-	
-	public void onTrackEnd()
-	{
-		/*
-		try
+		if(inSeekMode)
 		{
-			if(loop)
-			{
-				player.setMediaTime(0);
-				player.start();
-			}
-			else
-			{
-				next();
-			}
+			seekTime -= 5000000L;
 		}
-		catch (Exception e)
+		else
 		{
-			
-		}*/
+			current--;
+			if(current<0) current = playlist.uiItems.length - 1;
+			loadTrack();
+		}
 	}
 	
 	public void updateDrawData()
@@ -481,14 +492,14 @@ public class MusicPlayer extends MainScreen
 				// альбом
 				x1 = dw/2+PBMARGIN;
 				x2 = dw-PBMARGIN;
-				currX = dw/2 + 60 + (int)((dw/2-PBMARGIN*2)*player.getMediaTime()/dur);
+				currX = dw/2 + 60 + (int)((dw/2-PBMARGIN*2)*(inSeekMode?seekTime:player.getMediaTime())/dur);
 			}
 			else
 			{
 				// квадрат, портрет
 				x1 = PBMARGIN;
 				x2 = dw-PBMARGIN;
-				currX = PBMARGIN + (int)((dw-PBMARGIN*2)*player.getMediaTime()/dur);
+				currX = PBMARGIN + (int)((dw-PBMARGIN*2)*(inSeekMode?seekTime:player.getMediaTime())/dur);
 			}
 		}
 		catch (Exception e) { }
@@ -581,10 +592,14 @@ public class MusicPlayer extends MainScreen
 	{
 		OptionItem[] opts = new OptionItem[]
 		{
-			new OptionItem(this,"Повторять",loop?IconsManager.APPLY:IconsManager.REFRESH,0,50),
-			new OptionItem(this,"Случайно",random?IconsManager.APPLY:IconsManager.PLAY,1,50),
-			new OptionItem(this,"Скачать",IconsManager.DOWNLOAD,2,50),
-			new OptionItem(this,"Проблемы с воспроизведением?",IconsManager.INFO,3,50),
+			new OptionItem(this,"Плейлист",IconsManager.MENU,-1,40),
+			new OptionItem(this,"Повторять",loop?IconsManager.APPLY:IconsManager.REFRESH,0,40),
+			new OptionItem(this,"Случайно",random?IconsManager.APPLY:IconsManager.PLAY,1,40),
+			new OptionItem(this,"Перемотка",IconsManager.SEARCH,2,40),
+			new OptionItem(this,"Играть сначала",IconsManager.BACK,3,40),
+			new OptionItem(this,"Скачать",IconsManager.DOWNLOAD,4,40),
+			new OptionItem(this,"Проблемы с воспроизведением?",IconsManager.INFO,5,40),
+			new OptionItem(this,"Свернуть приложение",IconsManager.CLOSE,6,40),
 		};
 		VikaTouch.popup(new ContextMenu(opts));
 	}
@@ -653,16 +668,17 @@ public class MusicPlayer extends MainScreen
 		currAx-=2;
 		if(-currTx>(titleW/2+hdw)) currTx = titleW/2+hdw;
 		if(-currAx>(artistW/2+hdw)) currAx = artistW/2+hdw;
+		boolean tick = (System.currentTimeMillis()%1000)<500;
 		if(dw>dh)
 		{
 			// альбом
 			textAnchor = dw * 3 / 4;
 			timeY = dh-70;
-			g.drawImage(buttons[5], textAnchor-125, dh-50, 0);
-			g.drawImage(buttons[0], textAnchor-75, dh-50, 0);
+			if(!inSeekMode) g.drawImage(buttons[5], textAnchor-125, dh-50, 0);
+			if(!inSeekMode || tick) g.drawImage(buttons[0], textAnchor-75, dh-50, 0);
 			g.drawImage(buttons[isPlaying?3:1], textAnchor-25, dh-50, 0);
-			g.drawImage(buttons[2], textAnchor+25, dh-50, 0);
-			g.drawImage(buttons[4], textAnchor+75, dh-50, 0);
+			if(!inSeekMode || tick) g.drawImage(buttons[2], textAnchor+25, dh-50, 0);
+			if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], textAnchor+75, dh-50, 0);
 			
 			g.drawString(artist, textAnchor+(artistW>hdw?currAx:0), dh/2-f.getHeight(), Graphics.HCENTER | Graphics.TOP);
 			g.drawString(title, textAnchor+(titleW>hdw?currTx:0), dh/2, Graphics.HCENTER | Graphics.TOP);
@@ -672,11 +688,11 @@ public class MusicPlayer extends MainScreen
 			// портрет, квадрат
 			textAnchor = hdw;
 			timeY = dh-70;
-			g.drawImage(buttons[5], hdw-125, dh-50, 0);
-			g.drawImage(buttons[0], hdw-75, dh-50, 0);
+			if(!inSeekMode) g.drawImage(buttons[5], hdw-125, dh-50, 0);
+			if(!inSeekMode || tick) g.drawImage(buttons[0], hdw-75, dh-50, 0);
 			g.drawImage(buttons[isPlaying?3:1], hdw-25, dh-50, 0);
-			g.drawImage(buttons[2], hdw+25, dh-50, 0);
-			g.drawImage(buttons[4], hdw+75, dh-50, 0);
+			if(!inSeekMode || tick) g.drawImage(buttons[2], hdw+25, dh-50, 0);
+			if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], hdw+75, dh-50, 0);
 			
 			g.drawString(artist, textAnchor+(artistW>dw?currAx:0), timeY-f.getHeight()*3/2, Graphics.HCENTER | Graphics.TOP);
 			g.drawString(title, textAnchor+(titleW>dw?currTx:0), timeY-f.getHeight()*5/2, Graphics.HCENTER | Graphics.TOP);
@@ -726,7 +742,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(x>anchor+75)
 		{
-			VikaTouch.inst.cmdsInst.command(14, this);
+			if(!inSeekMode) VikaTouch.inst.cmdsInst.command(14, this);
 		}
 		else if(x>anchor+25)
 		{
@@ -749,7 +765,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(x>anchor-125)
 		{
-			options();
+			if(!inSeekMode) options();
 		}
 		
 	}
@@ -758,7 +774,7 @@ public class MusicPlayer extends MainScreen
 	{
 		if(key == -6)
 		{
-			options();
+			if(!inSeekMode) options();
 		}
 		else if(key == -3)
 		{
@@ -781,13 +797,18 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(key == -7 /*|| key == */) //TODO вспомнить кнопку "назад" на SE
 		{
-			VikaTouch.inst.cmdsInst.command(14, this);
+			if(!inSeekMode) VikaTouch.inst.cmdsInst.command(14, this);
 		}
 	}
 	
 	public void drawHUD(Graphics g) 
 	{
 		
+	}
+	
+	public boolean backScreenIsPlaylist()
+	{
+		return backScreen == playlist;
 	}
 
 	public void onMenuItemPress(int i) {
@@ -801,15 +822,48 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==2)
 		{
+			if(isReady)
+			{
+				seekTime = player.getMediaTime();
+				if(isPlaying) pause();
+				inSeekMode = true;
+			}
+		}
+		else if(i==3)
+		{
+			try {
+				player.stop();
+				Thread.sleep(500);
+			} catch (Exception e) { }
+			try {
+				player.setMediaTime(1);
+				player.start();
+			} catch (MediaException e) { }
+		}
+		else if(i==4)
+		{
 			try {
 				VikaTouch.appInst.platformRequest(getC().mp3);
 			} catch (ConnectionNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
-		else if(i==3)
+		else if(i==5)
 		{
 			// написать что мол выберите другой метод или купите N8
+		}
+		else if(i==6)
+		{
+			VikaTouch.appInst.notifyPaused();
+		}
+		else if(i==-1)
+		{
+			if(backScreenIsPlaylist())
+			{
+				VikaTouch.inst.cmdsInst.command(14, this);
+			}
+			else
+				VikaTouch.setDisplay(playlist, 1);
 		}
 	}
 
@@ -837,7 +891,10 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(event == ERROR)
 		{
-			VikaTouch.popup(new InfoPopup(data.toString(), null, "Player error", null));
+			String err = data.toString();
+			if(err.indexOf("-3") != -1) return;
+			if(err.indexOf("-2") != -1) err = "General internal error (-2)";
+			VikaTouch.popup(new InfoPopup(err, null, "Player error", null));
 		}
 	}
 }
