@@ -1,7 +1,7 @@
 Nokia-MIDlet-No-Exit: true
 Manifest-Version: 1.0
 MIDlet-Version: 2.7.13
-MIDlet-Info-URL: http://vkt.nnproject.tk
+MIDlet-Info-URL: http://vikamobile.ru
 Nokia-MIDlet-Background-Event: pause
 Nokia-MIDlet-On-Screen-Keypad: no
 MIDlet-Icon: vika256.png
@@ -11,7 +11,7 @@ Nokia-MIDlet-UID-1: 0xA02033e9
 MIDlet-Name: Vika Touch
 FlipInsensitive: True
 MIDlet-1: Vika Touch,/vika256.png,ru.nnproject.vikatouch.VikaTouchApp
-VikaTouch-Edition: closedbeta
+VikaTouch-Edition: openbeta
 Progressive_Download: enabled
 MIDlet-Permissions: javax.microedition.io.Connector.http,javax.microedition.io.Connector.file.write,javax.microedition.io.Connector.file.read
 MIDlet-Vendor: nnproject
