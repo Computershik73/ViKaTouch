@@ -406,6 +406,7 @@ public class SettingsScreen
 				it[1] = new OptionItem(this, "English (US)", IconsManager.EDIT, 2, oneitemheight);
 				it[2] = new OptionItem(this, "Русский", IconsManager.EDIT, 3, oneitemheight);
 				it[3] = new OptionItem(this, "Russian (translit)", IconsManager.EDIT, 4, oneitemheight);
+				it[3] = new OptionItem(this, "Español (ES)", IconsManager.EDIT, 5, oneitemheight);
 				VikaTouch.popup(new ContextMenu(it));
 				break;
 			}
@@ -421,7 +422,7 @@ public class SettingsScreen
 		if(i>=1&&i<=9)
 		{
 			int j = i - 1;
-			String[] res = new String[] { "en_UK", "en_US", "ru_RU", "lt_RU" };
+			String[] res = new String[] { "en_UK", "en_US", "ru_RU", "lt_RU", "es_ES" };
 			Settings.setted = true;
 			Settings.language = res[j];
 			/*VikaTouch.popup(new InfoPopup("Language was changed to "+res[j]+". The application must be restarted.", new Runnable()

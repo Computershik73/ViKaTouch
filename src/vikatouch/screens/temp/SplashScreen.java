@@ -119,8 +119,8 @@ public class SplashScreen
 		*/
 		ColorUtils.setcolor(g, 0);
 		
-		g.drawString("DO NOT DISTRIBUTE",dw/2,0,Graphics.TOP|Graphics.HCENTER);
-		g.drawString("НЕ РАСПРОСТРАНЯТЬ",dw/2,f.getHeight()+2,Graphics.TOP|Graphics.HCENTER);
+		g.drawString("OPEN BETA",dw/2,0,Graphics.TOP|Graphics.HCENTER);
+		g.drawString("РАЗРЕШЕНО К РАСПРОСТРАНЕНИЮ",dw/2,f.getHeight()+2,Graphics.TOP|Graphics.HCENTER);
 	}
 	
 	public void setText()
