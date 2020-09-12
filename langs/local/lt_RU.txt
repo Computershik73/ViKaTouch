@@ -1,0 +1,222 @@
+#русский транслитом
+#автор shinovon
+
+info.name=Russian (Translit)
+#YYYY.MM.DD
+langinfo.version=2020.08.20
+
+langinfo.hints=2
+
+# LANG FORMAT
+#| - new line
+#
+#datetime format:
+# DATE
+#DD - day
+#S - short month
+#N - month
+#O - month (number)
+#YEAR - year
+# TIME
+#tt - low case am / pm
+#TT - high case AM / PM
+#h - hour in 12 hours format
+#H - hour
+#HH - hour with zero if less than 10
+#M - minute
+#MM - minute with zero if less than 10
+
+format.time=H:MM
+format.chatdate=DD S
+format.chatdatewyear=DD S YEAR
+format.shortdatenoyear=DD N
+format.shortdate=DD.O.YEAR
+format.date=DD.O.YEAR
+format.fulldate=DD.O.YEAR H:MM
+
+date.today=segodnya
+date.todayat=segodnya v
+date.yesterday=vchera
+date.shortmonth.jan=yan
+date.shortmonth.feb=fev
+date.shortmonth.mar=mar
+date.shortmonth.apr=apr
+date.shortmonth.may=may
+date.shortmonth.jun=iun
+date.shortmonth.jul=iul
+date.shortmonth.aug=avg
+date.shortmonth.sep=sen
+date.shortmonth.oct=okt
+date.shortmonth.nov=noy
+date.shortmonth.dec=dek
+date.month.jan=yanvarya
+date.month.feb=fevralya
+date.month.mar=marta
+date.month.apr=aprelya
+date.month.may=maya
+date.month.jun=iunya
+date.month.jul=iulya
+date.month.aug=avgusta
+date.month.sep=sentyabrya
+date.month.oct=oktyabra
+date.month.nov=noyabra
+date.month.dec=dekabrya
+
+date.minutesago=minut nazad
+date.hoursago=chasov nazad
+date.justnow=tolko chto
+
+error.outofmem=Ne xvataet OZY dlya raboti prilozhenya!
+error.errcode=Kod oshibki
+error=Oshibka
+error.additionalinfo=Dop. infa
+error.description=Vozmozhnoe opisanie
+error.contactdevs=za podrobnoy informacii obratites k razrabotchiku
+
+online=online
+offline=offline
+wasonlinedate=byl online
+wasonlinetime=byl online v
+
+menu.videos=Video
+menu.music=Music
+menu.photos=Fotografii
+menu.documents=Documenty
+menu.friends=Druzya
+menu.cannotwrite=[nelzya pisat]
+menu.wall=Stena
+menu.info=Informacia
+menu.grleave=Vyti iz grupy
+menu.grjoin=Vstupit v grupu
+menu.groups=Soobshestva
+menu.quit=Vyhod
+menu.members=Members
+menu.contacts=Kontakty
+menu.website=Site
+menu.writemsg=Napisat soobshenie
+menu.nowebsite=net
+menu.discussions=Obsuzhdeniya
+menu.about=O prilozhenii
+menu.loading=Zagruzka...
+
+group=Grupa
+group.s=Grupy
+group.descriptionempty=[opisanie pusto]
+
+title.people=Ludi
+title.chats=Chaty
+title.newsfeed=Lenta
+title.docs=Documenty
+title.videos=Video
+title.loading=zagruzka
+title.members=Uchastniki
+title.login=Vhod
+title.groups=Grupa
+title.friends=Druzya
+title.music=Muzika
+title.settings=Nastroyki
+title.friendsw=Druzya %1
+title.documentsw=Documenty %1
+title.clubsw=Grupy %1
+title.membersw=Uchastniki %1
+
+friend.remove=Udalit iz druzey
+friend.add=Dobavit v druzya
+friend.accept=Prinyat zayavku
+friend.cancel=Zayavka otpravlena (otmenit)
+
+subscribe=Podpisatsya
+
+msg=Soobshenie
+msg.attach.audio=Audiozapis
+msg.attach.reply=Otvet
+msg.attach.fwd=Pereslannoe soobshenie
+msg.attach.attachment=Vlozenie
+msg.attach.video=Videozapis
+msg.entermsg=Vedite soobshenie...
+
+count.message=message
+count.messages=messages
+count.messagesfew=messages
+count.view=view
+count.views=views
+count.viewsfew=views
+count.member=member
+count.members=members
+count.membersfew=members
+
+video=Video
+video.1view=prosmotr
+video.views=prosmotrov
+video.viewsfew=prosmotra
+video.addtosebe=Dobavit k sebe
+
+title2.member=uchastnik
+title2.members=uchastnikov
+title2.membersfew=uchastnika
+title2.loading=Zagruzka...
+title2.msgloadingfailed=Ne udalos obnovit soobsheniya!
+
+login.captcharequired=Trebuetsa vvod kapchi!
+login.captcha=Captcha
+login.login=Login
+login.password=Parol
+login.warn=Ne vveden login ili parol!
+login.failed=Ne udalos voity
+
+profile.closed=Eto zakrity profil
+user=Polzovatel
+
+settings.system=Basic
+settings.appearance=Appearance
+settings.media=Media
+settings.help=Help
+settings.enabled=On
+settings.disabled=Off
+settings.directhttps=Directly HTTPS
+settings.proxy=Proxy
+settings.connection=Connection via
+settings.sensor=Sensor control optimization
+settings.norm=Normal
+settings.j2meloader=J2ME Loader
+settings.resistive=Resistive
+settings.logout=Logout
+settings.reset=Reset to defaults
+settings.clearcache=Clear cached images
+settings.transitionanimation=Animate transitions
+settings.listslength=Items count in list
+settings.dontloadavas=Dont load images
+settings.cacheimages=Cache images
+settings.historycount=Messages history count
+settings.refreshrate=Refresh rate
+settings.telemetry=Send usage stats
+settings.reporterrors=Report errors
+settings.videoresolution=Video resolution
+settings.rtsp=RTSP opening method
+settings.rtspc.0=Default
+settings.rtspc.1=Call system player
+settings.rtspc.2=Run VLC
+settings.youtube=Play YouTube videos via
+settings.audio=Audio play method
+settings.apiproxy=Api Proxy
+settings.authproxy=OAuth Proxy
+settings.language=Language
+settings.audioc.0=Play online
+settings.audioc.1=Cache into RAM and play
+settings.audioc.2=Cache into phone memory and play
+settings.audioc.3=Play in system player
+settings.audioc.4=Run VLC
+settings.audioc.5=Download file via browser
+settings.spabilities=Special abilities
+settings.debug=Debug
+
+back=Nazad
+
+splash.title.3=Preparing assets
+splash.title.4=Authentication
+splash.title.5=Loading profile information
+splash.title.6=Pre-loading conversations
+splash.title.7=Ready.
+splash.tip=---- Random hint ----
+splash.tip.0=add some hints pls
+splash.tip.1=vyvyvyvyvy

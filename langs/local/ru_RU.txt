@@ -1,0 +1,263 @@
+#info:
+#русский
+#оригинальный язык
+#совместимо с: пре-бета 2.7.11
+#авторы shinovon, Feodor0090
+#
+#вк авторов:
+#vk.com/shinovon
+#vk.com/r_f_klin
+
+langinfo.name=Русский
+#YYYY.MM.DD
+langinfo.version=2020.09.11
+
+langinfo.hints=15
+
+# LANG FORMAT
+#| - new line
+#
+#datetime format:
+# DATE
+#DD - day
+#S - short month
+#N - month
+#O - month (number)
+#YEAR - year
+# TIME
+#tt - low case am / pm
+#TT - high case AM / PM
+#h - hour in 12 hours format
+#H - hour
+#HH - hour with zero if less than 10
+#M - minute
+#MM - minute with zero if less than 10
+
+format.time=H:MM
+format.chatdate=DD S
+format.chatdatewyear=DD S YEAR
+format.shortdatenoyear=DD N
+format.shortdate=DD N YEAR
+format.date=DD N YEAR г.
+format.fulldate=DD N YEAR г. в H:MM
+
+date.today=сегодня
+date.todayat=сегодня в
+date.yesterday=вчера
+date.shortmonth.jan=янв
+date.shortmonth.feb=фев
+date.shortmonth.mar=мар
+date.shortmonth.apr=апр
+date.shortmonth.may=мая
+date.shortmonth.jun=июн
+date.shortmonth.jul=июл
+date.shortmonth.aug=авг
+date.shortmonth.sep=сен
+date.shortmonth.oct=окт
+date.shortmonth.nov=ноя
+date.shortmonth.dec=дек
+date.month.jan=января
+date.month.feb=февраля
+date.month.mar=марта
+date.month.apr=апреля
+date.month.may=мая
+date.month.jun=июня
+date.month.jul=июля
+date.month.aug=августа
+date.month.sep=сентября
+date.month.oct=октября
+date.month.nov=ноября
+date.month.dec=декабря
+
+date.minutesago=минут назад
+date.hoursago=часов назад
+date.justnow=только что
+
+error.outofmem=Не хватает памяти для работы приложения!
+error.errcode=Код ошибки
+error=Ошибка
+error.additionalinfo=Доп. инфо
+error.description=Возможное описание
+error.contactdevs=за подробной информации обратитесь к разработчику.
+close=Закрыть приложение
+
+online=онлайн
+offline=оффлайн
+wasonlinedate=был в сети 
+wasonlinetime=был в сети в
+
+menu.videos=Видео
+menu.music=Музыка
+menu.photos=Фотографии
+menu.documents=Документы
+menu.friends=Друзья
+menu.cannotwrite=[нельзя написать]
+menu.wall=Стена
+menu.info=Информация
+menu.grleave=Выйти из группы
+menu.grjoin=Вступить в группу
+menu.groups=Сообщества
+menu.quit=Выход
+menu.members=Участники
+menu.contacts=Контакты
+menu.website=Сайт
+menu.writemsg=Написать сообщение
+menu.nowebsite=нет
+menu.discussions=Обсуждения
+menu.about=О программе
+menu.loading=Загрузка...
+
+group=Группа
+group.s=Группы
+group.descriptionempty=[описание пусто]
+
+title.people=Люди
+title.chats=Сообщения
+title.newsfeed=Новости
+title.docs=Документы
+title.videos=Видео
+title.loading=загрузка
+title.members=Участники
+title.login=Вход
+title.groups=Группы
+title.friends=Друзья
+title.music=Музыка
+title.playlists=Плейлисты
+title.album=Альбом
+title.albums=Альбомы
+title.settings=Настройки
+title.friendsw=Друзья %1
+title.documentsw=Документы %1
+title.clubsw=Группы %1
+title.membersw=Участники %1
+title.musicw=Музыка %1
+title.playlistsw=Плейлисты %1
+title.albumsw=Альбомы %1
+
+friend.remove=Удалить из друзей
+friend.add=Добавить в друзья
+friend.accept=Принять заявку
+friend.cancel=Заявка отправлена (отменить)
+
+subscribe=Подписаться
+
+music.all=Вся музыка
+
+msg=Сообщение
+msg.attach.audio=Аудиозапись
+msg.attach.reply=Ответ
+msg.attach.fwd=Пересланное сообщение
+msg.attach.attachment=Вложение
+msg.attach.video=Видеозапись
+msg.keyboard=Нажмите ОК для ввода
+msg.entermsg=Введите сообщение...
+msg.typing=печатает...
+msg.typing2=печатают...
+msg.sending=Отправка сообщения...
+
+count.message=сообщение
+count.messages=сообщений
+count.messagesfew=сообщения
+count.view=просмотр
+count.views=просмотров
+count.viewsfew=просмотра
+count.member=участник
+count.members=участников
+count.membersfew=участника
+count.audio=аудиозапись
+count.audiosfew=аудиозаписи
+count.audios=аудиозаписей
+
+video=Видео
+video.addtosebe=Добавить к себе
+
+title2.loading=Загрузка...
+title2.msgloadingfailed=Не удалось обновить сообщения!
+
+login.captcharequired=Требуется ввод капчи!
+login.captcha=Капча
+login.login=Логин
+login.password=Пароль
+login.warn=Не введен логин или пароль!
+login.failed=Не удалось ввойти
+
+profile.closed=Это закрытый профиль
+user=Пользователь 
+
+settings.system=Основное
+settings.appearance=Интерфейс
+settings.media=Медиа
+settings.help=Помощь
+settings.enabled=Вкл
+settings.disabled=Выкл
+settings.directhttps=Напрямую через https
+settings.proxy=Через прокси
+settings.connection=Подключение
+settings.sensor=Оптимизация сенсорного управления
+settings.norm=Нормальный
+settings.j2meloader=J2ME Loader
+settings.resistive=Резистивный тач
+settings.logout=Выйти из аккаунта
+settings.reset=Настройки по умолчанию
+settings.clearcache=Очистить кэш
+settings.transitionanimation=Анимация переходов
+settings.listslength=Количество элементов в списках
+settings.dontloadavas=Не загружать аватарки
+settings.cacheimages=Кэшировать картинки
+settings.historycount=Длина истории переписки
+settings.refreshrate=Частота обновления (с)
+settings.telemetry=Отправка статистики использования
+settings.reporterrors=Отправка ошибок
+settings.videoresolution=Разрешение видео при воспроизведении
+settings.rtsp=Способ открытия RTSP ссылок
+settings.rtspc.0=По умолчанию
+settings.rtspc.1=Вызов плеера [Symbian]
+settings.rtspc.2=Выполнить "vlc.exe <MRL>" [KEmulator]
+settings.youtube=Открытие YouTube через
+settings.audio=Метод воспроизведения аудио
+settings.keepaudiocache=Сохранять кэшированную музыку
+settings.apiproxy=Api Proxy
+settings.authproxy=OAuth Proxy
+settings.language=Язык
+settings.audioc.0=Воспроизвести онлайн
+settings.audioc.1=Кэшировать в ОЗУ и воспроизвести
+settings.audioc.2=Кэшировать в файл и воспроизвести
+settings.audioc.3=Кэшировать в файл и открыть
+settings.audioc.4=Кэшировать и воспроизвести в системном плеере [Symbian]
+settings.audioc.5=Воспроизвести онлайн в системном плеере [Symbian]
+settings.audioc.6=Воспроизвести в VLC [KEmulator]
+settings.audioc.7=Скачать файл через браузер
+settings.spabilities=Специальные возможности
+settings.debug=Отладка
+settings.debugcrap=Отладочная информация на экране
+
+
+back=Назад
+select=Выбрать
+options=Опции
+
+splash.emnotsupported=Скорее всего, ViKa Touch сейчас запущена на неподдерживаемом эмуляторе. Мы рекомендуем использовать KEmulator, J2ME Loader, JBed либо официальные эмуляторы из пакетов для разработчиков - на других возможны проблемы с отображением, функционалом и безопасностью.
+splash.title.3=Подготовка ассетов
+splash.title.4=Авторизация
+splash.title.5=Загрузка информации профиля
+splash.title.6=Загрузка диалогов
+splash.title.7=Готово.
+splash.tip=---- Случайная подсказка ----
+#splash.tip.0=Приложение постоянно крашится из-за нехватки памяти? Попробуйте отключить загрузку аватарок в настройках и уменьшить длину списков.
+splash.tip.0=Если закрыть приложение кнопкой в меню, оно сообщит ВКонтакте что вы ушли в оффлайн.
+splash.tip.1=Если в списке документов нажать на иконку документа-картинки, откроется его предпросмотр.
+splash.tip.2=Около некоторых настроек в квадратных скобках указана платформа, для которой они предназначены - на других они работать не будут.
+splash.tip.3=Видео будут открываться и скачиваться в том разрешении, которое выбрано в настройках.
+splash.tip.4=Метод открытия видео подбирается автоматически в зависимости от платформы.
+splash.tip.5=Не воспроизводится музыка? Попробуйте выбрать в настройках другой метод, совместимый с вашей платформой. Их у нас аж 8, что-то да и заработает.
+splash.tip.6=Находясь в любом месте истории переписки, нажмите левую софт-клавишу для быстрого перемещения фокуса на поле ввода.
+splash.tip.7=Между экранами новостей, сообщений и меню можно перемещаться кнопками влево/вправо.
+splash.tip.8=Данные приложения занимают слишком много места? Попробуйте очистить кэш картинок в настройках.
+splash.tip.9=Скачать фотографию в исходном размере можно, выбрав кнопку загрузки в предпросмотре.
+splash.tip.10=Открытую фотографию можно быстро закрыть правой софт-клавишей.
+splash.tip.11=Мы поддерживаем воспроизведение медиа на KEmulator 1.0.3 - установите VLC и выберите его открытие в настройках приложения. Музыка и видео будут открываться там онлайн. Если он конечно захочет.
+splash.tip.12=Для J2ME Loader у нас есть персональный костыль - попытка адаптироваться под местный баг сенсора. Включите его в настройках, если испытываете проблемы с тапом по кнопкам меню.
+splash.tip.13=Если приложение потребляет слишком много трафика и/или забивает всю полосу пропускания - уменьшите частоту обновления сообщений.
+splash.tip.14=У нас можно открыть ссылки из сообщений! Поддерживается http/https, ftp, smb, rtsp, упоминания и ссылки на страницы ВКонтакте. Для этого откройте опции сообщения и выберите "ссылки".
+
+busy=Загрузка...
