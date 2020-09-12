@@ -613,11 +613,10 @@ public class MusicPlayer extends MainScreen
 	{
 		try 
 		{
-			String mrl = ((AudioTrackItem) list.uiItems[track]).mp3;
 			switch(Settings.audioMode)
 			{
 			case Settings.AUDIO_VLC:
-				//String mrl = ((AudioTrackItem) list.uiItems[track]).mp3;
+				String mrl = ((AudioTrackItem) list.uiItems[track]).mp3;
 				System.out.println(mrl);
 				if(mrl.indexOf("xtrafrancyz")!=-1)
 				{
@@ -632,10 +631,10 @@ public class MusicPlayer extends MainScreen
 				System.out.println(cmd);
 				break;
 			case Settings.AUDIO_DOWNLOAD:
-				VikaTouch.appInst.platformRequest(mrl);
+				VikaTouch.appInst.platformRequest(((AudioTrackItem) list.uiItems[track]).mp3);
 				break;
 			case Settings.AUDIO_SYSTEMPLAYER:
-				VikaTouch.callSystemPlayer(mrl);
+				VikaTouch.callSystemPlayer(((AudioTrackItem) list.uiItems[track]).mp3);
 				break;
 			default:
 				MusicPlayer mp = new MusicPlayer();
