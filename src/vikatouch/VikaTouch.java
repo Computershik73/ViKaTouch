@@ -989,6 +989,7 @@ public class VikaTouch
 	public static void callSystemPlayer(String file)
 	{
 		try {
+			
 			String urlF = VikaUtils.replace(VikaUtils.replace(file, "\\", ""), "https:", "http:");
 			FileConnection fileCon = null;
 			fileCon = (FileConnection) Connector.open(System.getProperty("fileconn.dir.music") + "test.ram", 3);

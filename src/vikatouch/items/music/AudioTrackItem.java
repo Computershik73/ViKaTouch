@@ -15,6 +15,7 @@ import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
 import vikatouch.music.MusicPlayer;
 import vikatouch.screens.music.MusicScreen;
+import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 
 public class AudioTrackItem 
@@ -50,7 +51,11 @@ public class AudioTrackItem
 			owner_id = json.optInt("owner_id");
 			length = json.optInt("duration");
 			lengthS = (length/60)+":"+(length%60<10?"0":"")+(length%60);
+			if (Settings.proxyApi==Settings.xtrafrancyzApi) {
+				mp3 = VikaUtils.replace(VikaUtils.replace(json.optString("url", ""), "https://vk-api", "http://vk-api"), "https:\\/\\/vk-api", "http://vk-api"); 
+			} else {
 			mp3 = json.optString("url", "");
+			}
 		}
 		catch (Exception e)
 		{
