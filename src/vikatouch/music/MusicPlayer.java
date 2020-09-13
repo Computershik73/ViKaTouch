@@ -878,6 +878,11 @@ public class MusicPlayer extends MainScreen
 			if(loop)
 			{
 				try {
+				player.stop();
+				} catch (MediaException e) {
+					e.printStackTrace();
+				}
+				try {
 					player.setMediaTime(1);
 					player.start();
 				} catch (MediaException e) {
