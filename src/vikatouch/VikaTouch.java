@@ -831,6 +831,7 @@ public class VikaTouch
 		canvas = new VikaCanvasInst();
 		setDisplay(canvas);
 		mainThread = new Thread(appInst);
+		mainThread.setPriority(Thread.MAX_PRIORITY);
 		mainThread.start();
 		uiThread = new UIThread(canvas);
 		uiThread.start();
@@ -969,9 +970,6 @@ public class VikaTouch
 		{
 			e.printStackTrace();
 		}
-
-		Thread.yield();
-
 	}
 	
 	private void disposeSplash()
