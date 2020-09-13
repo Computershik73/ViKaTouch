@@ -99,6 +99,9 @@ public class VikaTouch
 			tokenRMS = RecordStore.openRecordStore(TOKEN_RMS, true);
 			String s = accessToken + ";" + userId + ";" + MenuScreen.name + " " + MenuScreen.lastname + ";" + MenuScreen.avaurl;
 			tokenRMS.addRecord(s.getBytes("UTF-8"), 0, s.length());
+			tokenRMS.closeRecordStore();
+			//VikaTouch.sendLog("savetoken: "+accessToken);
+			
 		}
 		catch (Exception e)
 		{
@@ -115,7 +118,7 @@ public class VikaTouch
 			{
 				String s = new String(tokenRMS.getRecord(1), "UTF-8");
 				accessToken = s.substring(0, s.indexOf(";"));
-
+				
 				//Вся эта хрень нужна для запуска в оффлайне
 				String s2 = s.substring(s.indexOf(";")+1, s.length());
 				String s3 = s2.substring(s2.indexOf(";")+1, s2.length());
@@ -126,6 +129,7 @@ public class VikaTouch
 				MenuScreen.lastname = name.substring(name.indexOf(" ")+1, name.length());
 				userId = s2.substring(0, s2.indexOf(";"));
 				tokenRMS.closeRecordStore();
+				//VikaTouch.sendLog("gettoken: "+accessToken);
 				//оптимизация
 				MenuScreen.avaurl = null;
 				return true;
@@ -417,19 +421,22 @@ public class VikaTouch
 			String recept = ":APA91bFAM-gVwLCkCABy5DJPPRH5TNDHW9xcGu_OLhmdUSA8zuUsBiU_DexHrTLLZWtzWHZTT5QUaVkBk_GJVQyCE_yQj9UId3pU3vxvizffCPQISmh2k93Fs7XH1qPbDvezEiMyeuLDXb5ebOVGehtbdk_9u5pwUw";
 			String surl = new URLBuilder(Settings.httpsApi, "auth.refreshToken", false).addField("access_token", accessToken).addField("v", "5.120").addField("receipt", recept).toString();
 			refreshToken = VikaUtils.download(surl);
+			VikaTouch.sendLog("refr1 "+refreshToken);
 			try
 			{
 				if(refreshToken.indexOf("Unknown method") != -1)
 				{
 					musicIsProxied = true;
 					refreshToken = VikaUtils.music(surl);
+					//VikaTouch.sendLog("unk "+refreshToken);
 					JSONObject resp = new JSONObject(refreshToken).getJSONObject("response");
-					accessToken = resp.getString("access_token");
+					accessToken = resp.getString("token");
 				}
 				else
 				{
 					JSONObject resp = new JSONObject(refreshToken).getJSONObject("response");
-					accessToken = resp.getString("access_token");
+					accessToken = resp.getString("token");
+					//VikaTouch.sendLog("refr2 "+accessToken);
 				}
 			}
 			catch (Exception e)
@@ -1076,9 +1083,11 @@ public class VikaTouch
 	public static void logout()
 			throws Exception
 	{
+		VikaTouch.sendLog("logout: "+accessToken);
 		VikaTouch.accessToken = null;
 		try
 		{
+			
 			if(VikaTouch.tokenRMS != null)
 				VikaTouch.tokenRMS.closeRecordStore();
 		}
