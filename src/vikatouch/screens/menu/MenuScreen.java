@@ -88,7 +88,7 @@ public class MenuScreen
 						e.printStackTrace();
 						if(!VikaTouch.offlineMode)
 							VikaTouch.error(e, ErrorCodes.MENUAVATAR);
-						// там всегда нулл будет. Больше падать нечему. И нечего всё крашить, не скачалось и хрен с ним
+						VikaTouch.sendLog("Avatar error, url: "+avaurl);
 						hasAva = false;
 					}
 				}

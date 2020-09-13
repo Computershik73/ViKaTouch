@@ -240,6 +240,7 @@ public class ChatScreen
 
 	private void messagesChat()
 	{
+		//VikaTouch.sendLog("Messages in chat mode");
 		try
 		{
 			// скачка сообщений
@@ -259,6 +260,7 @@ public class ChatScreen
 				if(id > 0 && firstname != null)
 					profileNames.put(new IntObject(id), firstname + " " + lastname);
 			}
+			//VikaTouch.sendLog(""+items.length()+" msgs");
 			for(int i = 0; i < items.length(); i++)
 			{
 				MsgItem m = new MsgItem(items.getJSONObject(i));
@@ -285,6 +287,12 @@ public class ChatScreen
 				{
 					VikaUtils.request(new URLBuilder("messages.markAsRead").addField("start_message_id", ""+m.mid).addField("peer_id", peerId));
 				}
+				
+				/*if(i%5==4)
+				{
+					Thread.sleep(250);
+					VikaTouch.sendLog("msg "+i+" Mem: "+(Runtime.getRuntime().freeMemory()/1024)+"K total"+(Runtime.getRuntime().totalMemory()/1024));
+				}*/
 				itemsCount = (short) uiItems.length;
 			}
 			x = null;
@@ -295,7 +303,7 @@ public class ChatScreen
 		catch (Exception e)
 		{
 			this.title2 = "Не удалось загрузить сообщения.";
-			e.printStackTrace();
+			VikaTouch.sendLog(e.toString());
 		}
 	}
 
@@ -862,7 +870,7 @@ public class ChatScreen
 			uiItems[i].paint(g, y, scrolled);
 			y+=uiItems[i].getDrawHeight();
 		}
-		this.itemsh = y;
+		this.itemsh = y + 100;
 		if(!scrolledDown)
 		{
 			scrolledDown = true;

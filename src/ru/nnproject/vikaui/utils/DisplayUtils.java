@@ -1,6 +1,7 @@
 package ru.nnproject.vikaui.utils;
 
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.VikaCanvas;
@@ -52,35 +53,30 @@ public class DisplayUtils
 			return 0;
 		width = (short) canvas.getWidth();
 		height = (short) canvas.getHeight();
+		ScrollableCanvas.vmeshautsa = (short) (height - 110);
 		if(width != lwidth || height != lheight)
 		{
 			if(width == 360 && height == 640)
 			{
 				i = DISPLAY_PORTRAIT;
-				ScrollableCanvas.oneitemheight = 50;
-				ScrollableCanvas.vmeshautsa = 528;
 			} 
 			else if(width == 240)
 			{
 				if(height == 320)
 				{
 					i = DISPLAY_S40;
-					ScrollableCanvas.oneitemheight = 25;
-					ScrollableCanvas.vmeshautsa = 265;
 				}
 				else if(height == 400)
 				{
 					i = DISPLAY_ASHA311;
-					ScrollableCanvas.oneitemheight = 25;
 				}
 			}
 			else if(width == 320)
 			{
 				if(height == 240)
 				{
+					ScrollableCanvas.vmeshautsa = 90;
 					i = DISPLAY_EQWERTY;
-					ScrollableCanvas.oneitemheight = 50;
-					ScrollableCanvas.vmeshautsa = 185;
 				}
 			}
 			else if(width == 640)
@@ -88,28 +84,10 @@ public class DisplayUtils
 				if(height == 360)
 				{
 					i = DISPLAY_ALBUM;
-					ScrollableCanvas.oneitemheight = 50;
-					ScrollableCanvas.vmeshautsa = 248;
 				}
 				else if(height == 480)
 				{
-					ScrollableCanvas.oneitemheight = 50;
-					ScrollableCanvas.vmeshautsa = 368;
 					i = DISPLAY_E6;
-				}
-			}
-			else if(width == 800)
-			{
-				if(height == 480)
-				{
-					
-				}
-			}
-			else if(width == 480)
-			{
-				if(height == 800)
-				{
-					
 				}
 			}
 			else

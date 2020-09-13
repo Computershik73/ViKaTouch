@@ -10,6 +10,7 @@ import org.json.me.JSONObject;
 import ru.nnproject.vikaui.menu.*;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ContextMenu;
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -100,6 +101,7 @@ public class MusicScreen
 				{
 					e.printStackTrace();
 					VikaTouch.error(e, ErrorCodes.MUSICLISTLOAD);
+					VikaTouch.popup(new InfoPopup("Token error. Try to restart the application and your network connection.", null));
 				}
 				VikaTouch.loading = false;
 				System.gc();
