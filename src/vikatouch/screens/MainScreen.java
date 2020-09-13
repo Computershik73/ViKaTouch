@@ -118,7 +118,7 @@ public abstract class MainScreen
 		}
 		g.setFont(Font.getFont(0, 0, Font.SIZE_LARGE));
 		g.setGrayScale(255);
-		g.drawString(title, (DisplayUtils.compact || !hasBackButton) ? 10 : 72, topPanelH/2-g.getFont().getHeight()/2, 0);
+		if(title!=null) g.drawString(title, (DisplayUtils.compact || !hasBackButton) ? 10 : 72, topPanelH/2-g.getFont().getHeight()/2, 0);
 		Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
 		g.setFont(f);
 		

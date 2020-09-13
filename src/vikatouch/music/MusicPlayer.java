@@ -123,7 +123,7 @@ public class MusicPlayer extends MainScreen
 		catch (Exception e) { }
 		isPlaying = true;
 		isReady = false;
-		stop = false;
+		//stop = false;
 		loadTrackInfo();
 		time = "";
 		totalTime = "";
@@ -151,6 +151,14 @@ public class MusicPlayer extends MainScreen
 				{
 					public void run()
 					{
+						while(stop)
+						{
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								break;
+							}
+						}
 						try
 						{
 							time = "00:00";
@@ -161,18 +169,22 @@ public class MusicPlayer extends MainScreen
 							player.start();
 							isReady = true;
 							isPlaying = true;
-							stop = false;
 							try
 							{
 								((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
 							}
 							catch (Exception e) { }
 							totalTime = time(getC().length);
+							stop = false;
 							player.addPlayerListener(inst);
 						}
 						catch(Exception e)
 						{
 							VikaTouch.popup(new InfoPopup(e.toString(), null, "Player error", null));
+						}
+						finally
+						{
+							stop = false;
 						}
 					}
 				}.start();
@@ -185,6 +197,14 @@ public class MusicPlayer extends MainScreen
 				{
 					public void run()
 					{
+						while(stop)
+						{
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								break;
+							}
+						}
 						try
 						{
 							ContentConnection contCon = (ContentConnection) Connector.open(getC().mp3);
@@ -215,6 +235,7 @@ public class MusicPlayer extends MainScreen
 									i++;
 									if(stop)
 									{
+										stop = false;
 										dis.close();
 										contCon.close();
 										output.close();
@@ -254,6 +275,7 @@ public class MusicPlayer extends MainScreen
 									player = Manager.createPlayer(path);
 									player.addPlayerListener(inst);
 								} catch (Exception e) {
+									stop = false;
 									VikaTouch.popup(new InfoPopup("Player creating error", null)); //TODO errcodes
 									e.printStackTrace();
 									return;
@@ -262,6 +284,7 @@ public class MusicPlayer extends MainScreen
 								try {
 									player.realize();
 								} catch (MediaException e) {
+									stop = false;
 									VikaTouch.popup(new InfoPopup("Player realizing error", null));
 									e.printStackTrace();
 									return;
@@ -269,6 +292,7 @@ public class MusicPlayer extends MainScreen
 								try {
 									player.prefetch();
 								} catch (MediaException e) {
+									stop = false;
 									VikaTouch.popup(new InfoPopup("Player prefetching error", null));
 									e.printStackTrace();
 									return;
@@ -277,6 +301,7 @@ public class MusicPlayer extends MainScreen
 									player.start();
 									((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
 								} catch (MediaException e) {
+									stop = false;
 									VikaTouch.popup(new InfoPopup("Player running error", null));
 									e.printStackTrace();
 									return;
@@ -300,6 +325,7 @@ public class MusicPlayer extends MainScreen
 						catch(Exception e)
 						{
 							e.printStackTrace();
+							stop = false;
 							VikaTouch.popup(new InfoPopup("Common player error", null));
 						}
 						System.gc();
@@ -353,6 +379,7 @@ public class MusicPlayer extends MainScreen
 
 			//System.gc();
 		} catch (Exception e) {
+			stop = false;
 			VikaTouch.popup(new InfoPopup(e.toString(), null, "Player error", null));
 		}
 	}
@@ -451,6 +478,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else
 		{
+			if(!isReady) { stop = true; }
 			if(random)
 			{
 				Random r = new Random();
@@ -473,6 +501,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else
 		{
+			if(!isReady) { stop = true; }
 			current--;
 			if(current<0) current = playlist.uiItems.length - 1;
 			loadTrack();
