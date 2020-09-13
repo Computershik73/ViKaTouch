@@ -50,14 +50,14 @@ public class ConversationItem
 	{
 		super(json);
 		itemDrawHeight = 63;
-		if(DisplayUtils.compact)
+		/*if(DisplayUtils.compact)
 		{
 			itemDrawHeight = 36;
 		}
 		else
-		{
+		{*/
 			ava = VikaTouch.cameraImg;
-		}
+		//}
 		/*
 		try
 		{
@@ -82,8 +82,8 @@ public class ConversationItem
 	public void getAva()
 	{
 
-		if(!DisplayUtils.compact)
-		{
+		//if(!DisplayUtils.compact)
+		//{
 			Image img = null;
 			try
 			{
@@ -105,7 +105,7 @@ public class ConversationItem
 			{
 				
 			}
-		}
+		//}
 		avaurl = null;
 	}
 	
@@ -135,11 +135,11 @@ public class ConversationItem
 			//g.drawImage(deleteImg, DisplayUtils.width - 25, y + 17, 0);
 		}
 		
-		if(DisplayUtils.compact)
+		/*if(DisplayUtils.compact)
 		{
 		}
 		else
-		{
+		{*/
 			int h = itemDrawHeight;
 			int hfh = font.getHeight() / 2;
 			if(title != null)
@@ -191,7 +191,7 @@ public class ConversationItem
 				g.setGrayScale(255);
 				g.drawString(s, DisplayUtils.width - 16 - font.stringWidth(s) - hm, y + h*3/4 - hfh, 0);
 			}
-		}
+		//}
 	}
 
 	public void parseJSON()
