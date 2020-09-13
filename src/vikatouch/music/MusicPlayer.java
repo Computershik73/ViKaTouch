@@ -571,12 +571,25 @@ public class MusicPlayer extends MainScreen
 	public void getCover()
 	{
 		if (title != null) {
-			String s = VikaUtils.download("http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
-					+ URLDecoder.encode(title + " " + (artist==null?"":artist)) + "&country=ru&limit=1");
-
+			String q = "http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
+					+ URLDecoder.encode(title + " " + (artist==null?"":artist)) + "&country=ru&limit=1";
+			String s = VikaUtils.download(q);
+			VikaTouch.sendLog(s);
+			VikaTouch.sendLog(q);
+			
 			try {
-				JSONObject res;
-				if (!(res = new JSONObject(s)).getJSONArray("results").getJSONObject(0).isNull("artworkUrl100")) {
+				JSONObject res = new JSONObject(s);
+				if(res.optInt("resultsCount")==0)
+				{
+					VikaTouch.sendLog("Searching without artist");
+					q = "http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
+							+ URLDecoder.encode(title + " " + (artist==null?"":artist)) + "&country=ru&limit=1";
+					s = VikaUtils.download(q);
+					VikaTouch.sendLog(s);
+					VikaTouch.sendLog(q);
+					res = new JSONObject(s);
+				}
+				if (!res.getJSONArray("results").getJSONObject(0).isNull("artworkUrl100")) {
 					s = VikaUtils.replace(res.getJSONArray("results").getJSONObject(0).getString("artworkUrl100"), "\\", "");
 					if(!DisplayUtils.compact)
 					{
@@ -860,6 +873,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==3)
 		{
+			if(!isReady) return;
 			try {
 				player.stop();
 				Thread.sleep(500);
