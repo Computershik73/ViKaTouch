@@ -221,13 +221,6 @@ public class VikaCanvasInst
 		{
 			g.drawImage(frame, DisplayUtils.width / 2, DisplayUtils.height - 128, Graphics.TOP | Graphics.HCENTER);
 		}
-		
-
-		if(Settings.debugInfo)
-		{
-			g.setColor(0x00ffff);
-			g.drawString("", 65, 2, 0);
-		}
 	}
 	
 	public void updategif()

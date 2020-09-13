@@ -860,23 +860,29 @@ public class ChatScreen
 	private void drawDialog(Graphics g)
 	{
 		if(uiItems==null) return;
-		
-		int y = 0;
-		for(int i=0; i<uiItems.length; i++)
+		try
 		{
-			if(uiItems[i] == null) continue;
-			
-			y+=msgYMargin;
-			uiItems[i].paint(g, y, scrolled);
-			y+=uiItems[i].getDrawHeight();
+			int y = 0;
+			for(int i=0; i<uiItems.length; i++)
+			{
+				if(uiItems[i] == null) continue;
+				
+				y+=msgYMargin;
+				uiItems[i].paint(g, y, scrolled);
+				y+=uiItems[i].getDrawHeight();
+			}
+			this.itemsh = y + 100;
+			if(!scrolledDown)
+			{
+				scrolledDown = true;
+				scrolled = -(itemsh);
+				currentItem = (short) (uiItems.length-1-loadSpace);
+				uiItems[currentItem].setSelected(true);
+			}
 		}
-		this.itemsh = y + 100;
-		if(!scrolledDown)
+		catch(Exception e)
 		{
-			scrolledDown = true;
-			scrolled = -(itemsh);
-			currentItem = (short) (uiItems.length-1-loadSpace);
-			uiItems[currentItem].setSelected(true);
+			VikaTouch.error(e, -8);
 		}
 	}
 
