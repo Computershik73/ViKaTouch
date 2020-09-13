@@ -10,7 +10,6 @@ import org.json.me.JSONObject;
 import ru.nnproject.vikaui.menu.*;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ContextMenu;
-import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -68,7 +67,6 @@ public class MusicScreen
 				{
 					VikaTouch.loading = true;
 					String x = VikaUtils.music(new URLBuilder("audio.get").addField("owner_id", oid).addField("album_id", albumId).addField("count", 100).addField("offset", 0).toString());
-					VikaTouch.sendLog(x);
 					if(x.indexOf("error") != -1)
 					{
 						VikaTouch.error(ErrorCodes.MUSICLISTLOAD, x, false);
@@ -101,7 +99,6 @@ public class MusicScreen
 				{
 					e.printStackTrace();
 					VikaTouch.error(e, ErrorCodes.MUSICLISTLOAD);
-					VikaTouch.popup(new InfoPopup("Token error. Try to restart the application and your network connection.", null));
 				}
 				VikaTouch.loading = false;
 				System.gc();
@@ -184,28 +181,21 @@ public class MusicScreen
 		{
 			public void onMenuItemPress(int i) 
 			{ 
-				try
+				if(i==0)
 				{
-					if(i==0)
-					{
-						MusicScreen pls = new MusicScreen();
-						pls.load(id,0,getMusicTitle("music", name, name2));
-						VikaTouch.setDisplay(pls, 1);
-					}
-					else if(i==1)
-					{
-						PlaylistsScreen pls = new PlaylistsScreen();
-						pls.load(id,getMusicTitle("playlists", name, name2));
-						VikaTouch.setDisplay(pls, 1);
-					}
-					else if(i==2)
-					{
-						VikaTouch.setDisplay(MusicPlayer.inst, 1);
-					}
+					MusicScreen pls = new MusicScreen();
+					pls.load(id,0,getMusicTitle("music", name, name2));
+					VikaTouch.setDisplay(pls, 1);
 				}
-				catch(Exception e)
+				else if(i==1)
 				{
-					VikaTouch.sendLog("Music open: "+e.toString());
+					PlaylistsScreen pls = new PlaylistsScreen();
+					pls.load(id,getMusicTitle("playlists", name, name2));
+					VikaTouch.setDisplay(pls, 1);
+				}
+				else if(i==2)
+				{
+					VikaTouch.setDisplay(MusicPlayer.inst, 1);
 				}
 			}
 		};

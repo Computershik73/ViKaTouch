@@ -66,7 +66,6 @@ public class MsgItem
 	public void parseJSON()
 	{
 		super.parseJSON();
-		msgWidth = DisplayUtils.width - (DisplayUtils.width<=240?10:40);
 		try
 		{
 			parseAttachments();
@@ -308,6 +307,8 @@ public class MsgItem
 					int stickerW = DisplayUtils.width > 250 ? 128 : 64;
 					int rx = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + attMargin) - stickerW);
 					g.drawImage(((StickerAttachment) at).getImage(stickerW), rx, y+attY, 0);
+					//int x1 = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + msgWidth) + attMargin);
+					//g.drawString("Запись на стене", x1+10, y+attY, 0);
 				}
 				
 				attY += at.getDrawHeight()+attMargin;

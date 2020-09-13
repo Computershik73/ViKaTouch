@@ -119,8 +119,8 @@ public class SplashScreen
 		*/
 		ColorUtils.setcolor(g, 0);
 		
-		g.drawString("OPEN BETA",dw/2,0,Graphics.TOP|Graphics.HCENTER);
-		g.drawString("РАЗРЕШЕНО К РАСПРОСТРАНЕНИЮ",dw/2,f.getHeight()+2,Graphics.TOP|Graphics.HCENTER);
+		g.drawString("DO NOT DISTRIBUTE",dw/2,0,Graphics.TOP|Graphics.HCENTER);
+		g.drawString("НЕ РАСПРОСТРАНЯТЬ",dw/2,f.getHeight()+2,Graphics.TOP|Graphics.HCENTER);
 	}
 	
 	public void setText()
@@ -130,7 +130,7 @@ public class SplashScreen
 			statesNames[i] = TextLocal.inst.get("splash.title."+i);
 		}
 		tipStr = TextLocal.inst.get("splash.tip");
-		int tipsC = Integer.parseInt(TextLocal.inst.get("langinfo.hints"));
+		int tipsC = 16;
 		Random r = new Random();
 		int i = r.nextInt(tipsC);
 		tip = TextBreaker.breakText(TextLocal.inst.get("splash.tip."+i), Font.getFont(0, 0, Font.SIZE_SMALL), DisplayUtils.width-40);

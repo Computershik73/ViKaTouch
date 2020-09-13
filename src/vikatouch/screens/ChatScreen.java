@@ -143,7 +143,7 @@ public class ChatScreen
 	
 	public ChatScreen(int peerId, String title)
 	{
-		title2 = TextLocal.inst.get("title2.loading");
+		title2 = "Загрузка...";
 		this.title = title;
 		this.peerId = peerId;
 		parse();
@@ -151,7 +151,7 @@ public class ChatScreen
 	
 	public ChatScreen(int peerId)
 	{
-		title2 = TextLocal.inst.get("title2.loading");
+		title2 = "Загрузка...";
 		this.peerId = peerId;
 		parse();
 	}
@@ -240,7 +240,6 @@ public class ChatScreen
 
 	private void messagesChat()
 	{
-		//VikaTouch.sendLog("Messages in chat mode");
 		try
 		{
 			// скачка сообщений
@@ -260,7 +259,6 @@ public class ChatScreen
 				if(id > 0 && firstname != null)
 					profileNames.put(new IntObject(id), firstname + " " + lastname);
 			}
-			//VikaTouch.sendLog(""+items.length()+" msgs");
 			for(int i = 0; i < items.length(); i++)
 			{
 				MsgItem m = new MsgItem(items.getJSONObject(i));
@@ -287,12 +285,6 @@ public class ChatScreen
 				{
 					VikaUtils.request(new URLBuilder("messages.markAsRead").addField("start_message_id", ""+m.mid).addField("peer_id", peerId));
 				}
-				
-				/*if(i%5==4)
-				{
-					Thread.sleep(250);
-					VikaTouch.sendLog("msg "+i+" Mem: "+(Runtime.getRuntime().freeMemory()/1024)+"K total"+(Runtime.getRuntime().totalMemory()/1024));
-				}*/
 				itemsCount = (short) uiItems.length;
 			}
 			x = null;
@@ -303,7 +295,7 @@ public class ChatScreen
 		catch (Exception e)
 		{
 			this.title2 = "Не удалось загрузить сообщения.";
-			VikaTouch.sendLog(e.toString());
+			e.printStackTrace();
 		}
 	}
 
@@ -605,7 +597,6 @@ public class ChatScreen
 			{
 				try
 				{
-					VikaTouch.loading = true;
 					URLBuilder url = new URLBuilder("messages.send").addField("random_id", new Random().nextInt(10000)).addField("peer_id", peerId).addField("message", inputText).addField("intent", "default");
 					if(answerMsgId!=0)
 					{
@@ -626,12 +617,11 @@ public class ChatScreen
 				}
 				catch(Exception e)
 				{
-					VikaTouch.popup(new InfoPopup("Ошибка отправки сообщения - "+e.toString(), null));
+					e.printStackTrace();
 				}
 				finally
 				{
 					canSend = true;
-					VikaTouch.loading = false;
 				}
 			}
 		}.start();
@@ -841,48 +831,45 @@ public class ChatScreen
 	{
 		tapY-=topPanelH;
 		VikaCanvasInst.debugString = "hold " + tapTime;
-		if(uiItems==null) return;
-		int y = 0;
-		int gTapY = tapY-scrolled;
-		for(int i=0; i<uiItems.length; i++)
-		{
-			if(uiItems[i] == null) continue;
-			y+=msgYMargin;
-			int y2 = y+uiItems[i].getDrawHeight();
-			if(y<gTapY&&gTapY<y2)
+		/*if(tapTime > 200)
+		{*/
+			if(uiItems==null) return;
+			int y = 0;
+			int gTapY = tapY-scrolled;
+			for(int i=0; i<uiItems.length; i++)
 			{
-				uiItems[i].tap(0, gTapY-y);
+				if(uiItems[i] == null) continue;
+				y+=msgYMargin;
+				int y2 = y+uiItems[i].getDrawHeight();
+				if(y<gTapY&&gTapY<y2)
+				{
+					uiItems[i].tap(0, gTapY-y);
+				}
+				y = y2;
 			}
-			y = y2;
-		}
+		//}
 	}
 	
 	private void drawDialog(Graphics g)
 	{
 		if(uiItems==null) return;
-		try
+		
+		int y = 0;
+		for(int i=0; i<uiItems.length; i++)
 		{
-			int y = 0;
-			for(int i=0; i<uiItems.length; i++)
-			{
-				if(uiItems[i] == null) continue;
-				
-				y+=msgYMargin;
-				uiItems[i].paint(g, y, scrolled);
-				y+=uiItems[i].getDrawHeight();
-			}
-			this.itemsh = y + 100;
-			if(!scrolledDown)
-			{
-				scrolledDown = true;
-				scrolled = -(itemsh);
-				currentItem = (short) (uiItems.length-1-loadSpace);
-				uiItems[currentItem].setSelected(true);
-			}
+			if(uiItems[i] == null) continue;
+			
+			y+=msgYMargin;
+			uiItems[i].paint(g, y, scrolled);
+			y+=uiItems[i].getDrawHeight();
 		}
-		catch(Exception e)
+		this.itemsh = y;
+		if(!scrolledDown)
 		{
-			VikaTouch.error(e, -8);
+			scrolledDown = true;
+			scrolled = -(itemsh);
+			currentItem = (short) (uiItems.length-1-loadSpace);
+			uiItems[currentItem].setSelected(true);
 		}
 	}
 
@@ -955,13 +942,10 @@ public class ChatScreen
 		
 		g.drawImage((buttonSelected != 1?IconsManager.ico:IconsManager.selIco)[IconsManager.ATTACHMENT], 12, DisplayUtils.height - 36, 0);
 		g.drawImage((buttonSelected != 3?IconsManager.ico:IconsManager.selIco)[IconsManager.STICKERS], DisplayUtils.width - 86, DisplayUtils.height - 36, 0);
-		if(canSend || (System.currentTimeMillis()%500)<250)
-		{
-			if(keysMode)
-				g.drawImage((buttonSelected != 4?IconsManager.ico:IconsManager.selIco)[inputedLinesCount==0?IconsManager.VOICE:IconsManager.SEND], DisplayUtils.width - 40, DisplayUtils.height - 36, 0);
-			else
-				g.drawImage(inputedLinesCount==0?IconsManager.ico[IconsManager.VOICE]:IconsManager.selIco[IconsManager.SEND], DisplayUtils.width - 40, DisplayUtils.height - 36, 0);
-		}
+		if(keysMode)
+			g.drawImage((buttonSelected != 4?IconsManager.ico:IconsManager.selIco)[inputedLinesCount==0?IconsManager.VOICE:IconsManager.SEND], DisplayUtils.width - 40, DisplayUtils.height - 36, 0);
+		else
+			g.drawImage(inputedLinesCount==0?IconsManager.ico[IconsManager.VOICE]:IconsManager.selIco[IconsManager.SEND], DisplayUtils.width - 40, DisplayUtils.height - 36, 0);
 		if(keysMode) drawKeysTips(g);
 		
 		if(answerMsgId!=0)
@@ -999,13 +983,13 @@ public class ChatScreen
 		Font font2 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		g.setFont(font2);
 		ColorUtils.setcolor(g, ColorUtils.TEXT2);
-		if(!canSend)
-		{
-			g.drawString(sendingStr, 64, 30, 0);
-		}
-		else if(refreshOk)
+		if(refreshOk)
 		{
 			g.drawString(title2, 64, 30, 0);
+		}
+		else if(!canSend)
+		{
+			g.drawString(sendingStr, 64, 30, 0);
 		}
 		else
 		{

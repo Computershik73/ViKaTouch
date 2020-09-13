@@ -344,10 +344,9 @@ public class TextLocal
 		
 		x = replace(x, "\\temp\\", "%");
 		
-		// это конечно ничего не чинит, косяк там где-то в другом месте
-		for(int i = 0; i < vars.length; i++)
+		for(int i = 0; i < string.length(); i++)
 		{
-			x = replace(x, "\\var\\" + (i+1), vars[i]);
+			x = replace(x, "\\var\\" + (i + 1), vars[i]);
 		}
 		
 		

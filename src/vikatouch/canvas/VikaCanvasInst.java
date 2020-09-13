@@ -30,7 +30,6 @@ public class VikaCanvasInst
 	public VikaNotice currentAlert;
 	public double slide;
 	public VikaScreen oldScreen;
-	public static String busyStr;
 
 	public VikaCanvasInst()
 	{
@@ -54,29 +53,21 @@ public class VikaCanvasInst
 			e.printStackTrace();
 		}
 		slide = 0.0d;
-		busyStr = "Busy...";
 	}
 	
 	public void paint(Graphics g)
 	{
-		long rT = System.currentTimeMillis();
 		try
 		{
 			this.updateScreen(g);
-			rT = System.currentTimeMillis() - rT;
 		}
 		catch (Exception e)
 		{
-			VikaTouch.sendLog("Paint failed. "+e.toString());
+			e.printStackTrace();
+			if(e instanceof IllegalArgumentException)
+				return;
 			VikaTouch.error(e, ErrorCodes.VIKACANVASPAINT);
 		}
-		long gcT = System.currentTimeMillis();
-		if(Runtime.getRuntime().freeMemory()<1024*128) System.gc();
-		gcT = System.currentTimeMillis() - gcT;
-		g.setGrayScale(0);
-		g.fillRect(0, 30, 150, 30);
-		g.setGrayScale(255);
-		g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
 	}
 	
 	public void updateScreen(Graphics g)
@@ -84,7 +75,6 @@ public class VikaCanvasInst
 		DisplayUtils.checkdisplay();
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
-		long lsrT = System.currentTimeMillis();
 		try
 		{
 			
@@ -122,61 +112,39 @@ public class VikaCanvasInst
 			VikaTouch.error(e, -2);
 			e.printStackTrace();
 		}
-		long csrT = System.currentTimeMillis();
-		lsrT = csrT - lsrT;
 		try
 		{
-			
 	
 			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 			g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
 			
-			if(currentScreen != null)
+			if(currentScreen != null && !VikaTouch.crashed)
 			{
 				currentScreen.draw(g);
 			}
-			
 		}
 		catch (Exception e)
 		{
 			VikaTouch.error(e, ErrorCodes.VIKACANVASPAINT);
+			e.printStackTrace();
 		}
 		
-		if(showCaptcha)
+		if(showCaptcha && !VikaTouch.crashed)
 		{
 			VikaTouch.captchaScr.draw(g);
 		}
 		
 		g.translate(-g.getTranslateX(), 0);
 		
-		long hudrT = System.currentTimeMillis();
-		csrT = hudrT - csrT;
-		
-		try
+		if(currentScreen != null && currentScreen instanceof MainScreen)
 		{
-			if(currentScreen != null && currentScreen instanceof MainScreen)
-			{
-				((MainScreen) currentScreen).drawHUD(g);
-			}
-		}
-		catch (Exception e)
-		{
-			
+			((MainScreen) currentScreen).drawHUD(g);
 		}
 		
-		hudrT = System.currentTimeMillis() - hudrT;
-		
-		try
+		if(currentAlert != null)
 		{
-			if(currentAlert != null)
-			{
-				vengine.GraphicsUtil.darkScreen(g, DisplayUtils.width, DisplayUtils.height, 0, 0, 0, 128);
-				currentAlert.draw(g);
-			}
-		}
-		catch (Exception e)
-		{
-			
+			vengine.GraphicsUtil.darkScreen(g, DisplayUtils.width, DisplayUtils.height, 0, 0, 0, 128);
+			currentAlert.draw(g);
 		}
 		
 		
@@ -184,7 +152,7 @@ public class VikaCanvasInst
 		if(VikaTouch.loading && !(currentScreen instanceof SplashScreen))
 		{
 			drawLoading(g);
-		}/*
+		}
 		if(Settings.debugInfo)
 		{
 			if(debugString != null)
@@ -192,34 +160,24 @@ public class VikaCanvasInst
 				g.setColor(0xffff00);
 				g.drawString(debugString, 65, 2, 0);
 			}
-		}*/
-		
-		{
-			g.setGrayScale(0);
-			g.fillRect(0, 60, 240, 30);
-			g.setGrayScale(255);
-			g.drawString("csrT:"+csrT+" lsrT:"+lsrT+" hud:"+hudrT, 0, 60, 0);
-		}
-		
-		{
-			int freeMem = (int) (Runtime.getRuntime().freeMemory()/1024);
-			int totalMem = (int) (Runtime.getRuntime().totalMemory()/1024);
-			String infoStr = "Mem: "+(totalMem - freeMem)+"K/"+totalMem+"K , free: "+freeMem+"K";
-			g.setGrayScale(255);
-			g.fillRect(0, 0, g.getFont().stringWidth(infoStr), 30);
-			g.setGrayScale(0);
-			g.drawString(infoStr, 0, 0, 0);
 		}
 	}
 	
 	private void drawLoading(Graphics g)
 	{
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
-		g.drawString(busyStr, DisplayUtils.width / 2, DisplayUtils.height - 80, Graphics.TOP | Graphics.HCENTER);
+		g.drawString("Загрузка", DisplayUtils.width / 2, DisplayUtils.height - 80, Graphics.TOP | Graphics.HCENTER);
 		
 		if(frame != null)
 		{
 			g.drawImage(frame, DisplayUtils.width / 2, DisplayUtils.height - 128, Graphics.TOP | Graphics.HCENTER);
+		}
+		
+
+		if(Settings.debugInfo)
+		{
+			g.setColor(0x00ffff);
+			g.drawString("", 65, 2, 0);
 		}
 	}
 	
@@ -236,6 +194,7 @@ public class VikaCanvasInst
             }
             catch (Exception e)
             {
+            	e.printStackTrace();
             }
         }
     }
@@ -352,15 +311,17 @@ public class VikaCanvasInst
 			if(VikaTouch.loading)
 			{
 				updategif();
-				/*if(Settings.animateTransition)
+				if(Settings.animateTransition)
 				{
 					oldScreen = null;
 					slide = 0;
-				}*/
+				}
 			}
 			else
+			{
 				paint();
-			/*if(Settings.animateTransition)
+			}
+			if(Settings.animateTransition)
 			{
 				double sliden = Math.abs(slide);
 				if(sliden > 0)
@@ -372,7 +333,7 @@ public class VikaCanvasInst
 						slide = 0;
 					}
 				}
-			}*/
+			}
 		}
 	}
 

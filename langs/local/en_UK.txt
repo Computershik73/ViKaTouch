@@ -9,7 +9,7 @@
 
 langinfo.name=English (UK)
 #YYYY.MM.DD
-langinfo.version=2020.09.11
+langinfo.version=2020.08.30
 
 langinfo.hints=2
 
@@ -234,5 +234,3 @@ splash.title.7=Ready.
 splash.tip=---- Random hint ----
 splash.tip.0=add some hints pls
 splash.tip.1=vyvyvyvyvy
-
-busy=Busy...

@@ -51,14 +51,10 @@ public class MusicPlayer extends MainScreen
 	public boolean stop = false;
 	public boolean loop = false;
 	public boolean random = false;
-	public boolean inSeekMode = false;
-	public long seekTime;
 	
 	// кэш для рисования
 	public String title = "Track name";
 	private String artist = "track artist";
-	private int titleW, artistW;
-	private int currTx, currAx;
 	private String totalNumber;
 	private String time = "00:00";
 	private String totalTime = "99:59";
@@ -80,8 +76,8 @@ public class MusicPlayer extends MainScreen
 		try
 		{
 			Image sheet = Image.createImage("/playerbtns.png");
-			buttons = new Image[7];
-			for(int i = 0; i < 7; i++)
+			buttons = new Image[6];
+			for(int i = 0; i < 6; i++)
 			{
 				buttons[i] = Image.createImage(sheet, i*50, 0, 50, 50, 0);
 			}
@@ -121,11 +117,9 @@ public class MusicPlayer extends MainScreen
 			player.stop();
 		}
 		catch (Exception e) { }
-		coverOrig = null;
-		resizedCover = null;
 		isPlaying = true;
 		isReady = false;
-		//stop = false;
+		stop = false;
 		loadTrackInfo();
 		time = "";
 		totalTime = "";
@@ -153,40 +147,23 @@ public class MusicPlayer extends MainScreen
 				{
 					public void run()
 					{
-						while(stop)
-						{
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e) {
-								break;
-							}
-						}
 						try
 						{
-							time = "00:00";
-							totalTime = "--:--";
+							time = "...";
 							player = Manager.createPlayer(getC().mp3);
-							getCover();
-							resizeCover();
-							player.start();
-							isReady = true;
-							isPlaying = true;
 							try
 							{
 								((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
 							}
 							catch (Exception e) { }
-							totalTime = time(getC().length);
+							player.start();
+							isReady = true;
+							isPlaying = true;
 							stop = false;
-							player.addPlayerListener(inst);
 						}
 						catch(Exception e)
 						{
-							VikaTouch.popup(new InfoPopup(e.toString(), null, "Player error", null));
-						}
-						finally
-						{
-							stop = false;
+							e.printStackTrace();
 						}
 					}
 				}.start();
@@ -199,14 +176,6 @@ public class MusicPlayer extends MainScreen
 				{
 					public void run()
 					{
-						while(stop)
-						{
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e) {
-								break;
-							}
-						}
 						try
 						{
 							ContentConnection contCon = (ContentConnection) Connector.open(getC().mp3);
@@ -237,7 +206,6 @@ public class MusicPlayer extends MainScreen
 									i++;
 									if(stop)
 									{
-										stop = false;
 										dis.close();
 										contCon.close();
 										output.close();
@@ -275,9 +243,7 @@ public class MusicPlayer extends MainScreen
 								
 								try {
 									player = Manager.createPlayer(path);
-									player.addPlayerListener(inst);
 								} catch (Exception e) {
-									stop = false;
 									VikaTouch.popup(new InfoPopup("Player creating error", null)); //TODO errcodes
 									e.printStackTrace();
 									return;
@@ -286,7 +252,6 @@ public class MusicPlayer extends MainScreen
 								try {
 									player.realize();
 								} catch (MediaException e) {
-									stop = false;
 									VikaTouch.popup(new InfoPopup("Player realizing error", null));
 									e.printStackTrace();
 									return;
@@ -294,16 +259,14 @@ public class MusicPlayer extends MainScreen
 								try {
 									player.prefetch();
 								} catch (MediaException e) {
-									stop = false;
 									VikaTouch.popup(new InfoPopup("Player prefetching error", null));
 									e.printStackTrace();
 									return;
 								}
+								((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
 								try {
 									player.start();
-									((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
 								} catch (MediaException e) {
-									stop = false;
 									VikaTouch.popup(new InfoPopup("Player running error", null));
 									e.printStackTrace();
 									return;
@@ -327,7 +290,6 @@ public class MusicPlayer extends MainScreen
 						catch(Exception e)
 						{
 							e.printStackTrace();
-							stop = false;
 							VikaTouch.popup(new InfoPopup("Common player error", null));
 						}
 						System.gc();
@@ -336,10 +298,7 @@ public class MusicPlayer extends MainScreen
 			} 
 			else 
 			{
-				time = "...";
-				totalTime = "--:--";
-				getCover();
-				resizeCover();
+				System.out.println("cache playing");
 				ContentConnection contCon = null;
 				DataInputStream dis = null;
 				try {
@@ -373,7 +332,6 @@ public class MusicPlayer extends MainScreen
 				}
 				catch (Exception e) { }
 				player.start();
-				totalTime = time(player.getDuration()/1000000L);
 				isReady = true;
 				isPlaying = true;
 				stop = false;
@@ -381,8 +339,7 @@ public class MusicPlayer extends MainScreen
 
 			//System.gc();
 		} catch (Exception e) {
-			stop = false;
-			VikaTouch.popup(new InfoPopup(e.toString(), null, "Player error", null));
+			e.printStackTrace();
 		}
 	}
 
@@ -442,16 +399,11 @@ public class MusicPlayer extends MainScreen
 	
 	public void play()
 	{
+		System.out.println("PLAY");
 		try
 		{
 			if(isReady)
 			{
-				if(inSeekMode)
-				{
-					checkSeekTime();
-					inSeekMode = false;
-					player.setMediaTime(seekTime);
-				}
 				player.start();
 				isPlaying = true;
 			}
@@ -462,59 +414,54 @@ public class MusicPlayer extends MainScreen
 		}
 	}
 	
-	public void checkSeekTime()
-	{
-		if(seekTime<1L) seekTime = 1L;
-		if(seekTime>(getC().length-5)*1000000L)
-		{
-			seekTime = (getC().length-5)*1000000L;
-		}
-	}
-	
 	public void next()
 	{
-		if(inSeekMode)
+		if(random)
 		{
-			seekTime += 5000000L;
-			checkSeekTime();
+			Random r = new Random();
+			current = r.nextInt(playlist.uiItems.length);
 		}
 		else
 		{
-			if(!isReady) { stop = true; }
-			if(random)
-			{
-				Random r = new Random();
-				current = r.nextInt(playlist.uiItems.length);
-			}
-			else
-			{
-				current++;
-				if(current>=playlist.uiItems.length) current = 0;
-			}
-			loadTrack();
+			current++;
+			if(current>=playlist.uiItems.length) current = 0;
 		}
+		loadTrack();
 	}
 	
 	public void prev()
 	{
-		if(inSeekMode)
+		current--;
+		if(current<0) current = playlist.uiItems.length - 1;
+		loadTrack();
+	}
+	
+	public void onTrackEnd()
+	{
+		/*
+		try
 		{
-			seekTime -= 5000000L;
+			if(loop)
+			{
+				player.setMediaTime(0);
+				player.start();
+			}
+			else
+			{
+				next();
+			}
 		}
-		else
+		catch (Exception e)
 		{
-			if(!isReady) { stop = true; }
-			current--;
-			if(current<0) current = playlist.uiItems.length - 1;
-			loadTrack();
-		}
+			
+		}*/
 	}
 	
 	public void updateDrawData()
 	{
 		if(!isReady) return;
 		time = time(player.getMediaTime()/1000000L);
-		long dur = Settings.audioMode == Settings.AUDIO_PLAYONLINE ? getC().length*1000000L : player.getDuration();
+		//System.out.println("time:"+player.getMediaTime());
 		try
 		{
 			int dw = DisplayUtils.width;
@@ -523,14 +470,14 @@ public class MusicPlayer extends MainScreen
 				// альбом
 				x1 = dw/2+PBMARGIN;
 				x2 = dw-PBMARGIN;
-				currX = dw/2 + 60 + (int)((dw/2-PBMARGIN*2)*(inSeekMode?seekTime:player.getMediaTime())/dur);
+				currX = dw/2 + 60 + (int)((dw/2-PBMARGIN*2)*player.getMediaTime()/player.getDuration());
 			}
 			else
 			{
 				// квадрат, портрет
 				x1 = PBMARGIN;
 				x2 = dw-PBMARGIN;
-				currX = PBMARGIN + (int)((dw-PBMARGIN*2)*(inSeekMode?seekTime:player.getMediaTime())/dur);
+				currX = PBMARGIN + (int)((dw-PBMARGIN*2)*player.getMediaTime()/player.getDuration());
 			}
 		}
 		catch (Exception e) { }
@@ -540,9 +487,6 @@ public class MusicPlayer extends MainScreen
 	{
 		title = getC().name;
 		artist = getC().artist;
-		Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
-		titleW = f.stringWidth(title);
-		artistW = f.stringWidth(artist);
 	}
 	
 	public void onRotate()
@@ -552,11 +496,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void resizeCover()
 	{
-		if(coverOrig==null) 
-		{
-			resizedCover = null;
-			return;
-		}
+		if(coverOrig==null) return;
 		int dw = DisplayUtils.width;
 		if(dw > DisplayUtils.height)
 		{
@@ -573,25 +513,12 @@ public class MusicPlayer extends MainScreen
 	public void getCover()
 	{
 		if (title != null) {
-			String q = "http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
-					+ URLDecoder.encode(title + " " + (artist==null?"":artist)) + "&country=ru&limit=1";
-			String s = VikaUtils.download(q);
-			//VikaTouch.sendLog(s);
-			//VikaTouch.sendLog(q);
-			
+			String s = VikaUtils.download("http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
+					+ URLDecoder.encode(title + " " + (artist==null?"":artist)) + "&country=ru&limit=1");
+
 			try {
-				JSONObject res = new JSONObject(s);
-				if(res.optInt("resultsCount")==0)
-				{
-					//VikaTouch.sendLog("Searching without artist");
-					q = "http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
-							+ URLDecoder.encode(title + " " + (artist==null?"":artist)) + "&country=ru&limit=1";
-					s = VikaUtils.download(q);
-					//VikaTouch.sendLog(s);
-					//VikaTouch.sendLog(q);
-					res = new JSONObject(s);
-				}
-				if (!res.getJSONArray("results").getJSONObject(0).isNull("artworkUrl100")) {
+				JSONObject res;
+				if (!(res = new JSONObject(s)).getJSONArray("results").getJSONObject(0).isNull("artworkUrl100")) {
 					s = VikaUtils.replace(res.getJSONArray("results").getJSONObject(0).getString("artworkUrl100"), "\\", "");
 					if(!DisplayUtils.compact)
 					{
@@ -602,26 +529,12 @@ public class MusicPlayer extends MainScreen
 				}
 				if(coverOrig==null)
 				{
-					if(playlist.coverUrl!=null) coverOrig = VikaUtils.downloadImage(playlist.coverUrl);
+					coverOrig = VikaUtils.downloadImage(playlist.coverUrl);
 				}
 				
 			} catch (Exception var23) {
-				if(playlist.coverUrl!=null)
-					try {
-						coverOrig = VikaUtils.downloadImage(playlist.coverUrl);
-					} catch (IOException e) {
-						//VikaTouch.sendLog(e.toString());
-					}
+				var23.printStackTrace();
 			}
-		}
-		else
-		{
-			if(playlist.coverUrl!=null)
-				try {
-					coverOrig = VikaUtils.downloadImage(playlist.coverUrl);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 		}
 	}
 	
@@ -636,14 +549,10 @@ public class MusicPlayer extends MainScreen
 	{
 		OptionItem[] opts = new OptionItem[]
 		{
-			new OptionItem(this,"Плейлист",IconsManager.MENU,-1,40),
-			new OptionItem(this,"Повторять",loop?IconsManager.APPLY:IconsManager.REFRESH,0,40),
-			new OptionItem(this,"Случайно",random?IconsManager.APPLY:IconsManager.PLAY,1,40),
-			new OptionItem(this,"Перемотка",IconsManager.SEARCH,2,40),
-			new OptionItem(this,"Играть сначала",IconsManager.BACK,3,40),
-			new OptionItem(this,"Скачать",IconsManager.DOWNLOAD,4,40),
-			new OptionItem(this,"Проблемы с воспроизведением?",IconsManager.INFO,5,40),
-			new OptionItem(this,"Свернуть приложение",IconsManager.CLOSE,6,40),
+			new OptionItem(this,"Повторять",loop?IconsManager.APPLY:IconsManager.REFRESH,0,50),
+			new OptionItem(this,"Случайно",random?IconsManager.APPLY:IconsManager.PLAY,1,50),
+			new OptionItem(this,"Скачать",IconsManager.DOWNLOAD,2,50),
+			new OptionItem(this,"Проблемы с воспроизведением?",IconsManager.INFO,3,50),
 		};
 		VikaTouch.popup(new ContextMenu(opts));
 	}
@@ -707,64 +616,58 @@ public class MusicPlayer extends MainScreen
 		}
 		Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
 		g.setFont(f);
+		// cover
+		if(resizedCover!=null) 
+		{
+			g.drawImage(resizedCover, 0, 0, 0);
+		}
+		else
+		{
+			int s = (dw>dh)?hdw:dw;
+			g.setGrayScale(64);
+			g.fillRect(0, 0, s, s);
+		}
 		g.setGrayScale(0);
-		currTx-=2;
-		currAx-=2;
-		if(-currTx>(titleW/2+hdw)) currTx = titleW/2+hdw;
-		if(-currAx>(artistW/2+hdw)) currAx = artistW/2+hdw;
-		boolean tick = (System.currentTimeMillis()%1000)<500;
 		if(dw>dh)
 		{
 			// альбом
-			textAnchor = dw * 3 / 4;
+			textAnchor = (dw-50) * 3 / 4;
 			timeY = dh-70;
-			if(!inSeekMode) g.drawImage(buttons[5], textAnchor-125, dh-50, 0);
-			if(!inSeekMode || tick) g.drawImage(buttons[0], textAnchor-75, dh-50, 0);
+			g.drawImage(buttons[5], textAnchor-125, dh-50, 0);
+			g.drawImage(buttons[0], textAnchor-75, dh-50, 0);
 			g.drawImage(buttons[isPlaying?3:1], textAnchor-25, dh-50, 0);
-			if(!inSeekMode || tick) g.drawImage(buttons[2], textAnchor+25, dh-50, 0);
-			if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], textAnchor+75, dh-50, 0);
+			g.drawImage(buttons[2], textAnchor+25, dh-50, 0);
+			g.drawImage(buttons[4], textAnchor+75, dh-50, 0);
 			
-			g.drawString(artist, textAnchor+(artistW>hdw?currAx:0), dh/2-f.getHeight(), Graphics.HCENTER | Graphics.TOP);
-			g.drawString(title, textAnchor+(titleW>hdw?currTx:0), dh/2, Graphics.HCENTER | Graphics.TOP);
+			g.drawString(artist, textAnchor, dh/2-f.getHeight(), Graphics.HCENTER | Graphics.TOP);
+			g.drawString(title, textAnchor, dh/2, Graphics.HCENTER | Graphics.TOP);
 		}
 		else
 		{
 			// портрет, квадрат
 			textAnchor = hdw;
 			timeY = dh-70;
-			if(!inSeekMode) g.drawImage(buttons[5], hdw-125, dh-50, 0);
-			if(!inSeekMode || tick) g.drawImage(buttons[0], hdw-75, dh-50, 0);
+			g.drawImage(buttons[5], hdw-125, dh-50, 0);
+			g.drawImage(buttons[0], hdw-75, dh-50, 0);
 			g.drawImage(buttons[isPlaying?3:1], hdw-25, dh-50, 0);
-			if(!inSeekMode || tick) g.drawImage(buttons[2], hdw+25, dh-50, 0);
-			if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], hdw+75, dh-50, 0);
-			
-			g.drawString(artist, textAnchor+(artistW>dw?currAx:0), timeY-f.getHeight()*3/2, Graphics.HCENTER | Graphics.TOP);
-			g.drawString(title, textAnchor+(titleW>dw?currTx:0), timeY-f.getHeight()*5/2, Graphics.HCENTER | Graphics.TOP);
+			g.drawImage(buttons[2], hdw+25, dh-50, 0);
+			g.drawImage(buttons[4], hdw+75, dh-50, 0);
+
+			g.drawString(artist, textAnchor, timeY-f.getHeight()*3/2, Graphics.HCENTER | Graphics.TOP);
+			g.drawString(title, textAnchor, timeY-f.getHeight()*5/2, Graphics.HCENTER | Graphics.TOP);
 		}
 		ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 		g.drawRect(x1, timeY, x2-x1, 10);
 		if(isReady) g.fillRect(x1+2, timeY+2, currX-x1-4, 6);
 		
 		g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
-		g.drawString(time, x1-4, timeY-4, Graphics.TOP | Graphics.RIGHT);
-		g.drawString(totalTime, x2+4, timeY-4, Graphics.TOP | Graphics.LEFT);
-		
-		// cover
-		int coverY = (dw>dh)?((dh-hdw)/2):0;
-		if(resizedCover!=null) 
-		{
-			g.drawImage(resizedCover, 0, coverY, 0);
-		}
-		else
-		{
-			int s = (dw>dh)?hdw:dw;
-			g.setGrayScale(200);
-			g.fillRect(0, coverY, s, s);
-		}
+		g.drawString(time, x1-4, timeY-2, Graphics.TOP | Graphics.RIGHT);
+		g.drawString(totalTime, x2+4, timeY-2, Graphics.TOP | Graphics.LEFT);
 	}
 	
 	public void release(int x, int y)
 	{
+		//System.out.println("Player touch");
 		int dw = DisplayUtils.width;
 		int dh = DisplayUtils.height;
 		int hdw = dw/2;
@@ -773,7 +676,7 @@ public class MusicPlayer extends MainScreen
 		if(dw>dh)
 		{
 			// альбом
-			anchor = dw * 3 / 4;
+			anchor = (dw-50) * 3 / 4;
 		}
 		else
 		{
@@ -786,7 +689,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(x>anchor+75)
 		{
-			if(!inSeekMode) VikaTouch.inst.cmdsInst.command(14, this);
+			VikaTouch.inst.cmdsInst.command(14, this);
 		}
 		else if(x>anchor+25)
 		{
@@ -809,7 +712,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(x>anchor-125)
 		{
-			if(!inSeekMode) options();
+			options();
 		}
 		
 	}
@@ -818,7 +721,7 @@ public class MusicPlayer extends MainScreen
 	{
 		if(key == -6)
 		{
-			if(!inSeekMode) options();
+			options();
 		}
 		else if(key == -3)
 		{
@@ -841,18 +744,13 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(key == -7 /*|| key == */) //TODO вспомнить кнопку "назад" на SE
 		{
-			if(!inSeekMode) VikaTouch.inst.cmdsInst.command(14, this);
+			VikaTouch.inst.cmdsInst.command(14, this);
 		}
 	}
 	
 	public void drawHUD(Graphics g) 
 	{
 		
-	}
-	
-	public boolean backScreenIsPlaylist()
-	{
-		return backScreen == playlist;
 	}
 
 	public void onMenuItemPress(int i) {
@@ -866,49 +764,15 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==2)
 		{
-			if(isReady)
-			{
-				seekTime = player.getMediaTime();
-				if(isPlaying) pause();
-				inSeekMode = true;
-			}
-		}
-		else if(i==3)
-		{
-			if(!isReady) return;
-			try {
-				player.stop();
-				Thread.sleep(500);
-			} catch (Exception e) { }
-			try {
-				player.setMediaTime(1);
-				player.start();
-			} catch (MediaException e) { }
-		}
-		else if(i==4)
-		{
 			try {
 				VikaTouch.appInst.platformRequest(getC().mp3);
 			} catch (ConnectionNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
-		else if(i==5)
+		else if(i==3)
 		{
 			// написать что мол выберите другой метод или купите N8
-		}
-		else if(i==6)
-		{
-			VikaTouch.appInst.notifyPaused();
-		}
-		else if(i==-1)
-		{
-			if(backScreenIsPlaylist())
-			{
-				VikaTouch.inst.cmdsInst.command(14, this);
-			}
-			else
-				VikaTouch.setDisplay(playlist, 1);
 		}
 	}
 
@@ -917,34 +781,8 @@ public class MusicPlayer extends MainScreen
 	}
 
 
-	public void playerUpdate(Player pl, String event, Object data) {
-		if(event == END_OF_MEDIA)
-		{
-			if(loop)
-			{
-				try {
-				player.stop();
-				} catch (MediaException e) {
-					e.printStackTrace();
-				}
-				try {
-					player.setMediaTime(1);
-					player.start();
-				} catch (MediaException e) {
-					e.printStackTrace();
-				}
-			}
-			else
-			{
-				next();
-			}
-		}
-		else if(event == ERROR)
-		{
-			String err = data.toString();
-			if(err.indexOf("-3") != -1) return;
-			if(err.indexOf("-2") != -1) err = "General internal error (-2)";
-			VikaTouch.popup(new InfoPopup(err, null, "Player error", null));
-		}
+	public void playerUpdate(Player arg0, String arg1, Object arg2) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,7 +1,5 @@
 package ru.nnproject.vikaui;
 
-import vikatouch.VikaTouch;
-
 public class UIThread
 	extends Thread
 {
@@ -12,7 +10,7 @@ public class UIThread
 	{
 		super();
 		this.canvas = canvas;
-		this.setPriority(Thread.NORM_PRIORITY);
+		this.setPriority(Thread.MAX_PRIORITY);
 	}
 
 	public void run()
@@ -25,15 +23,9 @@ public class UIThread
 			}
 			catch (Exception e)
 			{
-				VikaTouch.sendLog("Tick failed. "+e.toString());
+				
 			}
 			Thread.yield();
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				VikaTouch.sendLog("UI thread exit");
-				return;
-			}
 		}
 	}
 
