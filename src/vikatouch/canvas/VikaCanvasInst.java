@@ -67,15 +67,14 @@ public class VikaCanvasInst
 		}
 		catch (Exception e)
 		{
-			/*if(e instanceof IllegalArgumentException)
-				return;*/
+			VikaTouch.sendLog("Paint failed. "+e.toString());
 			VikaTouch.error(e, ErrorCodes.VIKACANVASPAINT);
 		}
 		long gcT = System.currentTimeMillis();
-		System.gc();
+		if(Runtime.getRuntime().freeMemory()<1024*128) System.gc();
 		gcT = System.currentTimeMillis() - gcT;
 		g.setGrayScale(0);
-		g.fillRect(0, 30, 200, 30);
+		g.fillRect(0, 30, 150, 30);
 		g.setGrayScale(255);
 		g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
 	}
@@ -85,6 +84,7 @@ public class VikaCanvasInst
 		DisplayUtils.checkdisplay();
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
+		long lsrT = System.currentTimeMillis();
 		try
 		{
 			
@@ -122,9 +122,11 @@ public class VikaCanvasInst
 			VikaTouch.error(e, -2);
 			e.printStackTrace();
 		}
+		long csrT = System.currentTimeMillis();
+		lsrT = csrT - lsrT;
 		try
 		{
-			long csrT = System.currentTimeMillis();
+			
 	
 			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 			g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
@@ -134,11 +136,6 @@ public class VikaCanvasInst
 				currentScreen.draw(g);
 			}
 			
-			csrT = System.currentTimeMillis() - csrT;
-			g.setGrayScale(0);
-			g.fillRect(0, 60, 100, 30);
-			g.setGrayScale(255);
-			g.drawString("csrT: "+csrT, 0, 60, 0);
 		}
 		catch (Exception e)
 		{
@@ -152,6 +149,9 @@ public class VikaCanvasInst
 		
 		g.translate(-g.getTranslateX(), 0);
 		
+		long hudrT = System.currentTimeMillis();
+		csrT = hudrT - csrT;
+		
 		try
 		{
 			if(currentScreen != null && currentScreen instanceof MainScreen)
@@ -163,6 +163,8 @@ public class VikaCanvasInst
 		{
 			
 		}
+		
+		hudrT = System.currentTimeMillis() - hudrT;
 		
 		try
 		{
@@ -192,6 +194,12 @@ public class VikaCanvasInst
 			}
 		}*/
 		
+		{
+			g.setGrayScale(0);
+			g.fillRect(0, 60, 240, 30);
+			g.setGrayScale(255);
+			g.drawString("csrT:"+csrT+" lsrT:"+lsrT+" hud:"+hudrT, 0, 60, 0);
+		}
 		
 		{
 			int freeMem = (int) (Runtime.getRuntime().freeMemory()/1024);
@@ -235,7 +243,6 @@ public class VikaCanvasInst
             }
             catch (Exception e)
             {
-            	e.printStackTrace();
             }
         }
     }
@@ -358,8 +365,8 @@ public class VikaCanvasInst
 					slide = 0;
 				}*/
 			}
-
-			paint();
+			else
+				paint();
 			/*if(Settings.animateTransition)
 			{
 				double sliden = Math.abs(slide);

@@ -225,7 +225,7 @@ public class DialogsScreen
 						i = 0;
 					unselectAll();
 					Dialogs.dialogs[i].pressed();
-					repaint();
+					//repaint();
 				}
 			}
 		}
