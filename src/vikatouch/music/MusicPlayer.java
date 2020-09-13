@@ -121,6 +121,8 @@ public class MusicPlayer extends MainScreen
 			player.stop();
 		}
 		catch (Exception e) { }
+		coverOrig = null;
+		resizedCover = null;
 		isPlaying = true;
 		isReady = false;
 		//stop = false;
