@@ -2,6 +2,7 @@ package vikatouch.attachments;
 
 import org.json.me.JSONObject;
 
+import vikatouch.VikaTouch;
 import vikatouch.json.JSONBase;
 
 public abstract class Attachment
@@ -18,6 +19,7 @@ public abstract class Attachment
 	
 	public static Attachment parse(JSONObject json)
 	{
+		
 		String type = json.optString("type");
 		Attachment result = null;
 		

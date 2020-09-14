@@ -16,7 +16,7 @@ public class AudioAttachment
 extends Attachment implements IMenu
 {
 	public AudioAttachment() {
-		this.type = "doc";
+		this.type = "audio";
 	}
 	
 	public String name;
@@ -35,7 +35,7 @@ extends Attachment implements IMenu
 			size = json.optInt("duration");
 			ext = json.optString("ext");
 			docType = json.optInt("type");
-
+			VikaTouch.sendLog(name+" "+url+" "+size+" "+ext+" "+docType);
 			if(!json.isNull("url"))
 			{
 			/*	PhotoSize[] prevSizes = PhotoSize.parseSizes(json.getJSONObject("preview").getJSONObject("photo").getJSONArray("sizes"));
