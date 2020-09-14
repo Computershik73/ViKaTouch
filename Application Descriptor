@@ -1,8 +1,8 @@
 Nokia-MIDlet-No-Exit: true
 Manifest-Version: 1.0
-MIDlet-Version: 2.7.15
+MIDlet-Version: 2.7.16
 MIDlet-Info-URL: http://vikamobile.ru
-Nokia-MIDlet-Background-Event: pause
+Nokia-MIDlet-Background-Event: run
 Nokia-MIDlet-On-Screen-Keypad: no
 MIDlet-Icon: vika256.png
 MicroEdition-Configuration: CLDC-1.1

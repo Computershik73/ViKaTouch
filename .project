@@ -23,6 +23,18 @@
 		<buildCommand>
 			<name>org.eclipse.mtj.core.packageBuilder</name>
 			<arguments>
+				<dictionary>
+					<key>_do_obfuscation</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>_do_package</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>_update_version</key>
+					<value>true</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
