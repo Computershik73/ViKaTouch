@@ -15,7 +15,7 @@ import vikatouch.screens.music.MusicScreen;
 import vikatouch.utils.error.ErrorCodes;
 
 public class AudioAttachment 
-extends Attachment implements IMenu
+	extends DocumentAttachment implements IMenu
 {
 	public AudioAttachment() {
 		this.type = "audio";

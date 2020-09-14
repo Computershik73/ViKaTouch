@@ -86,8 +86,6 @@ public class MenuScreen
 					catch (Throwable e)
 					{
 						e.printStackTrace();
-						if(!VikaTouch.offlineMode)
-							VikaTouch.error(e, ErrorCodes.MENUAVATAR);
 						VikaTouch.sendLog("Avatar error, url: "+avaurl);
 						hasAva = false;
 					}
