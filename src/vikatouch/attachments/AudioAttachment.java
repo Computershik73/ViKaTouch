@@ -84,7 +84,7 @@ extends Attachment implements IMenu
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		f = Font.getFont(0, 0, Font.SIZE_SMALL);
 		g.setFont(f);
-		g.drawString(size / 60 + "m"+String.valueOf((size-(size/60)*60))+"s", x1+34, y1 + 30 - f.getHeight()/2, 0);
+		g.drawString(String.valueOf(size)+ " sec", x1+34, y1 + 30 - f.getHeight()/2, 0);
 	}
 	
 	public void press()
