@@ -16,6 +16,7 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.Attachment;
+import vikatouch.attachments.AudioAttachment;
 import vikatouch.attachments.DocumentAttachment;
 import vikatouch.attachments.PhotoAttachment;
 import vikatouch.attachments.StickerAttachment;
@@ -556,8 +557,8 @@ public class MsgItem
 					}
 					else if(a.type.equals("audio"))
 					{
-						DocumentAttachment da = (DocumentAttachment) a;
-						opts[j] = new OptionItem(this, da.name, IconsManager.MUSIC, j, h);
+						AudioAttachment aa = (AudioAttachment) a;
+						opts[j] = new OptionItem(this, aa.name, IconsManager.MUSIC, j, h);
 					}
 					else
 					{

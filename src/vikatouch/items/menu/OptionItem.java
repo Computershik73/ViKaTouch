@@ -48,7 +48,7 @@ public class OptionItem
 		int x = drawX + 48;
 		if(icon == -1)
 			x = x - 40;
-		g.drawString(text, x, y + ((h/2) - (((ScrollableCanvas.keysMode && s)?sf:f).getHeight()/2)), 0);
+		if(text!=null) g.drawString(text, x, y + ((h/2) - (((ScrollableCanvas.keysMode && s)?sf:f).getHeight()/2)), 0);
 		if(icon != -1)
 			g.drawImage(((ScrollableCanvas.keysMode && s)?(IconsManager.selIco):(IconsManager.ico))[icon], drawX + 12, y + (h/2 - 12), 0);
 	}
