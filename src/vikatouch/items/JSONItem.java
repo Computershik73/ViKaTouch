@@ -23,6 +23,7 @@ public class JSONItem
 	
 	public void parseJSON()
 	{
+		if(json==null) return;
 		text = fixJSONString(json.optString("text"));
 		fromid = json.optInt("from_id");
 		date = json.optLong("date");

@@ -15,6 +15,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.attachments.AudioAttachment;
 import vikatouch.items.menu.FriendItem;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.items.music.AudioTrackItem;
@@ -45,6 +46,27 @@ public class MusicScreen
 	{
 		super();
 		loadingStr = TextLocal.inst.get("title.loading");
+	}
+	
+	public void loadAtt(AudioAttachment aa)
+	{
+		scrolled = 0;
+		this.albumId = 0;
+		ownerId = 0;
+		this.title = TextLocal.inst.get("attachment");
+		hasBackButton = true;
+		uiItems = new PressableUIItem[1];
+		AudioTrackItem ati = new AudioTrackItem(null, this, 0);
+		ati.name = aa.name;
+		ati.artist = "";
+		ati.id = 0;
+		ati.owner_id = 0;
+		ati.length = aa.size;
+		ati.lengthS = (ati.length/60)+":"+(ati.length%60<10?"0":"")+(ati.length%60);
+		ati.mp3 = aa.musUrl;
+		uiItems[0] = ati;
+		VikaTouch.loading = false;
+		System.gc();
 	}
 
 	public void load(final int oid, final int albumId, String title)

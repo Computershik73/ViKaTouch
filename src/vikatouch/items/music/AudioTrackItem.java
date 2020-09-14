@@ -25,9 +25,9 @@ public class AudioTrackItem
 	public String name;
 	public String artist; // исполнтель, ну, вторая строка
 	public int length;
-	private String lengthS;
-	private MusicScreen playlist;
-	private int indexInPL;
+	public String lengthS;
+	public MusicScreen playlist;
+	public int indexInPL;
 	public String mp3;
 	
 	public AudioTrackItem(JSONObject json, MusicScreen s, int i)
@@ -40,8 +40,9 @@ public class AudioTrackItem
 
 	public void parseJSON()
 	{
-		System.out.println(json.toString());
-
+		setDrawHeight();
+		if(json==null) return;
+		
 		try
 		{
 			name = json.optString("title");
@@ -57,7 +58,6 @@ public class AudioTrackItem
 			e.printStackTrace();
 		}
 
-		setDrawHeight();
 		System.gc();
 	}
 

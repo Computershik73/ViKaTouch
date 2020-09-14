@@ -10,6 +10,8 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.items.menu.OptionItem;
+import vikatouch.music.MusicPlayer;
+import vikatouch.screens.music.MusicScreen;
 import vikatouch.utils.error.ErrorCodes;
 
 public class AudioAttachment 
@@ -109,7 +111,9 @@ extends Attachment implements IMenu
 		}
 		else if(i==1&&musUrl!=null)
 		{
-			//VikaTouch.popup(new ImagePreview(this));
+			MusicScreen ms = new MusicScreen();
+			ms.loadAtt(this);
+			MusicPlayer.launch(ms, 0);
 		}
 	}
 	public void onMenuItemOption(int i) { }

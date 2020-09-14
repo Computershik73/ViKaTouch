@@ -59,24 +59,24 @@ public class VikaCanvasInst
 	
 	public void paint(Graphics g)
 	{
-		long rT = System.currentTimeMillis();
+		//long rT = System.currentTimeMillis();
 		try
 		{
 			this.updateScreen(g);
-			rT = System.currentTimeMillis() - rT;
+			//rT = System.currentTimeMillis() - rT;
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			VikaTouch.sendLog("Paint failed. "+e.toString());
 			VikaTouch.error(e, ErrorCodes.VIKACANVASPAINT);
 		}
-		long gcT = System.currentTimeMillis();
+		//long gcT = System.currentTimeMillis();
 		if(Runtime.getRuntime().freeMemory()<1024*128) System.gc();
-		gcT = System.currentTimeMillis() - gcT;
-		g.setGrayScale(0);
-		g.fillRect(0, 30, 150, 30);
-		g.setGrayScale(255);
-		g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
+		//gcT = System.currentTimeMillis() - gcT;
+		//g.setGrayScale(0);
+		//g.fillRect(0, 30, 150, 30);
+		//g.setGrayScale(255);
+		//g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
 	}
 	
 	public void updateScreen(Graphics g)
@@ -194,12 +194,12 @@ public class VikaCanvasInst
 			}
 		}*/
 		
-		{
+		/*{
 			g.setGrayScale(0);
 			g.fillRect(0, 60, 240, 30);
 			g.setGrayScale(255);
 			g.drawString("csrT:"+csrT+" lsrT:"+lsrT+" hud:"+hudrT, 0, 60, 0);
-		}
+		}*/
 		
 		{
 			int freeMem = (int) (Runtime.getRuntime().freeMemory()/1024);
