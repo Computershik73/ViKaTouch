@@ -34,8 +34,8 @@ extends Attachment implements IMenu
 			url = fixJSONString(json.optString("url"));
 			size = json.optInt("duration");
 			ext = json.optString("ext");
-			docType = json.optInt("type");
-			VikaTouch.sendLog(name+" "+url+" "+size+" "+ext+" "+docType);
+			//docType = json.optInt("type");
+			VikaTouch.sendLog(name+" "+url+" "+size+" "+ext);
 			if(!json.isNull("url"))
 			{
 			/*	PhotoSize[] prevSizes = PhotoSize.parseSizes(json.getJSONObject("preview").getJSONObject("photo").getJSONArray("sizes"));
