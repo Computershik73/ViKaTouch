@@ -92,10 +92,10 @@ public class AudioAttachment
 	public void press()
 	{
 		OptionItem[] i = new OptionItem[musUrl==null?1:2];
-		i[0] = new OptionItem(this, "Скачать", IconsManager.MUSIC, 0, 50);
+		i[0] = new OptionItem(this, "Скачать", IconsManager.DOWNLOAD, 0, 50);
 		if(musUrl!=null)
 		{
-			i[1] = new OptionItem(this, "Открыть", IconsManager.MUSIC, 1, 50);
+			i[1] = new OptionItem(this, "Открыть", IconsManager.PLAY, 1, 50);
 		}
 		VikaTouch.popup(new ContextMenu(i));
 	}

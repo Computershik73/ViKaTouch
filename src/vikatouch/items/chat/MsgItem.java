@@ -554,6 +554,11 @@ public class MsgItem
 						DocumentAttachment da = (DocumentAttachment) a;
 						opts[j] = new OptionItem(this, da.name + " ("+(da.size/1000)+"kb)", IconsManager.DOCS, j, h);
 					}
+					else if(a.type.equals("audio"))
+					{
+						DocumentAttachment da = (DocumentAttachment) a;
+						opts[j] = new OptionItem(this, da.name, IconsManager.MUSIC, j, h);
+					}
 					else
 					{
 						opts[j] = new OptionItem(this, "Вложение", IconsManager.ATTACHMENT, j, h);
