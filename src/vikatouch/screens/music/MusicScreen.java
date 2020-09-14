@@ -50,6 +50,7 @@ public class MusicScreen
 	
 	public void loadAtt(AudioAttachment aa)
 	{
+		itemsCount = 1;
 		scrolled = 0;
 		this.albumId = 0;
 		ownerId = 0;
