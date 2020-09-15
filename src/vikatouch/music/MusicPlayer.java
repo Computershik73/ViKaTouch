@@ -766,6 +766,19 @@ public class MusicPlayer extends MainScreen
 		else
 		{
 			int t = (int) (System.currentTimeMillis()%1000);
+			int px1 = 0, px2 = 0;
+			if(t<500)
+			{
+				px1 = (x2-((x2-x1)*t/500))+2;
+				px2 = x2-2;
+			}
+			else
+			{
+				px1 = x1+2;
+				px2 = (x2-((x2-x1)*t/(t-500)));
+			}
+			g.setGrayScale(200);
+			g.fillRect(px1, timeY+2, px2-px1, 6);
 		}
 		
 		g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
