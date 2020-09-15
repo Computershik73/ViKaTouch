@@ -145,6 +145,12 @@ public class MusicPlayer extends MainScreen
 				VikaTouch.popup(new InfoPopup("Player closing error", null));
 			}
 			String url = getC().mp3;
+			try
+			{
+				url = VikaUtils.replace(url, "https", "http");
+			}
+			catch(Exception e) { }
+			//VikaTouch.sendLog(url);
 			final String path = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private") : System.getProperty("fileconn.dir.music")) + "vikaMusicCache.mp3";
 			
 			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
@@ -182,7 +188,12 @@ public class MusicPlayer extends MainScreen
 						}
 						catch(Exception e)
 						{
-							VikaTouch.popup(new InfoPopup(e.toString(), null, "Player error", null));
+							String es = e.toString();
+							if(es.indexOf("invalid")!=-1 && es.indexOf("response")!=-1)
+							{
+								es = "VK doesn't allow your device to access the audio file. Try to reconnect to network and restart (or reinstall) the app.";
+							}
+							VikaTouch.popup(new InfoPopup(es, null, "Player error", null));
 						}
 						finally
 						{

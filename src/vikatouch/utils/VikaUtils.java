@@ -18,12 +18,15 @@ import javax.microedition.io.HttpConnection;
 import javax.microedition.io.HttpsConnection;
 import javax.microedition.io.InputConnection;
 import javax.microedition.io.file.FileConnection;
+import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import ru.nnproject.vikaui.popup.InfoPopup;
 import tube42.lib.imagelib.ImageUtils;
 import vikatouch.VikaTouch;
 import vikatouch.caching.ImageStorage;
+import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.locale.TextLocal;
 import vikatouch.settings.Settings;
 import vikatouch.utils.url.URLBuilder;
@@ -200,11 +203,11 @@ public final class VikaUtils
 	
 	public static String download(String url)
 	{
+		VikaCanvasInst.netColor = 0xffff0000;
 		HttpConnection httpconn = null;
 		InputStream is = null;
 		InputStreamReader isr = null;
 		String result = null;
-		
 		try
 		{
 			Connection conn = Connector.open(url);
@@ -215,6 +218,7 @@ public final class VikaUtils
 			is = httpconn.openInputStream();
 			isr = new InputStreamReader(is, "UTF-8"); 
 			StringBuffer sb = new StringBuffer();
+			//Display.getDisplay(VikaTouch.appInst).vibrate(100);
 			char[] buffer;
 			int i;
 			if (httpconn.getResponseCode() != 200 && httpconn.getResponseCode() != 401)
@@ -257,9 +261,11 @@ public final class VikaUtils
 				
 				while ((i = isr.read(buffer, 0, buffer.length)) != -1)
 				{
+					VikaCanvasInst.netColor = 0xff00ff00;
 					sb.append(buffer, 0, i);
 				}
-				
+				//Thread.sleep(300);
+				//Display.getDisplay(VikaTouch.appInst).vibrate(100);
 				buffer = null;
 
 			}
@@ -270,24 +276,31 @@ public final class VikaUtils
 		}
 		catch (Throwable e)
 		{
-			System.out.println("Fail " + url);
-			e.printStackTrace();
+			VikaTouch.sendLog("Net fail " + url);
 		}
-
-		try
+		finally
 		{
-			if(isr != null)
-				isr.close();
-			if(is != null)
-				is.close();
-			if(httpconn != null)
-				httpconn.close();
+			try
+			{
+				VikaCanvasInst.netColor = 0xffffff00;
+				if(isr != null)
+					isr.close();
+				VikaCanvasInst.netColor = 0xffff00ff;
+				if(is != null)
+					is.close();
+				VikaCanvasInst.netColor = 0xff0000ff;
+				if(httpconn != null)
+					httpconn.close();
+				VikaCanvasInst.netColor = 0xff00ffff;
+				//Thread.sleep(300);
+			}
+			catch (Throwable e)
+			{
+				VikaTouch.popup(new InfoPopup("Net dispose error "+e.toString(), null));
+			}
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
+		VikaCanvasInst.netColor = 0xff000000;
+		//Display.getDisplay(VikaTouch.appInst).vibrate(100);
 		return result;
 	}
 	/*

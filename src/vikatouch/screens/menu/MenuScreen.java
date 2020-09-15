@@ -1,5 +1,6 @@
 package vikatouch.screens.menu;
 
+import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -49,7 +50,6 @@ public class MenuScreen
 	public MenuScreen()
 	{
 		super();
-
 		profileImg = VikaTouch.cameraImg;
 		if(VikaTouch.DEMO_MODE)
 		{

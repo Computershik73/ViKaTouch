@@ -70,6 +70,7 @@ public class ChatScreen
 	private int hasSpace = loadSpace;
 	
 	public static Thread updater = null;
+	public static boolean updStop = false;
 	
 	public static void stopUpdater()
 	{
@@ -77,6 +78,7 @@ public class ChatScreen
 		if(updater!=null && updater.isAlive())
 		{
 			updater.interrupt();
+			updStop = true;
 			updater = null;
 		}
 		if(typer !=null && typer.isAlive())
@@ -253,7 +255,9 @@ public class ChatScreen
 		{
 			// скачка сообщений
 			uiItems = new PressableUIItem[Settings.messagesPerLoad+loadSpace];
+			//VikaTouch.sendLog("Requesting history");
 			String x = VikaUtils.download(new URLBuilder("messages.getHistory").addField("peer_id", peerId).addField("extended", 1).addField("count", Settings.messagesPerLoad).addField("offset", 0));
+			//VikaTouch.sendLog("Requesting history ok");
 			JSONObject response = new JSONObject(x).getJSONObject("response");
 			JSONArray profiles = response.getJSONArray("profiles");
 			JSONArray items = response.getJSONArray("items");
@@ -326,7 +330,9 @@ public class ChatScreen
 		{
 			// скачка сообщений
 			uiItems = new PressableUIItem[Settings.messagesPerLoad+loadSpace];
+			//VikaTouch.sendLog("Requesting history");
 			String x = VikaUtils.download(new URLBuilder("messages.getHistory").addField("peer_id", peerId).addField("count", Settings.messagesPerLoad).addField("offset", 0));
+			//VikaTouch.sendLog("Requesting history ok");
 			JSONArray json = new JSONObject(x).getJSONObject("response").getJSONArray("items");
 			profileNames.put(new IntObject(peerId), title);
 			for(int i = 0; i<json.length();i++) 
@@ -391,9 +397,14 @@ public class ChatScreen
 		//System.out.println("Dialog ready.");
 		//scroll = -10000;
 		//dragging = true;
-		runUpdater();
-		VikaTouch.loading = false;
-		VikaTouch.sendLog("Dialog ready");
+		
+		try {
+			while(updStop) Thread.sleep(200);
+			runUpdater();
+			VikaTouch.loading = false;
+			VikaTouch.sendLog("Dialog ready");
+		} catch (InterruptedException e) {
+		}
 	}
 
 	public void draw(Graphics g)
@@ -717,15 +728,20 @@ public class ChatScreen
 			boolean more = true;
 			while(more)
 			{
+				if(updStop) return;
+				VikaCanvasInst.updColor = 0xffff0000;
 				long mid = ((MsgItem) uiItems[uiItems.length-hasSpace-1]).mid;
 				String x = VikaUtils.download(new URLBuilder("messages.getHistory")
 						.addField("start_message_id", String.valueOf(mid))
 						.addField("peer_id", peerId).addField("count", 1).addField("offset", -1).addField("extended", 1));
 				JSONArray items;
-				
+				VikaCanvasInst.updColor = 0xffffff00;
 				try
 				{
+					if(x == null || x.length()<10) throw new JSONException("Empty answer");
+					//VikaTouch.sendLog(x);
 					items = new JSONObject(x).getJSONObject("response").getJSONArray("items");
+					VikaCanvasInst.updColor = 0xffff7f00;
 				}
 				catch (JSONException e)
 				{
@@ -746,6 +762,8 @@ public class ChatScreen
 						more = false;
 						break;
 					}
+					VikaCanvasInst.updColor = 0xff00ff00;
+					if(updStop) return;
 					if(newMsgCount>=hasSpace-1)
 					{
 						//System.out.println("List shifting");
@@ -771,9 +789,12 @@ public class ChatScreen
 						catch(NullPointerException e)
 						{ }
 					}
+					VikaCanvasInst.updColor = 0xff0000ff;
 					MsgItem[] newMsgs = new MsgItem[newMsgCount];
 					for(int i = 0; i < newMsgCount; i++)
 					{
+						if(updStop) return;
+						VikaCanvasInst.updColor = 0xff0000ff;
 						MsgItem m = new MsgItem(items.getJSONObject(i));
 						m.parseJSON();
 						int fromId = m.fromid; 
@@ -792,15 +813,19 @@ public class ChatScreen
 						m.showName = !chain;
 						m.name = (m.foreign ? name :"Вы");
 						newMsgs[i] = m;
+						if(updStop) return;
 						m.loadAtts();
 						if(Settings.autoMarkAsRead)
 						{
+							VikaCanvasInst.updColor = 0xff00ffff;
 							VikaUtils.download(new URLBuilder("messages.markAsRead").addField("start_message_id", ""+m.mid).addField("peer_id", peerId));
 						}
 					}
+					VikaCanvasInst.updColor = 0xffff00ff;
 					// аппенд
 					for(int i=0; i < newMsgCount; i++)
 					{
+						if(updStop) return;
 						MsgItem m = newMsgs[newMsgCount-i-1];
 						uiItems[uiItems.length-hasSpace] = m;
 						hasSpace--;
@@ -829,23 +854,54 @@ public class ChatScreen
 		{
 			public void run()
 			{
+				try
+				{
+					while(updStop) Thread.sleep(200);
+				}
+				catch (Throwable e)
+				{
+					VikaCanvasInst.updColor = 0xff000000;
+					return;
+				}
 				while(true)
 				{
 					try
 					{
 						Thread.sleep(1000*Settings.refreshRate);
+						if(updStop)
+						{
+							VikaCanvasInst.updColor = 0xff000000;
+							updStop = false;
+							return;
+						}
 					}
 					catch (InterruptedException e)
-					{ break; } // забавный факт, оно падает при убивании потока во время сна. Я к тому что его надо либо не ловить, либо при поимке завершать галиматью вручную.
+					{ return; } // забавный факт, оно падает при убивании потока во время сна. Я к тому что его надо либо не ловить, либо при поимке завершать галиматью вручную.
 					try
 					{
-						//System.out.println("Chat updating...");
-						update();
+						VikaCanvasInst.updColor = 0xffffffff;
+						if(updStop)
+						{
+							updStop = false;
+							VikaCanvasInst.updColor = 0xff000000;
+							return;
+							
+						}
+						if(VikaTouch.canvas.currentScreen instanceof ChatScreen) update();
 					}
 					catch (Exception e)
 					{
 						e.printStackTrace();
 						refreshOk = false;
+					}
+					finally
+					{
+						VikaCanvasInst.updColor = 0xff000000;
+						if(updStop)
+						{
+							updStop = false;
+							return;
+						}
 					}
 				}
 			}

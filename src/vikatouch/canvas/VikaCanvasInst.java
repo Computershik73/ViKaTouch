@@ -31,6 +31,9 @@ public class VikaCanvasInst
 	public double slide;
 	public VikaScreen oldScreen;
 	public static String busyStr;
+	
+	public static int netColor = 0;
+	public static int updColor = 0;
 
 	public VikaCanvasInst()
 	{
@@ -76,7 +79,12 @@ public class VikaCanvasInst
 		g.setGrayScale(0);
 		g.fillRect(0, 30, 140, 30);
 		g.setGrayScale(255);
-		g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
+		//g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
+		
+		g.setColor(netColor);
+		g.fillRect(50, 120, 20, 20);
+		g.setColor(updColor);
+		g.fillRect(80, 120, 20, 20);
 	}
 	
 	public void updateScreen(Graphics g)
@@ -194,7 +202,7 @@ public class VikaCanvasInst
 			}
 		}*/
 		
-		{
+		/*{
 			g.setGrayScale(0);
 			g.fillRect(0, 60, 200, 30);
 			g.setGrayScale(255);
@@ -209,7 +217,7 @@ public class VikaCanvasInst
 			g.fillRect(0, 0, g.getFont().stringWidth(infoStr), 30);
 			g.setGrayScale(0);
 			g.drawString(infoStr, 0, 0, 0);
-		}
+		}*/
 	}
 	
 	private void drawLoading(Graphics g)

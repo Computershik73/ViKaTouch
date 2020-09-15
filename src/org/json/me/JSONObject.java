@@ -183,7 +183,11 @@ public class JSONObject {
         if (x.nextClean() != '{') {
             throw x.syntaxError("A JSONObject text must begin with '{'");
         }
+        int counter = 0;
         for (;;) {
+        	counter++;
+        	if(counter>=2048*1024)
+        		throw x.syntaxError("Timeout");
             c = x.nextClean();
             switch (c) {
             case 0:

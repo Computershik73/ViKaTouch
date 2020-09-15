@@ -579,8 +579,12 @@ public class VikaTouch
 		String details = "";
 		if(extended)
 		{
-			details = "\nDevice information: \nmemory: " + mem + "K, profiles: " + System.getProperty("microedition.profiles") + ", configuration: " + System.getProperty("microedition.configuration") + " Emulator: " + EmulatorDetector.emulatorType 
-			+ "\nSettings:\nsm: " + Settings.sensorMode + " https: " + Settings.https + " proxy: " + Settings.proxy + " lang: " + Settings.language + " listslen: " + Settings.simpleListsLength;
+			String m3g = System.getProperty("microedition.m3g.version");
+			if(m3g==null) m3g="Not supported";
+			details = "\nDevice information: \nmemory: " + mem + "K, profiles: " + System.getProperty("microedition.profiles") 
+			+ ", configuration: " + System.getProperty("microedition.configuration") + " Emulator: " + EmulatorDetector.emulatorType 
+			+ "\nSettings:\nsm: " + Settings.sensorMode + " https: " + Settings.https + " proxy: " + Settings.proxy + " lang: " 
+			+ Settings.language + " listslen: " + Settings.simpleListsLength + " audioMode:"+Settings.audioMode + " API string: "+VikaTouch.API+" m3g: "+m3g;
 		}
 		return main + details;
 	}
@@ -606,19 +610,6 @@ public class VikaTouch
 	{
 		String main = action + ": ViKa Touch " + getRelease() + " Version: " + getVersion() + ", device: " + mobilePlatform;
 		String details = "";
-		String mem = "error";
-		try
-		{
-			mem = ""+(Runtime.getRuntime().totalMemory()/1024);
-		} catch (Exception e) { }
-		
-		final boolean extended = true;
-		
-		if(extended && Settings.telemetry)
-		{
-			details = "\nDevice information: \nmemory: " + mem + "K, profiles: " + System.getProperty("microedition.profiles") + ", configuration: " + System.getProperty("microedition.configuration") + " Emulator:" + EmulatorDetector.emulatorType 
-			+ "\nSettings:\nsm:" + Settings.sensorMode + " https:" + Settings.https + "proxy:" + Settings.proxy + " lang:" + Settings.language + " listslen: " + Settings.simpleListsLength + " audioMode:"+Settings.audioMode;
-		}
 		sendLog(main + details + ".\n" + x);
 	}
 	public static void setDisplay(Displayable d)
@@ -866,7 +857,7 @@ public class VikaTouch
 		}
 		try
 		{
-			final Image camera = Image.createImage("/camera.png");
+			Image camera = Image.createImage("/camera.png");
 			cameraImg = ResizeUtils.resizeava(camera);
 		}
 		catch (IOException e1)
