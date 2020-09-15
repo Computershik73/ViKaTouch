@@ -721,6 +721,7 @@ public class ChatScreen
 		System.gc();
 	}
 	
+	JSONArray temp1;
 	private void update () throws JSONException
 	{
 		try
@@ -731,7 +732,7 @@ public class ChatScreen
 				if(updStop) return;
 				VikaCanvasInst.updColor = 0xffff0000;
 				long mid = ((MsgItem) uiItems[uiItems.length-hasSpace-1]).mid;
-				String x = VikaUtils.download(new URLBuilder("messages.getHistory")
+				final String x = VikaUtils.download(new URLBuilder("messages.getHistory")
 						.addField("start_message_id", String.valueOf(mid))
 						.addField("peer_id", peerId).addField("count", 1).addField("offset", -1).addField("extended", 1));
 				JSONArray items;
@@ -739,15 +740,39 @@ public class ChatScreen
 				try
 				{
 					if(x == null || x.length()<10) throw new JSONException("Empty answer");
-					//VikaTouch.sendLog(x);
-					items = new JSONObject(x).getJSONObject("response").getJSONArray("items");
+					temp1 = null;
+					Thread parser = new Thread()
+					{
+						public void run()
+						{
+							try {
+								temp1 = new JSONObject(x).getJSONObject("response").getJSONArray("items");
+							} catch (Throwable e) {
+								refreshOk = false;
+								return;
+							}
+						}
+					};
+					parser.start();
+					for(int i=0;i<100;i++)
+					{
+						if(temp1!=null) break;
+						Thread.sleep(20);
+					}
+					if(temp1==null)
+					{
+						parser.interrupt();
+						refreshOk = false;
+						return;
+					}
 					VikaCanvasInst.updColor = 0xffff7f00;
 				}
-				catch (JSONException e)
+				catch (Exception e)
 				{
 					refreshOk = false;
 					return;
 				}
+				items = temp1;
 				int newMsgCount = items.length();
 				System.out.println(newMsgCount+"");
 				if(newMsgCount==0)
@@ -868,12 +893,6 @@ public class ChatScreen
 					try
 					{
 						Thread.sleep(1000*Settings.refreshRate);
-						if(updStop)
-						{
-							VikaCanvasInst.updColor = 0xff000000;
-							updStop = false;
-							return;
-						}
 					}
 					catch (InterruptedException e)
 					{ return; } // забавный факт, оно падает при убивании потока во время сна. Я к тому что его надо либо не ловить, либо при поимке завершать галиматью вручную.
