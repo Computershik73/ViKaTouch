@@ -190,7 +190,7 @@ public class VideoItem
 			}
 			else
 			{
-				VikaTouch.appInst.platformRequest("https://vikamobile.ru/getl.php?url="+URLDecoder.encode(external));
+				VikaTouch.appInst.platformRequest("http://vikamobile.ru/getl.php?url="+URLDecoder.encode(external));
 			}
 		} catch (ConnectionNotFoundException e) {
 			e.printStackTrace();

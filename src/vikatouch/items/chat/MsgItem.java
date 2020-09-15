@@ -459,7 +459,7 @@ public class MsgItem
 					}
 					else
 					{
-						VikaTouch.appInst.platformRequest("https://vikamobile.ru/getl.php?url="+URLDecoder.encode(s));
+						VikaTouch.appInst.platformRequest("http://vikamobile.ru/getl.php?url="+URLDecoder.encode(s));
 					}
 				}
 				else

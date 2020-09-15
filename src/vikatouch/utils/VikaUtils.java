@@ -416,7 +416,7 @@ public final class VikaUtils
 	public static Image downloadImage(String url) 
 			throws IOException
 	{
-		if(!Settings.https)
+		//if(!Settings.https)
 			url = replace(url, "https:", "http:");
 		// кеширование картинок включается если запрос http
 		boolean caching = !startsWith(url, "file") && Settings.cacheImages;
