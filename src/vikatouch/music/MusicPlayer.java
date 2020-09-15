@@ -189,7 +189,7 @@ public class MusicPlayer extends MainScreen
 						catch(Exception e)
 						{
 							String es = e.toString();
-							if(es.indexOf("invalid")!=-1 && es.indexOf("response")!=-1)
+							if(es.indexOf("nvalid")!=-1 && es.indexOf("esponse")!=-1)
 							{
 								es = "VK doesn't allow your device to access the audio file. Try to reconnect to network and restart (or reinstall) the app.";
 							}
@@ -523,9 +523,14 @@ public class MusicPlayer extends MainScreen
 	
 	public void updateDrawData()
 	{
-		if(!isReady) return;
-		time = time(player.getMediaTime()/1000000L);
-		long dur = Settings.audioMode == Settings.AUDIO_PLAYONLINE ? getC().length*1000000L : player.getDuration();
+		long dur = 1;
+		long curr = 0;
+		if(isReady)
+		{
+			curr = player.getMediaTime();
+			time = time(curr/1000000L);
+			dur = Settings.audioMode == Settings.AUDIO_PLAYONLINE ? getC().length*1000000L : player.getDuration();
+		}
 		try
 		{
 			int dw = DisplayUtils.width;
@@ -534,14 +539,14 @@ public class MusicPlayer extends MainScreen
 				// альбом
 				x1 = dw/2+PBMARGIN;
 				x2 = dw-PBMARGIN;
-				currX = dw/2 + 60 + (int)((dw/2-PBMARGIN*2)*(inSeekMode?seekTime:player.getMediaTime())/dur);
+				currX = dw/2 + 60 + (int)((dw/2-PBMARGIN*2)*(inSeekMode?seekTime:curr)/dur);
 			}
 			else
 			{
 				// квадрат, портрет
 				x1 = PBMARGIN;
 				x2 = dw-PBMARGIN;
-				currX = PBMARGIN + (int)((dw-PBMARGIN*2)*(inSeekMode?seekTime:player.getMediaTime())/dur);
+				currX = PBMARGIN + (int)((dw-PBMARGIN*2)*(inSeekMode?seekTime:curr)/dur);
 			}
 		}
 		catch (Exception e) { }
@@ -719,8 +724,8 @@ public class MusicPlayer extends MainScreen
 		Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
 		g.setFont(f);
 		g.setGrayScale(0);
-		currTx-=2;
-		currAx-=2;
+		currTx-=1;
+		currAx-=1;
 		if(-currTx>(titleW/2+hdw)) currTx = titleW/2+hdw;
 		if(-currAx>(artistW/2+hdw)) currAx = artistW/2+hdw;
 		boolean tick = (System.currentTimeMillis()%1000)<500;
@@ -754,7 +759,14 @@ public class MusicPlayer extends MainScreen
 		}
 		ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 		g.drawRect(x1, timeY, x2-x1, 10);
-		if(isReady) g.fillRect(x1+2, timeY+2, currX-x1-4, 6);
+		if(isReady) 
+		{
+			g.fillRect(x1+2, timeY+2, currX-x1-4, 6);
+		}
+		else
+		{
+			int t = (int) (System.currentTimeMillis()%1000);
+		}
 		
 		g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
 		g.drawString(time, x1-4, timeY-4, Graphics.TOP | Graphics.RIGHT);

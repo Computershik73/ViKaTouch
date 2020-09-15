@@ -203,6 +203,7 @@ public final class VikaUtils
 	
 	public static String download(String url)
 	{
+		int step=0;
 		VikaCanvasInst.netColor = 0xffff0000;
 		HttpConnection httpconn = null;
 		InputStream is = null;
@@ -210,13 +211,18 @@ public final class VikaUtils
 		String result = null;
 		try
 		{
+			step = 1;
 			Connection conn = Connector.open(url);
+			step = 2;
 			//System.out.println("conn is " + conn.toString() + " " + conn.getClass().getName());
 			httpconn = (HttpConnection) conn;
 			httpconn.setRequestMethod("GET");
 			httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+			step = 3;
 			is = httpconn.openInputStream();
+			step = 4;
 			isr = new InputStreamReader(is, "UTF-8"); 
+			step = 5;
 			StringBuffer sb = new StringBuffer();
 			//Display.getDisplay(VikaTouch.appInst).vibrate(100);
 			char[] buffer;
@@ -226,7 +232,8 @@ public final class VikaUtils
 				//System.out.println("not 200 and not 401");
 				if(httpconn.getHeaderField("Location") != null)
 				{
-					final String replacedURL = httpconn.getHeaderField("Location");
+					String replacedURL = httpconn.getHeaderField("Location");
+					step = 6;
 					try
 					{
 						isr.close();
@@ -235,12 +242,18 @@ public final class VikaUtils
 					{
 						e.printStackTrace();
 					}
+					step = 7;
 					httpconn.close();
+					step = 8;
 					httpconn = (HttpConnection) Connector.open(replacedURL);
+					step = 9;
 					httpconn.setRequestMethod("GET");
 					httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+					step = 10;
 					is = httpconn.openInputStream();
+					step = 11;
 					isr = new InputStreamReader(is, "UTF-16");
+					step = 12;
 					sb = new StringBuffer();
 					if (httpconn.getResponseCode() == 200 || httpconn.getResponseCode() == 401)
 					{
@@ -252,13 +265,14 @@ public final class VikaUtils
 						}
 	
 					}
+					step = 13;
 				}
 			}
 			else
 			{
 				//System.out.println("yay"+httpconn.getResponseCode());
 				buffer = new char[10000];
-				
+				step = 14;
 				while ((i = isr.read(buffer, 0, buffer.length)) != -1)
 				{
 					VikaCanvasInst.netColor = 0xff00ff00;
@@ -267,16 +281,22 @@ public final class VikaUtils
 				//Thread.sleep(300);
 				//Display.getDisplay(VikaTouch.appInst).vibrate(100);
 				buffer = null;
-
+				step = 15;
 			}
 			
 			result = sb.toString();
-
+			step = 16;
 			//result = replace(sb.toString(), "<br>", " ");
 		}
 		catch (Throwable e)
 		{
-			VikaTouch.sendLog("Net fail " + url);
+			String curl = url;
+			try
+			{
+				curl = url.substring(0, 40);
+			}
+			catch(Exception e1) { }
+			VikaTouch.sendLog("Net fail "+e.toString() + " Step-"+step+" URL:" + curl);
 		}
 		finally
 		{
