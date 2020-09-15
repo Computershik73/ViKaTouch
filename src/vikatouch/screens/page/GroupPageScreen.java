@@ -359,9 +359,12 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 					MusicScreen.open(-id, name, name);
 					break;
 				case 7:
-					VideosScreen vs = new VideosScreen();
-					VikaTouch.setDisplay(vs, 1);
-					vs.load(0, id, name, name);
+					if(videos>0)
+					{
+						VideosScreen vs = new VideosScreen();
+						VikaTouch.setDisplay(vs, 1);
+						vs.load(0, -id, name, name);
+					}
 					break;
 				case 8:
 					if(docs>0) {

@@ -34,6 +34,10 @@ import vikatouch.utils.url.URLBuilder;
 public class ChatScreen
 	extends ReturnableListScreen
 {
+	
+	public boolean ready = false;
+	
+	
 	private static final int TYPE_USER = 1;
 	private static final int TYPE_CHAT = 2;
 	private static final int TYPE_GROUP = 3;
@@ -170,7 +174,11 @@ public class ChatScreen
 			type = TYPE_GROUP;
 			//title2 = "group" + this.localId;
 			this.title2 = "";
-			messagesDialog();
+			(new Thread() {
+				public void run() {
+					messagesDialog();
+				}
+			}).start();
 		}
 		else if(peerId > 0)
 		{
@@ -195,8 +203,12 @@ public class ChatScreen
 						//this.title2 = e.toString();
 						this.title2 = "Ошибка JSON";
 					}
-
-					messagesChat();
+					
+					(new Thread() {
+						public void run() {
+							messagesChat();
+						}
+					}).start();
 				}
 				catch (Exception e)
 				{
@@ -225,17 +237,13 @@ public class ChatScreen
 				{
 					this.title2 = "Не удалось загрузить информацию.";
 				}
-				messagesDialog();
+				(new Thread() {
+					public void run() {
+						messagesDialog();
+					}
+				}).start();
 			}
 		}
-		
-		System.gc();
-		//System.out.println("Dialog ready.");
-		//scroll = -10000;
-		//dragging = true;
-		repaint();
-		runUpdater();
-		//System.out.println("Updater started returned.");
 	}
 
 	private void messagesChat()
@@ -299,11 +307,16 @@ public class ChatScreen
 			items.dispose();
 			profiles.dispose();
 			response.dispose();
+			loadAtts();
 		}
 		catch (Exception e)
 		{
 			this.title2 = "Не удалось загрузить сообщения.";
 			VikaTouch.sendLog(e.toString());
+		}
+		finally
+		{
+			ready = true;
 		}
 	}
 
@@ -336,6 +349,7 @@ public class ChatScreen
 					VikaUtils.request(new URLBuilder("messages.markAsRead").addField("start_message_id", ""+m.mid).addField("peer_id", peerId));
 				}
 				itemsCount = (short) uiItems.length;
+				loadAtts();
 			}
 		}
 		catch (Exception e)
@@ -343,6 +357,43 @@ public class ChatScreen
 			this.title2 = "Не удалось загрузить сообщения.";
 			e.printStackTrace();
 		}
+		finally
+		{
+			ready = true;
+		}
+	}
+	
+	public void loadAtts()
+	{
+		VikaTouch.loading = true;
+		int i=0;
+		try
+		{
+			for(i=0; i<uiItems.length; i++)
+			{
+				if(uiItems[i]==null) continue;
+				if(uiItems[i] instanceof MsgItem)
+				{
+					((MsgItem) uiItems[i]).loadAtts();
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			VikaTouch.popup(new InfoPopup("Attachments error, msg "+i+" exc "+e.toString(), null));
+		}
+		
+		scrolled = -(itemsh);
+		currentItem = (short) (uiItems.length-1-loadSpace);
+		uiItems[currentItem].setSelected(true);
+		
+		System.gc();
+		//System.out.println("Dialog ready.");
+		//scroll = -10000;
+		//dragging = true;
+		runUpdater();
+		VikaTouch.loading = false;
+		VikaTouch.sendLog("Dialog ready");
 	}
 
 	public void draw(Graphics g)
@@ -741,6 +792,7 @@ public class ChatScreen
 						m.showName = !chain;
 						m.name = (m.foreign ? name :"Вы");
 						newMsgs[i] = m;
+						m.loadAtts();
 						if(Settings.autoMarkAsRead)
 						{
 							VikaUtils.download(new URLBuilder("messages.markAsRead").addField("start_message_id", ""+m.mid).addField("peer_id", peerId));
@@ -871,13 +923,6 @@ public class ChatScreen
 				y+=uiItems[i].getDrawHeight();
 			}
 			this.itemsh = y + 100;
-			if(!scrolledDown)
-			{
-				scrolledDown = true;
-				scrolled = -(itemsh);
-				currentItem = (short) (uiItems.length-1-loadSpace);
-				uiItems[currentItem].setSelected(true);
-			}
 		}
 		catch(Exception e)
 		{

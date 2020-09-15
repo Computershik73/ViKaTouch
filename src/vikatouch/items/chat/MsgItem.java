@@ -165,7 +165,7 @@ public class MsgItem
 		}
 	}
 	
-	public void paint(Graphics g, int y, int scrolled)
+	public void loadAtts()
 	{
 		if(attH<0)
 		{
@@ -205,6 +205,11 @@ public class MsgItem
 				}
 			}
 		}
+	}
+	
+	public void paint(Graphics g, int y, int scrolled)
+	{
+		
 		// drawing
 		Font font = Font.getFont(0, 0, 8);
 		g.setFont(font);
@@ -268,7 +273,7 @@ public class MsgItem
 		}
 		
 		// рендер аттачей
-		if(attH>0)
+		if(attH>0 && attsReady)
 		{
 			attY += attMargin;
 			for(int i=0; i<attachments.length; i++)
