@@ -869,7 +869,7 @@ public class VikaTouch
 		
 		//Выбор сервера
 		if(!Settings.setted)
-			{
+		{
 			if (mobilePlatform.indexOf("S60") > 0)
 			{
 				if (mobilePlatform.indexOf("5.3") == INDEX_FALSE && mobilePlatform.indexOf("5.2") == INDEX_FALSE && mobilePlatform.indexOf("5.1") == INDEX_FALSE && mobilePlatform.indexOf("5.0") == INDEX_FALSE)
@@ -907,6 +907,10 @@ public class VikaTouch
 				API = Settings.proxyApi;
 				Settings.proxy = true;
 			}
+		}
+		else
+		{
+			API = Settings.https?"https://api.vk.com:443":Settings.proxyApi;
 		}
 		try
 		{

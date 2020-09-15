@@ -161,6 +161,7 @@ public abstract class MainScreen
 			}
 		}
 
+		/*
 		if(Settings.debugInfo)
 		{
 			g.setColor(0xffff00);
@@ -176,7 +177,7 @@ public abstract class MainScreen
 			g.setColor(0xff0000);
 			g.drawRect(endx-2, endy-2, 4, 4);
 			g.drawString("cs"+scroll + " sc" + scrolled + " d" + drift + " ds" + driftSpeed + " st" + scrollingTimer + " sp" + scrollPrev + " t" + timer, 0, 30, 0);
-		}
+		}*/
 	}
 
 	public void drawHUD(Graphics g)

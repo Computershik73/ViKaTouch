@@ -76,15 +76,18 @@ public class VikaCanvasInst
 		long gcT = System.currentTimeMillis();
 		if(Runtime.getRuntime().freeMemory()<1024*128) System.gc();
 		gcT = System.currentTimeMillis() - gcT;
-		g.setGrayScale(0);
-		g.fillRect(0, 30, 140, 30);
-		g.setGrayScale(255);
-		//g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
+		if(Settings.debugInfo)
+		{
+			g.setGrayScale(0);
+			g.fillRect(0, 30, 140, 30);
+			g.setGrayScale(255);
+			g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
+		}
 		
 		g.setColor(netColor);
-		g.fillRect(50, 120, 20, 20);
+		g.fillRect(DisplayUtils.width-50, 10, 20, 20);
 		g.setColor(updColor);
-		g.fillRect(80, 120, 20, 20);
+		g.fillRect(DisplayUtils.width-20, 10, 20, 20);
 	}
 	
 	public void updateScreen(Graphics g)
@@ -201,15 +204,13 @@ public class VikaCanvasInst
 				g.drawString(debugString, 65, 2, 0);
 			}
 		}*/
-		
-		/*{
+		if(Settings.debugInfo)
+		{
 			g.setGrayScale(0);
 			g.fillRect(0, 60, 200, 30);
 			g.setGrayScale(255);
 			g.drawString("csrT:"+csrT+" lsrT:"+lsrT+" hud:"+hudrT, 0, 60, 0);
-		}
-		
-		{
+			
 			int freeMem = (int) (Runtime.getRuntime().freeMemory()/1024);
 			int totalMem = (int) (Runtime.getRuntime().totalMemory()/1024);
 			String infoStr = "Mem: "+(totalMem - freeMem)+"K/"+totalMem+"K , free: "+freeMem+"K";
@@ -217,7 +218,7 @@ public class VikaCanvasInst
 			g.fillRect(0, 0, g.getFont().stringWidth(infoStr), 30);
 			g.setGrayScale(0);
 			g.drawString(infoStr, 0, 0, 0);
-		}*/
+		}
 	}
 	
 	private void drawLoading(Graphics g)
