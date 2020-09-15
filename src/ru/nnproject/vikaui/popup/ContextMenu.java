@@ -118,6 +118,7 @@ public class ContextMenu extends VikaNotice {
 		if(x < rx || x > rx + width || y < ry || y > ry + th)
 		{
 			VikaTouch.canvas.currentAlert = null;
+			return;
 		}
 		
 		int tapY = y - ry;
