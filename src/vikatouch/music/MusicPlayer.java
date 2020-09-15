@@ -49,8 +49,8 @@ public class MusicPlayer extends MainScreen
 	public boolean isPlaying = false;
 	public boolean isReady = false;
 	public boolean stop = false;
-	public boolean loop = false;
-	public boolean random = false;
+	public static boolean loop = false;
+	public static boolean random = false;
 	public boolean inSeekMode = false;
 	public long seekTime;
 	
@@ -923,10 +923,14 @@ public class MusicPlayer extends MainScreen
 			if(loop)
 			{
 				try {
-				player.stop();
+					player.stop();
 				} catch (MediaException e) {
 					e.printStackTrace();
 				}
+				if(Settings.audioMode == Settings.AUDIO_LOADANDPLAY)
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e1) { }
 				try {
 					player.setMediaTime(1);
 					player.start();

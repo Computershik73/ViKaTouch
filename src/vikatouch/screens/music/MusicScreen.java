@@ -110,7 +110,6 @@ public class MusicScreen
 							JSONObject item = items.getJSONObject(i);
 							uiItems[i] = new AudioTrackItem(item, thisC, i);
 							((AudioTrackItem) uiItems[i]).parseJSON();
-							//Thread.yield();
 						}
 					}
 					catch (JSONException e)

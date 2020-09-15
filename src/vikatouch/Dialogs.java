@@ -114,7 +114,7 @@ public class Dialogs
 				}
 				catch (Throwable e)
 				{
-					e.printStackTrace();
+					VikaTouch.sendLog("Dialogs loading error "+e.toString());
 				}
 				VikaTouch.loading = true;
 				
@@ -125,14 +125,21 @@ public class Dialogs
 					{
 						public void run()
 						{
-							VikaTouch.loading = true;
-							
-							for(int i = 0; i < itemsCount; i++)
+							try
 							{
-								if(dialogs[i] != null)
+								VikaTouch.loading = true;
+								
+								for(int i = 0; i < itemsCount; i++)
 								{
-									dialogs[i].getAva();
+									if(dialogs[i] != null)
+									{
+										dialogs[i].getAva();
+									}
 								}
+							}
+							catch(Throwable e)
+							{
+								VikaTouch.sendLog("Dialogs avas error "+e.toString());
 							}
 							
 							VikaTouch.loading = false;
@@ -140,7 +147,6 @@ public class Dialogs
 					};
 					downloaderThread2.start();
 				}
-				Thread.yield();
 			}
 		};
 		if(async)

@@ -795,7 +795,6 @@ public class ChatScreen
 						e.printStackTrace();
 						refreshOk = false;
 					}
-					Thread.yield();
 				}
 			}
 		};

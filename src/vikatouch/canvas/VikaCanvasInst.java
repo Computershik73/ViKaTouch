@@ -41,7 +41,7 @@ public class VikaCanvasInst
 		
 		try
 		{
-			final InputStream in = this.getClass().getResourceAsStream("/loading.gif");
+			InputStream in = this.getClass().getResourceAsStream("/loading.gif");
 			d = new GifDecoder();
 			int err = d.read(in);
 	        if (err == 0)

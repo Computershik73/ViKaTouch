@@ -75,7 +75,6 @@ public class PlaylistsScreen extends MainScreen {
 							JSONObject item = items.getJSONObject(i);
 							uiItems[i] = new PlaylistItem(item);
 							((PlaylistItem) uiItems[i]).parseJSON();
-							//Thread.yield();
 						}
 					}
 					catch (JSONException e)

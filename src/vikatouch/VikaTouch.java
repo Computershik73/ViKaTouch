@@ -616,27 +616,11 @@ public class VikaTouch
 		
 		if(extended && Settings.telemetry)
 		{
-			details = "\nDevice information: \nmemory: " + mem + "K, profiles: " + System.getProperty("microedition.profiles") + ", configuration: " + System.getProperty("microedition.configuration") + " Emulator: " + EmulatorDetector.emulatorType 
-			+ "\nSettings:\nsm: " + Settings.sensorMode + " https: " + Settings.https + " proxy: " + Settings.proxy + " lang: " + Settings.language + " listslen: " + Settings.simpleListsLength;
+			details = "\nDevice information: \nmemory: " + mem + "K, profiles: " + System.getProperty("microedition.profiles") + ", configuration: " + System.getProperty("microedition.configuration") + " Emulator:" + EmulatorDetector.emulatorType 
+			+ "\nSettings:\nsm:" + Settings.sensorMode + " https:" + Settings.https + "proxy:" + Settings.proxy + " lang:" + Settings.language + " listslen: " + Settings.simpleListsLength + " audioMode:"+Settings.audioMode;
 		}
 		sendLog(main + details + ".\n" + x);
 	}
-
-	/*
-	public static void SendTelemetry(String action)
-	{
-		if(!Settings.telemetry) return;
-		int peerId = -197851296;
-		try
-		{
-			String x = "VikaT "+getVersion() + ", device: " + mobilePlatform + "\nTELEMETRY_ACTION-"+action; // Желательно именно так, мне легче будет парсить
-			//Мне так не нрав!
-			VikaUtils.download(new URLBuilder("messages.send").addField("random_id", new Random().nextInt(1000)).addField("peer_id", peerId).addField("message", x).addField("intent", "default"));
-		}
-		catch (Exception e) { }
-	}
-	*/
-
 	public static void setDisplay(Displayable d)
 	{
 		Display.getDisplay(appInst).setCurrent(d);

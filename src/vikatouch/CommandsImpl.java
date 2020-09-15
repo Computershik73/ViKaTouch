@@ -212,7 +212,6 @@ public class CommandsImpl
 						break;
 					}
 				}
-				Thread.yield();
 			}
 		};
 		t.start();

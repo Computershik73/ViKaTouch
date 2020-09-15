@@ -81,7 +81,6 @@ public class VideosScreen
 							JSONObject item = items.getJSONObject(i);
 							uiItems[i] = new VideoItem(item);
 							((VideoItem) uiItems[i]).parseJSON();
-							//Thread.yield();
 						}
 						range = " ("+(from+1)+"-"+(itemsCount+from)+")";
 						if(canLoadMore) {

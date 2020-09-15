@@ -175,7 +175,6 @@ public class DialogsScreen
 				{
 					Dialogs.dialogs[i].selected = false;
 				}
-				Thread.yield();
 			}
 			Dialogs.selected = false;
 		}

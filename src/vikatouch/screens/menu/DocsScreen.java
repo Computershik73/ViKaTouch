@@ -99,7 +99,6 @@ public class DocsScreen
 							JSONObject item = items.getJSONObject(i);
 							uiItems[i] = new DocItem(item);
 							((DocItem) uiItems[i]).parseJSON();
-							//Thread.yield();
 						}
 						range = " ("+(from+1)+"-"+(itemsCount+from)+")";
 						if(canLoadMore) {

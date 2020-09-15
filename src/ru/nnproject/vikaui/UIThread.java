@@ -23,11 +23,11 @@ public class UIThread
 			{
 				canvas.tick();
 			}
-			catch (Exception e)
+			catch (Throwable e)
 			{
 				VikaTouch.sendLog("Tick failed. "+e.toString());
 			}
-			Thread.yield();
+			//Thread.yield();
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
