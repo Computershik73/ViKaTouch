@@ -641,7 +641,7 @@ public class MusicPlayer extends MainScreen
 		}
 	}
 	
-	public String time(long t)
+	public static String time(long t)
 	{
 		int s = (int) (t%60);
 		long min = t/60;
@@ -775,10 +775,11 @@ public class MusicPlayer extends MainScreen
 			else
 			{
 				px1 = x1+2;
-				px2 = (x2-((x2-x1)*t/(t-500)));
+				px2 = (x2-((x2-x1)*(t-500)/500));
 			}
 			g.setGrayScale(200);
 			g.fillRect(px1, timeY+2, px2-px1, 6);
+			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 		}
 		
 		g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));

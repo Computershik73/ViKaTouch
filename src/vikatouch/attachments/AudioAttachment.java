@@ -15,7 +15,7 @@ import vikatouch.screens.music.MusicScreen;
 import vikatouch.utils.error.ErrorCodes;
 
 public class AudioAttachment 
-	extends DocumentAttachment implements IMenu
+	extends DocumentAttachment
 {
 	public AudioAttachment() {
 		this.type = "audio";
@@ -23,9 +23,7 @@ public class AudioAttachment
 	
 	public String name;
 	public String url;
-	private int docType;
 	public int size;
-	private String ext;
 	public String musUrl;
 
 	public void parseJSON() 
@@ -35,30 +33,9 @@ public class AudioAttachment
 			name = json.optString("artist")+ " "+json.optString("title");
 			url = fixJSONString(json.optString("url"));
 			size = json.optInt("duration");
-			ext = json.optString("ext");
-			//docType = json.optInt("type");
-			VikaTouch.sendLog(name+" "+url+" "+size+" "+ext);
 			if(!json.isNull("url"))
 			{
-			/*	PhotoSize[] prevSizes = PhotoSize.parseSizes(json.getJSONObject("preview").getJSONObject("photo").getJSONArray("sizes"));
-
-				PhotoSize prevPs = null;
-				try
-				{
-					prevPs = PhotoSize.getSize(prevSizes, "x");
-					if(prevPs==null) throw new Exception();
-				}
-				catch (Exception e1)
-				{
-					try
-					{
-						prevPs = PhotoSize.getSize(prevSizes, "o");
-					}
-					catch (Exception e2)
-					{ }
-				}
-				if(prevPs != null)*/
-					musUrl = fixJSONString(json.optString("url"));
+				musUrl = fixJSONString(json.optString("url"));
 			}
 		}
 		catch (Exception e)
@@ -91,31 +68,10 @@ public class AudioAttachment
 	
 	public void press()
 	{
-		OptionItem[] i = new OptionItem[musUrl==null?1:2];
-		i[0] = new OptionItem(this, "Скачать", IconsManager.DOWNLOAD, 0, 50);
-		if(musUrl!=null)
-		{
-			i[1] = new OptionItem(this, "Открыть", IconsManager.PLAY, 1, 50);
-		}
-		VikaTouch.popup(new ContextMenu(i));
+		// в плеере скачать можно. 
+		MusicScreen ms = new MusicScreen();
+		ms.loadAtt(this);
+		MusicPlayer.launch(ms, 0);
 	}
-	public void onMenuItemPress(int i) {
-		if(i==0)
-		{
-			try
-			{
-				VikaTouch.appInst.platformRequest(url);
-			}
-			catch(Exception e)
-			{ }
-		}
-		else if(i==1&&musUrl!=null)
-		{
-			MusicScreen ms = new MusicScreen();
-			ms.loadAtt(this);
-			MusicPlayer.launch(ms, 0);
-		}
-	}
-	public void onMenuItemOption(int i) { }
 
 }

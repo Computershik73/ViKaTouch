@@ -321,9 +321,17 @@ public class VikaTouch
 					accessToken = json.getString("access_token");
 					userId = json.getString("user_id");
 					refreshToken();
-					final VikaScreen canvas = menuScr = new MenuScreen();
-					setDisplay(canvas, 1);
 					saveToken();
+					MenuScreen canvas = menuScr = new MenuScreen();
+					if(VikaTouch.canvas.currentScreen instanceof SettingsScreen)
+					{
+						((SettingsScreen)VikaTouch.canvas.currentScreen).backScreen = canvas;
+					}
+					else
+					{
+						setDisplay(canvas, 1);
+					}
+					
 					Dialogs.refreshDialogsList(true);
 					return true;
 				}

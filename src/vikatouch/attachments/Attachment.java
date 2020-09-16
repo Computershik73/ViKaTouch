@@ -44,6 +44,11 @@ public abstract class Attachment
 				result = new AudioAttachment();
 				result.json = json.getJSONObject("audio");
 			}
+			else if(type.equals("audio_message"))
+			{
+				result = new VoiceAttachment();
+				result.json = json.getJSONObject("audio_message");
+			}
 			else if(type.equals("doc"))
 			{
 				result = new DocumentAttachment();

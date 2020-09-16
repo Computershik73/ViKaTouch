@@ -145,6 +145,7 @@ music.all=Вся музыка
 
 msg=Сообщение
 msg.attach.audio=Аудиозапись
+msg.attach.voice=Голосовое сообщение
 msg.attach.reply=Ответ
 msg.attach.fwd=Пересланное сообщение
 msg.attach.attachment=Вложение

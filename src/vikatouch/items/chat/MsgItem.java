@@ -22,6 +22,7 @@ import vikatouch.attachments.PhotoAttachment;
 import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.WallAttachment;
 import vikatouch.items.menu.OptionItem;
+import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.IntObject;
@@ -98,18 +99,18 @@ public class MsgItem
 						{
 							JSONObject att = replyAttachs.getJSONObject(0);
 							String type = att.getString("type");
-							JSONObject atj = att.getJSONObject(type);
+							//VikaTouch.sendLog(type);
 							if(type.equals("photo"))
 							{
 								replyText = "[Фотография]";
 							}
 							else if(type.equals("audio_message"))
 							{
-								replyText = "[Голосовое сообщение]";
+								replyText = "["+TextLocal.inst.get("msg.attach.voice")+"]";
 							}
 							else if(type.equals("audio"))
 							{
-								replyText = "[Аудио]";
+								replyText = "["+TextLocal.inst.get("msg.attach.audio")+"]";
 							}
 							else if(type.equals("wall_reply"))
 							{
@@ -117,7 +118,7 @@ public class MsgItem
 							}
 							else
 							{
-								replyText = "[Вложение]";
+								replyText = "["+TextLocal.inst.get("msg.attach.attachment")+"]";
 							}
 						}
 						else if(replyAttachs.length() > 1)
@@ -265,7 +266,7 @@ public class MsgItem
 		
 		if(hasReply)
 		{
-			g.drawString(replyText, textX+h1, y+h1/2+h1*(linesC+1+(showName?1:0)), 0);
+			if(replyText!=null) g.drawString(replyText, textX+h1, y+h1/2+h1*(linesC+1+(showName?1:0)), 0);
 			ColorUtils.setcolor(g, ColorUtils.COLOR1);
 			if(replyName != null)
 				g.drawString(replyName, textX+h1, y+h1/2+h1*(linesC+(showName?1:0)), 0);

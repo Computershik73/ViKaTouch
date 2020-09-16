@@ -33,6 +33,7 @@ public class LoginScreen
 	
 	// tapping cache
 	private int[] tapCoords;
+	
 	private String titleLoginStr;
 	protected String passwordStr;
 	protected String loginStr;
