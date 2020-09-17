@@ -403,6 +403,7 @@ public class ChatScreen
 		VikaCanvasInst.msgColor = 0xff00ffff;
 		try
 		{
+			Thread.sleep(200);
 			scrolled = -(itemsh);
 			currentItem = (short) (uiItems.length-1-loadSpace);
 			uiItems[currentItem].setSelected(true);
@@ -530,12 +531,12 @@ public class ChatScreen
 		{
 			keysMode = true;
 		}
-		if(VikaTouch.canvas.currentAlert!=null)
+		/*if(VikaTouch.canvas.currentAlert!=null)
 		{
 			VikaTouch.canvas.currentAlert.press(key);
 			repaint();
 			return;
-		}
+		}*/
 		if(key == -1)
 		{
 			up();
@@ -748,9 +749,11 @@ public class ChatScreen
 				if(updStop) return;
 				VikaCanvasInst.updColor = 0xffff0000;
 				long mid = ((MsgItem) uiItems[uiItems.length-hasSpace-1]).mid;
+				
 				final String x = VikaUtils.download(new URLBuilder("messages.getHistory")
 						.addField("start_message_id", String.valueOf(mid))
 						.addField("peer_id", peerId).addField("count", 1).addField("offset", -1).addField("extended", 1));
+				
 				JSONArray items;
 				VikaCanvasInst.updColor = 0xffffff00;
 				try

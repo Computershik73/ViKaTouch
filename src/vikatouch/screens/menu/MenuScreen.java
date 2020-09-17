@@ -64,7 +64,7 @@ public class MenuScreen
 		{
 			try
 			{
-				if((avaurl == null && hasAva && profileImg != null) || name == null || name == "null" || name == "" || avaurl == "" || !VikaTouch.offlineMode)
+				if((avaurl == null && hasAva && profileImg != null) || name == null || name.equals("null") || name == "" || avaurl == "" || !VikaTouch.offlineMode)
 				{
 					String var10 = VikaUtils.download(new URLBuilder("users.get")
 						.addField("user_ids", VikaTouch.userId)
@@ -76,36 +76,25 @@ public class MenuScreen
 					avaurl = JSONBase.fixJSONString(profileobj.optString("photo_50"));
 					hasAva = profileobj.optInt("has_photo") == 1;
 				}
-				if(!Settings.dontLoadAvas && hasAva && avaurl != null && avaurl != "" && avaurl != "null")
+				
+				try
 				{
-					try
+					if(!Settings.dontLoadAvas && hasAva && avaurl != null && avaurl != "" && avaurl != "null")
 					{
 						profileImg = ResizeUtils.resizeava(
-								VikaUtils.downloadImage(avaurl));
-					}
-					catch (Throwable e)
-					{
-						e.printStackTrace();
-						VikaTouch.sendLog("Avatar error, url: "+avaurl);
-						hasAva = false;
+							VikaUtils.downloadImage(avaurl));
 					}
 				}
-			}
-			catch (StringIndexOutOfBoundsException var19)
-			{
-				VikaTouch.error(var19, ErrorCodes.MENUPROFILEINFO1);
-			}
-			catch (NullPointerException var19)
-			{
-				VikaTouch.error(var19, ErrorCodes.MENUPROFILEINFO2);
-			}
-			catch (Exception var19)
-			{
-				VikaTouch.error(var19, ErrorCodes.MENUPROFILEINFO3);
+				catch (Throwable e)
+				{
+					e.printStackTrace();
+					VikaTouch.sendLog("Avatar error, url: "+avaurl);
+					hasAva = false;
+				}
 			}
 			catch (Throwable a)
 			{
-				VikaTouch.error(a, ErrorCodes.MENUPROFILEINFO3);
+				VikaTouch.sendLog("Menu profile info: "+a.toString()+" uid:"+VikaTouch.userId);
 			}
 		}
 		else

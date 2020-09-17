@@ -12,7 +12,7 @@ public abstract class JSONBase
 	
 	public final static String fixJSONString(String jsonString)
 	{
-		if(jsonString == null || jsonString == "")
+		if(jsonString == null || jsonString.equals(""))
 		{
 			return "";
 		}

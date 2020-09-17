@@ -141,12 +141,18 @@ subscribe=Follow
 music.all=All music
 
 msg=Message
-msg.attach.audio=Auio
-msg.attach.reply=Unswer
+msg.attach.audio=Audio
+msg.attach.reply=Answer
 msg.attach.fwd=Forwarded message
 msg.attach.attachment=Attachment
 msg.attach.video=Video
 msg.entermsg=Enter message...
+msg.attach.voice=Voice message
+msg.attach.reply=Ответ
+msg.keyboard=Press OK to input...
+msg.typing=typing...
+msg.typing2=typing...
+msg.sending=Sending...
 
 count.message=message
 count.messages=messages

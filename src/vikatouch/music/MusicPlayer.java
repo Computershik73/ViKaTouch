@@ -144,12 +144,17 @@ public class MusicPlayer extends MainScreen
 			} catch (Exception var20) {
 				VikaTouch.popup(new InfoPopup("Player closing error", null));
 			}
-			String url = getC().mp3;
+			String turl = getC().mp3;
 			try
 			{
-				url = VikaUtils.replace(url, "https", "http");
+				turl = VikaUtils.replace(turl, "https", "http");
+				if(!Settings.https)
+				{
+					turl = turl.substring(0, turl.indexOf("?"));
+				}
 			}
 			catch(Exception e) { }
+			final String url = turl;
 			VikaTouch.sendLog(url);
 			final String path = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private") : System.getProperty("fileconn.dir.music")) + "vikaMusicCache.mp3";
 			
@@ -171,7 +176,7 @@ public class MusicPlayer extends MainScreen
 						{
 							time = "00:00";
 							totalTime = "--:--";
-							player = Manager.createPlayer(getC().mp3);
+							player = Manager.createPlayer(url);
 							getCover();
 							resizeCover();
 							player.start();

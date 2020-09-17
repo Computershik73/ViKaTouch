@@ -266,6 +266,7 @@ public class VikaTouch
 				);
 				if(tokenUnswer == null && !Settings.proxy)
 				{
+					VikaTouch.popup(new InfoPopup("Direct oauth failed. Trying via proxy.", null));
 					Settings.proxy = true;
 					Settings.https = false;
 					OAUTH = Settings.proxyOAuth;

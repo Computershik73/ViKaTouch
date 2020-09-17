@@ -221,7 +221,9 @@ public final class VikaUtils
 			step = 3;
 			is = httpconn.openInputStream();
 			step = 4;
+			VikaCanvasInst.netColor = 0xffff00ff;
 			isr = new InputStreamReader(is, "UTF-8"); 
+			VikaCanvasInst.netColor = 0xffff7f00;
 			step = 5;
 			StringBuffer sb = new StringBuffer();
 			//Display.getDisplay(VikaTouch.appInst).vibrate(100);
@@ -305,7 +307,6 @@ public final class VikaUtils
 				VikaCanvasInst.netColor = 0xffffff00;
 				if(isr != null)
 					isr.close();
-				VikaCanvasInst.netColor = 0xffff00ff;
 				if(is != null)
 					is.close();
 				VikaCanvasInst.netColor = 0xff0000ff;
@@ -316,7 +317,7 @@ public final class VikaUtils
 			}
 			catch (Throwable e)
 			{
-				VikaTouch.popup(new InfoPopup("Net dispose error "+e.toString(), null));
+				VikaTouch.sendLog("Net dispose error "+e.toString());
 			}
 		}
 		VikaCanvasInst.netColor = 0xff000000;
