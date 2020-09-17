@@ -150,7 +150,7 @@ public class MusicPlayer extends MainScreen
 				url = VikaUtils.replace(url, "https", "http");
 			}
 			catch(Exception e) { }
-			//VikaTouch.sendLog(url);
+			VikaTouch.sendLog(url);
 			final String path = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private") : System.getProperty("fileconn.dir.music")) + "vikaMusicCache.mp3";
 			
 			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)

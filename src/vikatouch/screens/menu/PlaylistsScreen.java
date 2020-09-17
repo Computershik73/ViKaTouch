@@ -80,11 +80,11 @@ public class PlaylistsScreen extends MainScreen {
 					catch (JSONException e)
 					{
 						e.printStackTrace();
-						//VikaTouch.error(e, ErrorCodes.DOCUMENTSPARSE);
+						VikaTouch.error(e, ErrorCodes.PLAYLISTSPARSE);
 					}
 					VikaTouch.loading = true;
 					repaint();
-					Thread.sleep(1000); // ну вдруг юзер уже нажмёт? Зачем зря грузить
+					Thread.sleep(1000);
 					VikaTouch.loading = true;
 					for(int i = 0; i < itemsCount; i++)
 					{
@@ -100,7 +100,7 @@ public class PlaylistsScreen extends MainScreen {
 				catch (Exception e)
 				{
 					e.printStackTrace();
-					//VikaTouch.error(e, ErrorCodes.DOCUMENTSLOAD);
+					VikaTouch.error(e, ErrorCodes.PLAYLISTSLOAD);
 				}
 				VikaTouch.loading = false;
 				System.gc();
@@ -154,32 +154,22 @@ public class PlaylistsScreen extends MainScreen {
 	{
 		try
 		{
-			switch(DisplayUtils.idispi)
+			if(y > 58 && y < DisplayUtils.height - oneitemheight)
 			{
-				case DisplayUtils.DISPLAY_ALBUM:
-				case DisplayUtils.DISPLAY_PORTRAIT:
+				int h = 102;
+				int yy1 = y - (scrolled + 58);
+				int i = yy1 / h;
+				if(i < 0)
+					i = 0;
+				if(!dragging)
 				{
-					if(y > 58 && y < DisplayUtils.height - oneitemheight)
+					if(downloaderThread != null && downloaderThread.isAlive())
 					{
-						int h = 102;
-						int yy1 = y - (scrolled + 58);
-						int i = yy1 / h;
-						if(i < 0)
-							i = 0;
-						if(!dragging)
-						{
-							if(downloaderThread != null && downloaderThread.isAlive())
-							{
-								downloaderThread.interrupt();
-							}
-							downloaderThread = null;
-							uiItems[i].tap(x, yy1 - (h * i));
-						}
-						break;
+						downloaderThread.interrupt();
 					}
-					break;
+					downloaderThread = null;
+					uiItems[i].tap(x, yy1 - (h * i));
 				}
-	
 			}
 		}
 		catch (ArrayIndexOutOfBoundsException e) 

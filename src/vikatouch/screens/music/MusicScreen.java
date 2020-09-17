@@ -90,8 +90,8 @@ public class MusicScreen
 				try
 				{
 					VikaTouch.loading = true;
-					String x = VikaUtils.music(new URLBuilder("audio.get").addField("owner_id", oid).addField("album_id", albumId).addField("count", 100).addField("offset", 0).toString());
-					VikaTouch.sendLog(x);
+					String x = VikaUtils.music(new URLBuilder("audio.get").addField("owner_id", oid).addField("album_id", albumId).addField("count", 500).addField("offset", 0).toString());
+					//VikaTouch.sendLog(x);
 					if(x.indexOf("error") != -1)
 					{
 						VikaTouch.error(ErrorCodes.MUSICLISTLOAD, x, false);
@@ -110,6 +110,8 @@ public class MusicScreen
 							JSONObject item = items.getJSONObject(i);
 							uiItems[i] = new AudioTrackItem(item, thisC, i);
 							((AudioTrackItem) uiItems[i]).parseJSON();
+							if(i%40 == 10) Thread.sleep(500);
+							// должно не зависать
 						}
 					}
 					catch (JSONException e)
@@ -148,6 +150,7 @@ public class MusicScreen
 					{
 						if(uiItems[i] != null)
 						{
+							if(y+scrolled > DisplayUtils.height) break;
 							uiItems[i].paint(g, y, scrolled);
 							y += uiItems[i].getDrawHeight();
 						}

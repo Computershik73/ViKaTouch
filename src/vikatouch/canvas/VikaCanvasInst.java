@@ -34,6 +34,7 @@ public class VikaCanvasInst
 	
 	public static int netColor = 0;
 	public static int updColor = 0;
+	public static int msgColor = 0;
 
 	public VikaCanvasInst()
 	{
@@ -84,6 +85,8 @@ public class VikaCanvasInst
 			g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
 		}
 		
+		g.setColor(msgColor);
+		g.fillRect(DisplayUtils.width-80, 10, 20, 20);
 		g.setColor(netColor);
 		g.fillRect(DisplayUtils.width-50, 10, 20, 20);
 		g.setColor(updColor);

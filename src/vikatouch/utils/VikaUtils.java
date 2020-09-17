@@ -293,7 +293,7 @@ public final class VikaUtils
 			String curl = url;
 			try
 			{
-				curl = url.substring(0, 40);
+				curl = url.substring(0, 50);
 			}
 			catch(Exception e1) { }
 			VikaTouch.sendLog("Net fail "+e.toString() + " Step-"+step+" URL:" + curl);

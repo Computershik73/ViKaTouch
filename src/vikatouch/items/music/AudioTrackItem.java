@@ -68,19 +68,22 @@ public class AudioTrackItem
 
 	public void paint(Graphics g, int y, int scrolled)
 	{
+		if(y+scrolled+itemDrawHeight < -50) return;
 		//g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
-		if(ScrollableCanvas.keysMode && selected)
-		{
-			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-			g.fillRect(0, y, DisplayUtils.width, itemDrawHeight);
-		}
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && selected)?ColorUtils.BUTTONCOLOR:0);
 		if(name != null)
 			g.drawString(name, 73, y, 0);
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
-		if(artist!=null) g.drawString(artist, 73, y + 24, 0);
 		if(lengthS!=null) g.drawString(lengthS, DisplayUtils.width-10-g.getFont().stringWidth(lengthS), y, 0);
-		g.drawImage(IconsManager.ico[IconsManager.MUSIC], 20, y+13, 0);
+		int icon = IconsManager.MUSIC;
+		if(MusicPlayer.inst!=null && playlist == MusicPlayer.inst.playlist && indexInPL == MusicPlayer.inst.current)
+		{
+			icon = IconsManager.PLAY;
+			//ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+		}
+		if(artist!=null) g.drawString(artist, 73, y + 24, 0);
+		
+		g.drawImage(((ScrollableCanvas.keysMode && selected)?(IconsManager.selIco):(IconsManager.ico))[icon], 20, y+13, 0);
 	}
 
 	public void tap(int x, int y)

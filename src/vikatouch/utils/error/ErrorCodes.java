@@ -54,4 +54,6 @@ public class ErrorCodes
 	public static final int MUSICLISTLOAD = 49;
 	public static final int LOCALELOAD = 50;
 	public static final int MENUNOUSERID = 51;
+	public static final int PLAYLISTSLOAD = 52;
+	public static final int PLAYLISTSPARSE = 53;
 }

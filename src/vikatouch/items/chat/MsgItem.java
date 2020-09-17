@@ -210,7 +210,7 @@ public class MsgItem
 	
 	public void paint(Graphics g, int y, int scrolled)
 	{
-		
+		if(y+scrolled+itemDrawHeight < -50) return;
 		// drawing
 		Font font = Font.getFont(0, 0, 8);
 		g.setFont(font);
