@@ -3,15 +3,25 @@ package vikatouch.attachments;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
+import org.json.me.JSONObject;
+
+import ru.nnproject.vikaui.popup.ContextMenu;
+import ru.nnproject.vikaui.popup.ImagePreview;
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaTouch;
 import vikatouch.items.chat.MsgItem;
+import vikatouch.items.menu.OptionItem;
+import vikatouch.items.menu.VideoItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.music.MusicPlayer;
 import vikatouch.screens.music.MusicScreen;
+import vikatouch.utils.IntObject;
+import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
+import vikatouch.utils.url.URLBuilder;
 
 public class VoiceAttachment 
 	extends DocumentAttachment 
@@ -21,7 +31,7 @@ public class VoiceAttachment
 		this.type = "audio_message";
 	}
 	
-	public String name;
+	public static String name;
 	public String url;
 	public int size;
 	public String length;
@@ -29,6 +39,7 @@ public class VoiceAttachment
 	public String text;
 	public String[] textB;
 	public int lastW = 0;
+	public long mid;
 
 	public void parseJSON() 
 	{
@@ -97,9 +108,48 @@ public class VoiceAttachment
 	
 	public void press()
 	{
+		OptionItem[] i = new OptionItem[2];
+		i[0] = new OptionItem(this, "Прослушать", IconsManager.PLAY, 0, 50);
+		i[1] = new OptionItem(this, "Транскрипт", IconsManager.EDIT, 1, 50);
+		VikaTouch.popup(new ContextMenu(i));
 		// в плеере скачать можно. 
 		//MusicScreen ms = new MusicScreen();
 		//ms.loadAtt(this);
 		//MusicPlayer.launch(ms, 0);
+	}
+	
+	public void onMenuItemPress(int i) {
+		if(i==0)
+		{
+			try
+			{
+			}
+			catch(Exception e)
+			{ }
+		}
+		else if(i==1)
+		{
+			try
+			{
+				String x = VikaUtils.download(new URLBuilder("messages.getById")
+						.addField("message_ids", String.valueOf(mid)).addField("extended", 1));
+				JSONObject r = new JSONObject(x).getJSONObject("response").getJSONArray("items").getJSONObject(0);
+				MsgItem m = new MsgItem(r);
+				m.parseJSON();
+
+				m.loadAtts();
+				
+				VoiceAttachment v = m.findVoice();
+				if(v!=null)
+				{
+					VikaTouch.popup(new InfoPopup(v.text, null));
+				}
+			}
+			catch (Exception e)
+			{
+				VikaTouch.popup(new InfoPopup("Transcript loading error", null));
+				VikaTouch.sendLog("Voice transcript: "+e.toString());
+			}
+		}
 	}
 }

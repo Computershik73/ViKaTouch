@@ -221,7 +221,7 @@ public class Settings
 		sendErrors = true;
 		autoMarkAsRead = true;
 		isLiteOrSomething = VikaTouch.isS40();
-		dontBack = isLiteOrSomething;
+		//dontBack = isLiteOrSomething;
 		threaded = true;
 		audioMode = AUDIO_LOADANDPLAY;
 		

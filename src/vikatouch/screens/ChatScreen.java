@@ -404,6 +404,7 @@ public class ChatScreen
 		try
 		{
 			Thread.sleep(200);
+			repaint();
 			scrolled = -(itemsh);
 			currentItem = (short) (uiItems.length-1-loadSpace);
 			uiItems[currentItem].setSelected(true);

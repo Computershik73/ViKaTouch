@@ -20,6 +20,8 @@ import vikatouch.attachments.AudioAttachment;
 import vikatouch.attachments.DocumentAttachment;
 import vikatouch.attachments.PhotoAttachment;
 import vikatouch.attachments.StickerAttachment;
+import vikatouch.attachments.VideoAttachment;
+import vikatouch.attachments.VoiceAttachment;
 import vikatouch.attachments.WallAttachment;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
@@ -186,6 +188,14 @@ public class MsgItem
 							{
 								((PhotoAttachment) at).loadForMessage();
 							}
+							if(at instanceof VideoAttachment)
+							{
+								((VideoAttachment) at).loadForMessage();
+							}
+							if(at instanceof VoiceAttachment)
+							{
+								((VoiceAttachment) at).mid = mid;
+							}
 							if(at instanceof StickerAttachment)
 							{
 								int stickerH = DisplayUtils.width > 250 ? 128 : 64;
@@ -206,6 +216,20 @@ public class MsgItem
 				}
 			}
 		}
+	}
+	
+	public VoiceAttachment findVoice()
+	{
+		for(int i=0; i<attachments.length; i++)
+		{
+			Attachment at = attachments[i];
+			if(at==null) continue;
+			if(at instanceof VoiceAttachment)
+			{
+				return (VoiceAttachment) at;
+			}
+		}
+		return null;
 	}
 	
 	public void paint(Graphics g, int y, int scrolled)
@@ -298,6 +322,26 @@ public class MsgItem
 					else
 					{
 						g.drawImage(pa.renderImg, rx, y+attY, 0);
+					}
+				}
+				else if(at instanceof VideoAttachment)
+				{
+					VideoAttachment va = (VideoAttachment) at;
+					int rx = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + attMargin) - va.renderW);
+					if(va.renderImg == null)
+					{
+						if(Settings.isLiteOrSomething)
+						{
+							g.drawString("Видео", textX, y+attY, 0);
+						}
+						else
+							g.drawString("Не удалось загрузить изображение", textX, y+attY, 0);
+					}
+					else
+					{
+						g.drawImage(va.renderImg, rx, y+attY, 0);
+						int x1 = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + msgWidth) + attMargin);
+						g.drawString(va.title, x1, y+attY+va.renderH, 0);
 					}
 				}
 				else if(at instanceof DocumentAttachment)
@@ -565,6 +609,15 @@ public class MsgItem
 					{
 						AudioAttachment aa = (AudioAttachment) a;
 						opts[j] = new OptionItem(this, aa.name, IconsManager.MUSIC, j, h);
+					}
+					else if(a.type.equals("video"))
+					{
+						VideoAttachment va = (VideoAttachment) a;
+						opts[j] = new OptionItem(this, va.title, IconsManager.VIDEOS, j, h);
+					}
+					else if(a.type.equals("audio_message"))
+					{
+						opts[j] = new OptionItem(this, VoiceAttachment.name, IconsManager.VOICE, j, h);
 					}
 					else
 					{

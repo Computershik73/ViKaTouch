@@ -145,14 +145,6 @@ public class PhotoAttachment
 	
 	public int getDrawHeight() { return renderH; }
 
-	// Нестабильно! Нельзя такое по индексу получать.
-	public Image getPreviewImage() {
-		return getImg(0);
-	}
-	public Image getFullImage() {
-		return getImg(6);
-	}
-
 	public Image getImage(int height) {
 		// TODO Auto-generated method stub
 		return null;
@@ -197,6 +189,19 @@ public class PhotoAttachment
 
 	public void openComments() {
 		// TODO
+	}
+
+	public Image getPreviewImage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Image getFullImage() {
+		try {
+			return VikaUtils.downloadImage(getFullImageUrl());
+		} catch (IOException e) {
+			return null;
+		}
 	}
 }
 
