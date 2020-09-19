@@ -47,6 +47,8 @@ public class CaptchaScreen
 		if(!switcher)
 			ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawRect(0, 100, 240, 40);
+		ColorUtils.setcolor(g, 3);
+		g.fillRect(x, 150, w, 36);
 		ColorUtils.setcolor(g, 2);
 		if(input != null)
 			g.drawString(input, 10, 110, 0);
@@ -54,8 +56,6 @@ public class CaptchaScreen
 		ColorUtils.setcolor(g, -5);
 		g.drawString(captchaRequiredStr/*"Требуется ввод капчи!"*/, DisplayUtils.width / 2, 0, Graphics.TOP | Graphics.HCENTER);
 		g.drawImage(image, x, 24, 0);
-		ColorUtils.setcolor(g, 3);
-		g.fillRect(x, 150, w, 36);
 	}
 	
 	public final void press(short x, short y)
