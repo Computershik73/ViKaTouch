@@ -13,6 +13,7 @@ public class JSONItem
 	public JSONItem(JSONObject json)
 	{
 		this.json = json;
+		
 	}
 	
 	public Attachment[] attachments = new Attachment[5];
