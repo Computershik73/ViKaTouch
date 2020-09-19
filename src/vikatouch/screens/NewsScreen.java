@@ -49,9 +49,9 @@ public class NewsScreen
 		VikaTouch.loading = true;
 		try
 		{
-			short requestcount = 10;
+			short requestcount = 20;
 			short startswith = 0;
-			short postscount = 10;
+			short postscount = 20;
 			uiItems = new PostItem[postscount];
 			int len2 = postscount;
 			final String s = VikaUtils.download(
@@ -114,19 +114,13 @@ public class NewsScreen
 
 	public void draw(Graphics g)
 	{
-		double multiplier = (double)DisplayUtils.height / 640.0;
-		double ww = 10.0 * multiplier;
-		int w = (int)ww;
 		try
 		{
-			ColorUtils.setcolor(g, -1);
-			g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
 			ColorUtils.setcolor(g, 0);
-			g.setFont(Font.getFont(0, 0, 8));
-			//g.drawString(string, 8, 8, 0);
 			
 			update(g);
-			int y = oneitemheight + w;
+			
+			int y = topPanelH+10;
 			try
 			{
 				for(int i = 0; i < itemsCount; i++)
@@ -134,7 +128,7 @@ public class NewsScreen
 					if(uiItems[i] != null)
 					{
 						uiItems[i].paint(g, y, scrolled);
-						y += uiItems[i].getDrawHeight() + 8;
+						y += uiItems[i].getDrawHeight() + 10;
 					}
 				}
 				if(y != itemsh)

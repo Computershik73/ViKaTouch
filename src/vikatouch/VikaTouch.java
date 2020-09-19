@@ -358,7 +358,7 @@ public class VikaTouch
 
 	private boolean code(String user, String pass, String tokenUnswer)
 	{
-		String code = TextEditor.inputString("", "2Fa code", 16);
+		String code = TextEditor.inputString("2Fa code", "", 16);
 		try
 		{
 			tokenUnswer = VikaUtils.download(

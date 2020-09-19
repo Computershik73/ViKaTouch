@@ -19,6 +19,7 @@ import vikatouch.screens.AboutScreen;
 import vikatouch.screens.LoginScreen;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.menu.MenuScreen;
+import vikatouch.updates.VikaUpdate;
 
 public class SettingsScreen
 	extends MainScreen

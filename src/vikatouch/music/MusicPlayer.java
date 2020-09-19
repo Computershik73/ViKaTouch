@@ -155,7 +155,7 @@ public class MusicPlayer extends MainScreen
 			}
 			catch(Exception e) { }
 			final String url = turl;
-			VikaTouch.sendLog(url);
+			//VikaTouch.sendLog(url);
 			final String path = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private") : System.getProperty("fileconn.dir.music")) + "vikaMusicCache.mp3";
 			
 			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
