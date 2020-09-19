@@ -18,6 +18,7 @@ import vikatouch.json.JSONBase;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
 import vikatouch.settings.Settings;
+import vikatouch.updates.VikaUpdate;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
@@ -132,6 +133,19 @@ public class MenuScreen
 		// sending stats
 		//TODO ENABLE ON OBT
 		VikaTouch.sendStats();
+		
+		(new Thread()
+		{
+			public void run()
+			{
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+				}
+				VikaUpdate vu = VikaUpdate.check();
+				if(vu!=null) vu.ask();
+			}
+		}).start();
 	}
 
 	protected final void up()
