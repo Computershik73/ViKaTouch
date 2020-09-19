@@ -1,15 +1,9 @@
 package vikatouch.updates;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Vector;
-
 import javax.microedition.io.ConnectionNotFoundException;
-import javax.microedition.lcdui.Font;
 
 import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.popup.InfoPopup;
-import vengine.VEngine;
 import vikatouch.VikaTouch;
 import vikatouch.utils.VikaUtils;
 
