@@ -193,6 +193,7 @@ public class MusicPlayer extends MainScreen
 						}
 						catch(Exception e)
 						{
+							isReady = true;
 							String es = e.toString();
 							if(es.indexOf("nvalid")!=-1 && es.indexOf("esponse")!=-1)
 							{
@@ -343,8 +344,9 @@ public class MusicPlayer extends MainScreen
 						catch(Exception e)
 						{
 							e.printStackTrace();
+							isReady = true;
 							stop = false;
-							VikaTouch.popup(new InfoPopup("Common player error", null));
+							VikaTouch.popup(new InfoPopup("Common player error: "+e.toString(), null));
 						}
 						System.gc();
 					}
@@ -593,6 +595,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void getCover()
 	{
+		if(DisplayUtils.height<=220) return;
 		if (title != null) {
 			String q = "http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
 					+ URLDecoder.encode(title + " " + (artist==null?"":artist)) + "&country=ru&limit=1";
@@ -791,17 +794,20 @@ public class MusicPlayer extends MainScreen
 		g.drawString(time, x1-4, timeY-4, Graphics.TOP | Graphics.RIGHT);
 		g.drawString(totalTime, x2+4, timeY-4, Graphics.TOP | Graphics.LEFT);
 		
-		// cover
-		int coverY = (dw>dh)?((dh-hdw)/2):0;
-		if(resizedCover!=null) 
+		if(DisplayUtils.height>220)
 		{
-			g.drawImage(resizedCover, 0, coverY, 0);
-		}
-		else
-		{
-			int s = (dw>dh)?hdw:dw;
-			g.setGrayScale(200);
-			g.fillRect(0, coverY, s, s);
+			// cover
+			int coverY = (dw>dh)?((dh-hdw)/2):0;
+			if(resizedCover!=null) 
+			{
+				g.drawImage(resizedCover, 0, coverY, 0);
+			}
+			else
+			{
+				int s = (dw>dh)?hdw:dw;
+				g.setGrayScale(200);
+				g.fillRect(0, coverY, s, s);
+			}
 		}
 	}
 	
