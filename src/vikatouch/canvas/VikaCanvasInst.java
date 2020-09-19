@@ -35,6 +35,8 @@ public class VikaCanvasInst
 	public static int netColor = 0;
 	public static int updColor = 0;
 	public static int msgColor = 0;
+	
+	public static String timingsStr;
 
 	public VikaCanvasInst()
 	{
@@ -74,23 +76,40 @@ public class VikaCanvasInst
 			VikaTouch.sendLog("Paint failed. "+e.toString());
 			VikaTouch.error(e, ErrorCodes.VIKACANVASPAINT);
 		}
+		
 		long gcT = System.currentTimeMillis();
 		if(Runtime.getRuntime().freeMemory()<1024*128) System.gc();
 		gcT = System.currentTimeMillis() - gcT;
-		if(Settings.debugInfo)
-		{
-			g.setGrayScale(0);
-			g.fillRect(0, 30, 140, 30);
-			g.setGrayScale(255);
-			g.drawString("RT: "+rT+" GCT: "+gcT, 0, 30, 0);
-		}
 		
-		g.setColor(msgColor);
-		g.fillRect(DisplayUtils.width-80, 10, 20, 20);
-		g.setColor(netColor);
-		g.fillRect(DisplayUtils.width-50, 10, 20, 20);
-		g.setColor(updColor);
-		g.fillRect(DisplayUtils.width-20, 10, 20, 20);
+		{
+			
+			if(Settings.debugInfo)
+			{
+				int h = g.getFont().getHeight();
+				
+				int freeMem = (int) (Runtime.getRuntime().freeMemory()/1024);
+				int totalMem = (int) (Runtime.getRuntime().totalMemory()/1024);
+				String memStr = "Mem: "+(totalMem - freeMem)+"K/"+totalMem+"K , free: "+freeMem+"K";
+				g.setGrayScale(255);
+				g.fillRect(0, 0, g.getFont().stringWidth(memStr), h);
+				g.setGrayScale(0);
+				g.drawString(memStr, 0, 0, 0);
+				
+				if(timingsStr == null) timingsStr = "...";
+				String infoStr = "RT:"+rT+" ("+timingsStr+") gc:"+gcT;
+				g.setGrayScale(255);
+				g.fillRect(0, h, g.getFont().stringWidth(infoStr), h);
+				g.setGrayScale(0);
+				g.drawString(infoStr, 0, h, 0);
+			}
+			
+			g.setColor(msgColor);
+			g.fillRect(DisplayUtils.width-12, 0, 4, 4);
+			g.setColor(netColor);
+			g.fillRect(DisplayUtils.width-8, 0, 4, 4);
+			g.setColor(updColor);
+			g.fillRect(DisplayUtils.width-4, 0, 4, 4);
+		}
 	}
 	
 	public void updateScreen(Graphics g)
@@ -98,7 +117,6 @@ public class VikaCanvasInst
 		DisplayUtils.checkdisplay();
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
-		long lsrT = System.currentTimeMillis();
 		try
 		{
 			
@@ -137,7 +155,6 @@ public class VikaCanvasInst
 			e.printStackTrace();
 		}
 		long csrT = System.currentTimeMillis();
-		lsrT = csrT - lsrT;
 		try
 		{
 			
@@ -178,7 +195,8 @@ public class VikaCanvasInst
 			
 		}
 		
-		hudrT = System.currentTimeMillis() - hudrT;
+		long carT = System.currentTimeMillis();
+		hudrT = carT - hudrT;
 		
 		try
 		{
@@ -193,6 +211,7 @@ public class VikaCanvasInst
 			
 		}
 		
+		carT = System.currentTimeMillis() - carT;
 		
 		
 		if(VikaTouch.loading && !(currentScreen instanceof SplashScreen))
@@ -209,18 +228,7 @@ public class VikaCanvasInst
 		}*/
 		if(Settings.debugInfo)
 		{
-			g.setGrayScale(0);
-			g.fillRect(0, 60, 200, 30);
-			g.setGrayScale(255);
-			g.drawString("csrT:"+csrT+" lsrT:"+lsrT+" hud:"+hudrT, 0, 60, 0);
-			
-			int freeMem = (int) (Runtime.getRuntime().freeMemory()/1024);
-			int totalMem = (int) (Runtime.getRuntime().totalMemory()/1024);
-			String infoStr = "Mem: "+(totalMem - freeMem)+"K/"+totalMem+"K , free: "+freeMem+"K";
-			g.setGrayScale(255);
-			g.fillRect(0, 0, g.getFont().stringWidth(infoStr), 30);
-			g.setGrayScale(0);
-			g.drawString(infoStr, 0, 0, 0);
+			timingsStr = "s:"+csrT+" a:"+carT+" hud:"+hudrT;
 		}
 	}
 	
