@@ -49,31 +49,26 @@ public class NewsScreen
 		VikaTouch.loading = true;
 		try
 		{
-			short requestcount = 20;
-			short startswith = 0;
-			short postscount = 20;
-			uiItems = new PostItem[postscount];
-			int len2 = postscount;
+			int count = 20;
+			
 			final String s = VikaUtils.download(
 					new URLBuilder("newsfeed.get")
 					.addField("filters", "post,photo,photo_tag,wall_photo")
-					.addField("count", requestcount)
+					.addField("count", count)
 					.addField("fields", "groups,profiles,items")
 					);
 			JSONObject response = new JSONObject(s).getJSONObject("response");
 			JSONArray items = response.getJSONArray("items");
+			int itemsCount = items.length();
+			uiItems = new PostItem[itemsCount];
+			
 			profiles = response.getJSONArray("profiles");
 			groups = response.getJSONArray("groups");
-			//System.out.println(s);
+			
 			itemsh = 0;
-			int i2 = startswith;
-			for(int i = 0; i < len2; i++)
+			for(int i = 0; i < itemsCount; i++)
 			{
-				if(i2 >= requestcount)
-				{
-					break;
-				}
-				JSONObject item = items.getJSONObject(i2);
+				JSONObject item = items.getJSONObject(i);
 				JSONObject itemCopy;
 				try
 				{
@@ -85,16 +80,7 @@ public class NewsScreen
 				}
 				uiItems[i] = new PostItem(itemCopy, item);
 				((PostItem) uiItems[i]).parseJSON();
-				if(((PostItem) uiItems[i]).text == "" && ((PostItem) uiItems[i]).prevImage == null)
-				{
-					uiItems[i] = null;
-					i--;
-				}
-				else
-					itemsh += uiItems[i].getDrawHeight() + 8;
-				i2++;
 			}
-			itemsCount = postscount;
 		}
 		catch (Exception e)
 		{
@@ -122,7 +108,7 @@ public class NewsScreen
 			int y = topPanelH+10;
 			try
 			{
-				for(int i = 0; i < itemsCount; i++)
+				for(int i = 0; i < uiItems.length; i++)
 				{
 					if(uiItems[i] != null)
 					{
