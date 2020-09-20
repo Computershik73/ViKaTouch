@@ -97,7 +97,11 @@ public class FriendItem extends JSONUIItem
 
 	private void setDrawHeight()
 	{
-		itemDrawHeight = 50 + BORDER * 2;
+		itemDrawHeight = 52;
+	}
+	public int getDrawHeight()
+	{
+		return itemDrawHeight;
 	}
 	
 	public void getAva() {

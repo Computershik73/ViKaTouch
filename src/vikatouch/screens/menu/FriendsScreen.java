@@ -207,7 +207,6 @@ public class FriendsScreen
 							uiItems[i].paint(g, y, scrolled);
 							y += uiItems[i].getDrawHeight();
 						}
-	
 					}
 				}
 			}
@@ -234,31 +233,20 @@ public class FriendsScreen
 	{
 		try 
 		{
-		switch(DisplayUtils.idispi)
+			if(y > topPanelH && y < DisplayUtils.height - bottomPanelH)
 			{
-				case DisplayUtils.DISPLAY_ALBUM:
-				case DisplayUtils.DISPLAY_PORTRAIT:
+				int h = uiItems[0].getDrawHeight();
+				int yy1 = y - (scrolled + topPanelH);
+				int i = yy1 / h;
+				if(i < 0)
+					i = 0;
+				if(!dragging)
 				{
-					if(y > 58 && y < DisplayUtils.height - oneitemheight)
-					{
-						int h = 48 + (FriendItem.BORDER * 2);
-						int yy1 = y - (scrolled + 58);
-						int i = yy1 / h;
-						if(i < 0)
-							i = 0;
-						if(!dragging)
-						{
-							uiItems[i].tap(x, yy1 - (h * i));
-						}
-						break;
-					}
-					break;
+					uiItems[i].tap(x, yy1 - (h * i));
 				}
-	
 			}
+	
 		}
-		catch (ArrayIndexOutOfBoundsException e) 
-		{ }
 		catch (Exception e) 
 		{
 			e.printStackTrace();
