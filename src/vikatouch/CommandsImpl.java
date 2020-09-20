@@ -227,10 +227,6 @@ public class CommandsImpl
 			// открывался сплеш....
 			//дурак чтоли
 		}
-		else if (s instanceof MusicScreen)//Добавил Белов Юрий
-		{
-			VikaTouch.setDisplay(VikaTouch.menuScr, -1);
-		}//тут закончил
 		if(Settings.dontBack)
 		{
 			if(s instanceof SettingsScreen)
