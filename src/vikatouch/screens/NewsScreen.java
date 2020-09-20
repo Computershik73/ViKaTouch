@@ -108,16 +108,19 @@ public class NewsScreen
 			int y = topPanelH+10;
 			try
 			{
-				for(int i = 0; i < uiItems.length; i++)
+				if(uiItems!=null)
 				{
-					if(uiItems[i] != null)
+					for(int i = 0; i < uiItems.length; i++)
 					{
-						uiItems[i].paint(g, y, scrolled);
-						y += uiItems[i].getDrawHeight() + 10;
+						if(uiItems[i] != null)
+						{
+							uiItems[i].paint(g, y, scrolled);
+							y += uiItems[i].getDrawHeight() + 10;
+						}
 					}
-				}
-				if(y != itemsh)
+					
 					itemsh = y;
+				}
 			}
 			catch (Exception e)
 			{
@@ -151,12 +154,6 @@ public class NewsScreen
 					if(y > y1 && y < y2)
 					{
 						uiItems[i].tap(x, y1 - y);
-						itemsh = 0;
-						for(int i2 = 0; i2 < itemsCount; i2++)
-						{
-							if(uiItems[i2] != null)
-								itemsh += uiItems[i2].getDrawHeight();
-						}
 					}
 				}
 			}
