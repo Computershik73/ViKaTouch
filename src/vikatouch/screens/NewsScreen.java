@@ -116,7 +116,6 @@ public class NewsScreen
 	{
 		try
 		{
-			ColorUtils.setcolor(g, 0);
 			
 			update(g);
 			
@@ -155,36 +154,25 @@ public class NewsScreen
 	{
 		if(!dragging)
 		{
-			switch(DisplayUtils.idispi)
+			if(y > 58 && y < DisplayUtils.height - oneitemheight)
 			{
-				case DisplayUtils.DISPLAY_ALBUM:
-				case DisplayUtils.DISPLAY_PORTRAIT:
+				int yy = 0;
+				for(int i = 0; i < itemsCount; i++)
 				{
-					if(y > 58 && y < DisplayUtils.height - oneitemheight)
+					int y1 = scrolled + 50 + yy;
+					int y2 = y1 + uiItems[i].getDrawHeight();
+					yy += uiItems[i].getDrawHeight();
+					if(y > y1 && y < y2)
 					{
-						int yy = 0;
-						for(int i = 0; i < itemsCount; i++)
+						uiItems[i].tap(x, y1 - y);
+						itemsh = 0;
+						for(int i2 = 0; i2 < itemsCount; i2++)
 						{
-							int y1 = scrolled + 50 + yy;
-							int y2 = y1 + uiItems[i].getDrawHeight();
-							yy += uiItems[i].getDrawHeight();
-							if(y > y1 && y < y2)
-							{
-								uiItems[i].tap(x, y1 - y);
-								itemsh = 0;
-								for(int i2 = 0; i2 < itemsCount; i2++)
-								{
-									if(uiItems[i2] != null)
-										itemsh += uiItems[i2].getDrawHeight();
-								}
-								break;
-							}
-							
+							if(uiItems[i2] != null)
+								itemsh += uiItems[i2].getDrawHeight();
 						}
 					}
-					break;
 				}
-				
 			}
 		}
 		super.release(x, y);

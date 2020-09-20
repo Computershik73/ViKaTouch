@@ -72,7 +72,7 @@ public class AudioTrackItem
 		//g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
 		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && selected)?ColorUtils.BUTTONCOLOR:0);
 		if(name != null)
-			g.drawString(name, 73, y, 0);
+			g.drawString(name, 48, y, 0);
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
 		if(lengthS!=null) g.drawString(lengthS, DisplayUtils.width-10-g.getFont().stringWidth(lengthS), y, 0);
 		int icon = IconsManager.MUSIC;
@@ -81,9 +81,9 @@ public class AudioTrackItem
 			icon = IconsManager.PLAY;
 			//ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 		}
-		if(artist!=null) g.drawString(artist, 73, y + 24, 0);
+		if(artist!=null) g.drawString(artist, 48, y + 24, 0);
 		
-		g.drawImage(((ScrollableCanvas.keysMode && selected)?(IconsManager.selIco):(IconsManager.ico))[icon], 20, y+13, 0);
+		g.drawImage(((ScrollableCanvas.keysMode && selected)?(IconsManager.selIco):(IconsManager.ico))[icon], 12, y+13, 0);
 	}
 
 	public void tap(int x, int y)

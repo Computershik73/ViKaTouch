@@ -1,24 +1,21 @@
 package vikatouch.items;
 
-import java.io.IOException;
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
-import ru.nnproject.vikaui.menu.items.UIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.Attachment;
+import vikatouch.attachments.DocumentAttachment;
 import vikatouch.attachments.PhotoAttachment;
-import vikatouch.attachments.PhotoSize;
-import vikatouch.items.chat.MsgItem;
+import vikatouch.attachments.StickerAttachment;
+import vikatouch.attachments.VideoAttachment;
 import vikatouch.screens.NewsScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
@@ -61,10 +58,13 @@ public class PostItem
 	private boolean dontLoadAva;
 	protected boolean hasPrevImg;
 	
+	int attH = 0;
+	
 	public void parseJSON()
 	{
 		super.parseJSON();
 		super.parseAttachments();
+		//VikaTouch.sendLog(json2.toString());
 		try
 		{
 			if(text == null || text == "")
@@ -200,18 +200,23 @@ public class PostItem
 			itemDrawHeight += 43;
 		}
 
-		getPhotos();
 		
 		if(data != null && data.equalsIgnoreCase("profile_photo"))
 		{
 			text = "обновил фотографию на странице";
 		}
 		
-		drawText = TextBreaker.breakText(text, largefont, this, full, DisplayUtils.width - 32);
+		drawText = TextBreaker.breakText(text, Font.getFont(0, 0, 8), DisplayUtils.width - 32);
+		
+		
+		
+		VikaTouch.sendLog("Getting res");
+		getRes();
 		
 		System.gc();
 	}
 	
+	/*
 	private void getPhotos() 
 	{
 		new Thread(new Runnable()
@@ -249,97 +254,170 @@ public class PostItem
 			}
 		}).start();
 	}
+	*/
 
 	public void paint(Graphics g, int y, int scrolled)
 	{
-		int yy = 10 + y;
+		Font f = Font.getFont(0, 0, 8);
+		int fh = f.getHeight();
+		int textX = 16;
+		int dw = DisplayUtils.width;
+		g.setFont(f);
 		
-		getAva();
+		int cy = 0;
 		
 		if(ava != null)
 		{
-			g.drawImage(ava, 14, 10 + y, 0);
-			yy += ava.getHeight() + 12;
+			g.drawImage(ava, 10, 5 + y, 0);
+			g.drawImage(IconsManager.ac, 10, 5 + y, 0);
 		}
-		else
-		{
-			g.drawImage(VikaTouch.cameraImg, 14, 10 + y, 0);
-			yy += VikaTouch.cameraImg.getHeight() + 12;
-		}
-		
-
-		g.drawImage(IconsManager.ac, 14, 10 + y, 0);
 		
 		ColorUtils.setcolor(g, 5);
 		
-		g.drawString("" + name, 76, 18 + y, 0);
+		if(name!=null) g.drawString(name, 70, y + 5 + 25 - f.getHeight()/2, 0);
 
-		if(largefont)
-			g.setFont(Font.getFont(0, 0, Font.SIZE_LARGE));
-		else
-			g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
+		cy += 60;
 		if(drawText != null)
 		{
 			for(int i = 0; i < drawText.length; i++)
 			{
 				if(drawText[i] != null)
+					g.drawString(drawText[i], textX, y + cy + fh*i, 0);
+			}
+			cy+=fh*(drawText.length+1);
+		}
+
+		try
+		{
+			if(attH>0)
+			{
+				cy += 5;
+				for(int i=0; i<attachments.length; i++)
 				{
-					if(drawText[i].length() > 0)
+					Attachment at = attachments[i];
+					if(at==null) continue;
+					
+					if(at instanceof PhotoAttachment)
 					{
-						if(i == 9 && drawText.length == 10)
-							g.setColor(68, 104, 143);
-						
-						g.drawString(""+drawText[i], 16, yy, 0);
-						
-						ColorUtils.setcolor(g, 5);
+						PhotoAttachment pa = (PhotoAttachment) at;
+						if(pa.renderImg == null)
+						{
+							if(Settings.isLiteOrSomething) {
+								g.drawString("Фотография", textX, y+cy, 0);
+							} else
+								g.drawString("Не удалось загрузить изображение", textX, y+cy, 0);
+						}
+						else
+						{
+							g.drawImage(pa.renderImg, (dw-pa.renderW)/2, y+cy, 0);
+						}
 					}
-					yy += 24;
-				}
-				else
-				{
-					break;
+					else if(at instanceof VideoAttachment)
+					{
+						VideoAttachment va = (VideoAttachment) at;
+						if(va.renderImg == null)
+						{
+							if(Settings.isLiteOrSomething)
+							{
+								g.drawString("Видео", textX, y+cy, 0);
+							}
+							else
+								g.drawString("Не удалось загрузить изображение", textX, y+cy, 0);
+						}
+						else
+						{
+							g.drawImage(va.renderImg, (dw-va.renderW)/2, y+cy, 0);
+							g.drawString(va.title, textX, y+cy+va.renderH, 0);
+						}
+					}
+					else if(at instanceof DocumentAttachment)
+					{
+						((DocumentAttachment) at).draw(g, textX, y+cy, dw - textX*2);
+					}
+					
+					cy += at.getDrawHeight();
 				}
 			}
 		}
+		catch (Exception e) { }
 		
-		if(largefont)
-			g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
-
-		if(prevImage != null)
+		cy+=10;
+		g.drawImage(IconsManager.ico[IconsManager.LIKE], 24, y+cy, 0);
+		cy+=30;
+		itemDrawHeight = cy;
+	}
+	
+	public void loadAtts()
+	{
+		if(attH<=0)
 		{
-			int ix = (DisplayUtils.width - prevImage.getWidth()) / 2;
-			g.drawImage(prevImage, ix, yy + 3, 0);
+			attH = 0;
+			// prepairing attachments
+			try {
+				VikaTouch.sendLog("loadAtts "+attachments.length);
+				for(int i=0; i<attachments.length; i++)
+				{
+					Attachment at = attachments[i];
+					if(at==null) continue;
+
+					if(at instanceof PhotoAttachment)
+					{
+						((PhotoAttachment) at).loadForNews();
+					}
+					if(at instanceof VideoAttachment)
+					{
+						((VideoAttachment) at).loadForMessage();
+					}
+					if(at instanceof StickerAttachment)
+					{
+						int stickerH = DisplayUtils.width > 250 ? 128 : 64;
+						attH += stickerH + 5;
+					}
+					else
+					{
+						attH += at.getDrawHeight() + 5;
+					}
+				}
+				if(attH != 0) { attH += 5; }
+			}
+			catch (Exception e)
+			{
+				attH = 0;
+				VikaTouch.sendLog(e.toString());
+			}
 		}
 	}
 
-	private void getAva()
+	public void getRes()
 	{
-		if(!Settings.dontLoadAvas)
-		{
-			if(avaurl != null && ava == null && !dontLoadAva)
-			{
-				new Thread(new Runnable(){
-				
-					public void run() {
-
-						try
-						{
-				dontLoadAva = true;
-				ava = VikaUtils.downloadImage(avaurl);
+		(new Thread() {
+			
+			public void run() {
+				ava = VikaTouch.cameraImg;
+				if(!Settings.dontLoadAvas && avaurl != null && !dontLoadAva)
+				{
+					try
+					{
+						dontLoadAva = true;
+						ava = VikaUtils.downloadImage(avaurl);
 					}
 					catch (Exception e)
 					{
-						
+						ava = VikaTouch.cameraImg;
 					}
-				}}).start();
+				}
+				loadAtts();
 			}
-		}
+		}).start();
+	}
+	
+	public int getDrawHeight()
+	{
+		return itemDrawHeight;
 	}
 
 	public void tap(int x, int y)
 	{
-		full = true;
-		parseJSON();
 	}
 
 	public void keyPressed(int key)
