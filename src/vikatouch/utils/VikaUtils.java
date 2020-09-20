@@ -205,7 +205,7 @@ public final class VikaUtils
 	{
 		int step=0;
 		VikaCanvasInst.netColor = 0xffff0000;
-		HttpConnection httpconn = null;
+		final HttpConnection httpconn;
 		InputStream is = null;
 		InputStreamReader isr = null;
 		String result = null;
@@ -218,8 +218,25 @@ public final class VikaUtils
 			httpconn = (HttpConnection) conn;
 			httpconn.setRequestMethod("GET");
 			httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+			Thread timeout = new Thread()
+			{
+				public void run()
+				{
+					try
+					{
+						Thread.sleep(15000);
+						httpconn.close();
+						VikaCanvasInst.netColor = 0xff0000ff;
+					}
+					catch(Throwable t)
+					{
+					}
+				}
+			};
 			step = 3;
+			timeout.start();
 			is = httpconn.openInputStream();
+			timeout.interrupt();
 			step = 4;
 			VikaCanvasInst.netColor = 0xffff00ff;
 			isr = new InputStreamReader(is, "UTF-8"); 
@@ -247,17 +264,17 @@ public final class VikaUtils
 					step = 7;
 					httpconn.close();
 					step = 8;
-					httpconn = (HttpConnection) Connector.open(replacedURL);
+					HttpConnection httpconn2 = (HttpConnection) Connector.open(replacedURL);
 					step = 9;
-					httpconn.setRequestMethod("GET");
-					httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+					httpconn2.setRequestMethod("GET");
+					httpconn2.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 					step = 10;
-					is = httpconn.openInputStream();
+					is = httpconn2.openInputStream();
 					step = 11;
 					isr = new InputStreamReader(is, "UTF-16");
 					step = 12;
 					sb = new StringBuffer();
-					if (httpconn.getResponseCode() == 200 || httpconn.getResponseCode() == 401)
+					if (httpconn2.getResponseCode() == 200 || httpconn2.getResponseCode() == 401)
 					{
 						buffer = new char[10000];
 	
@@ -268,26 +285,30 @@ public final class VikaUtils
 	
 					}
 					step = 13;
+					httpconn2.close();
 				}
 			}
 			else
 			{
-				//System.out.println("yay"+httpconn.getResponseCode());
-				buffer = new char[10000];
-				step = 14;
-				while ((i = isr.read(buffer, 0, buffer.length)) != -1)
+				try
 				{
-					VikaCanvasInst.netColor = 0xff00ff00;
-					sb.append(buffer, 0, i);
+					buffer = new char[10000];
+					step = 14;
+					while ((i = isr.read(buffer, 0, buffer.length)) != -1)
+					{
+						VikaCanvasInst.netColor = 0xff00ff00;
+						sb.append(buffer, 0, i);
+					}
+					buffer = null;
 				}
-				//Thread.sleep(300);
-				//Display.getDisplay(VikaTouch.appInst).vibrate(100);
-				buffer = null;
+				catch(Exception e) { }
 				step = 15;
+				httpconn.close();
 			}
 			
 			result = sb.toString();
 			step = 16;
+			
 			//result = replace(sb.toString(), "<br>", " ");
 		}
 		catch (Throwable e)
@@ -309,9 +330,9 @@ public final class VikaUtils
 					isr.close();
 				if(is != null)
 					is.close();
-				VikaCanvasInst.netColor = 0xff0000ff;
-				if(httpconn != null)
-					httpconn.close();
+				
+				//if(httpconn != null)
+				//	httpconn.close();
 				VikaCanvasInst.netColor = 0xff00ffff;
 				//Thread.sleep(300);
 			}
