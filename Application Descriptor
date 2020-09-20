@@ -1,6 +1,6 @@
 Nokia-MIDlet-No-Exit: true
 Manifest-Version: 1.0
-MIDlet-Version: 2.7.20
+MIDlet-Version: 2.7.21
 MIDlet-Info-URL: http://vikamobile.ru
 Nokia-MIDlet-Background-Event: run
 Nokia-MIDlet-On-Screen-Keypad: no

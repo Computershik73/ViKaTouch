@@ -220,18 +220,21 @@ public class CommandsImpl
 	protected void back(VikaScreen s)
 	{
 		
-		if(s instanceof MenuScreen)
+		if(s instanceof MenuScreen || s instanceof LoginScreen)
 		{
 			//command(-1, s);
 			return;
 			// открывался сплеш....
 			//дурак чтоли
+			// Кто? Арман шоле?
 		}
+		// А вот с экраном плейлиста как раз всё ок  было.
+		/*
 		else if (s instanceof MusicScreen)//Добавил Белов Юрий
 		{
 			VikaTouch.setDisplay(VikaTouch.menuScr, -1);
 			return;
-		}//тут закончил
+		}//тут закончил */
 		if(Settings.dontBack)
 		{
 			if(s instanceof SettingsScreen)

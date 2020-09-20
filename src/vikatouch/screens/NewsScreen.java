@@ -53,7 +53,7 @@ public class NewsScreen
 			
 			final String s = VikaUtils.download(
 					new URLBuilder("newsfeed.get")
-					.addField("filters", "post,photo,photo_tag,wall_photo")
+					.addField("filters", "post")
 					.addField("count", count)
 					.addField("fields", "groups,profiles,items")
 					);
@@ -146,14 +146,21 @@ public class NewsScreen
 			if(y > 58 && y < DisplayUtils.height - oneitemheight)
 			{
 				int yy = 0;
-				for(int i = 0; i < itemsCount; i++)
+				for(int i = 0; i < uiItems.length; i++)
 				{
-					int y1 = scrolled + 50 + yy;
-					int y2 = y1 + uiItems[i].getDrawHeight();
-					yy += uiItems[i].getDrawHeight();
-					if(y > y1 && y < y2)
+					try
 					{
-						uiItems[i].tap(x, y1 - y);
+						int y1 = scrolled + 50 + yy;
+						int y2 = y1 + uiItems[i].getDrawHeight();
+						yy += uiItems[i].getDrawHeight();
+						if(y > y1 && y < y2)
+						{
+							uiItems[i].tap(x, y1 - y);
+						}
+					}
+					catch (Exception e)
+					{
+						
 					}
 				}
 			}

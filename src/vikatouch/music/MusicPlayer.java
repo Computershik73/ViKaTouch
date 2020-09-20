@@ -982,6 +982,7 @@ public class MusicPlayer extends MainScreen
 		else if(i==6)
 		{
 			VikaTouch.appInst.notifyPaused();
+			Display.getDisplay(VikaTouch.appInst).setCurrent(null);
 		}
 		else if(i==-1)
 		{

@@ -6,6 +6,7 @@ import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -36,22 +37,24 @@ public class PostItem
 
 	public int ownerid;
 	public int id;
+	
 	public int views;
 	public int reposts;
 	public int likes;
+	private boolean liked;
 	public boolean canlike;
+	
 	public String copyright;
 	public int replyownerid;
 	public int replypostid;
-	public Image prevImage;
+	
 	private String avaurl;
 	private String[] drawText;
 	public String name = "";
 	public Image ava;
+	
 	public boolean isreply;
-	private boolean largefont;
 	private int sourceid;
-	private boolean full;
 	private String reposterName;
 	private String type;
 	private String data;
@@ -81,6 +84,7 @@ public class PostItem
 		try
 		{
 			likes = json2.optJSONObject("likes").optInt("count");
+			liked = json2.optJSONObject("likes").optInt("user_likes") == 1;
 			reposts = json2.optJSONObject("reposts").optInt("count");
 			views = json2.optJSONObject("views").optInt("count");
 		}
@@ -208,9 +212,8 @@ public class PostItem
 		
 		drawText = TextBreaker.breakText(text, Font.getFont(0, 0, 8), DisplayUtils.width - 32);
 		
-		
-		
-		VikaTouch.sendLog("Getting res");
+		//if(text==null || text.length()<5)
+			//VikaTouch.sendLog(json2.toString());
 		getRes();
 		
 		System.gc();
@@ -263,6 +266,7 @@ public class PostItem
 		int textX = 16;
 		int dw = DisplayUtils.width;
 		g.setFont(f);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		
 		int cy = 0;
 		
@@ -342,7 +346,8 @@ public class PostItem
 		catch (Exception e) { }
 		
 		cy+=10;
-		g.drawImage(IconsManager.ico[IconsManager.LIKE], 24, y+cy, 0);
+		g.drawImage(IconsManager.ico[liked?IconsManager.LIKE_F:IconsManager.LIKE], 24, y+cy, 0);
+		g.drawString(String.valueOf(likes), 60, y+cy+12 - fh/2, 0);
 		cy+=30;
 		itemDrawHeight = cy;
 	}
@@ -354,7 +359,6 @@ public class PostItem
 			attH = 0;
 			// prepairing attachments
 			try {
-				VikaTouch.sendLog("loadAtts "+attachments.length);
 				for(int i=0; i<attachments.length; i++)
 				{
 					Attachment at = attachments[i];
@@ -418,6 +422,7 @@ public class PostItem
 
 	public void tap(int x, int y)
 	{
+		//VikaTouch.sendLog(json2.toString());
 	}
 
 	public void keyPressed(int key)
