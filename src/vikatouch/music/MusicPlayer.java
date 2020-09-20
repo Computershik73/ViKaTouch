@@ -54,6 +54,8 @@ public class MusicPlayer extends MainScreen
 	public boolean inSeekMode = false;
 	public long seekTime;
 	
+	public String url;
+	
 	// кэш для рисования
 	public String title = "Track name";
 	private String artist = "track artist";
@@ -154,7 +156,7 @@ public class MusicPlayer extends MainScreen
 				}
 			}
 			catch(Exception e) { }
-			final String url = turl;
+			url = turl;
 			//VikaTouch.sendLog(url);
 			final String path = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private") : System.getProperty("fileconn.dir.music")) + "vikaMusicCache.mp3";
 			
@@ -177,8 +179,6 @@ public class MusicPlayer extends MainScreen
 							time = "00:00";
 							totalTime = "--:--";
 							player = Manager.createPlayer(url);
-							getCover();
-							resizeCover();
 							player.start();
 							isReady = true;
 							isPlaying = true;
@@ -190,6 +190,8 @@ public class MusicPlayer extends MainScreen
 							totalTime = time(getC().length);
 							stop = false;
 							player.addPlayerListener(inst);
+							getCover();
+							resizeCover();
 						}
 						catch(Exception e)
 						{
@@ -914,7 +916,11 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==2)
 		{
-			if(isReady)
+			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
+			{
+				VikaTouch.popup(new InfoPopup("Due to J2ME limitations, rewinding in online mode isn't aliveable.", null));
+			}
+			else if(isReady)
 			{
 				seekTime = player.getMediaTime();
 				if(isPlaying) pause();
@@ -924,14 +930,42 @@ public class MusicPlayer extends MainScreen
 		else if(i==3)
 		{
 			if(!isReady) return;
-			try {
-				player.stop();
-				Thread.sleep(500);
-			} catch (Exception e) { }
-			try {
-				player.setMediaTime(1);
-				player.start();
-			} catch (MediaException e) { }
+			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
+			{
+				try
+				{
+					try {
+						closePlayer();
+					} catch (Exception e2) { }
+					player = Manager.createPlayer(url);
+					player.start();
+					isReady = true;
+					isPlaying = true;
+					try
+					{
+						((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
+					}
+					catch (Exception e) { }
+					totalTime = time(getC().length);
+					stop = false;
+					player.addPlayerListener(inst);
+				}
+				catch (Exception e)
+				{
+					
+				}
+			}
+			else
+			{
+				try {
+					player.stop();
+					Thread.sleep(500);
+				} catch (Exception e) { }
+				try {
+					player.setMediaTime(1);
+					player.start();
+				} catch (MediaException e) { }
+			}
 		}
 		else if(i==4)
 		{
@@ -972,18 +1006,40 @@ public class MusicPlayer extends MainScreen
 			{
 				try {
 					player.stop();
-				} catch (MediaException e) {
-					e.printStackTrace();
-				}
+				} catch (MediaException e) { }
 				if(Settings.audioMode == Settings.AUDIO_LOADANDPLAY)
+				{
 					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e1) { }
-				try {
-					player.setMediaTime(1);
-					player.start();
-				} catch (MediaException e) {
-					e.printStackTrace();
+						closePlayer();
+					} catch (Exception e2) { }
+					try 
+					{
+						player = Manager.createPlayer(System.getProperty("fileconn.dir.music") + "vikaMusicCache.mp3");
+						player.addPlayerListener(inst);
+						player.realize();
+					} 
+					catch (Exception e) 
+					{
+						VikaTouch.popup(new InfoPopup("Player creating error", null));
+						return;
+					}
+					try 
+					{
+						player.start();
+						((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
+					} 
+					catch (MediaException e) 
+					{
+						VikaTouch.popup(new InfoPopup("Player running error", null));
+						return;
+					}
+				}
+				else
+				{
+					try {
+						player.setMediaTime(1);
+						player.start();
+					} catch (MediaException e) { }
 				}
 			}
 			else
