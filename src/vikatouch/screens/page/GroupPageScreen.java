@@ -11,6 +11,7 @@ import org.json.me.JSONObject;
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ConfirmBox;
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -351,6 +352,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 					break;
 				case 3:
 					// стена
+					VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
 					break;
 				case 4:
 					isInfoShown = true;

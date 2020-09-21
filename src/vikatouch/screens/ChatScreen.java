@@ -497,6 +497,7 @@ public class ChatScreen
 					else if(x < 50)
 					{
 						//прикреп
+						VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
 					}
 					else if(x > DisplayUtils.width - 40)
 					{
@@ -506,6 +507,7 @@ public class ChatScreen
 					else if(x > DisplayUtils.width - 90)
 					{
 						//емоци и стикеры
+						VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
 					}
 				}
 			}
@@ -567,12 +569,14 @@ public class ChatScreen
 				break;
 			case 1:
 				// прикреп
+				VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
 				break;
 			case 2:
 				showTextBox();
 				break;
 			case 3:
 				// смайлы
+				VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
 				break;
 			case 4:
 				send();

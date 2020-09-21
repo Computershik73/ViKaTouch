@@ -9,6 +9,7 @@ import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.popup.ConfirmBox;
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -353,6 +354,7 @@ public class ProfilePageScreen
 				fs.loadFriends(0, id, wname, name2);
 				break;
 			case 3:
+				VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
 				break;
 			case 4:
 				GroupsScreen gs = new GroupsScreen();
