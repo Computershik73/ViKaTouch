@@ -156,9 +156,10 @@ public class SettingsScreen
 		uiList = new PressableUIItem[]
 		{
 			backItem,
-			new SettingMenuItem(this, TextLocal.inst.get("settings.transitionanimation"), IconsManager.ANIMATION, 0, 
+			/*new SettingMenuItem(this, TextLocal.inst.get("settings.transitionanimation"), IconsManager.ANIMATION, 0, 
 				oneitemheight, eOd, Settings.animateTransition?1:0, null),
-
+			*/
+			// как известно, анимация давно сломанна, да и вообще в ней нет смысла т.к. при открытии экрана всё лагает.
 			
 			new OptionItem(this, TextLocal.inst.get("settings.language"), IconsManager.EDIT, 23, oneitemheight),
 		};

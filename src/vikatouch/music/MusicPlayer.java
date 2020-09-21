@@ -24,6 +24,7 @@ import javax.microedition.media.control.VolumeControl;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
@@ -671,7 +672,7 @@ public class MusicPlayer extends MainScreen
 			new OptionItem(this,"Проблемы с воспроизведением?",IconsManager.INFO,5,40),
 			new OptionItem(this,"Свернуть приложение",IconsManager.CLOSE,6,40),
 		};
-		VikaTouch.popup(new ContextMenu(opts));
+		VikaTouch.popup(new AutoContextMenu(opts));
 	}
 	
 	public AudioTrackItem getC()
@@ -978,6 +979,7 @@ public class MusicPlayer extends MainScreen
 		else if(i==5)
 		{
 			// написать что мол выберите другой метод или купите N8
+			VikaTouch.popup(new InfoPopup("Try to choose another mode in settings. We recommend to use caching into file - it's the stablest.", null));
 		}
 		else if(i==6)
 		{

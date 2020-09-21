@@ -5,6 +5,7 @@ import javax.microedition.lcdui.Graphics;
 
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
+import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
@@ -102,7 +103,7 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 			{
 				po[i] = new OptionItem(this, opts[i], IconsManager.SETTINGS, i, 40);
 			}
-			VikaTouch.popup(new ContextMenu(po));
+			VikaTouch.popup(new AutoContextMenu(po));
 		} else if(help!=null && key == KEY_FUNC)
 		{
 			VikaTouch.popup(new InfoPopup(help, null, TextLocal.inst.get("settings.help"), null));
