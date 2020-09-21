@@ -202,7 +202,7 @@ public class VikaCanvasInst
 		{
 			if(currentAlert != null)
 			{
-				vengine.GraphicsUtil.darkScreen(g, DisplayUtils.width, DisplayUtils.height, 0, 0, 0, 128);
+				if(!VikaTouch.isS40()) vengine.GraphicUtils.darkScreen(g, DisplayUtils.width, DisplayUtils.height, 0, 0, 0, 128);
 				currentAlert.draw(g);
 			}
 		}
