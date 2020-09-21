@@ -204,7 +204,7 @@ public class VikaCanvasInst
 			{
 				try
 				{
-					if(!VikaTouch.isS40()) vengine.GraphicUtils.darkScreen(g, DisplayUtils.width, DisplayUtils.height, 0, 0, 0, 128);
+					if(!VikaTouch.isS40()) vengine.GraphicUtils.fillTransparentRect(g, 0, 0, DisplayUtils.width, DisplayUtils.height, 0, 0, 0, 128);
 				}
 				catch (Exception e) { 
 					e.printStackTrace();
