@@ -1018,7 +1018,7 @@ public class VikaTouch
 					&& mobilePlatform.indexOf("Samsung") < 0) {
 				VikaTouch.appInst.platformRequest(urlF);
 			} else {
-				VikaTouch.appInst.platformRequest("file:////C:/VikaT/test.ram");//Ввел новый адрес, тут закончились1
+				VikaTouch.appInst.platformRequest("file:///C:/VikaT/test.ram");//Ввел новый адрес, тут закончились1
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
