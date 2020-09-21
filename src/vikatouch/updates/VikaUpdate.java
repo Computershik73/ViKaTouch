@@ -16,12 +16,16 @@ public class VikaUpdate {
 	
 	public static VikaUpdate check()
 	{
+		int step = 0;
 		try
 		{
+			step = 1;
 			String ver = VikaUtils.download("http://vikamobile.ru/vkt/ver.txt");
+			step = 2;
 			String[] vers = VEUtils.split(ver, 3, '.');
+			step = 3;
 			String[] cvers = VEUtils.split(VikaTouch.getVersion(), 3, '.');
-			
+			step = 4;
 			if(Integer.parseInt(vers[1])>Integer.parseInt(cvers[1]) || Integer.parseInt(vers[2])>Integer.parseInt(cvers[2]))
 			{
 				VikaUpdate vu = new VikaUpdate();
@@ -29,12 +33,14 @@ public class VikaUpdate {
 				vu.newVer = ver;
 				vu.changeLog = VikaUtils.download("http://vikamobile.ru/vkt/cl.txt");
 				vu.url = "http://vikamobile.ru/vkt/"+ver+".jar";
+				return vu;
 			}
 			
 			return null;
 		}
 		catch (Throwable t)
 		{
+			VikaTouch.sendLog("Updates check: "+t.toString()+" step"+step);
 			return null;
 		}
 	}
