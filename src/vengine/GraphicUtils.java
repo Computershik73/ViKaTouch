@@ -44,7 +44,7 @@ public class GraphicUtils {
 	public static void darkScreen(Graphics G, int w, int h, int r, int g, int b, int a)
 	{
 		int c = (a << 24) | (r << 16) | (g << 8) | b;
-		int l = w*30;
+		int l = w*30+1;
 		int[] m;
 		if(lastRGB != null && l>1 && lastRGB.length == l && lastRGB[0] == c)
 		{
