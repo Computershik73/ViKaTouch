@@ -241,7 +241,7 @@ public class MusicPlayer extends MainScreen
 							trackFile.create();
 							output = trackFile.openOutputStream();
 							
-							ContentConnection contCon = (ContentConnection) Connector.open(url);
+							ContentConnection contCon = (ContentConnection) Connector.open(getC().mp3);
 							DataInputStream dis = contCon.openDataInputStream();
 					
 							int trackSize = (int) contCon.getLength();
