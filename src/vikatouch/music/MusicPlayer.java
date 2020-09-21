@@ -159,7 +159,10 @@ public class MusicPlayer extends MainScreen
 			catch(Exception e) { }
 			url = turl;
 			//VikaTouch.sendLog(url);
-			final String path = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private") : System.getProperty("fileconn.dir.music")) + "vikaMusicCache.mp3";
+			String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private") : System.getProperty("fileconn.dir.music"));
+			if(tpath == null)
+				tpath = "file:///C:/";
+			final String path = tpath + "vikaMusicCache.mp3";
 			
 			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
 			{
@@ -229,9 +232,6 @@ public class MusicPlayer extends MainScreen
 						}
 						try
 						{
-							ContentConnection contCon = (ContentConnection) Connector.open(getC().mp3);
-							DataInputStream dis = contCon.openDataInputStream();
-							
 	
 							FileConnection trackFile = (FileConnection) Connector.open(path);
 				
@@ -240,6 +240,9 @@ public class MusicPlayer extends MainScreen
 							}
 							trackFile.create();
 							output = trackFile.openOutputStream();
+							
+							ContentConnection contCon = (ContentConnection) Connector.open(url);
+							DataInputStream dis = contCon.openDataInputStream();
 					
 							int trackSize = (int) contCon.getLength();
 							totalTime = (trackSize/1024/1024)+"."+(trackSize/1024%103)+"MB";
@@ -263,6 +266,7 @@ public class MusicPlayer extends MainScreen
 										output.close();
 										return;
 									}
+									if(Runtime.getRuntime().freeMemory()<trackSize*3) System.gc();
 								}
 								cacheBuffer = new byte[(int) (contCon.getLength()-contCon.getLength()/100*(i))];
 								time = "99,9%";
@@ -537,6 +541,7 @@ public class MusicPlayer extends MainScreen
 		long curr = 0;
 		if(isReady)
 		{
+			if(player==null) return;
 			curr = player.getMediaTime();
 			time = time(curr/1000000L);
 			dur = Settings.audioMode == Settings.AUDIO_PLAYONLINE ? getC().length*1000000L : player.getDuration();
@@ -721,96 +726,103 @@ public class MusicPlayer extends MainScreen
 	}
 
 	public void draw(Graphics g) {
-		updateDrawData(); //TODO: run in different thread, repeat every 1 sec.
-		int dw = DisplayUtils.width;
-		int dh = DisplayUtils.height;
-		int hdw = dw/2;
-		int textAnchor;
-		int timeY;
-		if(dw!=lastW)
+		try
 		{
-			onRotate();
-			lastW = dw;
-		}
-		Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
-		g.setFont(f);
-		g.setGrayScale(0);
-		currTx-=1;
-		currAx-=1;
-		if(-currTx>(titleW/2+hdw)) currTx = titleW/2+hdw;
-		if(-currAx>(artistW/2+hdw)) currAx = artistW/2+hdw;
-		boolean tick = (System.currentTimeMillis()%1000)<500;
-		if(dw>dh)
-		{
-			// альбом
-			textAnchor = dw * 3 / 4;
-			timeY = dh-70;
-			if(!inSeekMode) g.drawImage(buttons[5], textAnchor-125, dh-50, 0);
-			if(!inSeekMode || tick) g.drawImage(buttons[0], textAnchor-75, dh-50, 0);
-			g.drawImage(buttons[isPlaying?3:1], textAnchor-25, dh-50, 0);
-			if(!inSeekMode || tick) g.drawImage(buttons[2], textAnchor+25, dh-50, 0);
-			if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], textAnchor+75, dh-50, 0);
-			
-			g.drawString(artist, textAnchor+(artistW>hdw?currAx:0), dh/2-f.getHeight(), Graphics.HCENTER | Graphics.TOP);
-			g.drawString(title, textAnchor+(titleW>hdw?currTx:0), dh/2, Graphics.HCENTER | Graphics.TOP);
-		}
-		else
-		{
-			// портрет, квадрат
-			textAnchor = hdw;
-			timeY = dh-70;
-			if(!inSeekMode) g.drawImage(buttons[5], hdw-125, dh-50, 0);
-			if(!inSeekMode || tick) g.drawImage(buttons[0], hdw-75, dh-50, 0);
-			g.drawImage(buttons[isPlaying?3:1], hdw-25, dh-50, 0);
-			if(!inSeekMode || tick) g.drawImage(buttons[2], hdw+25, dh-50, 0);
-			if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], hdw+75, dh-50, 0);
-			
-			g.drawString(artist, textAnchor+(artistW>dw?currAx:0), timeY-f.getHeight()*3/2, Graphics.HCENTER | Graphics.TOP);
-			g.drawString(title, textAnchor+(titleW>dw?currTx:0), timeY-f.getHeight()*5/2, Graphics.HCENTER | Graphics.TOP);
-		}
-		ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-		g.drawRect(x1, timeY, x2-x1, 10);
-		if(isReady) 
-		{
-			g.fillRect(x1+2, timeY+2, currX-x1-4, 6);
-		}
-		else
-		{
-			int t = (int) (System.currentTimeMillis()%1000);
-			int px1 = 0, px2 = 0;
-			if(t<500)
+			updateDrawData(); //TODO: run in different thread, repeat every 1 sec.
+			int dw = DisplayUtils.width;
+			int dh = DisplayUtils.height;
+			int hdw = dw/2;
+			int textAnchor;
+			int timeY;
+			if(dw!=lastW)
 			{
-				px1 = (x2-((x2-x1)*t/500))+2;
-				px2 = x2-2;
+				onRotate();
+				lastW = dw;
+			}
+			Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
+			g.setFont(f);
+			g.setGrayScale(0);
+			currTx-=1;
+			currAx-=1;
+			if(-currTx>(titleW/2+hdw)) currTx = titleW/2+hdw;
+			if(-currAx>(artistW/2+hdw)) currAx = artistW/2+hdw;
+			boolean tick = (System.currentTimeMillis()%1000)<500;
+			if(dw>dh)
+			{
+				// альбом
+				textAnchor = dw * 3 / 4;
+				timeY = dh-70;
+				if(!inSeekMode) g.drawImage(buttons[5], textAnchor-125, dh-50, 0);
+				if(!inSeekMode || tick) g.drawImage(buttons[0], textAnchor-75, dh-50, 0);
+				g.drawImage(buttons[isPlaying?3:1], textAnchor-25, dh-50, 0);
+				if(!inSeekMode || tick) g.drawImage(buttons[2], textAnchor+25, dh-50, 0);
+				if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], textAnchor+75, dh-50, 0);
+				
+				g.drawString(artist, textAnchor+(artistW>hdw?currAx:0), dh/2-f.getHeight(), Graphics.HCENTER | Graphics.TOP);
+				g.drawString(title, textAnchor+(titleW>hdw?currTx:0), dh/2, Graphics.HCENTER | Graphics.TOP);
 			}
 			else
 			{
-				px1 = x1+2;
-				px2 = (x2-((x2-x1)*(t-500)/500));
+				// портрет, квадрат
+				textAnchor = hdw;
+				timeY = dh-70;
+				if(!inSeekMode) g.drawImage(buttons[5], hdw-125, dh-50, 0);
+				if(!inSeekMode || tick) g.drawImage(buttons[0], hdw-75, dh-50, 0);
+				g.drawImage(buttons[isPlaying?3:1], hdw-25, dh-50, 0);
+				if(!inSeekMode || tick) g.drawImage(buttons[2], hdw+25, dh-50, 0);
+				if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], hdw+75, dh-50, 0);
+				
+				g.drawString(artist, textAnchor+(artistW>dw?currAx:0), timeY-f.getHeight()*3/2, Graphics.HCENTER | Graphics.TOP);
+				g.drawString(title, textAnchor+(titleW>dw?currTx:0), timeY-f.getHeight()*5/2, Graphics.HCENTER | Graphics.TOP);
 			}
-			g.setGrayScale(200);
-			g.fillRect(px1, timeY+2, px2-px1, 6);
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-		}
-		
-		g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
-		g.drawString(time, x1-4, timeY-4, Graphics.TOP | Graphics.RIGHT);
-		g.drawString(totalTime, x2+4, timeY-4, Graphics.TOP | Graphics.LEFT);
-		
-		if(DisplayUtils.height>220)
-		{
-			// cover
-			int coverY = (dw>dh)?((dh-hdw)/2):0;
-			if(resizedCover!=null) 
+			g.drawRect(x1, timeY, x2-x1, 10);
+			if(isReady) 
 			{
-				g.drawImage(resizedCover, 0, coverY, 0);
+				g.fillRect(x1+2, timeY+2, currX-x1-4, 6);
 			}
 			else
 			{
-				int s = (dw>dh)?hdw:dw;
+				int t = (int) (System.currentTimeMillis()%1000);
+				int px1 = 0, px2 = 0;
+				if(t<500)
+				{
+					px1 = (x2-((x2-x1)*t/500))+2;
+					px2 = x2-2;
+				}
+				else
+				{
+					px1 = x1+2;
+					px2 = (x2-((x2-x1)*(t-500)/500));
+				}
 				g.setGrayScale(200);
-				g.fillRect(0, coverY, s, s);
+				g.fillRect(px1, timeY+2, px2-px1, 6);
+				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 			}
+			
+			g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
+			g.drawString(time, x1-4, timeY-4, Graphics.TOP | Graphics.RIGHT);
+			g.drawString(totalTime, x2+4, timeY-4, Graphics.TOP | Graphics.LEFT);
+			
+			if(DisplayUtils.height>220)
+			{
+				// cover
+				int coverY = (dw>dh)?((dh-hdw)/2):0;
+				if(resizedCover!=null) 
+				{
+					g.drawImage(resizedCover, 0, coverY, 0);
+				}
+				else
+				{
+					int s = (dw>dh)?hdw:dw;
+					g.setGrayScale(200);
+					g.fillRect(0, coverY, s, s);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			
 		}
 	}
 	
