@@ -991,9 +991,9 @@ public class VikaTouch
 			FileConnection fileCon = null;
 			//Следующие правки мои - Белов Юрий:
 			FileConnection vikaDir = null;//1 Объект папки с музыкой/видео
-			vikaDir = (FileConnection) Connector.open("/C:/VikaT");//
+			vikaDir = (FileConnection) Connector.open("file:///C:/VikaT");//
 			vikaDir.mkdir();//2 Инструкция говорит, что так можно создать папку
-			fileCon = (FileConnection) Connector.open(System.getProperty("/C:/VikaT/") + "test.ram", 3);
+			fileCon = (FileConnection) Connector.open(System.getProperty("file:///C:/VikaT/") + "test.ram", 3);
 			if (!fileCon.exists()) {
 				fileCon.create();
 			} else {
