@@ -982,10 +982,7 @@ public class VikaTouch
 			String urlF = VikaUtils.replace(VikaUtils.replace(file, "\\", ""), "https:", "http:");
 			FileConnection fileCon = null;
 			//Следующие правки мои - Белов Юрий:
-			FileConnection vikaDir = null;//1 Объект папки с музыкой/видео
-			vikaDir = (FileConnection) Connector.open("/C:/VikaT");//
-			vikaDir.mkdir();//2 Инструкция говорит, что так можно создать папку
-			fileCon = (FileConnection) Connector.open(System.getProperty("/C:/VikaT/") + "test.ram", 3);
+			fileCon = (FileConnection) Connector.open(System.getProperty("fileconn.dir.music") + "test.ram", 3);
 			if (!fileCon.exists()) {
 				fileCon.create();
 			} else {
@@ -1010,7 +1007,7 @@ public class VikaTouch
 					&& mobilePlatform.indexOf("Samsung") < 0) {
 				VikaTouch.appInst.platformRequest(urlF);
 			} else {
-				VikaTouch.appInst.platformRequest("file:///C:/VikaT/test.ram");//Ввел новый адрес, тут закончились1
+				VikaTouch.appInst.platformRequest(System.getProperty("fileconn.dir.music") + "test.ram");//Ввел новый адрес, тут закончились1
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
