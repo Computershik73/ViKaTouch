@@ -17,7 +17,6 @@ public class ConfirmBox
 	private String line2;
 	private Runnable ok;
 	private Runnable cancel;
-	private boolean hasYes;
 	private String customYes;
 	private String customNo;
 	
@@ -27,25 +26,14 @@ public class ConfirmBox
 		line2 = subtext;
 		ok = onOk;
 		cancel = onCancel;
-		this.hasYes = true;
 	}
 	
-	public ConfirmBox(String text, String subtext, Runnable onOk, Runnable onCancel, boolean hasYes)
+	public ConfirmBox(String text, String subtext, Runnable onOk, Runnable onCancel, String customYes, String customNo)
 	{
 		line1 = text;
 		line2 = subtext;
 		ok = onOk;
 		cancel = onCancel;
-		this.hasYes = hasYes;
-	}
-	
-	public ConfirmBox(String text, String subtext, Runnable onOk, Runnable onCancel, String customYes, String customNo, boolean hasYes)
-	{
-		line1 = text;
-		line2 = subtext;
-		ok = onOk;
-		cancel = onCancel;
-		this.hasYes = hasYes;
 		this.customYes = customYes;
 		this.customNo = customNo;
 	}
@@ -53,7 +41,7 @@ public class ConfirmBox
 	public void draw(Graphics g)
 	{
 		int width = Math.min(DisplayUtils.width-20, 300);
-		Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
+		Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
 		int h1 = f.getHeight();
 		int th = h1*6;
 		int y = DisplayUtils.height/2 - th/2;
@@ -70,8 +58,7 @@ public class ConfirmBox
 		g.fillRoundRect(x, y, width, th, 16, 16);
 		
 		ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-		if(hasYes)
-			g.fillRoundRect(x+20, y+h1*3, width/2-40, h1*2, 30, 30);
+		g.fillRoundRect(x+20, y+h1*3, width/2-40, h1*2, 30, 30);
 		g.fillRoundRect(DisplayUtils.width/2+20, y+h1*3, width/2-40, h1*2, 30, 30);
 		
 		g.setFont(f);
@@ -83,8 +70,7 @@ public class ConfirmBox
 		if(line2!=null)
 			g.drawString(line2, DisplayUtils.width/2 - f.stringWidth(line2)/2, y+h1+h1/2, 0);
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
-		if(hasYes)
-			g.drawString(okT, ((x+20)+(DisplayUtils.width/2-20))/2-f.stringWidth(okT)/2, y+h1*3+h1/2, 0);
+		g.drawString(okT, ((x+20)+(DisplayUtils.width/2-20))/2-f.stringWidth(okT)/2, y+h1*3+h1/2, 0);
 		g.drawString(cancT, ((DisplayUtils.width/2+20)+(DisplayUtils.width/2+20+(width/2-40)))/2-f.stringWidth(cancT)/2, y+h1*3+h1/2, 0);
 	}
 	
