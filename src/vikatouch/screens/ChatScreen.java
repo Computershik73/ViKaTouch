@@ -405,7 +405,7 @@ public class ChatScreen
 		{
 			Thread.sleep(200);
 			repaint();
-			scrolled = -(itemsh);
+			scrolled = -65534;
 			currentItem = (short) (uiItems.length-1-loadSpace);
 			uiItems[currentItem].setSelected(true);
 		}
@@ -621,7 +621,6 @@ public class ChatScreen
 			}
 			else
 				scrollToSelected();
-			// Не тестил. Инета то. Но надеюсь прокатит.
 			uiItems[currentItem].setSelected(true);
 		}
 		else
@@ -656,6 +655,17 @@ public class ChatScreen
 		{
 			buttonSelected--;
 		}
+	}
+	
+	public int getItemY(int n)
+	{
+		int y=0;
+		for(int i=0;(i<uiItems.length&&i<n);i++)
+		{
+			y += uiItems[i].getDrawHeight();
+			y += msgYMargin;
+		}
+		return y;
 	}
 	
 	public void repeat(int key)
@@ -1024,9 +1034,8 @@ public class ChatScreen
 			for(int i=0; i<uiItems.length; i++)
 			{
 				if(uiItems[i] == null) continue;
-				if(y+scrolled > DisplayUtils.height) break;
 				y+=msgYMargin;
-				uiItems[i].paint(g, y, scrolled);
+				if(y+scrolled < DisplayUtils.height) uiItems[i].paint(g, y, scrolled);
 				y+=uiItems[i].getDrawHeight();
 			}
 			this.itemsh = y + 100;
