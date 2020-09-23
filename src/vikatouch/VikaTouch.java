@@ -53,12 +53,7 @@ public class VikaTouch
 	public static LoginScreen loginScr;
 	public static MenuScreen menuScr;
 	public static DialogsScreen dialogsScr;
-	public static DocsScreen docsScr;
-	public static GroupsScreen grScr;
-	public static VideosScreen videosScr;
-	public static FriendsScreen friendsScr;
 	public static NewsScreen newsScr;
-	public static PhotosScreen photosScr;
 	public static CaptchaScreen captchaScr;
 	public static RecordStore tokenRMS;
 	public static Image cameraImg;
@@ -766,9 +761,6 @@ public class VikaTouch
 			canvas.currentAlert = null;
 			canvas.lastTempScreen = null;
 			newsScr = null;
-			friendsScr = null;
-			grScr = null;
-			videosScr = null;
 			System.gc();
 			popup(new InfoPopup(TextLocal.inst.get("error.outofmem") + "\n\n" + s != null && s.length() > 1 ? (TextLocal.inst.get("error.additionalinfo") + ":\n" + s) : "", null));
 			if(menuScr != null)

@@ -92,10 +92,9 @@ public class CommandsImpl
 						//Друзья
 						if(s instanceof MenuScreen)
 						{
-							if(VikaTouch.friendsScr == null)
-								VikaTouch.friendsScr = new FriendsScreen();
-							VikaTouch.friendsScr.loadFriends(0, 0, null, null);
-							VikaTouch.setDisplay(VikaTouch.friendsScr, 1);
+							FriendsScreen friendsScr = new FriendsScreen();
+							friendsScr.loadFriends(0, 0, null, null);
+							VikaTouch.setDisplay(friendsScr, 1);
 						}
 						break;
 					}
@@ -104,10 +103,9 @@ public class CommandsImpl
 						//Группы
 						if(s instanceof MenuScreen)
 						{
-							if(VikaTouch.grScr == null)
-								VikaTouch.grScr = new GroupsScreen();
-							VikaTouch.grScr.loadGroups(0, Integer.parseInt(VikaTouch.userId), null, null);
-							VikaTouch.setDisplay(VikaTouch.grScr, 1);
+							GroupsScreen grScr = new GroupsScreen();
+							grScr.loadGroups(0, Integer.parseInt(VikaTouch.userId), null, null);
+							VikaTouch.setDisplay(grScr, 1);
 						}
 						break;
 					}
@@ -125,10 +123,9 @@ public class CommandsImpl
 						//Видео
 						if(s instanceof MenuScreen)
 						{
-							if(VikaTouch.videosScr == null)
-								VikaTouch.videosScr = new VideosScreen();
-							VikaTouch.videosScr.load(0, 0, null, null);
-							VikaTouch.setDisplay(VikaTouch.videosScr, 1);
+							VideosScreen videosScr = new VideosScreen();
+							videosScr.load(0, 0, null, null);
+							VikaTouch.setDisplay(videosScr, 1);
 						}
 						break;
 					}
@@ -150,10 +147,9 @@ public class CommandsImpl
 						//Документы
 						if(s instanceof MenuScreen)
 						{
-							if(VikaTouch.docsScr == null)
-								VikaTouch.docsScr = new DocsScreen();
-							VikaTouch.docsScr.loadDocs(0, 0, null, null);
-							VikaTouch.setDisplay(VikaTouch.docsScr, 1);
+							DocsScreen docsScr = new DocsScreen();
+							docsScr.loadDocs(0, 0, null, null);
+							VikaTouch.setDisplay(docsScr, 1);
 						}
 						break;
 					}
@@ -249,18 +245,12 @@ public class CommandsImpl
 					VikaTouch.setDisplay(VikaTouch.loginScr, -1);
 				}
 			}
-			if(s instanceof DocsScreen || s instanceof AboutScreen || s instanceof GroupsScreen || s instanceof VideosScreen || s instanceof FriendsScreen || s instanceof PhotosScreen)
-			{
-				VikaTouch.setDisplay(VikaTouch.menuScr, -1);
-			}
-			if(s instanceof ChatScreen)
+			else if(s instanceof ChatScreen)
 			{
 				VikaTouch.setDisplay(VikaTouch.dialogsScr, -1);
 			}
-			if(s instanceof GroupPageScreen)
-			{
-				VikaTouch.setDisplay(VikaTouch.grScr, -1);
-			}
+			else
+				VikaTouch.setDisplay(VikaTouch.menuScr, -1);
 		}
 		else
 		{
@@ -309,6 +299,12 @@ public class CommandsImpl
 
 	protected void menu(VikaScreen s)
 	{
+		// меню должно возвращать В МЕНЮ, есть кнопка назад.
+		if(!(s instanceof MenuScreen))
+		{
+			VikaTouch.setDisplay(VikaTouch.menuScr, 1);
+		}
+		/*
 		if(s instanceof SettingsScreen)
 		{
 		//	Settings.saveSettings();
@@ -339,7 +335,7 @@ public class CommandsImpl
 		else if(MenuScreen.lastMenu == DisplayUtils.CANVAS_VIDEOSLIST)
 		{
 			VikaTouch.setDisplay(VikaTouch.videosScr, 1);
-		}
+		}*/
 	}
 
 }

@@ -91,7 +91,7 @@ public abstract class MainScreen
 	{
 		// vars
 		topPanelH = DisplayUtils.compact?24:58;
-		bottomPanelH = 50;
+		bottomPanelH = DisplayUtils.compact?24:50;
 		int dw = DisplayUtils.width;
 		boolean showBottomPanel = (!keysMode || !DisplayUtils.compact || (this instanceof NewsScreen)||(this instanceof DialogsScreen)||(this instanceof MenuScreen));
 		// fills
