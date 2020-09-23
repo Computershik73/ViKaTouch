@@ -89,7 +89,7 @@ public class VikaCanvasInst
 				
 				int freeMem = (int) (Runtime.getRuntime().freeMemory()/1024);
 				int totalMem = (int) (Runtime.getRuntime().totalMemory()/1024);
-				String memStr = "Mem: "+(totalMem - freeMem)+"K/"+totalMem+"K , free: "+freeMem+"K";
+				String memStr = String.valueOf(totalMem - freeMem)+"K/"+totalMem+"K, free:"+freeMem+"K";
 				g.setGrayScale(255);
 				g.fillRect(0, 0, g.getFont().stringWidth(memStr), h);
 				g.setGrayScale(0);

@@ -1053,6 +1053,7 @@ public class VikaTouch
 				
 			}
 		}
+		if(uiThread != null && uiThread.isAlive()) uiThread.interrupt();
 	}
 
 	public void freeMemoryLow()
