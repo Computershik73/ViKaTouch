@@ -110,7 +110,7 @@ public class MusicScreen
 							JSONObject item = items.getJSONObject(i);
 							uiItems[i] = new AudioTrackItem(item, thisC, i);
 							((AudioTrackItem) uiItems[i]).parseJSON();
-							if(i%40 == 10) Thread.sleep(500);
+							Thread.sleep(20);
 							// должно не зависать
 						}
 					}
