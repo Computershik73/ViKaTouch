@@ -542,7 +542,7 @@ public class MusicPlayer extends MainScreen
 		if(isReady)
 		{
 			if(player==null) return;
-			curr = player.getMediaTime();
+			curr = inSeekMode?seekTime:player.getMediaTime();
 			time = time(curr/1000000L);
 			dur = Settings.audioMode == Settings.AUDIO_PLAYONLINE ? getC().length*1000000L : player.getDuration();
 		}

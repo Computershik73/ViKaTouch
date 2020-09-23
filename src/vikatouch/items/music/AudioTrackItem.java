@@ -14,6 +14,7 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
 import vikatouch.music.MusicPlayer;
+import vikatouch.screens.MainScreen;
 import vikatouch.screens.music.MusicScreen;
 import vikatouch.utils.VikaUtils;
 
@@ -104,12 +105,12 @@ public class AudioTrackItem
 			{
 				if(MusicPlayer.inst.current == indexInPL)
 				{
-					VikaTouch.setDisplay(MusicPlayer.inst, 1);
+					restorePlayerScreen();
 				}
 				else
 				{
 					MusicPlayer.inst.current = indexInPL;
-					VikaTouch.setDisplay(MusicPlayer.inst, 1);
+					restorePlayerScreen();
 					MusicPlayer.inst.loadTrack();
 				}
 			}
@@ -119,5 +120,15 @@ public class AudioTrackItem
 				MusicPlayer.launch(playlist, indexInPL);
 			}
 		}
+	}
+	
+	public void restorePlayerScreen()
+	{
+		if(MusicPlayer.inst.backScreenIsPlaylist())
+		{
+			VikaTouch.setDisplay(MusicPlayer.inst, 1);
+		}
+		else
+			VikaTouch.setDisplay(playlist.backScreen, -1);
 	}
 }

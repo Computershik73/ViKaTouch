@@ -6,6 +6,7 @@ import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
@@ -57,12 +58,6 @@ public class PlaylistItem extends JSONUIItem {
 
 	public void paint(Graphics g, int y, int scrolled)
 	{
-		/*if(ScrollableCanvas.keysMode && selected)
-		{
-			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-			g.fillRect(0, y, DisplayUtils.width, itemDrawHeight);
-		}*/
-		
 		if(iconImg == null)
 		{
 			ColorUtils.setcolor(g, 6);
@@ -73,7 +68,7 @@ public class PlaylistItem extends JSONUIItem {
 			g.drawImage(iconImg, 1, y+1, 0);
 		}
 
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && selected)?ColorUtils.BUTTONCOLOR:0);
 		g.setFont(Font.getFont(0, 0, Font.SIZE_MEDIUM));
 		if(name != null)
 			g.drawString(name, 102, y+12, 0);
