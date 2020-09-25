@@ -59,17 +59,29 @@ public class Settings
 	
 	public static boolean symtube;
 	
-	/** На ЗБТ чтоб было включено!!11!1!! */
 	public static boolean telemetry = true;
 
 	public static final boolean slideAnim = true;
+	
+	public static boolean imageTrimming;
+	
+	public static byte loadMusicViaHttp;
+	
+	public static byte loadMusicWithKey;
+	
+	public static byte playerVolume;
+	
+	public static boolean loadITunesCovers;
+	
+	public static boolean autoMarkAsRead = true;
+	
+	public static byte storage;
 	
 	//Не нуждаются сохранению (м.б передумаем)
 	public static boolean threaded;
 	public static long memoryClearCache = 500;
 	public static boolean dontBack;
 	public static boolean isLiteOrSomething;
-	public static boolean autoMarkAsRead = true;
 	public static boolean alerts;
 
 	//константы
@@ -81,6 +93,19 @@ public class Settings
 
 	public final static String httpsOAuth = "https://oauth.vk.com";
 
+	public static final byte MUSIC_FOLDER = 0;
+	public static final byte PRIVATE_FOLDER = 1;
+	public static final byte DISK_C = 2;
+	public static final byte DISK_D = 3;
+	public static final byte DISK_E = 4;
+	public static final byte DISK_F = 5;
+	
+	public static final byte AUDIO_DEFAULT = 0;
+	public static final byte AUDIO_HTTP = 1;
+	public static final byte AUDIO_HTTPS = 2;
+	public static final byte AUDIO_EXTRA = 1;
+	public static final byte AUDIO_NOEXTRA = 2;
+	
 	public static final int SENSOR_OK = 0;
 	public static final int SENSOR_J2MELOADER = 1;
 	public static final int SENSOR_RESISTIVE = 2;
@@ -138,6 +163,14 @@ public class Settings
 		        	rtspMethod = is.readShort();
 		        	symtube = is.readBoolean();
 		        	refreshRate = is.readShort();
+		        	// 2.8.5
+		        	storage = is.readByte();
+			        imageTrimming = is.readBoolean();
+			        autoMarkAsRead = is.readBoolean();
+			        playerVolume = is.readByte();
+			        loadMusicViaHttp = is.readByte();
+			        loadITunesCovers = is.readBoolean();
+			        loadMusicWithKey = is.readByte();
 		        }
 		        catch (Exception e)
 		        {
@@ -188,6 +221,14 @@ public class Settings
 		        os.writeShort(rtspMethod);
 		        os.writeBoolean(symtube);
 		        os.writeShort(refreshRate);
+		        // 2.8.5
+		        os.writeByte(storage);
+		        os.writeBoolean(imageTrimming);
+		        os.writeBoolean(autoMarkAsRead);
+		        os.writeByte(playerVolume);
+		        os.writeByte(loadMusicViaHttp);
+		        os.writeBoolean(loadITunesCovers);
+		        os.writeByte(loadMusicWithKey);
 		
 		        final byte[] b = baos.toByteArray();
 		        rs.addRecord(b, 0, b.length);
@@ -221,9 +262,14 @@ public class Settings
 		sendErrors = true;
 		autoMarkAsRead = true;
 		isLiteOrSomething = VikaTouch.isS40();
-		//dontBack = isLiteOrSomething;
 		threaded = true;
 		audioMode = AUDIO_LOADANDPLAY;
+		loadMusicViaHttp = 0;
+		loadMusicWithKey = 0;
+		imageTrimming = false;
+		playerVolume = 100;
+		loadITunesCovers = true;
+		autoMarkAsRead = true;
 		
 		//язык соотвествующий настройкам устройства
 		try
@@ -245,15 +291,6 @@ public class Settings
 			videoResolution = "240";
 			proxy = true;
 			//threaded = false;
-		}
-		
-		// простите/извините, мне проверять надо а не ждать пока диалоги скачаются.
-		if(VikaTouch.mobilePlatform.indexOf("Z710") > -1)
-		{
-			dontLoadAvas = true;
-			simpleListsLength = 10;
-			cacheImages = false;
-			autoMarkAsRead = false;
 		}
 	}
 

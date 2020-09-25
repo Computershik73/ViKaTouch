@@ -11,6 +11,7 @@ import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.ContentConnection;
 import javax.microedition.io.file.FileConnection;
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
@@ -34,6 +35,7 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.items.music.AudioTrackItem;
+import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.music.MusicScreen;
 import vikatouch.settings.Settings;
@@ -53,6 +55,7 @@ public class MusicPlayer extends MainScreen
 	public static boolean loop = false;
 	public static boolean random = false;
 	public boolean inSeekMode = false;
+	public boolean controlsBlocked = false;
 	public long seekTime;
 	
 	public String url;
@@ -70,13 +73,17 @@ public class MusicPlayer extends MainScreen
 	public Image[] buttons;
 	private Image coverOrig;
 	private Image resizedCover;
+	public static Image nullCover;
 	private int lastW;
+	
+	private int volumeY, volumeX1, volumeX2;
 	
 	public static MusicPlayer inst;
 	public Player player;
 	public Manager man;
 	public InputStream input;
 	public OutputStream output;
+	public Thread loader;
 	
 	public MusicPlayer()
 	{
@@ -147,17 +154,7 @@ public class MusicPlayer extends MainScreen
 			} catch (Exception var20) {
 				VikaTouch.popup(new InfoPopup("Player closing error", null));
 			}
-			String turl = getC().mp3;
-			try
-			{
-				turl = VikaUtils.replace(turl, "https", "http");
-				if(!Settings.https)
-				{
-					turl = turl.substring(0, turl.indexOf("?"));
-				}
-			}
-			catch(Exception e) { }
-			url = turl;
+			url = getMp3Link();
 			//VikaTouch.sendLog(url);
 			String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private") : System.getProperty("fileconn.dir.music"));
 			if(tpath == null)
@@ -166,7 +163,7 @@ public class MusicPlayer extends MainScreen
 			
 			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
 			{
-				new Thread()
+				loader = new Thread()
 				{
 					public void run()
 					{
@@ -188,7 +185,7 @@ public class MusicPlayer extends MainScreen
 							isPlaying = true;
 							try
 							{
-								((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
+								((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
 							}
 							catch (Exception e) { }
 							totalTime = time(getC().length);
@@ -203,22 +200,22 @@ public class MusicPlayer extends MainScreen
 							String es = e.toString();
 							if(es.indexOf("nvalid")!=-1 && es.indexOf("esponse")!=-1)
 							{
-								es = "VK doesn't allow your device to access the audio file. Try to reconnect to network and restart (or reinstall) the app.";
+								es = TextLocal.inst.get("player.accessfailed");
 							}
-							VikaTouch.popup(new InfoPopup(es, null, "Player error", null));
+							VikaTouch.popup(new InfoPopup(es, null, TextLocal.inst.get("player.playererror"), null));
 						}
 						finally
 						{
 							stop = false;
 						}
 					}
-				}.start();
+				};
+				loader.start();
 			}
-			//else if (url.indexOf("bb2.mp3")<0) 
 			else if(Settings.audioMode != Settings.AUDIO_CACHEANDPLAY)
 			{
 				
-				new Thread()
+				loader = new Thread()
 				{
 					public void run()
 					{
@@ -241,7 +238,7 @@ public class MusicPlayer extends MainScreen
 							trackFile.create();
 							output = trackFile.openOutputStream();
 							
-							ContentConnection contCon = (ContentConnection) Connector.open(getC().mp3);
+							ContentConnection contCon = (ContentConnection) Connector.open(url);
 							DataInputStream dis = contCon.openDataInputStream();
 					
 							int trackSize = (int) contCon.getLength();
@@ -294,8 +291,6 @@ public class MusicPlayer extends MainScreen
 							{*/
 							if(Settings.audioMode == Settings.AUDIO_LOADANDPLAY)
 							{
-								getCover();
-								resizeCover();
 								
 								try {
 									player = Manager.createPlayer(path);
@@ -319,13 +314,18 @@ public class MusicPlayer extends MainScreen
 									player.prefetch();
 								} catch (MediaException e) {
 									stop = false;
-									VikaTouch.popup(new InfoPopup("Player prefetching error", null));
+									if(trackSize<10000)
+									{
+										VikaTouch.popup(new InfoPopup(TextLocal.inst.get("player.accessfailed"), null));
+									}
+									else
+										VikaTouch.popup(new InfoPopup("Player prefetching error", null));
 									e.printStackTrace();
 									return;
 								}
 								try {
 									player.start();
-									((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
+									((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
 								} catch (MediaException e) {
 									stop = false;
 									VikaTouch.popup(new InfoPopup("Player running error", null));
@@ -347,6 +347,8 @@ public class MusicPlayer extends MainScreen
 							isReady = true;
 							isPlaying = true;
 							stop = false;
+							getCover();
+							resizeCover();
 						}
 						catch(Exception e)
 						{
@@ -357,7 +359,8 @@ public class MusicPlayer extends MainScreen
 						}
 						System.gc();
 					}
-				}.start();
+				};
+				loader.start();
 			} 
 			else 
 			{
@@ -394,7 +397,7 @@ public class MusicPlayer extends MainScreen
 				player = Manager.createPlayer(input, "audio/mpeg");
 				try
 				{
-					((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
+					((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
 				}
 				catch (Exception e) { }
 				player.start();
@@ -407,7 +410,7 @@ public class MusicPlayer extends MainScreen
 			//System.gc();
 		} catch (Exception e) {
 			stop = false;
-			VikaTouch.popup(new InfoPopup(e.toString(), null, "Player error", null));
+			VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
 		}
 	}
 
@@ -441,6 +444,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void pause()
 	{
+		if(controlsBlocked) return;
 		System.out.println("PAUSE");
 		try
 		{
@@ -451,7 +455,7 @@ public class MusicPlayer extends MainScreen
 			}
 			else
 			{
-				VikaTouch.popup(new ConfirmBox("Отменить загрузку?",null,new Runnable()
+				VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("player.cancel"),null,new Runnable()
 						{
 							public void run() {
 								if(!isReady) { stop = true; }
@@ -467,6 +471,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void play()
 	{
+		if(controlsBlocked) return;
 		try
 		{
 			if(isReady)
@@ -487,6 +492,38 @@ public class MusicPlayer extends MainScreen
 		}
 	}
 	
+	public void tapSeek(int x)
+	{
+		if(controlsBlocked) return;
+		try
+		{
+			if(!isReady) return;
+			if(player == null) return;
+			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE) return;
+			if(x<=x1 || x>=x2) return;
+			
+			double p = (float) (x-x1) / (x2-x1);
+			long st = ((long)((getC().length)*p))*1000000L;
+			
+			if(st<1L) st=1L;
+			if(st<player.getDuration())
+			{
+				try
+				{
+					player.stop();
+				} catch (Exception e) { }
+				player.setMediaTime(st);
+				player.start();
+				inSeekMode = false;
+				isPlaying = true;
+			}
+		}
+		catch (Exception e)
+		{
+			
+		}
+	}
+	
 	public void checkSeekTime()
 	{
 		if(seekTime<1L) seekTime = 1L;
@@ -498,6 +535,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void next()
 	{
+		if(controlsBlocked) return;
 		if(inSeekMode)
 		{
 			seekTime += 5000000L;
@@ -522,6 +560,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void prev()
 	{
+		if(controlsBlocked) return;
 		if(inSeekMode)
 		{
 			seekTime -= 5000000L;
@@ -533,6 +572,31 @@ public class MusicPlayer extends MainScreen
 			if(current<0) current = playlist.uiItems.length - 1;
 			loadTrack();
 		}
+	}
+	
+	public void changeVolume(boolean up)
+	{
+		int v = Settings.playerVolume;
+		if(up)
+		{
+			v+=10;
+			if(v>100) v = 100;
+		}
+		else
+		{
+			if(v<=10)
+			{
+				v = 1;
+			}
+			else
+				v-=10;
+		}
+		try
+		{
+			((VolumeControl) player.getControl("VolumeControl")).setLevel(v);
+		}
+		catch (Exception e) { }
+		Settings.playerVolume = (byte) v;
 	}
 	
 	public void updateDrawData()
@@ -604,7 +668,7 @@ public class MusicPlayer extends MainScreen
 	public void getCover()
 	{
 		if(DisplayUtils.height<=220) return;
-		if (title != null) {
+		if (title != null && Settings.loadITunesCovers) {
 			String q = "http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
 					+ URLDecoder.encode(title + " " + (artist==null?"":artist)) + "&country=ru&limit=1";
 			String s = VikaUtils.download(q);
@@ -638,22 +702,30 @@ public class MusicPlayer extends MainScreen
 				}
 				
 			} catch (Exception var23) {
-				if(playlist.coverUrl!=null)
+				if(playlist.coverUrl!=null) {
 					try {
-						coverOrig = VikaUtils.downloadImage(playlist.coverUrl);
-					} catch (IOException e) {
-						//VikaTouch.sendLog(e.toString());
-					}
+						if(playlist.cover==null)
+						{
+							coverOrig = playlist.cover = VikaUtils.downloadImage(playlist.coverUrl);
+						}
+						else
+							coverOrig = playlist.cover;
+					} catch (IOException e) { }
+				}
 			}
 		}
 		else
 		{
-			if(playlist.coverUrl!=null)
+			if(playlist.coverUrl!=null) {
 				try {
-					coverOrig = VikaUtils.downloadImage(playlist.coverUrl);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+					if(playlist.cover==null)
+					{
+						coverOrig = playlist.cover = VikaUtils.downloadImage(playlist.coverUrl);
+					}
+					else
+						coverOrig = playlist.cover;
+				} catch (IOException e) { }
+			}
 		}
 	}
 	
@@ -668,14 +740,24 @@ public class MusicPlayer extends MainScreen
 	{
 		OptionItem[] opts = new OptionItem[]
 		{
-			new OptionItem(this,"Плейлист",IconsManager.MENU,-1,40),
-			new OptionItem(this,"Повторять",loop?IconsManager.APPLY:IconsManager.REFRESH,0,40),
-			new OptionItem(this,"Случайно",random?IconsManager.APPLY:IconsManager.PLAY,1,40),
-			new OptionItem(this,"Перемотка",IconsManager.SEARCH,2,40),
-			new OptionItem(this,"Играть сначала",IconsManager.BACK,3,40),
-			new OptionItem(this,"Скачать",IconsManager.DOWNLOAD,4,40),
-			new OptionItem(this,"Проблемы с воспроизведением?",IconsManager.INFO,5,40),
-			new OptionItem(this,"Свернуть приложение",IconsManager.CLOSE,6,40),
+			new OptionItem(this,TextLocal.inst.get("player.playlist"),IconsManager.MENU,-1,40),
+			new OptionItem(this,TextLocal.inst.get("player.loop"),loop?IconsManager.APPLY:IconsManager.REFRESH,0,40),
+			new OptionItem(this,TextLocal.inst.get("player.random"),random?IconsManager.APPLY:IconsManager.PLAY,1,40),
+			new OptionItem(this,TextLocal.inst.get("player.seek"),IconsManager.SEARCH,2,40),
+			new OptionItem(this,TextLocal.inst.get("player.playagain"),IconsManager.BACK,3,40),
+			new OptionItem(this,TextLocal.inst.get("player.download"),IconsManager.DOWNLOAD,4,40),
+			new OptionItem(this,TextLocal.inst.get("player.troubleshooting"),IconsManager.SETTINGS,5,40),
+			new OptionItem(this,TextLocal.inst.get("player.hideapp"),IconsManager.CLOSE,6,40),
+		};
+		VikaTouch.popup(new AutoContextMenu(opts));
+	}
+	
+	public void troubleOptions()
+	{
+		OptionItem[] opts = new OptionItem[]
+		{
+			new OptionItem(this,TextLocal.inst.get("player.updatelinks"),IconsManager.REFRESH,10,40),
+			new OptionItem(this,TextLocal.inst.get("player.forcedreboot"),IconsManager.CLOSE,11,40),
 		};
 		VikaTouch.popup(new AutoContextMenu(opts));
 	}
@@ -683,6 +765,69 @@ public class MusicPlayer extends MainScreen
 	public AudioTrackItem getC()
 	{
 		return ((AudioTrackItem) playlist.uiItems[current]);
+	}
+	
+	public String getMp3Link()
+	{
+		String turl = getC().mp3;
+		boolean https;
+		boolean extra;
+		
+		if(Settings.loadMusicViaHttp == Settings.AUDIO_HTTP)
+		{
+			https = false;
+		}
+		else if(Settings.loadMusicViaHttp == Settings.AUDIO_HTTPS)
+		{
+			https = true;
+		}
+		else
+		{
+			if(!Settings.https)
+			{
+				https = false;
+			}
+			else
+			{
+				https = Settings.audioMode != Settings.AUDIO_PLAYONLINE;
+			}
+		}
+		if(Settings.loadMusicWithKey == Settings.AUDIO_EXTRA)
+		{
+			extra = true;
+		}
+		else if(Settings.loadMusicWithKey == Settings.AUDIO_EXTRA)
+		{
+			extra = false;
+		}
+		else
+		{
+			extra = Settings.https;
+		}
+		try
+		{
+			if(https)
+			{
+				turl = VikaUtils.replace(turl, "http:", "https:");
+				//turl = VikaUtils.replace(turl, "httpss", "https");
+			}
+			else
+			{
+				turl = VikaUtils.replace(turl, "https", "http");
+			}
+		}
+		catch(Exception e) { }
+		
+		try
+		{
+			if(!extra)
+			{
+				turl = turl.substring(0, turl.indexOf("?"));
+			}
+		}
+		catch(Exception e) { }
+		
+		return turl;
 	}
 	
 	public static void launch(MusicScreen list, int track)
@@ -724,6 +869,8 @@ public class MusicPlayer extends MainScreen
 			e.printStackTrace();
 		}
 	}
+	
+	int timeY;
 
 	public void draw(Graphics g) {
 		try
@@ -733,7 +880,7 @@ public class MusicPlayer extends MainScreen
 			int dh = DisplayUtils.height;
 			int hdw = dw/2;
 			int textAnchor;
-			int timeY;
+			
 			if(dw!=lastW)
 			{
 				onRotate();
@@ -751,7 +898,10 @@ public class MusicPlayer extends MainScreen
 			{
 				// альбом
 				textAnchor = dw * 3 / 4;
-				timeY = dh-70;
+				timeY = dh-90;
+				volumeY = 40;
+				volumeX1 = hdw+40;
+				volumeX2 = dw - 40;
 				if(!inSeekMode) g.drawImage(buttons[5], textAnchor-125, dh-50, 0);
 				if(!inSeekMode || tick) g.drawImage(buttons[0], textAnchor-75, dh-50, 0);
 				g.drawImage(buttons[isPlaying?3:1], textAnchor-25, dh-50, 0);
@@ -765,7 +915,10 @@ public class MusicPlayer extends MainScreen
 			{
 				// портрет, квадрат
 				textAnchor = hdw;
-				timeY = dh-70;
+				timeY = dh-90;
+				volumeY = timeY-f.getHeight()*4;
+				volumeX1 = 50;
+				volumeX2 = dw - 50;
 				if(!inSeekMode) g.drawImage(buttons[5], hdw-125, dh-50, 0);
 				if(!inSeekMode || tick) g.drawImage(buttons[0], hdw-75, dh-50, 0);
 				g.drawImage(buttons[isPlaying?3:1], hdw-25, dh-50, 0);
@@ -800,9 +953,19 @@ public class MusicPlayer extends MainScreen
 				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 			}
 			
-			g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
-			g.drawString(time, x1-4, timeY-4, Graphics.TOP | Graphics.RIGHT);
-			g.drawString(totalTime, x2+4, timeY-4, Graphics.TOP | Graphics.LEFT);
+			int volumeXc = volumeX1+((volumeX2-volumeX1)*Settings.playerVolume/100);
+			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+			g.fillRect(volumeX1, volumeY, volumeXc-volumeX1, 6);
+			g.setGrayScale(200);
+			g.fillRect(volumeXc, volumeY, volumeX2-volumeXc, 6);
+			
+			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+			f = Font.getFont(0, 0, Font.SIZE_SMALL);
+			g.setFont(f);
+			g.drawString(time, x1-4, timeY-6, Graphics.TOP | Graphics.RIGHT);
+			g.drawString(totalTime, x2+4, timeY-6, Graphics.TOP | Graphics.LEFT);
+			g.drawString("Vol", volumeX1-4, volumeY+3-f.getHeight()/2, Graphics.TOP | Graphics.RIGHT);
+			g.drawString(String.valueOf(Settings.playerVolume), volumeX2+4, volumeY+3-f.getHeight()/2, Graphics.TOP | Graphics.LEFT);
 			
 			if(DisplayUtils.height>220)
 			{
@@ -817,6 +980,11 @@ public class MusicPlayer extends MainScreen
 					int s = (dw>dh)?hdw:dw;
 					g.setGrayScale(200);
 					g.fillRect(0, coverY, s, s);
+					if(nullCover==null)
+					{
+						nullCover = Image.createImage("/emptyCover.png");
+					}
+					g.drawImage(nullCover, s/2, (dw>dh)?(dh/2):hdw, Graphics.HCENTER | Graphics.VCENTER);
 				}
 			}
 		}
@@ -831,6 +999,22 @@ public class MusicPlayer extends MainScreen
 		int dw = DisplayUtils.width;
 		int dh = DisplayUtils.height;
 		int hdw = dw/2;
+		if(y>=timeY-4 && y<=timeY+14)
+		{
+			tapSeek(x);
+			return;
+		}
+		if(y>=volumeY-6 && y<=volumeY+12)
+		{
+			x-=volumeX1;
+			float v = (float) x / (volumeX2 - volumeX1);
+			int vi = (int) (v*100);
+			if(vi<0) vi = 0;
+			if(vi>100) vi = 100;
+			Settings.playerVolume = (byte) vi;
+			((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
+			return;
+		}
 		if(y<dh-50) return;
 		int anchor;
 		if(dw>dh)
@@ -849,6 +1033,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(x>anchor+75)
 		{
+			if(controlsBlocked) return;
 			if(!inSeekMode) VikaTouch.inst.cmdsInst.command(14, this);
 		}
 		else if(x>anchor+25)
@@ -902,8 +1087,17 @@ public class MusicPlayer extends MainScreen
 		{
 			next();
 		}
+		else if(key == -1)
+		{
+			changeVolume(true);
+		}
+		else if(key == -2)
+		{
+			changeVolume(false);
+		}
 		else if(key == -7 /*|| key == */) //TODO вспомнить кнопку "назад" на SE
 		{
+			if(controlsBlocked) return;
 			if(!inSeekMode) VikaTouch.inst.cmdsInst.command(14, this);
 		}
 	}
@@ -929,9 +1123,10 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==2)
 		{
+			if(controlsBlocked) return;
 			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
 			{
-				VikaTouch.popup(new InfoPopup("Due to J2ME limitations, rewinding in online mode isn't aliveable.", null));
+				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("player.rewindimpossible"), null));
 			}
 			else if(isReady)
 			{
@@ -942,6 +1137,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==3)
 		{
+			if(controlsBlocked) return;
 			if(!isReady) return;
 			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
 			{
@@ -982,6 +1178,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==4)
 		{
+			if(controlsBlocked) return;
 			try {
 				VikaTouch.appInst.platformRequest(getC().mp3);
 			} catch (ConnectionNotFoundException e) {
@@ -990,8 +1187,7 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==5)
 		{
-			// написать что мол выберите другой метод или купите N8
-			VikaTouch.popup(new InfoPopup("Try to choose another mode in settings. We recommend to use caching into file - it's the stablest.", null));
+			troubleOptions();
 		}
 		else if(i==6)
 		{
@@ -1000,12 +1196,41 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==-1)
 		{
+			if(controlsBlocked) return;
 			if(backScreenIsPlaylist())
 			{
 				VikaTouch.inst.cmdsInst.command(14, this);
 			}
 			else
 				VikaTouch.setDisplay(playlist, 1);
+		}
+		else if(i==10)
+		{
+			if(controlsBlocked) return;
+			playlist.reload(true);
+		}
+		else if(i==11)
+		{
+			try
+			{
+				if(loader!=null && loader.isAlive())
+				{
+					loader.interrupt();
+				}
+			}
+			catch (Exception e) { }
+			try
+			{
+				closePlayer();
+				Thread.sleep(500);
+			}
+			catch (Exception e) { }
+			controlsBlocked = false;
+			isReady = true;
+			inSeekMode = false;
+			isPlaying = false;
+			stop = false;
+			loadTrack();
 		}
 	}
 
@@ -1066,8 +1291,8 @@ public class MusicPlayer extends MainScreen
 		{
 			String err = data.toString();
 			if(err.indexOf("-3") != -1) return;
-			if(err.indexOf("-2") != -1) err = "General internal error (-2)";
-			VikaTouch.popup(new InfoPopup(err, null, "Player error", null));
+			if(err.indexOf("-2") != -1) err = TextLocal.inst.get("player.internalerror");
+			VikaTouch.popup(new InfoPopup(err, null, TextLocal.inst.get("player.playererror"), null));
 		}
 	}
 }

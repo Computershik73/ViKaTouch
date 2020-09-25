@@ -1,7 +1,7 @@
 #info:
 #русский
 #оригинальный язык
-#совместимо с: пре-бета 2.7.11
+#совместимо с: 2.8.5
 #авторы shinovon, Feodor0090
 #
 #вк авторов:
@@ -191,6 +191,7 @@ settings.media=Медиа
 settings.help=Помощь
 settings.enabled=Вкл
 settings.disabled=Выкл
+settings.auto=Автоматически
 settings.directhttps=Напрямую через https
 settings.proxy=Через прокси
 settings.connection=Подключение
@@ -231,6 +232,11 @@ settings.audioc.7=Скачать файл через браузер
 settings.spabilities=Специальные возможности
 settings.debug=Отладка
 settings.debugcrap=Отладочная информация на экране
+settings.dontloadmusicwithkey=Не использовать ключ доступа
+settings.itunescovers=Искать обложки в ITunes
+settings.loadmusicviahttp=Протокол
+settings.datafolder=Папка для хранения данных
+settings.automarkasread=Помечать сообщения как прочитанные
 
 
 back=Назад
@@ -262,3 +268,19 @@ splash.tip.13=Если приложение потребляет слишком 
 splash.tip.14=У нас можно открыть ссылки из сообщений! Поддерживается http/https, ftp, smb, rtsp, упоминания и ссылки на страницы ВКонтакте. Для этого откройте опции сообщения и выберите "ссылки".
 
 busy=Загрузка...
+
+player.playlist=Плейлист
+player.loop=Зациклить
+player.random=Случайный порядок
+player.seek=Перемотка
+player.playagain=Играть с начала
+player.download=Скачать
+player.hideapp=Свернуть приложение
+player.troubleshooting=Устранение проблем
+player.updatelinks=Обновить ссылки
+player.forcedreboot=Принудительно перезапустить
+player.rewindimpossible=Перемотка в онлайн режиме недоступна из-за ограничений J2ME.
+player.accessfailed=Медиа-сервер закрыл доступ к аудиофайлу. Попробуйте обновить ссылки через меню устранения проблем или перезапустить приложение.
+player.playererror=Ошибка плеера
+player.internalerror=Неизвестная внутренняя ошибка (-2)
+player.cancel=Отменить загрузку?

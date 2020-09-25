@@ -101,7 +101,7 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 			OptionItem[] po = new OptionItem[opts.length];
 			for(int i=0;i<opts.length;i++)
 			{
-				po[i] = new OptionItem(this, opts[i], IconsManager.SETTINGS, i, 40);
+				po[i] = new OptionItem(this, opts[i], (currentOption==i)?IconsManager.APPLY:IconsManager.SETTINGS, i, 40);
 			}
 			VikaTouch.popup(new AutoContextMenu(po));
 		} else if(help!=null && key == KEY_FUNC)

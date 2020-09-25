@@ -95,7 +95,7 @@ public class SettingsScreen
 					oneitemheight, eOd, Settings.sendErrors?1:0, null),
 			new OptionItem(this, TextLocal.inst.get("settings.reset"), IconsManager.SETTINGS, -3, oneitemheight),
 			new OptionItem(this, TextLocal.inst.get("menu.about"), IconsManager.INFO, 31, oneitemheight),
-			new OptionItem(this, TextLocal.inst.get("settings.logout"), -1, -1, oneitemheight),
+			new OptionItem(this, TextLocal.inst.get("settings.logout"), IconsManager.BACK, -1, oneitemheight),
 		};
 		systemList = new PressableUIItem[]
 		{
@@ -113,8 +113,8 @@ public class SettingsScreen
 			new SettingMenuItem(this, TextLocal.inst.get("settings.refreshrate"), IconsManager.REFRESH, 7, 
 				oneitemheight, refreshVals, rr, null),
 			//блять я тебя захуярю
-			/*new SettingMenuItem(this, TextLocal.inst.get("settings.automarkasread"), IconsManager.APPLY, 15, 
-					oneitemheight, eOd, Settings.autoMarkAsRead?1:0, null),*/
+			/**/new SettingMenuItem(this, TextLocal.inst.get("settings.automarkasread"), IconsManager.APPLY, 15, 
+					oneitemheight, eOd, Settings.autoMarkAsRead?1:0, null),/**/
 		};
 		mediaList = new PressableUIItem[]
 		{
@@ -130,6 +130,15 @@ public class SettingsScreen
 					oneitemheight, new String[] { TextLocal.inst.get("settings.rtspc.0"), TextLocal.inst.get("settings.rtspc.1"),
 							TextLocal.inst.get("settings.rtspc.2") }, 
 					Settings.rtspMethod, null),
+			new SettingMenuItem(this, TextLocal.inst.get("settings.loadmusicviahttp"), IconsManager.DOWNLOAD, 16, 
+					oneitemheight, new String[] { TextLocal.inst.get("settings.auto"), "HTTP", "HTTPS" }, 
+					Settings.loadMusicViaHttp, null),
+			new SettingMenuItem(this, TextLocal.inst.get("settings.dontloadmusicwithkey"), IconsManager.DOWNLOAD, 18, 
+					oneitemheight, new String[] { TextLocal.inst.get("settings.auto"), TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") }, 
+					Settings.loadMusicWithKey, null),
+			new SettingMenuItem(this, TextLocal.inst.get("settings.itunescovers"), IconsManager.PHOTOS, 17, 
+					oneitemheight, eOd, 
+					Settings.loadITunesCovers?1:0, null),
 			new SettingMenuItem(this, TextLocal.inst.get("settings.youtube"), IconsManager.PLAY, 14, 
 					oneitemheight, new String[] { "m.youtube.com", "SymTube" }, 
 					Settings.https?1:0, null),
@@ -300,6 +309,21 @@ public class SettingsScreen
 			case 15:
 			{
 				Settings.autoMarkAsRead = var==1;
+				break;
+			}
+			case 16:
+			{
+				Settings.loadMusicViaHttp = (byte) var;
+				break;
+			}
+			case 17:
+			{
+				Settings.loadITunesCovers = var==1;
+				break;
+			}
+			case 18:
+			{
+				Settings.loadMusicWithKey = (byte) var;
 				break;
 			}
 		}

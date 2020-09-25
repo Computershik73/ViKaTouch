@@ -11,7 +11,7 @@ langinfo.name=English (UK)
 #YYYY.MM.DD
 langinfo.version=2020.09.11
 
-langinfo.hints=2
+langinfo.hints=1
 
 # LANG FORMAT
 #| - new line
@@ -190,6 +190,7 @@ settings.media=Media
 settings.help=Help
 settings.enabled=On
 settings.disabled=Off
+settings.auto=Auto
 settings.directhttps=Directly HTTPS
 settings.proxy=Proxy
 settings.connection=Connection via
@@ -227,6 +228,11 @@ settings.audioc.5=Download file via browser
 settings.spabilities=Special abilities
 settings.debug=Debug
 settings.debugcrap=Debug information on display
+settings.dontloadmusicwithkey=Don't use access keys
+settings.itunescovers=Look for covers in ITunes
+settings.loadmusicviahttp=Using protocol
+settings.datafolder=Data folder
+settings.automarkasread=Mark messages as read
 
 back=Back
 select=Select
@@ -237,8 +243,23 @@ splash.title.4=Authentication
 splash.title.5=Loading profile information
 splash.title.6=Pre-loading conversations
 splash.title.7=Ready.
-splash.tip=---- Random hint ----
-splash.tip.0=add some hints pls
-splash.tip.1=vyvyvyvyvy
+splash.tip= 
+splash.tip.0= 
 
 busy=Busy...
+
+player.playlist=Playlist
+player.loop=Loop this track
+player.random=Random order
+player.seek=Rewind
+player.playagain=Play again
+player.download=Download
+player.hideapp=Hide application
+player.troubleshooting=Troubleshooting
+player.updatelinks=Update links
+player.forcedreboot=Forced player reboot
+player.rewindimpossible=Due to J2ME limitations, rewinding in online mode isn't aliveable.
+player.accessfailed=VK doesn't allow your device to access the audio file. Try to reload playlist (Options > Troubleshooting > Update links) or restart the app.
+player.playererror=Player error
+player.internalerror=Unknown internal error (-2)
+player.cancel=Cancel downloading?

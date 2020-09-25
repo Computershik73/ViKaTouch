@@ -403,8 +403,8 @@ public class ChatScreen
 		VikaCanvasInst.msgColor = 0xff00ffff;
 		try
 		{
-			Thread.sleep(200);
 			repaint();
+			Thread.sleep(200);
 			scrolled = -65534;
 			currentItem = (short) (uiItems.length-1-loadSpace);
 			uiItems[currentItem].setSelected(true);
@@ -1038,7 +1038,7 @@ public class ChatScreen
 				if(y+scrolled < DisplayUtils.height) uiItems[i].paint(g, y, scrolled);
 				y+=uiItems[i].getDrawHeight();
 			}
-			this.itemsh = y + 100;
+			this.itemsh = y + 50;
 		}
 		catch(Exception e)
 		{

@@ -113,21 +113,23 @@ public class PlaylistsScreen extends MainScreen {
 	{
 		ColorUtils.setcolor(g, 0);
 		g.setFont(Font.getFont(0, 0, 8));
-		itemsh = itemsCount * 52;
 		try
 		{
 			update(g);
 			int y = topPanelH;
 			try
 			{
-				if(uiItems!=null) for(int i = 0; i < itemsCount; i++)
+				if(uiItems!=null)
 				{
-					if(uiItems[i] != null)
+					for(int i = 0; i < itemsCount; i++)
 					{
-						uiItems[i].paint(g, y, scrolled);
-						y += uiItems[i].getDrawHeight();
+						if(uiItems[i] != null)
+						{
+							uiItems[i].paint(g, y, scrolled);
+							y += uiItems[i].getDrawHeight();
+						}
 					}
-
+					itemsh = y+100;
 				}
 			}
 			catch (Exception e)
@@ -147,14 +149,14 @@ public class PlaylistsScreen extends MainScreen {
 	
 	public final void drawHUD(Graphics g)
 	{
-		drawHUD(g, uiItems==null?title:plStr);
+		drawHUD(g, uiItems!=null?title:plStr);
 	}
 	
 	public final void release(int x, int y)
 	{
 		try
 		{
-			if(y > 58 && y < DisplayUtils.height - oneitemheight)
+			if(y > topPanelH && y < DisplayUtils.height - bottomPanelH)
 			{
 				int h = 102;
 				int yy1 = y - (scrolled + 58);

@@ -80,7 +80,7 @@ public abstract class ScrollableCanvas
 		}
 		else if(DisplayUtils.canvas.isSensorModeJ2MELoader())
 		{
-			if(ndeltaY > 1 || ndeltaX > 1)
+			if(ndeltaY > 4 || ndeltaX > 4)
 			{
 				dragging = true;
 			}

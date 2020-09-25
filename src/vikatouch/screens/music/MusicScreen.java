@@ -2,6 +2,7 @@ package vikatouch.screens.music;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
@@ -35,9 +36,12 @@ public class MusicScreen
 	public int ownerId;
 	public int albumId;
 	public String coverUrl = null;
+	public Image cover = null;
 	
 	public String title;
 	private String loadingStr;
+	
+	public boolean playAfter;
 	
 	
 	public static Thread downloaderThread;
@@ -110,7 +114,7 @@ public class MusicScreen
 							JSONObject item = items.getJSONObject(i);
 							uiItems[i] = new AudioTrackItem(item, thisC, i);
 							((AudioTrackItem) uiItems[i]).parseJSON();
-							Thread.sleep(20);
+							Thread.sleep(15);
 							// должно не зависать
 						}
 					}
@@ -129,15 +133,40 @@ public class MusicScreen
 				}
 				VikaTouch.loading = false;
 				System.gc();
+				if(playAfter)
+				{
+					if(MusicPlayer.inst!=null)
+					{
+						MusicPlayer.inst.controlsBlocked = false;
+						MusicPlayer.inst.loadTrack();
+					}
+				}
 			}
 		};
 		downloaderThread.start();
 	}
+	
+	public void reload(boolean playAfter)
+	{
+		if(ownerId!=0)
+		{
+			if(MusicPlayer.inst!=null)
+			{
+				MusicPlayer.inst.controlsBlocked = true;
+			}
+			this.playAfter = playAfter;
+			load(ownerId, albumId, title);
+		}
+		else
+		{
+			VikaTouch.popup(new InfoPopup("Playlist's owner ID isn't defined, reloading failed.", null));
+		}
+	}
+	
 	public void draw(Graphics g)
 	{
 		ColorUtils.setcolor(g, 0);
 		g.setFont(Font.getFont(0, 0, 8));
-		itemsh = itemsCount * 52;
 		try
 		{
 			update(g);
@@ -154,7 +183,7 @@ public class MusicScreen
 							uiItems[i].paint(g, y, scrolled);
 							y += uiItems[i].getDrawHeight();
 						}
-	
+						itemsh = y+60;
 					}
 				}
 			}

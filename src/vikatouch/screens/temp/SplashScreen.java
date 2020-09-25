@@ -102,25 +102,6 @@ public class SplashScreen
 			ColorUtils.setcolor(g, ColorUtils.COLOR1);
 			g.fillRect(43, dh-15, (dw-86)*statesProgress[currState]/100, 10);
 		}
-		/*
-		g.setColor(0xffff00);
-		g.fillRect(0,0,90,90);
-		try
-		{
-			
-			if(IconsManager.sheet != null)
-				g.drawImage(IconsManager.sheet, 0, 0, 0);
-		g.drawImage(IconsManager.ico[IconsManager.INFO],0,64,0);
-		}
-		catch(Exception e)
-		{
-			
-		}
-		*/
-		ColorUtils.setcolor(g, 0);
-		
-		g.drawString("OPEN BETA",dw/2,0,Graphics.TOP|Graphics.HCENTER);
-		g.drawString("РАЗРЕШЕНО К РАСПРОСТРАНЕНИЮ",dw/2,f.getHeight()+2,Graphics.TOP|Graphics.HCENTER);
 	}
 	
 	public void setText()
