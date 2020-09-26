@@ -23,6 +23,7 @@ import vikatouch.items.menu.OptionItem;
 import vikatouch.json.JSONBase;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
+import vikatouch.screens.NewsScreen;
 import vikatouch.screens.menu.DocsScreen;
 import vikatouch.screens.menu.FriendsScreen;
 import vikatouch.screens.menu.MenuScreen;
@@ -351,8 +352,10 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 					}
 					break;
 				case 3:
-					// стена
-					VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
+					NewsScreen newsScr = new NewsScreen();
+					newsScr.newsSource = -id;
+					newsScr.loadPosts();
+					VikaTouch.setDisplay(newsScr, 1);
 					break;
 				case 4:
 					isInfoShown = true;
