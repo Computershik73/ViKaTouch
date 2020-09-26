@@ -180,6 +180,7 @@ public class MusicPlayer extends MainScreen
 							time = "00:00";
 							totalTime = "--:--";
 							player = Manager.createPlayer(url);
+							
 							player.start();
 							isReady = true;
 							isPlaying = true;
@@ -499,7 +500,24 @@ public class MusicPlayer extends MainScreen
 		{
 			if(!isReady) return;
 			if(player == null) return;
-			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE) return;
+			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE) {
+				closePlayer();
+				time = "00:00";
+				totalTime = "--:--";
+				player = Manager.createPlayer(url);
+				
+				player.start();
+				isReady = true;
+				isPlaying = true;
+				try
+				{
+					((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
+				}
+				catch (Exception e) { }
+				totalTime = time(getC().length);
+				stop = false;
+				player.addPlayerListener(inst);
+			};
 			if(x<=x1 || x>=x2) return;
 			
 			double p = (float) (x-x1) / (x2-x1);
