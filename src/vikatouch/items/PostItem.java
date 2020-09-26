@@ -257,7 +257,9 @@ public class PostItem
 		ColorUtils.setcolor(g, 5);
 		
 		if(name!=null) g.drawString(name, 70, y + 5 + 12 - f.getHeight()/2, 0);
+		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
 		if(dateS!=null) g.drawString(dateS, 70, y + 5 + 38 - f.getHeight()/2, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 
 		cy += 60;
 		if(drawText != null)
