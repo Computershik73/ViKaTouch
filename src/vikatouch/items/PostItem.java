@@ -65,6 +65,8 @@ public class PostItem
 	private String data;
 	private boolean dontLoadAva;
 	protected boolean hasPrevImg;
+	public long date;
+	public String dateS;
 	
 	// tap data
 	int repX, comX;
@@ -94,6 +96,7 @@ public class PostItem
 		{
 			likes = json2.optJSONObject("likes").optInt("count");
 			liked = json2.optJSONObject("likes").optInt("user_likes") == 1;
+			canlike = json2.optJSONObject("likes").optInt("can_like") == 1;
 			reposts = json2.optJSONObject("reposts").optInt("count");
 			views = json2.optJSONObject("views").optInt("count");
 			comments = json2.optJSONObject("comments").optInt("count");
@@ -112,6 +115,15 @@ public class PostItem
 		catch (Exception e)
 		{
 			
+		}
+		
+		try
+		{
+			date = json2.optLong("date");
+			dateS = VikaUtils.parseTime(date);
+		}
+		catch (Exception e)
+		{
 		}
 		
 		type = json2.optString("type"); 
@@ -207,12 +219,7 @@ public class PostItem
 			}
 		}
 		
-		
-		
-		if(reposterName != null)
-		{
-			itemDrawHeight += 43;
-		}
+		itemDrawHeight = 100;
 
 		
 		if(data != null && data.equalsIgnoreCase("profile_photo"))
@@ -231,6 +238,7 @@ public class PostItem
 
 	public void paint(Graphics g, int y, int scrolled)
 	{
+		if(y+scrolled+itemDrawHeight < -50) return;
 		Font f = Font.getFont(0, 0, 8);
 		int fh = f.getHeight();
 		int textX = 16;
@@ -248,7 +256,8 @@ public class PostItem
 		
 		ColorUtils.setcolor(g, 5);
 		
-		if(name!=null) g.drawString(name, 70, y + 5 + 25 - f.getHeight()/2, 0);
+		if(name!=null) g.drawString(name, 70, y + 5 + 12 - f.getHeight()/2, 0);
+		if(dateS!=null) g.drawString(dateS, 70, y + 5 + 38 - f.getHeight()/2, 0);
 
 		cy += 60;
 		if(drawText != null)
@@ -330,10 +339,12 @@ public class PostItem
 		String likesS = String.valueOf(likes);
 		g.drawString(likesS, 60, y+cy+12 - fh/2, 0);
 		
+		repX = 60+12+f.stringWidth(likesS);
 		g.drawImage(IconsManager.ico[IconsManager.REPOST], 60+12+f.stringWidth(likesS), y+cy, 0);
 		String repostsS = String.valueOf(reposts);
 		g.drawString(repostsS, 60+48+f.stringWidth(likesS), y+cy+12 - fh/2, 0);
 		
+		comX = 120+f.stringWidth(likesS)+f.stringWidth(repostsS);
 		g.drawImage(IconsManager.ico[IconsManager.COMMENTS], 120+f.stringWidth(likesS)+f.stringWidth(repostsS), y+cy, 0);
 		String comsS = String.valueOf(comments);
 		g.drawString(comsS, 120+f.stringWidth(likesS)+f.stringWidth(repostsS)+32, y+cy+12 - fh/2, 0);
@@ -454,6 +465,7 @@ public class PostItem
 		{
 			public void run ()
 			{
+				VikaTouch.loading = true;
 				URLBuilder url;
 				if(val)
 				{
@@ -470,6 +482,7 @@ public class PostItem
 					VikaTouch.popup(new InfoPopup("Ошибка", null));
 				}
 				liked = val;
+				VikaTouch.loading = false;
 			}
 		}.start();
 	}

@@ -131,7 +131,9 @@ public class PhotoAttachment
 	{
 		try 
 		{
-			PhotoSize ps = PhotoSize.searchSmallerSize(sizes, DisplayUtils.width);
+			PhotoSize ps = (DisplayUtils.width>DisplayUtils.height)?
+					PhotoSize.searchSmallerSizeH(sizes, DisplayUtils.height):
+					PhotoSize.searchSmallerSize(sizes, DisplayUtils.width);
 			Image i = VikaUtils.downloadImage(ps.url);
 			renderH = i.getHeight();
 			renderW = i.getWidth();

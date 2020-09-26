@@ -115,6 +115,7 @@ public final class VikaUtils
 		    else if(dayDelta == 1)
 		    {
 		    	result = TextLocal.inst.get("date.yesterday");
+		    	result += " " + time;
 		    	break parsing;
 		    }
 		    else if(currentYear == year)

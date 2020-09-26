@@ -321,7 +321,6 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 				case 0:
 					FriendsScreen fs = new FriendsScreen();
 					VikaTouch.setDisplay(fs, 1);
-					// всё ещё падает, я хз почему.
 					fs.loadFriends(0, -id, name, name);
 					break;
 				case 1:
@@ -354,8 +353,9 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 				case 3:
 					NewsScreen newsScr = new NewsScreen();
 					newsScr.newsSource = -id;
-					newsScr.loadPosts();
+					newsScr.titleStr = name;
 					VikaTouch.setDisplay(newsScr, 1);
+					newsScr.loadPosts();
 					break;
 				case 4:
 					isInfoShown = true;

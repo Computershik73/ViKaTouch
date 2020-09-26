@@ -24,7 +24,7 @@ public class NewsScreen
 	
 	public static JSONArray profiles;
 	public static JSONArray groups;
-	private static String titleStr;
+	public String titleStr;
 	
 	public int newsSource = 0;
 	
@@ -50,7 +50,7 @@ public class NewsScreen
 				VikaTouch.loading = true;
 				try
 				{
-					int count = 30;
+					int count = 20;
 					URLBuilder url;
 					if(newsSource == 0)
 					{
@@ -60,9 +60,12 @@ public class NewsScreen
 					else
 					{
 						url = new URLBuilder("wall.get").addField("filter", "all").addField("extended", 1)
-								.addField("count", count).addField("fields", "groups,profiles,items");
+								.addField("count", count).addField("owner_id", newsSource);
 					}
 					final String s = VikaUtils.download(url);
+					//VikaTouch.sendLog(url.toString());
+					//VikaTouch.sendLog(newsSource+" "+(s.length()>210?s.substring(0, 200):s));
+					VikaTouch.loading = true;
 					JSONObject response = new JSONObject(s).getJSONObject("response");
 					JSONArray items = response.getJSONArray("items");
 					int itemsCount = items.length();
@@ -74,6 +77,7 @@ public class NewsScreen
 					itemsh = 0;
 					for(int i = 0; i < itemsCount; i++)
 					{
+						VikaTouch.loading = true;
 						JSONObject item = items.getJSONObject(i);
 						JSONObject itemCopy;
 						try
@@ -93,6 +97,7 @@ public class NewsScreen
 					VikaTouch.error(e, ErrorCodes.NEWSPARSE);
 					e.printStackTrace();
 				}
+				VikaTouch.loading = false;
 			}
 		}.start();
 		
@@ -120,12 +125,12 @@ public class NewsScreen
 					{
 						if(uiItems[i] != null)
 						{
-							uiItems[i].paint(g, y, scrolled);
+							if(y+scrolled < DisplayUtils.height) uiItems[i].paint(g, y, scrolled);
 							y += uiItems[i].getDrawHeight() + 10;
 						}
 					}
 					
-					itemsh = y;
+					itemsh = y+50;
 				}
 			}
 			catch (Exception e)
@@ -151,17 +156,18 @@ public class NewsScreen
 		{
 			if(y > 58 && y < DisplayUtils.height - oneitemheight)
 			{
-				int yy = 0;
+				int yy = topPanelH+10;
 				for(int i = 0; i < uiItems.length; i++)
 				{
 					try
 					{
-						int y1 = scrolled + 50 + yy;
+						int y1 = scrolled + yy;
 						int y2 = y1 + uiItems[i].getDrawHeight();
 						yy += uiItems[i].getDrawHeight();
 						if(y > y1 && y < y2)
 						{
-							uiItems[i].tap(x, y1 - y);
+							//VikaTouch.sendLog(i+" x"+x+" y"+(y1-y));
+							uiItems[i].tap(x, y - y1);
 						}
 					}
 					catch (Exception e)
