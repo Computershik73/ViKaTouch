@@ -5,6 +5,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
@@ -146,6 +147,14 @@ public class ImagePreview extends VikaNotice {
 					}
 				}
 			}
+		}
+	}
+	
+	public void press(int key)
+	{
+		if((key == PressableUIItem.KEY_OK || key == PressableUIItem.KEY_RFUNC))
+		{
+			VikaTouch.canvas.currentAlert = null;
 		}
 	}
 	
