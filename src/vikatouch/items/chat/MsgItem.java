@@ -7,6 +7,7 @@ import org.json.me.JSONArray;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
@@ -125,7 +126,7 @@ public class MsgItem
 						}
 						else if(replyAttachs.length() > 1)
 						{
-							replyText = "[Вложения " + replyAttachs.length() + "]";
+							replyText = "["+TextLocal.inst.get("msg.attach.attachments")+" (" + replyAttachs.length() + ")]";
 						}
 						breakReplyText = false;
 					}
@@ -145,7 +146,7 @@ public class MsgItem
 				int fromId = reply.optInt("from_id");
 				if(fromId==Integer.parseInt(VikaTouch.userId))
 				{
-					replyName = "Вы";
+					replyName = TextLocal.inst.get("msg.you");
 				}
 				else
 				{
@@ -463,15 +464,15 @@ public class MsgItem
 		if(key == -5) 
 		{
 			int h = DisplayUtils.height>240?36:30;
-			OptionItem[] opts = new OptionItem[7];
-			opts[0] = new OptionItem(this, "Прочитано", IconsManager.APPLY, -5, h);
-			opts[1] = new OptionItem(this, "Ответить", IconsManager.ANSWER, -1, h);
-			opts[2] = new OptionItem(this, "Удалить", IconsManager.CLOSE, -2, h);
-			opts[3] = new OptionItem(this, "Редактировать", IconsManager.EDIT, -4, h);
-			opts[4] = new OptionItem(this, "Переслать", IconsManager.SEND, -6, h);
-			opts[5] = new OptionItem(this, "Ссылки...", IconsManager.LINK, -8, h);
-			opts[6] = new OptionItem(this, "Вложения...", IconsManager.ATTACHMENT, -9, h);
-			VikaTouch.popup(new ContextMenu(opts));
+			OptionItem[] opts = new OptionItem[6];
+			opts[0] = new OptionItem(this, TextLocal.inst.get("msg.reply"), IconsManager.ANSWER, -1, h);
+			opts[1] = foreign ? new OptionItem(this, TextLocal.inst.get("msg.markasread"), IconsManager.APPLY, -5, h)
+				: new OptionItem(this, TextLocal.inst.get("msg.edit"), IconsManager.EDIT, -4, h);
+			opts[2] = new OptionItem(this, TextLocal.inst.get("msg.delete"), IconsManager.CLOSE, -2, h);
+			opts[3] = new OptionItem(this, TextLocal.inst.get("msg.fwd"), IconsManager.SEND, -6, h);
+			opts[4] = new OptionItem(this, TextLocal.inst.get("msg.links")+"...", IconsManager.LINK, -8, h);
+			opts[5] = new OptionItem(this, TextLocal.inst.get("msg.attach.attachments")+"...", IconsManager.ATTACHMENT, -9, h);
+			VikaTouch.popup(new AutoContextMenu(opts));
 		}
 	}
 
@@ -581,7 +582,7 @@ public class MsgItem
 						if(links[j].indexOf("rtsp")==0) { icon = IconsManager.VIDEOS; }
 						opts2[j] = new OptionItem(this, links[j], icon, -(j+100), h);
 					}
-					VikaTouch.popup(new ContextMenu(opts2));
+					VikaTouch.popup(new AutoContextMenu(opts2));
 				}
 			}
 			break;

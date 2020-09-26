@@ -158,7 +158,7 @@ public class SettingsScreen
 		debugList = new PressableUIItem[]
 		{
 			backItem,
-			new OptionItem(this, TextLocal.inst.get("settings.clearсache"), IconsManager.CLOSE, -2, oneitemheight),
+			//new OptionItem(this, TextLocal.inst.get("settings.clearсache"), IconsManager.CLOSE, -2, oneitemheight),
 			new SettingMenuItem(this, TextLocal.inst.get("settings.debugcrap"), IconsManager.DEVICE, 10, 
 					oneitemheight, eOd, Settings.debugInfo?1:0, null),
 		};
@@ -171,6 +171,8 @@ public class SettingsScreen
 			// как известно, анимация давно сломанна, да и вообще в ней нет смысла т.к. при открытии экрана всё лагает.
 			
 			new OptionItem(this, TextLocal.inst.get("settings.language"), IconsManager.EDIT, 23, oneitemheight),
+			new SettingMenuItem(this, TextLocal.inst.get("settings.vibontouch"), IconsManager.DEVICE, 19, 
+					oneitemheight, eOd, Settings.vibOnTouch?1:0, null)
 		};
 		
 		titleStr = TextLocal.inst.get("title.settings");
@@ -324,6 +326,11 @@ public class SettingsScreen
 			case 18:
 			{
 				Settings.loadMusicWithKey = (byte) var;
+				break;
+			}
+			case 19:
+			{
+				Settings.vibOnTouch = var==1;
 				break;
 			}
 		}

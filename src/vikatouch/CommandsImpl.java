@@ -276,7 +276,11 @@ public class CommandsImpl
 			VikaTouch.loading = true;
 			
 			if(VikaTouch.newsScr == null)
+			{
 				VikaTouch.newsScr = new NewsScreen();
+				VikaTouch.newsScr.newsSource = 0;
+				VikaTouch.newsScr.loadPosts();
+			}
 			VikaTouch.setDisplay(VikaTouch.newsScr, -1);
 		}
 	}

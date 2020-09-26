@@ -180,6 +180,7 @@ public class MusicPlayer extends MainScreen
 							time = "00:00";
 							totalTime = "--:--";
 							player = Manager.createPlayer(url);
+							player.realize();
 							
 							player.start();
 							isReady = true;
@@ -351,7 +352,7 @@ public class MusicPlayer extends MainScreen
 							getCover();
 							resizeCover();
 						}
-						catch(Exception e)
+						catch(Throwable e)
 						{
 							e.printStackTrace();
 							isReady = true;
@@ -409,7 +410,7 @@ public class MusicPlayer extends MainScreen
 			}
 
 			//System.gc();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			stop = false;
 			VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
 		}
@@ -500,28 +501,14 @@ public class MusicPlayer extends MainScreen
 		{
 			if(!isReady) return;
 			if(player == null) return;
+			//if(Settings.audioMode == Settings.AUDIO_PLAYONLINE) return;
 			if(x<=x1 || x>=x2) return;
 			
 			double p = (float) (x-x1) / (x2-x1);
 			long st = ((long)((getC().length)*p))*1000000L;
 			
 			if(st<1L) st=1L;
-			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE) {
-				closePlayer();
-				player = Manager.createPlayer(url);
-				player.setMediaTime(st);
-				player.start();
-				isReady = true;
-				isPlaying = true;
-				try
-				{
-					((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
-				}
-				catch (Exception e) { }
-				stop = false;
-				player.addPlayerListener(inst);
-			}
-			else if(st<player.getDuration())
+			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE || st<player.getDuration())
 			{
 				try
 				{
@@ -535,7 +522,7 @@ public class MusicPlayer extends MainScreen
 		}
 		catch (Exception e)
 		{
-			
+			VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
 		}
 	}
 	

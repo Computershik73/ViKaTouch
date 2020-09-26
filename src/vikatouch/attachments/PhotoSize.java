@@ -102,4 +102,24 @@ public class PhotoSize
 		}
 		return curr;
 	}
+	
+	public static PhotoSize searchSmallerSizeH(PhotoSize[] sizes, int tH)
+	{
+		PhotoSize curr = null;
+		int currD = 0xFFFF;
+		for(int i = 0; i < sizes.length; i++)
+		{
+			if(sizes[i] != null)
+			{
+				int d = tH - sizes[i].height;
+				if(d < 0) continue;
+				if(d < currD)
+				{
+					currD = d;
+					curr = sizes[i];
+				}
+			}
+		}
+		return curr;
+	}
 }

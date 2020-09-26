@@ -1,5 +1,7 @@
 package vikatouch.items;
 
+import java.util.Random;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -14,6 +16,7 @@ import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.Attachment;
 import vikatouch.attachments.DocumentAttachment;
+import vikatouch.attachments.ISocialable;
 import vikatouch.attachments.PhotoAttachment;
 import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
@@ -24,7 +27,7 @@ import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
 public class PostItem
-	extends JSONUIItem
+	extends JSONUIItem implements ISocialable
 {
 	
 	private JSONObject json2;
@@ -41,6 +44,8 @@ public class PostItem
 	public int views;
 	public int reposts;
 	public int likes;
+	public boolean canLike;
+	public int comments;
 	private boolean liked;
 	public boolean canlike;
 	
@@ -60,6 +65,12 @@ public class PostItem
 	private String data;
 	private boolean dontLoadAva;
 	protected boolean hasPrevImg;
+	public long date;
+	public String dateS;
+	
+	// tap data
+	int repX, comX;
+	int[] attsY0;
 	
 	int attH = 0;
 	
@@ -85,8 +96,10 @@ public class PostItem
 		{
 			likes = json2.optJSONObject("likes").optInt("count");
 			liked = json2.optJSONObject("likes").optInt("user_likes") == 1;
+			canlike = json2.optJSONObject("likes").optInt("can_like") == 1;
 			reposts = json2.optJSONObject("reposts").optInt("count");
 			views = json2.optJSONObject("views").optInt("count");
+			comments = json2.optJSONObject("comments").optInt("count");
 		}
 		catch (Exception e)
 		{
@@ -102,6 +115,15 @@ public class PostItem
 		catch (Exception e)
 		{
 			
+		}
+		
+		try
+		{
+			date = json2.optLong("date");
+			dateS = VikaUtils.parseTime(date);
+		}
+		catch (Exception e)
+		{
 		}
 		
 		type = json2.optString("type"); 
@@ -197,12 +219,7 @@ public class PostItem
 			}
 		}
 		
-		
-		
-		if(reposterName != null)
-		{
-			itemDrawHeight += 43;
-		}
+		itemDrawHeight = 100;
 
 		
 		if(data != null && data.equalsIgnoreCase("profile_photo"))
@@ -218,49 +235,10 @@ public class PostItem
 		
 		System.gc();
 	}
-	
-	/*
-	private void getPhotos() 
-	{
-		new Thread(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					if(attachments[0] != null)
-					{
-						if(attachments[0] instanceof PhotoAttachment)
-						{
-							hasPrevImg = true;
-							try
-							{
-								((PhotoAttachment)attachments[0]).loadForNews();
-								prevImage = ((PhotoAttachment)attachments[0]).renderImg;
-							}
-							catch (Exception e2)
-							{
-								e2.printStackTrace();
-							}
-						}
-						if(prevImage != null)
-						{
-							itemDrawHeight += prevImage.getHeight() + 16;
-						}
-					}
-				}
-				catch (Exception e)
-				{
-					VikaTouch.error(e, ErrorCodes.POSTIMAGE);
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
-	*/
 
 	public void paint(Graphics g, int y, int scrolled)
 	{
+		if(y+scrolled+itemDrawHeight < -50) return;
 		Font f = Font.getFont(0, 0, 8);
 		int fh = f.getHeight();
 		int textX = 16;
@@ -278,7 +256,10 @@ public class PostItem
 		
 		ColorUtils.setcolor(g, 5);
 		
-		if(name!=null) g.drawString(name, 70, y + 5 + 25 - f.getHeight()/2, 0);
+		if(name!=null) g.drawString(name, 70, y + 5 + 12 - f.getHeight()/2, 0);
+		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
+		if(dateS!=null) g.drawString(dateS, 70, y + 5 + 38 - f.getHeight()/2, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 
 		cy += 60;
 		if(drawText != null)
@@ -296,11 +277,12 @@ public class PostItem
 			if(attH>0)
 			{
 				cy += 5;
+				attsY0 = new int[attachments.length];
 				for(int i=0; i<attachments.length; i++)
 				{
 					Attachment at = attachments[i];
 					if(at==null) continue;
-					
+					attsY0[i] = cy;
 					if(at instanceof PhotoAttachment)
 					{
 						PhotoAttachment pa = (PhotoAttachment) at;
@@ -338,17 +320,42 @@ public class PostItem
 					{
 						((DocumentAttachment) at).draw(g, textX, y+cy, dw - textX*2);
 					}
+					else
+					{
+						attsY0[i] = 65535;
+					}
 					
 					cy += at.getDrawHeight();
 				}
 			}
+			else
+			{
+				attsY0 = null;
+			}
 		}
-		catch (Exception e) { }
+		catch (Exception e) 
+		{ 
+			attsY0 = null;
+		}
 		
 		cy+=10;
+		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
+		
 		g.drawImage(IconsManager.ico[liked?IconsManager.LIKE_F:IconsManager.LIKE], 24, y+cy, 0);
-		g.drawString(String.valueOf(likes), 60, y+cy+12 - fh/2, 0);
-		cy+=30;
+		String likesS = String.valueOf(likes);
+		g.drawString(likesS, 60, y+cy+12 - fh/2, 0);
+		
+		repX = 60+12+f.stringWidth(likesS);
+		g.drawImage(IconsManager.ico[IconsManager.REPOST], 60+12+f.stringWidth(likesS), y+cy, 0);
+		String repostsS = String.valueOf(reposts);
+		g.drawString(repostsS, 60+48+f.stringWidth(likesS), y+cy+12 - fh/2, 0);
+		
+		comX = 120+f.stringWidth(likesS)+f.stringWidth(repostsS);
+		g.drawImage(IconsManager.ico[IconsManager.COMMENTS], 120+f.stringWidth(likesS)+f.stringWidth(repostsS), y+cy, 0);
+		String comsS = String.valueOf(comments);
+		g.drawString(comsS, 120+f.stringWidth(likesS)+f.stringWidth(repostsS)+32, y+cy+12 - fh/2, 0);
+		
+		cy+=40;
 		itemDrawHeight = cy;
 	}
 	
@@ -422,11 +429,87 @@ public class PostItem
 
 	public void tap(int x, int y)
 	{
-		//VikaTouch.sendLog(json2.toString());
+		if(y >= itemDrawHeight-45)
+		{
+			if(x<repX)
+			{
+				like(!liked);
+			}
+		}
+		else if(attsY0!=null)
+		{
+			for(int i=0; i<attachments.length;i++)
+			{
+				if(attsY0[i]!=0 && y > attsY0[i])
+				{
+					attachments[i].press();
+				}
+			}
+		}
 	}
 
 	public void keyPressed(int key)
 	{
+		
+	}
+
+	public boolean canSave() {
+		return false;
+	}
+	public void save() { }
+
+	public boolean canLike() {
+		return canLike;
+	}
+
+	public boolean getLikeStatus() {
+		return liked;
+	}
+
+	public void like(final boolean val) {
+		new Thread()
+		{
+			public void run ()
+			{
+				VikaTouch.loading = true;
+				URLBuilder url;
+				if(val)
+				{
+					url = new URLBuilder("likes.add");
+				}
+				else
+				{
+					url = new URLBuilder("likes.delete");
+				}
+				url.addField("type", "post").addField("owner_id", ownerid).addField("item_id", id);
+				String res = VikaUtils.download(url);
+				if(res==null)
+				{
+					VikaTouch.popup(new InfoPopup("Ошибка", null));
+				}
+				liked = val;
+				VikaTouch.loading = false;
+			}
+		}.start();
+	}
+
+	public void send() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void repost() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean commentsAliveable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void openComments() {
+		// TODO Auto-generated method stub
 		
 	}
 }
