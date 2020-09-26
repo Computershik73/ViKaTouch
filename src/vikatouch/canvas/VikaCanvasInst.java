@@ -9,6 +9,7 @@ import javax.microedition.lcdui.Image;
 import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.popup.VikaNotice;
+import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -28,6 +29,9 @@ public class VikaCanvasInst
 	private Image frame;
 	private GifDecoder d;
 	public VikaNotice currentAlert;
+	public String currentInfo;
+	public long currentInfoStartTime;
+	public VikaNotification currentNof;
 	public double slide;
 	public VikaScreen oldScreen;
 	public static String busyStr;
