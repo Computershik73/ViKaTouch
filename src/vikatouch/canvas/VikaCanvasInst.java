@@ -272,7 +272,7 @@ public class VikaCanvasInst
 
 	public void pointerPressed(int x, int y)
 	{
-		if(Settings.vibOnTouch) Display.getDisplay(VikaTouch.appInst).vibrate(100);
+		if(Settings.vibOnTouch) Display.getDisplay(VikaTouch.appInst).vibrate(50);
 		if(currentAlert != null)
 		{
 			currentAlert.press(x, y);

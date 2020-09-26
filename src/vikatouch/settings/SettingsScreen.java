@@ -158,7 +158,7 @@ public class SettingsScreen
 		debugList = new PressableUIItem[]
 		{
 			backItem,
-			new OptionItem(this, TextLocal.inst.get("settings.clearсache"), IconsManager.CLOSE, -2, oneitemheight),
+			//new OptionItem(this, TextLocal.inst.get("settings.clearсache"), IconsManager.CLOSE, -2, oneitemheight),
 			new SettingMenuItem(this, TextLocal.inst.get("settings.debugcrap"), IconsManager.DEVICE, 10, 
 					oneitemheight, eOd, Settings.debugInfo?1:0, null),
 		};

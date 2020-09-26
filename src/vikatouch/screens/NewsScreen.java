@@ -50,7 +50,7 @@ public class NewsScreen
 				VikaTouch.loading = true;
 				try
 				{
-					int count = 20;
+					int count = 50;
 					URLBuilder url;
 					if(newsSource == 0)
 					{
@@ -90,6 +90,7 @@ public class NewsScreen
 						}
 						uiItems[i] = new PostItem(itemCopy, item);
 						((PostItem) uiItems[i]).parseJSON();
+						Thread.sleep(20);
 					}
 				}
 				catch (Exception e)
@@ -126,7 +127,7 @@ public class NewsScreen
 						if(uiItems[i] != null)
 						{
 							if(y+scrolled < DisplayUtils.height) uiItems[i].paint(g, y, scrolled);
-							y += uiItems[i].getDrawHeight() + 10;
+							y += uiItems[i].getDrawHeight();
 						}
 					}
 					

@@ -320,6 +320,10 @@ public class PostItem
 					{
 						((DocumentAttachment) at).draw(g, textX, y+cy, dw - textX*2);
 					}
+					else
+					{
+						attsY0[i] = 65535;
+					}
 					
 					cy += at.getDrawHeight();
 				}
@@ -351,7 +355,7 @@ public class PostItem
 		String comsS = String.valueOf(comments);
 		g.drawString(comsS, 120+f.stringWidth(likesS)+f.stringWidth(repostsS)+32, y+cy+12 - fh/2, 0);
 		
-		cy+=30;
+		cy+=40;
 		itemDrawHeight = cy;
 	}
 	
@@ -425,7 +429,7 @@ public class PostItem
 
 	public void tap(int x, int y)
 	{
-		if(y >= itemDrawHeight-35)
+		if(y >= itemDrawHeight-45)
 		{
 			if(x<repX)
 			{
