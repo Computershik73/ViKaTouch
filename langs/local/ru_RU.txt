@@ -149,12 +149,28 @@ msg.attach.voice=Голосовое сообщение
 msg.attach.reply=Ответ
 msg.attach.fwd=Пересланное сообщение
 msg.attach.attachment=Вложение
+msg.attach.attachments=Вложения
 msg.attach.video=Видеозапись
 msg.keyboard=Нажмите ОК для ввода
 msg.entermsg=Введите сообщение...
 msg.typing=печатает...
 msg.typing2=печатают...
 msg.sending=Отправка сообщения...
+msg.editing=Редактирование
+msg.failedtoload=Не удалось загрузить информацию
+msg.failedtoload2=Не удалось загрузить сообщения
+msg.sendneterror=Сообщение не отправлено из-за сетевой ошибки.
+msg.senderror=Ошибка при отправке сообщения
+msg.send=Отправить
+msg.attach=Прикрепить
+msg.stickers=Стикеры
+msg.you=Вы
+msg.links=Ссылки
+msg.fwd=Переслать
+msg.delete=Удалить
+msg.edit=Редактировать
+msg.markasread=Прочитано
+msg.reply=Ответить
 
 count.message=сообщение
 count.messages=сообщений
@@ -237,11 +253,15 @@ settings.itunescovers=Искать обложки в ITunes
 settings.loadmusicviahttp=Протокол
 settings.datafolder=Папка для хранения данных
 settings.automarkasread=Помечать сообщения как прочитанные
-
+settings.vibontouch=Вибрация при касаниях
 
 back=Назад
 select=Выбрать
+up=Наверх
+down=Вниз
 options=Опции
+keyboard=Клавиатура
+close=Закрыть
 
 splash.emnotsupported=Скорее всего, ViKa Touch сейчас запущена на неподдерживаемом эмуляторе. Мы рекомендуем использовать KEmulator, J2ME Loader, JBed либо официальные эмуляторы из пакетов для разработчиков - на других возможны проблемы с отображением, функционалом и безопасностью.
 splash.title.3=Подготовка ассетов

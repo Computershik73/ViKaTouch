@@ -60,6 +60,7 @@ public class ChatScreen
 	private String typing2Str = "";
 	private String refreshErrorStr = "";
 	private String sendingStr = "";
+	public static String[] kt;
 	
 	private boolean scrolledDown = false;
 	private int inputBoxH = 48;
@@ -125,7 +126,7 @@ public class ChatScreen
 			{
 				public void run()
 				{
-					String newText = TextEditor.inputString("Редактирование", msg.text==null?"":msg.text, 0);
+					String newText = TextEditor.inputString(TextLocal.inst.get("msg.editing"), msg.text==null?"":msg.text, 0);
 					URLBuilder url = new URLBuilder("messages.edit").addField("peer_id", c.peerId)
 							.addField("message", newText).addField("keep_forward_messages", "1")
 							.addField("keep_snippets", "1").addField("dont_parse_links", "1");
@@ -215,7 +216,7 @@ public class ChatScreen
 				}
 				catch (Exception e)
 				{
-					this.title2 = "Не удалось загрузить информацию.";
+					this.title2 = TextLocal.inst.get("msg.failedtoload");
 				}
 			}
 			else
@@ -229,7 +230,7 @@ public class ChatScreen
 					try
 					{
 						JSONObject json = new JSONObject(x).getJSONArray("response").getJSONObject(0);
-						this.title2 = json.optInt("online") > 0 ? "онлайн" : "оффлайн";
+						this.title2 = json.optInt("online") > 0 ? TextLocal.inst.get("online") : TextLocal.inst.get("msg.offline");
 					}
 					catch (JSONException e)
 					{
@@ -238,7 +239,7 @@ public class ChatScreen
 				}
 				catch (Exception e)
 				{
-					this.title2 = "Не удалось загрузить информацию.";
+					this.title2 = TextLocal.inst.get("msg.failedtoload");
 				}
 				(new Thread() {
 					public void run() {
@@ -321,7 +322,7 @@ public class ChatScreen
 		}
 		catch (Exception e)
 		{
-			this.title2 = "Не удалось загрузить сообщения.";
+			this.title2 = TextLocal.inst.get("msg.failedtoload2");
 			VikaTouch.sendLog(e.toString());
 		}
 		finally
@@ -371,7 +372,7 @@ public class ChatScreen
 		}
 		catch (Exception e)
 		{
-			this.title2 = "Не удалось загрузить сообщения.";
+			this.title2 = TextLocal.inst.get("msg.failedtoload2");
 			e.printStackTrace();
 		}
 		finally
@@ -709,7 +710,7 @@ public class ChatScreen
 					String res = VikaUtils.download(url);
 					if(res==null)
 					{
-						VikaTouch.popup(new InfoPopup("Ошибка при отправке сообщения", null));
+						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("msg.sendneterror"), null));
 					}
 					else
 					{
@@ -720,7 +721,7 @@ public class ChatScreen
 				}
 				catch(Exception e)
 				{
-					VikaTouch.popup(new InfoPopup("Ошибка отправки сообщения - "+e.toString(), null));
+					VikaTouch.popup(new InfoPopup(TextLocal.inst.get("msg.senderror")+" - "+e.toString(), null));
 				}
 				finally
 				{
@@ -934,7 +935,14 @@ public class ChatScreen
 				{
 					try
 					{
-						Thread.sleep(1000*Settings.refreshRate);
+						for(int i=0; i<Settings.refreshRate; i++)
+						{
+							Thread.sleep(1000);
+							if(updStop)
+							{
+								updStop = false; return;
+							}
+						}
 					}
 					catch (InterruptedException e)
 					{ return; } // забавный факт, оно падает при убивании потока во время сна. Я к тому что его надо либо не ловить, либо при поимке завершать галиматью вручную.
@@ -1181,15 +1189,30 @@ public class ChatScreen
 	private void drawKeysTips(Graphics g)
 	{
 		String left; String ok; String right;
+		if(kt==null)
+		{
+			kt = new String[] { 
+				TextLocal.inst.get("back"),
+				TextLocal.inst.get("msg.write"),
+				TextLocal.inst.get("up"),
+				TextLocal.inst.get("options"),
+				TextLocal.inst.get("msg.attach"),
+				TextLocal.inst.get("keyboard"),
+				TextLocal.inst.get("msg.stickers"),
+				TextLocal.inst.get("msg.send"),
+				TextLocal.inst.get("msg.sending"),
+				TextLocal.inst.get("close")
+			};
+		}
 		if(VikaTouch.canvas.currentAlert==null)
 		{
-			right = "Назад";
-			left = buttonSelected==0?"Написать":"Наверх";
-			ok = canSend?((new String[] {"Действия", "Прикрепить", "Клавиатура", "Стикеры", "Отправить"})[buttonSelected]):"Отправка сообщения...";
+			right = kt[0];
+			left = buttonSelected==0?kt[1]:kt[2];
+			ok = canSend?((new String[] {kt[3], kt[4], kt[5], kt[6], kt[7]})[buttonSelected]):kt[8];
 		}
 		else if(VikaTouch.canvas.currentAlert instanceof ContextMenu)
 		{
-			right = "Закрыть";
+			right = kt[9];
 			left = "";
 			ContextMenu m = (ContextMenu) VikaTouch.canvas.currentAlert;
 			ok = m.items[m.selected].text;
