@@ -1,5 +1,7 @@
 package vikatouch.items;
 
+import java.util.Random;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -14,6 +16,7 @@ import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.Attachment;
 import vikatouch.attachments.DocumentAttachment;
+import vikatouch.attachments.ISocialable;
 import vikatouch.attachments.PhotoAttachment;
 import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
@@ -24,7 +27,7 @@ import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
 public class PostItem
-	extends JSONUIItem
+	extends JSONUIItem implements ISocialable
 {
 	
 	private JSONObject json2;
@@ -41,6 +44,8 @@ public class PostItem
 	public int views;
 	public int reposts;
 	public int likes;
+	public boolean canLike;
+	public int comments;
 	private boolean liked;
 	public boolean canlike;
 	
@@ -60,6 +65,10 @@ public class PostItem
 	private String data;
 	private boolean dontLoadAva;
 	protected boolean hasPrevImg;
+	
+	// tap data
+	int repX, comX;
+	int[] attsY0;
 	
 	int attH = 0;
 	
@@ -87,6 +96,7 @@ public class PostItem
 			liked = json2.optJSONObject("likes").optInt("user_likes") == 1;
 			reposts = json2.optJSONObject("reposts").optInt("count");
 			views = json2.optJSONObject("views").optInt("count");
+			comments = json2.optJSONObject("comments").optInt("count");
 		}
 		catch (Exception e)
 		{
@@ -218,46 +228,6 @@ public class PostItem
 		
 		System.gc();
 	}
-	
-	/*
-	private void getPhotos() 
-	{
-		new Thread(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					if(attachments[0] != null)
-					{
-						if(attachments[0] instanceof PhotoAttachment)
-						{
-							hasPrevImg = true;
-							try
-							{
-								((PhotoAttachment)attachments[0]).loadForNews();
-								prevImage = ((PhotoAttachment)attachments[0]).renderImg;
-							}
-							catch (Exception e2)
-							{
-								e2.printStackTrace();
-							}
-						}
-						if(prevImage != null)
-						{
-							itemDrawHeight += prevImage.getHeight() + 16;
-						}
-					}
-				}
-				catch (Exception e)
-				{
-					VikaTouch.error(e, ErrorCodes.POSTIMAGE);
-					e.printStackTrace();
-				}
-			}
-		}).start();
-	}
-	*/
 
 	public void paint(Graphics g, int y, int scrolled)
 	{
@@ -296,11 +266,12 @@ public class PostItem
 			if(attH>0)
 			{
 				cy += 5;
+				attsY0 = new int[attachments.length];
 				for(int i=0; i<attachments.length; i++)
 				{
 					Attachment at = attachments[i];
 					if(at==null) continue;
-					
+					attsY0[i] = cy;
 					if(at instanceof PhotoAttachment)
 					{
 						PhotoAttachment pa = (PhotoAttachment) at;
@@ -342,12 +313,31 @@ public class PostItem
 					cy += at.getDrawHeight();
 				}
 			}
+			else
+			{
+				attsY0 = null;
+			}
 		}
-		catch (Exception e) { }
+		catch (Exception e) 
+		{ 
+			attsY0 = null;
+		}
 		
 		cy+=10;
+		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
+		
 		g.drawImage(IconsManager.ico[liked?IconsManager.LIKE_F:IconsManager.LIKE], 24, y+cy, 0);
-		g.drawString(String.valueOf(likes), 60, y+cy+12 - fh/2, 0);
+		String likesS = String.valueOf(likes);
+		g.drawString(likesS, 60, y+cy+12 - fh/2, 0);
+		
+		g.drawImage(IconsManager.ico[IconsManager.REPOST], 60+12+f.stringWidth(likesS), y+cy, 0);
+		String repostsS = String.valueOf(reposts);
+		g.drawString(repostsS, 60+48+f.stringWidth(likesS), y+cy+12 - fh/2, 0);
+		
+		g.drawImage(IconsManager.ico[IconsManager.COMMENTS], 120+f.stringWidth(likesS)+f.stringWidth(repostsS), y+cy, 0);
+		String comsS = String.valueOf(comments);
+		g.drawString(comsS, 120+f.stringWidth(likesS)+f.stringWidth(repostsS)+32, y+cy+12 - fh/2, 0);
+		
 		cy+=30;
 		itemDrawHeight = cy;
 	}
@@ -422,11 +412,85 @@ public class PostItem
 
 	public void tap(int x, int y)
 	{
-		//VikaTouch.sendLog(json2.toString());
+		if(y >= itemDrawHeight-35)
+		{
+			if(x<repX)
+			{
+				like(!liked);
+			}
+		}
+		else if(attsY0!=null)
+		{
+			for(int i=0; i<attachments.length;i++)
+			{
+				if(attsY0[i]!=0 && y > attsY0[i])
+				{
+					attachments[i].press();
+				}
+			}
+		}
 	}
 
 	public void keyPressed(int key)
 	{
+		
+	}
+
+	public boolean canSave() {
+		return false;
+	}
+	public void save() { }
+
+	public boolean canLike() {
+		return canLike;
+	}
+
+	public boolean getLikeStatus() {
+		return liked;
+	}
+
+	public void like(final boolean val) {
+		new Thread()
+		{
+			public void run ()
+			{
+				URLBuilder url;
+				if(val)
+				{
+					url = new URLBuilder("likes.add");
+				}
+				else
+				{
+					url = new URLBuilder("likes.delete");
+				}
+				url.addField("type", "post").addField("owner_id", ownerid).addField("item_id", id);
+				String res = VikaUtils.download(url);
+				if(res==null)
+				{
+					VikaTouch.popup(new InfoPopup("Ошибка", null));
+				}
+				liked = val;
+			}
+		}.start();
+	}
+
+	public void send() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void repost() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean commentsAliveable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void openComments() {
+		// TODO Auto-generated method stub
 		
 	}
 }
