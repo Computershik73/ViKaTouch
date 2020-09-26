@@ -368,8 +368,6 @@ public class MusicPlayer extends MainScreen
 			{
 				time = "...";
 				totalTime = "--:--";
-				getCover();
-				resizeCover();
 				ContentConnection contCon = null;
 				DataInputStream dis = null;
 				try {
@@ -397,6 +395,7 @@ public class MusicPlayer extends MainScreen
 				System.gc();
 				input = aByteArrayInputStream212;
 				player = Manager.createPlayer(input, "audio/mpeg");
+				player.realize();
 				try
 				{
 					((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
@@ -407,6 +406,8 @@ public class MusicPlayer extends MainScreen
 				isReady = true;
 				isPlaying = true;
 				stop = false;
+				getCover();
+				resizeCover();
 			}
 
 			//System.gc();

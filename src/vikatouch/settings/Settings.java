@@ -51,7 +51,7 @@ public class Settings
 	
 	public static int refreshRate = 5;
 
-	public static boolean sendErrors;
+	public static boolean sendLogs;
 	
 	public static int audioMode = 0; // добавь пж сохранение -ок
 	
@@ -269,7 +269,7 @@ public class Settings
 		language = "ru_RU";
 		cacheImages = true;
 		dontLoadAvas = false;
-		sendErrors = true;
+		sendLogs = true;
 		autoMarkAsRead = true;
 		isLiteOrSomething = VikaTouch.isS40();
 		threaded = true;

@@ -6,37 +6,51 @@ import java.util.Random;
 
 import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.Connector;
-import javax.microedition.io.SocketConnection;
 import javax.microedition.io.file.FileConnection;
-import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.AlertType;
+import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Image;
 import javax.microedition.rms.RecordStore;
 
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikatouch.VikaTouchApp;
-import ru.nnproject.vikaui.*;
+import ru.nnproject.vikaui.UIThread;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.popup.VikaNotice;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
-import vikamobilebase.*;
 import vikatouch.caching.ImageStorage;
 import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.locale.TextLocal;
-import vikatouch.screens.*;
-import vikatouch.screens.menu.*;
+import vikatouch.screens.AboutScreen;
+import vikatouch.screens.CaptchaScreen;
+import vikatouch.screens.ChatScreen;
+import vikatouch.screens.DialogsScreen;
+import vikatouch.screens.LoginScreen;
+import vikatouch.screens.MainScreen;
+import vikatouch.screens.NewsScreen;
+import vikatouch.screens.ReturnableListScreen;
+import vikatouch.screens.menu.DocsScreen;
+import vikatouch.screens.menu.FriendsScreen;
+import vikatouch.screens.menu.GroupsScreen;
+import vikatouch.screens.menu.MenuScreen;
+import vikatouch.screens.menu.PhotosScreen;
+import vikatouch.screens.menu.VideosScreen;
 import vikatouch.screens.page.GroupPageScreen;
 import vikatouch.screens.temp.SplashScreen;
 import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
-import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.captcha.CaptchaObject;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.error.ErrorCodes;
+import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
 
 public class VikaTouch
@@ -578,17 +592,18 @@ public class VikaTouch
 		{
 			mem = "" + (Runtime.getRuntime().totalMemory()/1024);
 		} catch (Exception e) { }
-		String main = "Login: ViKa Touch " + getRelease() + " Version: "+getVersion() + ", device: " + dev
+		String main = "Login: ViKa Touch " + getRelease() + " v"+getVersion() + " on " + dev
 			+ ", display: " + DisplayUtils.width + "x" + DisplayUtils.height;
 		String details = "";
 		if(extended)
 		{
 			String m3g = System.getProperty("microedition.m3g.version");
-			if(m3g==null) m3g="Not supported";
-			details = "\nDevice information: \nmemory: " + mem + "K, profiles: " + System.getProperty("microedition.profiles") 
-			+ ", configuration: " + System.getProperty("microedition.configuration") + " Emulator: " + EmulatorDetector.emulatorType 
-			+ "\nSettings:\nsm: " + Settings.sensorMode + " https: " + Settings.https + " proxy: " + Settings.proxy + " lang: " 
-			+ Settings.language + " listslen: " + Settings.simpleListsLength + " audioMode:"+Settings.audioMode + " API string: "+VikaTouch.API+" m3g: "+m3g;
+			if(m3g==null) m3g="-";
+			details = "\nDevice info: \nRAM:" + mem + "K, profiles:" + System.getProperty("microedition.profiles") 
+			+ ", conf:" + System.getProperty("microedition.configuration") + " Emulator:" + EmulatorDetector.emulatorType 
+			+ "\nSettings:\nsm: " + Settings.sensorMode + " https:" + (Settings.https?1:0) + " proxy:" + (Settings.proxy?1:0) 
+			+ " lang: " + Settings.language + " ll:" + Settings.simpleListsLength + " audio:"+Settings.audioMode 
+			+ "AS:" + Settings.loadMusicViaHttp + "" + Settings.loadMusicWithKey+ " m3g:"+m3g;
 		}
 		return main + details;
 	}
@@ -598,13 +613,14 @@ public class VikaTouch
 		(new Thread() {
 			public void run()
 			{
-				sendLog(getStats(Settings.telemetry));
+				sendLog(getStats(true));
 			}
 		}).start();
 	}
 	
 	public static void sendLog(String x)
 	{
+		if(!Settings.sendLogs) return;
 		if(accessToken == null || accessToken == "")
 			return;
 		int peerId = -197851296;
@@ -630,7 +646,7 @@ public class VikaTouch
 	{
 		inst.errReason = "errcode" + i;
 		
-		if(Settings.sendErrors)
+		if(Settings.sendLogs)
 		{
 			sendLog("Error Report", "errcode: " + i + (fatal ? ", fatal" : ""));
 		}
@@ -653,7 +669,7 @@ public class VikaTouch
 	{
 		inst.errReason = "errcode" + i;
 		
-		if(Settings.sendErrors)
+		if(Settings.sendLogs)
 		{
 			sendLog("Error Report", "errcode: " + i + ", message: " + s + (fatal ? ", fatal" : ""));
 		}
@@ -740,7 +756,7 @@ public class VikaTouch
 			}
 		}
 		
-		if(Settings.sendErrors)
+		if(Settings.sendLogs)
 		{
 			sendLog("Error Report", "errcode: " + i + ", throwable: " + e.toString() + (fatal ? ", fatal" : ""));
 		}
@@ -777,7 +793,7 @@ public class VikaTouch
 			} : null, "Ошибка", fatal ? TextLocal.inst.get("close") : null));
 		}
 		
-		if(Settings.sendErrors)
+		if(Settings.sendLogs)
 		{
 			sendLog("Error Report", "throwable: " + e.toString() + ", message: " + s + (fatal ? ", fatal" : ""));
 		}
@@ -792,7 +808,7 @@ public class VikaTouch
 			crashed = true;
 		}
 		
-		if(Settings.sendErrors)
+		if(Settings.sendLogs)
 		{
 			sendLog("Error Report", "message: " + s + (fatal ? ", fatal" : ""));
 		}

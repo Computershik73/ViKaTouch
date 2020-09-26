@@ -1,7 +1,6 @@
 package vikatouch.settings;
 
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.rms.RecordStore;
 
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
@@ -11,15 +10,11 @@ import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
-import vikatouch.items.*;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
-import vikatouch.music.MusicPlayer;
 import vikatouch.screens.AboutScreen;
 import vikatouch.screens.LoginScreen;
 import vikatouch.screens.MainScreen;
-import vikatouch.screens.menu.MenuScreen;
-import vikatouch.updates.VikaUpdate;
 
 public class SettingsScreen
 	extends MainScreen
@@ -89,10 +84,8 @@ public class SettingsScreen
 			new OptionItem(this, TextLocal.inst.get("settings.media"), IconsManager.PLAY, -102, oneitemheight),
 			new OptionItem(this, TextLocal.inst.get("settings.spabilities"), IconsManager.FRIENDS, -103, oneitemheight),
 			new OptionItem(this, TextLocal.inst.get("settings.debug"), IconsManager.SETTINGS, -104, oneitemheight),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.telemetry"), IconsManager.SEND, 11, 
-					oneitemheight, eOd, Settings.telemetry?1:0, null),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.reporterrors"), IconsManager.SEND, 12, 
-					oneitemheight, eOd, Settings.sendErrors?1:0, null),
+			new SettingMenuItem(this, TextLocal.inst.get("settings.sendlogs"), IconsManager.SEND, 12, 
+					oneitemheight, eOd, Settings.sendLogs?1:0, null),
 			new OptionItem(this, TextLocal.inst.get("settings.reset"), IconsManager.SETTINGS, -3, oneitemheight),
 			new OptionItem(this, TextLocal.inst.get("menu.about"), IconsManager.INFO, 31, oneitemheight),
 			new OptionItem(this, TextLocal.inst.get("settings.logout"), IconsManager.BACK, -1, oneitemheight),
@@ -295,7 +288,7 @@ public class SettingsScreen
 			}
 			case 12:
 			{
-				Settings.sendErrors = var==1;
+				Settings.sendLogs = var==1;
 				break;
 			}
 			case 13:

@@ -11,6 +11,7 @@ import org.json.me.JSONObject;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
+import vikatouch.attachments.WallAttachment;
 import vikatouch.items.PostItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.menu.MenuScreen;
@@ -105,6 +106,10 @@ public class NewsScreen
 		System.gc();
 	}
 
+	public void loadAtt(WallAttachment att)
+	{
+		
+	}
 	protected final void callRefresh()
 	{
 		loadPosts();
