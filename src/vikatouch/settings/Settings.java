@@ -75,6 +75,10 @@ public class Settings
 	
 	public static boolean autoMarkAsRead = true;
 	
+	public static boolean fullscreen = true;
+	
+	public static boolean vibOnTouch = false;
+	
 	public static byte storage;
 	
 	//Не нуждаются сохранению (м.б передумаем)
@@ -171,6 +175,9 @@ public class Settings
 			        loadMusicViaHttp = is.readByte();
 			        loadITunesCovers = is.readBoolean();
 			        loadMusicWithKey = is.readByte();
+			        // 2.8.6
+			        vibOnTouch = is.readBoolean();
+			        fullscreen = is.readBoolean();
 		        }
 		        catch (Exception e)
 		        {
@@ -229,6 +236,9 @@ public class Settings
 		        os.writeByte(loadMusicViaHttp);
 		        os.writeBoolean(loadITunesCovers);
 		        os.writeByte(loadMusicWithKey);
+		        // 2.8.6
+		        os.writeBoolean(vibOnTouch);
+		        os.writeBoolean(fullscreen);
 		
 		        final byte[] b = baos.toByteArray();
 		        rs.addRecord(b, 0, b.length);
@@ -270,6 +280,8 @@ public class Settings
 		playerVolume = 100;
 		loadITunesCovers = true;
 		autoMarkAsRead = true;
+		fullscreen = true;
+		vibOnTouch = false;
 		
 		//язык соотвествующий настройкам устройства
 		try
