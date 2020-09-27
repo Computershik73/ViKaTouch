@@ -176,15 +176,14 @@ public class SettingsScreen
 	{
 		update(g);
 		
-		int y = 58;
+		int y = topPanelH;
 		if(uiItems!=null)
 		{
 			for (int i=0;i<uiItems.length;i++)
 			{
 				if(uiItems[i]!=null) {
-					y+=2;
 					uiItems[i].paint(g, y, scrolled);
-					y+=uiItems[i].getDrawHeight()+2;
+					y+=uiItems[i].getDrawHeight();
 				}
 			}
 		}
@@ -201,16 +200,25 @@ public class SettingsScreen
 	{
 		try
 		{
-			if(y > 58 && y < DisplayUtils.height - oneitemheight)
+			if(y > topPanelH && y < DisplayUtils.height - bottomPanelH && uiItems!=null)
 			{
-				int h = oneitemheight+4;
-				int yy1 = y - (scrolled + 58);
-				int i = yy1 / h;
-				if(i < 0)
-					i = 0;
-				if(!dragging)
+				int yy = topPanelH;
+				for(int i = 0; i < uiItems.length; i++)
 				{
-					uiItems[i].tap(x, yy1 - (h * i));
+					try
+					{
+						int y1 = scrolled + yy;
+						int y2 = y1 + uiItems[i].getDrawHeight();
+						yy += uiItems[i].getDrawHeight();
+						if(y > y1 && y < y2)
+						{
+							uiItems[i].tap(x, y - y1);
+						}
+					}
+					catch (Exception e)
+					{
+						
+					}
 				}
 			}
 				
