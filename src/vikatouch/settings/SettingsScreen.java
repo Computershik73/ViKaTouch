@@ -4,6 +4,7 @@ import javax.microedition.lcdui.Graphics;
 
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
+import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
@@ -423,7 +424,7 @@ public class SettingsScreen
 				it[1] = new OptionItem(this, "360", IconsManager.VIDEOS, 12, oneitemheight);
 				it[2] = new OptionItem(this, "480", IconsManager.VIDEOS, 13, oneitemheight);
 				it[3] = new OptionItem(this, "720", IconsManager.VIDEOS, 14, oneitemheight);
-				VikaTouch.popup(new ContextMenu(it));
+				VikaTouch.popup(new AutoContextMenu(it));
 				break;
 			}
 			case 31:
@@ -441,7 +442,7 @@ public class SettingsScreen
 				it[2] = new OptionItem(this, "Русский", IconsManager.EDIT, 3, oneitemheight);
 				it[3] = new OptionItem(this, "Russian (translit)", IconsManager.EDIT, 4, oneitemheight);
 				it[3] = new OptionItem(this, "Español (ES)", IconsManager.EDIT, 5, oneitemheight);
-				VikaTouch.popup(new ContextMenu(it));
+				VikaTouch.popup(new AutoContextMenu(it));
 				break;
 			}
 			// 11-20 - разреши видео! Пока, потом я мб таки запихну это дело в SettingItem.
