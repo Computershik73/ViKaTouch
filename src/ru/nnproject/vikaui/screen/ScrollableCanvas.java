@@ -294,7 +294,7 @@ public abstract class ScrollableCanvas
 	
 	protected final void keysScroll(int dir)
 	{
-		scroll = (short)(dir*60);
+		scroll = (short)(dir*40);
 		//scrollPrev += scroll;
 		scrollingTimer = 25;
 		driftSpeed = (short) (20*dir);

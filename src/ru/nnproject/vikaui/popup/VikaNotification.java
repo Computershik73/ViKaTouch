@@ -94,11 +94,11 @@ public class VikaNotification {
 				try
 				{
 					Display d = Display.getDisplay(VikaTouch.appInst);
-					d.vibrate(40);
-					Thread.sleep(80);
-					d.vibrate(40);
-					Thread.sleep(80);
-					d.vibrate(40);
+					d.vibrate(50);
+					Thread.sleep(100);
+					d.vibrate(50);
+					Thread.sleep(100);
+					d.vibrate(50);
 				} catch (Exception e) {
 				}
 			}
