@@ -2,6 +2,7 @@ package vikatouch.screens;
 
 import java.io.IOException;
 
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -74,7 +75,7 @@ public class LoginScreen
 	public final void press(int key)
 	{
 		keysMode = true;
-		if(key == -5)
+		if((key == -5) || (key==Canvas.FIRE))
 		{
 			if(selectedBtn == 0)
 			{
@@ -111,7 +112,7 @@ public class LoginScreen
 				};
 				thread.start();
 			}
-			else if(selectedBtn == 3)
+			else if(selectedBtn == 3) 
 			{
 				if(user != null && user.length() >= 5 && pass != null && pass.length() >= 6)
 				{
@@ -152,7 +153,7 @@ public class LoginScreen
 				}
 			}
 		}
-		else if(key == -2)
+		else if ((key == -2) || (key==Canvas.DOWN))
 		{
 			selectedBtn++;
 			if(selectedBtn > 3)
@@ -164,7 +165,7 @@ public class LoginScreen
 				pressed = true;
 			}
 		}
-		else if(key == -1)
+		else if ((key == -1) || (key==Canvas.UP))
 		{
 			selectedBtn--;
 			if(selectedBtn == 2)

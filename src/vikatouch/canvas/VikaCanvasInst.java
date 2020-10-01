@@ -426,5 +426,56 @@ public class VikaCanvasInst
 	{
 		return Settings.sensorMode == Settings.SENSOR_KEMULATOR;
 	}
+	
+	protected boolean navigationMovement(int dx, int dy, int status, int time) 
+	 {
+	    Field f;
+	    int index;
+	    focusIndex = this.getFieldWithFocusIndex();
+	    if(focusIndex==1)
+	    {
+	        f = getField(focusIndex);
+
+	        Manager m = (Manager)f;
+	        index = m.getFieldWithFocusIndex();
+	        if(dx==-1)
+	        {
+	            index = index--;
+	            if(index>=0)
+	              {
+	                f = m.getField(index);
+	                f.setFocus();
+	              }
+	        }
+	        if(dy==-1)
+	        {
+	            index = index-3;
+	            if(index>=0)
+	              {
+	                f = m.getField(index);
+	                f.setFocus();
+	              } 
+	        }
+	        if(dx==1)
+	        {
+	            index = index++;
+	            if(index<=19)
+	              {
+	                f = m.getField(index);
+	                f.setFocus();
+	              } 
+	        }
+	        if(dy==1)
+	        {
+	            index = index+3;
+	            if(index<=19)
+	              {
+	                f = m.getField(index);
+	                f.setFocus();
+	              } 
+	        }
+	    }
+	    return super.navigationMovement(dx, dy, status, time);
+	}
 
 }
