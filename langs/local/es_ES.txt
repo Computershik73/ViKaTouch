@@ -2,15 +2,15 @@
 #español
 #оригинальный язык
 #совместимо с: пре-бета 2.7.14
-#автор: Илья Высоцкий
+#автор: Илья Высоцкий, Jazminrocio
 #
 #вк автора:
 #vk.com/okabe2011
-#
+#vk.com/jazminrocio
 
 langinfo.name=Español (ES)
 #YYYY.MM.DD
-langinfo.version=2020.09.26
+langinfo.version=2020.09.27
 
 langinfo.hints=2
 
@@ -81,8 +81,8 @@ error.description=Posible descripción
 error.contactdevs=Póngase en contacto con el desarrollador para obtener más información.
 close=Cerrar aplicación
 
-online=En linea
-offline=Desconectado
+online=En linea 
+offline=Desconectado 
 wasonlinedate=Estaba en línea
 wasonlinetime=Estaba en línea en
 
@@ -116,12 +116,16 @@ group=Grupo
 group.s=Grupos
 group.descriptionempty=[descripción vacía]
 
+groups.join=Unirse al grupo 
+groups.leave=Dejar el grupo 
+
 title.people=Gente
 title.chats=Mensajes
 title.newsfeed=Noticias
 title.docs=Documentos
 title.photos=Sección aun no incluida 
-title.videos=Videos
+title.videos=Videos de Amigo 
+title.videosw=Lista de videos 
 title.loading=Cargando... 
 title.members=Miembros
 title.login=Inicio de sesión
@@ -140,6 +144,9 @@ title.musicw=Música %1
 title.playlistsw=Listas de reproducción %1
 title.albumsw=Álbumes %1
 
+likes.add=Dar me gusta 
+likes.delete=Eliminar me gusta 
+
 friend.remove=Eliminar de amigos
 friend.add=Agregar como amigo
 friend.accept=Aceptar solicitud
@@ -150,16 +157,37 @@ subscribe=Suscribirse
 music.all=Toda la música
 
 msg=Mensaje
+msg.online=En linea 
+msg.offline=Desconectado 
 msg.attach.audio=Grabación de Audio
 msg.attach.reply=Respuesta
-msg.attach.fwd=Mensaje Reenviado
+msg.attach.fwd=Mensaje Reenviado 
+msg.attach.attachments=Archivos Adjuntos 
 msg.attach.attachment=Archivo Adjunto
 msg.attach.video=Vídeo
-msg.keyboard=Haga clic en aceptar para escribir
+msg.attach.voice=Mensaje de voz 
+msg.write=Escribir 
 msg.entermsg=Escriba un mensaje...
+msg.keyboard=Presione OK para ingresar ... 
 msg.typing=Escribiendo...
 msg.typing2=Escribir...
 msg.sending=Enviar un mensaje...
+msg.sending=Enviando un mensaje ...
+msg.editing=Editando
+msg.failedtoload=No se pudo cargar la información
+msg.failedtoload2=No se pudieron cargar los mensajes
+msg.sendneterror=El mensaje no se envió debido a un error de red.
+msg.senderror=Error al enviar el mensaje
+msg.send=Enviar
+msg.attach=Adjuntar
+msg.stickers=Stickers
+msg.you=Tú
+msg.links=Enlaces
+msg.fwd=Adjuntar msj a otro chat
+msg.delete=Eliminar
+msg.edit=Editar
+msg.markasread=Leer
+msg.reply=Responder 
 
 count.message=Mensaje
 count.messages=Mensajes
@@ -176,7 +204,13 @@ count.audios=Audios
 
 video=Video
 video.addtosebe=Añadir video
+video.1view=Ver
+video.views=Vistas
+video.viewsfew=Visitas
 
+title2.member=Miembro
+title2.members=Mienbros
+title2.membersfew=Ver Miembros
 title2.loading=Cargando...
 title2.msgloadingfailed=¡No se pudieron actualizar los mensajes!
 
@@ -214,8 +248,8 @@ settings.dontloadavas=No cargar avatares
 settings.cacheimages=Imágenes en caché
 settings.historycount=Longitud del historial de correspondencia
 settings.refreshrate=Frecuencia de actualización
-settings.telemetry=Envío de estadísticas de uso
-settings.reporterrors=Envío de errores
+settings.rytelemetry=Envío de estadísticas de uso
+settings.sendlogs=Envío de registros y errores 
 settings.videoresolution=Resolución de vídeo durante la reproducción
 settings.rtsp=Método para abrir enlaces RTSP
 settings.rtspc.0=Por defecto
@@ -245,10 +279,18 @@ settings.itunescovers=Buscar portadas en iTunes
 settings.loadmusicviahttp=Protocolo
 settings.datafolder=Carpeta de almacenamiento
 settings.automarkasread=Marcar mensajes como leídos 
+settings.vibontouch=Vibración al tacto 
 
 back=Atrás
 select=Seleccionar
 options=Opciones
+up=Arriba
+down=Abajo
+keyboard=Teclado
+close=Cerrar
+yes=Si 
+ok=Aceptar 
+cancel=Cancelar 
 
 splash.emnotsupported=Lo más probable es que ViKa Touch se esté ejecutando actualmente en un emulador no compatible. Recomendamos el uso de kemulator, J2ME Loader, JBed o emuladores oficiales de paquetes para desarrolladores; en otros, puede haber problemas de visualización, funcionalidad y seguridad.
 splash.title.3=Preparación de assets
