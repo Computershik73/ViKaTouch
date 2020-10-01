@@ -1,20 +1,14 @@
 package vikatouch.screens;
 
-import java.io.IOException;
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
-import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
-import vikatouch.locale.TextLocal;
 import vikatouch.screens.menu.MenuScreen;
-import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
 
 public abstract class MainScreen
@@ -475,4 +469,7 @@ public abstract class MainScreen
 		}
 	}
 
+	// events
+	public void onLeave()
+	{ }
 }

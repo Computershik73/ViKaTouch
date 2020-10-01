@@ -28,6 +28,7 @@ public class SettingsScreen
 	
 	private PressableUIItem[] menuList;
 	private PressableUIItem[] systemList;
+	private PressableUIItem[] msgList;
 	private PressableUIItem[] mediaList;
 	private PressableUIItem[] uiList;
 	private PressableUIItem backItem;
@@ -42,13 +43,13 @@ public class SettingsScreen
 		oneitemheight = (short) (DisplayUtils.compact?30:50);
 		backItem = new OptionItem(this, TextLocal.inst.get("back"), IconsManager.BACK, 0, oneitemheight);
 		
-
+		String[] dialogsRR = new String[] { eOd[0], "5", "10", "20", "30" };
 
 		// частота обновления
 		int rr = -1;
 		for(int i=0;i<refreshVals.length;i++)
 		{
-			if(refreshVals[i]==Settings.refreshRate) rr = i;
+			if(refreshVals[i]==Settings.msgRefreshRate) rr = i;
 		}
 		if(rr==-1)
 		{
@@ -77,11 +78,23 @@ public class SettingsScreen
 			j = countValDef;
 			Settings.simpleListsLength = countVals[j];
 		}
+		// диалоги
+		int j0 = -1;
+		for(int i=0;i<countVals.length;i++)
+		{
+			if(countVals[i]==Settings.dialogsLength) j0 = i;
+		}
+		if(j0==-1)
+		{
+			j0 = countValDef;
+			Settings.dialogsLength = countVals[j0];
+		}
 		
 		menuList = new PressableUIItem[]
 		{
 			new OptionItem(this, TextLocal.inst.get("settings.system"), IconsManager.DEVICE, -100, oneitemheight),
 			new OptionItem(this, TextLocal.inst.get("settings.appearance"), IconsManager.MENU, -101, oneitemheight),
+			new OptionItem(this, TextLocal.inst.get("title.chats"), IconsManager.MSGS, -105, oneitemheight),
 			new OptionItem(this, TextLocal.inst.get("settings.media"), IconsManager.PLAY, -102, oneitemheight),
 			new OptionItem(this, TextLocal.inst.get("settings.spabilities"), IconsManager.FRIENDS, -103, oneitemheight),
 			new OptionItem(this, TextLocal.inst.get("settings.debug"), IconsManager.SETTINGS, -104, oneitemheight),
@@ -102,13 +115,23 @@ public class SettingsScreen
 					oneitemheight, eOd, Settings.cacheImages?1:0, null),
 			new SettingMenuItem(this, TextLocal.inst.get("settings.listslength"), IconsManager.MENU, 5, 
 				oneitemheight, countVals, j, null),
+			
+			
+		};
+		msgList = new PressableUIItem[]
+		{
+			backItem,
 			new SettingMenuItem(this, TextLocal.inst.get("settings.historycount"), IconsManager.MSGS, 6, 
-				oneitemheight, countVals, j, null),
+					oneitemheight, countVals, j, null),
 			new SettingMenuItem(this, TextLocal.inst.get("settings.refreshrate"), IconsManager.REFRESH, 7, 
 				oneitemheight, refreshVals, rr, null),
 			//блять я тебя захуярю
 			/**/new SettingMenuItem(this, TextLocal.inst.get("settings.automarkasread"), IconsManager.APPLY, 15, 
 					oneitemheight, eOd, Settings.autoMarkAsRead?1:0, null),/**/
+			new SettingMenuItem(this, TextLocal.inst.get("settings.dialogscount"), IconsManager.MENU, 20, 
+					oneitemheight, countVals, j0, null),
+			new SettingMenuItem(this, TextLocal.inst.get("settings.dialogsrefreshrate"), IconsManager.REFRESH, 21, 
+					oneitemheight, dialogsRR, Settings.dialogsRefreshRate, null),
 		};
 		mediaList = new PressableUIItem[]
 		{
@@ -277,7 +300,7 @@ public class SettingsScreen
 			}
 			case 7:
 			{
-				Settings.refreshRate = refreshVals[var];
+				Settings.msgRefreshRate = refreshVals[var];
 				break;
 			}
 			case 9:
@@ -335,8 +358,18 @@ public class SettingsScreen
 				Settings.vibOnTouch = var==1;
 				break;
 			}
+			case 20:
+			{
+				Settings.dialogsLength = countVals[var];
+				break;
+			}
+			case 21:
+			{
+				Settings.dialogsRefreshRate = (byte) var;
+				break;
+			}
 		}
-		//Settings.saveSettings();
+		Settings.saveSettings();
 		// а вариант "поменял настройку и закрыл приложение" не? Оно кст и не работало, т.к. 14 команда давно не используется. И вообще, точно ли тот командИмпл нужен, когда всё кругом на оптион айтемах с их IMenu...
 	}
 
@@ -372,6 +405,11 @@ public class SettingsScreen
 			case -104:
 			{
 				switchList(debugList);
+				break;
+			}
+			case -105:
+			{
+				switchList(msgList);
 				break;
 			}
 			case -1:

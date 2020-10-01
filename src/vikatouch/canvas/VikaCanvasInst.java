@@ -199,6 +199,18 @@ public class VikaCanvasInst
 			
 		}
 		
+		try
+		{
+			if(currentNof != null)
+			{
+				currentNof.draw(g);
+			}
+		}
+		catch(Exception e)
+		{
+			
+		}
+		
 		long carT = System.currentTimeMillis();
 		hudrT = carT - hudrT;
 		
@@ -210,8 +222,7 @@ public class VikaCanvasInst
 				{
 					if(!VikaTouch.isS40()) vengine.GraphicUtils.darkScreen(g, DisplayUtils.width, DisplayUtils.height, 0, 0, 0, 128);
 				}
-				catch (Exception e) { 
-					e.printStackTrace();
+				catch (Exception e) {
 				}
 				currentAlert.draw(g);
 			}
@@ -276,6 +287,11 @@ public class VikaCanvasInst
 		if(currentAlert != null)
 		{
 			currentAlert.press(x, y);
+		}
+		else if(currentNof!=null && currentNof.active && y < VikaNotification.nofH 
+			&& x > VikaNotification.nofX && x < DisplayUtils.width-VikaNotification.nofX)
+		{
+			currentNof.open();
 		}
 		else if(showCaptcha)
 		{

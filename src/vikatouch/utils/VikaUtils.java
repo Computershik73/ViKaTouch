@@ -24,6 +24,7 @@ import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.popup.InfoPopup;
 import tube42.lib.imagelib.ImageUtils;
+import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
 import vikatouch.caching.ImageStorage;
 import vikatouch.canvas.VikaCanvasInst;
@@ -202,6 +203,17 @@ public final class VikaUtils
 		return download(url.toString());
 	}
 	
+	public static String downloadE(URLBuilder url) throws VikaNetworkError
+	{
+		String res = download(url);
+		if(res==null)
+		{
+			VikaTouch.offlineMode=true;
+			throw new VikaNetworkError();
+		}
+		return res;
+	}
+	
 	public static String download(String url)
 	{
 		int step=0;
@@ -241,10 +253,8 @@ public final class VikaUtils
 					{
 						isr.close();
 					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
+					catch (IOException e)
+					{ }
 					step = 7;
 					httpconn.close();
 					step = 8;
@@ -718,5 +728,22 @@ public final class VikaUtils
 		}
 
 		return var1.toString();
+	}
+	
+	public static String cut(String str, int l)
+	{
+		if(str==null) return "".intern();
+		try
+		{
+			if(str.length()<l+2)
+			{
+				return str;
+			}
+			return str.substring(0, l)+"...";
+		}
+		catch (StringIndexOutOfBoundsException e)
+		{
+			return str;
+		}
 	}
 }

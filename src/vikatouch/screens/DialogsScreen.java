@@ -41,7 +41,7 @@ public class DialogsScreen
 	protected final void callRefresh()
 	{
 		VikaTouch.loading = true;
-		Dialogs.refreshDialogsList(true);
+		Dialogs.refreshDialogsList(true, false);
 	}
 	
 	public final void press(int key)
@@ -86,8 +86,15 @@ public class DialogsScreen
 		{
 			currentItem = Dialogs.itemsCount--;
 		}
-		scrollToSelected();
-		Dialogs.dialogs[currentItem].setSelected(true);
+		try
+		{
+			scrollToSelected();
+			Dialogs.dialogs[currentItem].setSelected(true);
+		}
+		catch (Exception e)
+		{
+			
+		}
 	}
 	
 	protected final void down()

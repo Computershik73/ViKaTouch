@@ -58,25 +58,6 @@ public class ConversationItem
 		{*/
 			ava = VikaTouch.cameraImg;
 		//}
-		/*
-		try
-		{
-			/*
-			if(deleteImg == null)
-			{
-				deleteImg = Image.createImage("/dialremove.png");
-			}
-			
-			if(unreadImg == null)
-			{
-				unreadImg = Image.createImage("/unread.png");
-			}
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		*/
 	}
 
 	public void getAva()

@@ -18,5 +18,14 @@ public abstract class JSONBase
 		}
 		return VikaUtils.replace(VikaUtils.replace(VikaUtils.replace(jsonString, "\\/", "/"), "\\n", "\n"), "\\\"", "\"");
 	}
+	
+	public void disposeJson()
+	{
+		if(json!=null && !json.disposed)
+		{
+			json.dispose();
+		}
+		json = null;
+	}
 
 }

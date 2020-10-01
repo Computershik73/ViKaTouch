@@ -52,7 +52,7 @@ public class CommandsImpl
 					case -1:
 					{
 						//Выход
-						Settings.saveSettings();
+						//Settings.saveSettings();
 						VikaTouch.appInst.destroyApp(false);
 						break;
 					}
@@ -65,6 +65,7 @@ public class CommandsImpl
 					case 1:
 					{
 						//Сообщения
+						
 						dialogs(s);
 						break;
 					}
@@ -212,6 +213,17 @@ public class CommandsImpl
 		};
 		t.start();
 	}
+	
+	protected void callLeaveEvent(VikaScreen s)
+	{
+		try
+		{
+			if(s instanceof MainScreen)
+				((MainScreen) s).onLeave();
+		}
+		catch (Exception e)
+		{ }
+	}
 
 	protected void back(VikaScreen s)
 	{
@@ -267,6 +279,8 @@ public class CommandsImpl
 				VikaTouch.setDisplay(VikaTouch.dialogsScr, -1);
 			}
 		}
+		
+		callLeaveEvent(s);
 	}
 
 	protected void news(VikaScreen s)
@@ -282,6 +296,7 @@ public class CommandsImpl
 				VikaTouch.newsScr.loadPosts();
 			}
 			VikaTouch.setDisplay(VikaTouch.newsScr, -1);
+			callLeaveEvent(s);
 		}
 	}
 
@@ -294,10 +309,11 @@ public class CommandsImpl
 			if(VikaTouch.dialogsScr == null)
 				VikaTouch.dialogsScr = new DialogsScreen();
 			VikaTouch.setDisplay(VikaTouch.dialogsScr, 0);
+			callLeaveEvent(s);
 		}
 		else
 		{
-			Dialogs.refreshDialogsList(true);
+			Dialogs.refreshDialogsList(true, false);
 		}
 	}
 
@@ -307,6 +323,7 @@ public class CommandsImpl
 		if(!(s instanceof MenuScreen))
 		{
 			VikaTouch.setDisplay(VikaTouch.menuScr, 1);
+			callLeaveEvent(s);
 		}
 		/*
 		if(s instanceof SettingsScreen)

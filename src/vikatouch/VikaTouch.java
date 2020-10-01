@@ -21,6 +21,7 @@ import ru.nnproject.vikatouch.VikaTouchApp;
 import ru.nnproject.vikaui.UIThread;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.popup.VikaNotice;
+import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -342,7 +343,7 @@ public class VikaTouch
 						setDisplay(canvas, 1);
 					}
 					
-					Dialogs.refreshDialogsList(true);
+					Dialogs.refreshDialogsList(true, false);
 					return true;
 				}
 			}
@@ -413,7 +414,7 @@ public class VikaTouch
 				final VikaScreen canvas = menuScr = new MenuScreen();
 				setDisplay(canvas, 1);
 				saveToken();
-				Dialogs.refreshDialogsList(true);
+				Dialogs.refreshDialogsList(true, false);
 				return true;
 			}
 		}
@@ -527,7 +528,7 @@ public class VikaTouch
 					final VikaScreen canvas = menuScr = new MenuScreen();
 					setDisplay(canvas, 1);
 					saveToken();
-					Dialogs.refreshDialogsList(true);
+					Dialogs.refreshDialogsList(true, false);
 					CaptchaScreen.finished = false;
 					return true;
 					//CaptchaScreen.finished = false;
@@ -956,7 +957,7 @@ public class VikaTouch
 				SplashScreen.currState = 6;
 				if(accessToken != "" && !offlineMode)
 				{
-					Dialogs.refreshDialogsList(true);
+					Dialogs.refreshDialogsList(true, false);
 				}
 				SplashScreen.currState = 7;
 			}
@@ -991,6 +992,11 @@ public class VikaTouch
 	{
 		canvas.currentAlert = popup;
 		canvas.repaint();
+	}
+	public static void notificate(VikaNotification n)
+	{
+		canvas.currentNof = n;
+		VikaNotification.vib();
 	}
 	public static void callSystemPlayer(String file)
 	{
@@ -1057,7 +1063,7 @@ public class VikaTouch
 
 	public void stop()
 	{
-		Settings.saveSettings();
+		//Settings.saveSettings();
 		if(VikaTouch.accessToken != null && VikaTouch.accessToken != "")
 		{
 			try

@@ -6,6 +6,7 @@ import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.popup.VikaNotification;
 import vikatouch.items.chat.ConversationItem;
 import vikatouch.screens.ChatScreen;
 import vikatouch.settings.Settings;
@@ -16,9 +17,7 @@ public class Dialogs
 	extends TimerTask
 {
 	
-	public static int dialogsCount = 15;
-	
-	public static ConversationItem[] dialogs = new ConversationItem[15];
+	public static ConversationItem[] dialogs = new ConversationItem[0];
 	
 	public static JSONArray profiles;
 	
@@ -31,10 +30,12 @@ public class Dialogs
 	public static Thread downloaderThread;
 
 	private static Thread downloaderThread2;
+	
+	public static Thread updater = null;
 
 	private static Runnable runnable;
 	
-	public static void refreshDialogsList(final boolean async)
+	public static void refreshDialogsList(final boolean async, final boolean sendNofs)
 	{
 		if(downloaderThread != null && downloaderThread.isAlive())
 			downloaderThread.interrupt();
@@ -45,53 +46,52 @@ public class Dialogs
 			{
 				try
 				{
-					VikaTouch.loading = true;
-					String x = VikaUtils.download(new URLBuilder("messages.getConversations").addField("count", "1"));
+					if(dialogs.length != Settings.dialogsLength)
+						dialogs = new ConversationItem[Settings.dialogsLength];
+					itemsCount = Settings.dialogsLength;
+					if(async) VikaTouch.loading = true;
+					String x = VikaUtils.downloadE(new URLBuilder("messages.getConversations").addField("count", "1"));
+					
 					try
 					{
-						VikaTouch.loading = true;
+						if(async) VikaTouch.loading = true;
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = response.getJSONArray("items");
 						JSONObject item = items.getJSONObject(0);
-						boolean u = dialogs[0] == null;
-						short has = 0;
+						boolean hasNew = dialogs[0] == null;
+						short unreadC = 0;
 						try
 						{
-							u = dialogs[0] == null || !item.getJSONObject("last_message").optString("text").substring(0, 7).equalsIgnoreCase(dialogs[0].lasttext.substring(0, 7));
+							hasNew = dialogs[0] == null || !VikaUtils.cut(item.getJSONObject("last_message").optString("text"), 7).equalsIgnoreCase(VikaUtils.cut(dialogs[0].lasttext, 7));
 						}
 						catch (Exception e)
-						{
-							
-						}
-						has = (short) response.optInt("unread_count");
-						itemsCount = (short) response.optInt("count");
-						if(itemsCount > dialogsCount)
-						{
-							itemsCount = dialogsCount;
-						}
+						{ }
+						unreadC = (short) response.optInt("unread_count");
+						//itemsCount = (short) response.optInt("count");
 						response.dispose("response pre");
 						items.dispose("items pre");
 						item.dispose("item pre");
-						if(VikaTouch.unreadCount != has || has > 0 || u)
+						if(VikaTouch.unreadCount != unreadC || unreadC > 0 || hasNew)
 						{
-							VikaTouch.unreadCount = has;
-							VikaTouch.loading = true;
-							x = VikaUtils.download(new URLBuilder("messages.getConversations").addField("filter", "all").addField("extended", "1").addField("count", dialogsCount));
-							VikaTouch.loading = true;
+							VikaTouch.unreadCount = unreadC;
+							x = VikaUtils.download(new URLBuilder("messages.getConversations").addField("filter", "all")
+									.addField("extended", "1").addField("count", Settings.dialogsLength));
+							if(async) VikaTouch.loading = true;
 							response = new JSONObject(x).getJSONObject("response");
 							items = response.getJSONArray("items");
 							profiles = response.getJSONArray("profiles");
 							groups = response.optJSONArray("groups");
-							if(itemsCount > dialogsCount)
-							{
-								itemsCount = dialogsCount;
-							}
-							for(int i = 0; i < itemsCount; i++)
+							for(int i = 0; i < items.length(); i++)
 							{
 								item = items.getJSONObject(i);
 								dialogs[i] = new ConversationItem(item);
 								dialogs[i].parseJSON();
+								dialogs[i].disposeJson();
 								item.dispose("item for");
+							}
+							if(sendNofs && hasNew && dialogs.length>1 && dialogs[0]!=null)
+							{
+								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40), VikaTouch.dialogsScr));
 							}
 							items.dispose("items");
 							x = null;
@@ -103,21 +103,21 @@ public class Dialogs
 						e.printStackTrace();
 					}
 
-					VikaTouch.loading = false;
+					if(async) VikaTouch.loading = false;
 				}
-				catch (NullPointerException e)
+				catch (VikaNetworkError e)
 				{
 					if(!VikaTouch.offlineMode)
-					VikaTouch.warn("Сбой соединения с сервером. Проверьте ваше подключение. Приложение переключено в оффлайн режим");
+						VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Сетевая ошибка", "Не удалось обновить сообщения", null));
 					VikaTouch.offlineMode = true;
-					e.printStackTrace();
 				}
 				catch (Throwable e)
 				{
 					VikaTouch.sendLog("Dialogs loading error "+e.toString());
 				}
-				VikaTouch.loading = true;
+				if(async) VikaTouch.loading = true;
 				
+				runUpdater();
 				//поток качающий картинки
 				if(!Settings.dontLoadAvas)
 				{
@@ -160,9 +160,30 @@ public class Dialogs
 		}
 	}
 	
-	public static void refreshDialog()
+	public static void runUpdater()
 	{
-		
+		if(Settings.dialogsRefreshRate != 0 && (updater==null || !updater.isAlive()))
+		{
+			updater = new Thread()
+			{
+				public void run()
+				{
+					try
+					{
+						while(true)
+						{
+							Thread.sleep(Settings.dialogsRefreshRates[Settings.dialogsRefreshRate]*1000);
+							if(!(VikaTouch.canvas.currentScreen instanceof ChatScreen)) refreshDialogsList(false, true);
+						}
+					}
+					catch(Throwable t)
+					{
+						return;
+					}
+				}
+			};
+			updater.start();
+		}
 	}
 
 	public static void openDialog(ConversationItem dialogItem)
@@ -191,8 +212,13 @@ public class Dialogs
 	{
 		if(!VikaTouch.offlineMode)
 		{
-			refreshDialogsList(true);
+			refreshDialogsList(true, false);
 		}
+	}
+
+	public static void stopUpdater() {
+		if(updater!=null && updater.isAlive())
+			updater.interrupt();
 	}
 
 }

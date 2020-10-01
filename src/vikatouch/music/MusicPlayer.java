@@ -29,6 +29,7 @@ import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
+import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -125,7 +126,10 @@ public class MusicPlayer extends MainScreen
 	
 	public void loadTrack()
 	{
-		System.out.println("TRACK LOAD");
+		if(VikaTouch.canvas.currentScreen != this)
+		{
+			VikaTouch.notificate(new VikaNotification(VikaNotification.NEXT_TRACK, "Сейчас играет", VikaUtils.cut(getC().name, 40), this));
+		}
 		try
 		{
 			player.stop();
@@ -415,6 +419,8 @@ public class MusicPlayer extends MainScreen
 			stop = false;
 			VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
 		}
+		
+		Settings.saveSettings(); // громкость там...
 	}
 
 	private void closePlayer() throws MediaException {

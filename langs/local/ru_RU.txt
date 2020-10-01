@@ -223,7 +223,7 @@ settings.listslength=Количество элементов в списках
 settings.dontloadavas=Не загружать аватарки
 settings.cacheimages=Кэшировать картинки
 settings.historycount=Длина истории переписки
-settings.refreshrate=Частота обновления (с)
+settings.refreshrate=Частота обновления чата (с)
 settings.telemetry=Отправка статистики использования
 settings.sendlogs=Отправка логов и ошибок
 settings.videoresolution=Разрешение видео при воспроизведении
@@ -254,6 +254,8 @@ settings.loadmusicviahttp=Протокол
 settings.datafolder=Папка для хранения данных
 settings.automarkasread=Помечать сообщения как прочитанные
 settings.vibontouch=Вибрация при касаниях
+settings.dialogscount=Количество диалогов
+settings.dialogsrefreshrate=Частота обновления диалогов (с)
 
 back=Назад
 select=Выбрать

@@ -463,7 +463,7 @@ public class MsgItem
 	{
 		if(key == -5) 
 		{
-			int h = DisplayUtils.height>240?36:30;
+			int h = 48;
 			OptionItem[] opts = new OptionItem[6];
 			opts[0] = new OptionItem(this, TextLocal.inst.get("msg.reply"), IconsManager.ANSWER, -1, h);
 			opts[1] = foreign ? new OptionItem(this, TextLocal.inst.get("msg.markasread"), IconsManager.APPLY, -5, h)
@@ -537,7 +537,7 @@ public class MsgItem
 			OptionItem[] opts1 = new OptionItem[2];
 			opts1[0] = new OptionItem(this, "Удалить у себя", IconsManager.EDIT, -98, 60);
 			opts1[1] = new OptionItem(this, "Удалить везде", IconsManager.CLOSE, -99, 60);
-			VikaTouch.popup(new ContextMenu(opts1));
+			VikaTouch.popup(new AutoContextMenu(opts1));
 			break;
 		case -4:
 			if(!foreign) ChatScreen.editMsg(this);
@@ -627,7 +627,7 @@ public class MsgItem
 				}
 				if(opts != null && opts.length>0)
 				{
-					VikaTouch.popup(new ContextMenu(opts));
+					VikaTouch.popup(new AutoContextMenu(opts));
 				}
 				else
 				{

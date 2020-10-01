@@ -49,7 +49,13 @@ public class Settings
 
 	public static boolean dontLoadAvas;
 	
-	public static int refreshRate = 5;
+	public static int msgRefreshRate = 5;
+	
+	public static byte dialogsRefreshRate = 0;
+	
+	public static int[] dialogsRefreshRates = new int[] { 0, 5, 10, 20, 30 };
+	
+	public static int dialogsLength = 15;
 
 	public static boolean sendLogs;
 	
@@ -166,7 +172,7 @@ public class Settings
 		        	audioMode = is.readShort();
 		        	rtspMethod = is.readShort();
 		        	symtube = is.readBoolean();
-		        	refreshRate = is.readShort();
+		        	msgRefreshRate = is.readShort();
 		        	// 2.8.5
 		        	storage = is.readByte();
 			        imageTrimming = is.readBoolean();
@@ -178,6 +184,9 @@ public class Settings
 			        // 2.8.6
 			        vibOnTouch = is.readBoolean();
 			        fullscreen = is.readBoolean();
+			        // 2.8.7
+			        dialogsRefreshRate = is.readByte();
+			        dialogsLength = is.readInt();
 		        }
 		        catch (Exception e)
 		        {
@@ -227,7 +236,7 @@ public class Settings
 		        os.writeShort(audioMode);
 		        os.writeShort(rtspMethod);
 		        os.writeBoolean(symtube);
-		        os.writeShort(refreshRate);
+		        os.writeShort(msgRefreshRate);
 		        // 2.8.5
 		        os.writeByte(storage);
 		        os.writeBoolean(imageTrimming);
@@ -239,6 +248,9 @@ public class Settings
 		        // 2.8.6
 		        os.writeBoolean(vibOnTouch);
 		        os.writeBoolean(fullscreen);
+		        // 2.8.7
+		        os.writeByte(dialogsRefreshRate);
+		        os.writeInt(dialogsLength);
 		
 		        final byte[] b = baos.toByteArray();
 		        rs.addRecord(b, 0, b.length);
@@ -265,6 +277,7 @@ public class Settings
 		sensorMode = SENSOR_OK;
 		simpleListsLength = 30;
 		messagesPerLoad = 30;
+		dialogsLength = 20;
 		videoResolution = Math.min(DisplayUtils.width, DisplayUtils.height)>=360?"360":"240";
 		language = "ru_RU";
 		cacheImages = true;
@@ -282,6 +295,7 @@ public class Settings
 		autoMarkAsRead = true;
 		fullscreen = true;
 		vibOnTouch = false;
+		dialogsRefreshRate = (byte) (isLiteOrSomething?0:2);
 		
 		//язык соотвествующий настройкам устройства
 		try

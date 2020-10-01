@@ -63,6 +63,7 @@ public class NewsScreen
 						url = new URLBuilder("wall.get").addField("filter", "all").addField("extended", 1)
 								.addField("count", count).addField("owner_id", newsSource);
 					}
+					hasBackButton = newsSource!=0;
 					final String s = VikaUtils.download(url);
 					//VikaTouch.sendLog(url.toString());
 					//VikaTouch.sendLog(newsSource+" "+(s.length()>210?s.substring(0, 200):s));
@@ -189,6 +190,11 @@ public class NewsScreen
 	protected void scrollHorizontally(int deltaX)
 	{
 		
+	}
+	
+	public void onLeave()
+	{
+		VikaTouch.newsScr = null;
 	}
 
 }

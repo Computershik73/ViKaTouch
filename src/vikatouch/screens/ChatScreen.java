@@ -935,7 +935,7 @@ public class ChatScreen
 				{
 					try
 					{
-						for(int i=0; i<Settings.refreshRate; i++)
+						for(int i=0; i<Settings.msgRefreshRate; i++)
 						{
 							Thread.sleep(1000);
 							if(updStop)

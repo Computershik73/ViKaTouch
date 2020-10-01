@@ -243,14 +243,14 @@ public class MusicScreen
 					if(i==0)
 					{
 						MusicScreen pls = new MusicScreen();
-						pls.load(id,0,getMusicTitle("music", name, name2));
 						VikaTouch.setDisplay(pls, 1);
+						pls.load(id,0,getMusicTitle("music", name, name2));
 					}
 					else if(i==1)
 					{
 						PlaylistsScreen pls = new PlaylistsScreen();
-						pls.load(id,getMusicTitle("playlists", name, name2));
 						VikaTouch.setDisplay(pls, 1);
+						pls.load(id,getMusicTitle("playlists", name, name2));
 					}
 					else if(i==2)
 					{

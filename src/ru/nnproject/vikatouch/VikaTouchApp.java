@@ -2,6 +2,7 @@ package ru.nnproject.vikatouch;
 
 import javax.microedition.midlet.*;
 
+import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
 import vikatouch.screens.ChatScreen;
 
@@ -17,6 +18,7 @@ public final class VikaTouchApp
 	{
 		ChatScreen.stopUpdater();
 		VikaTouch.inst.stop();
+		Dialogs.stopUpdater();
 		this.notifyDestroyed();
 	}
 
