@@ -224,7 +224,7 @@ public class SettingsScreen
 	{
 		try
 		{
-			if(y > topPanelH && y < DisplayUtils.height - bottomPanelH && uiItems!=null)
+			if(y > topPanelH && y < DisplayUtils.height - bottomPanelH && uiItems!=null && !dragging)
 			{
 				int yy = topPanelH;
 				for(int i = 0; i < uiItems.length; i++)
