@@ -23,6 +23,7 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.popup.InfoPopup;
+import ru.nnproject.vikaui.popup.VikaNotification;
 import tube42.lib.imagelib.ImageUtils;
 import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
@@ -309,7 +310,8 @@ public final class VikaUtils
 				curl = url.substring(0, 56);
 			}
 			catch(Exception e1) { }
-			VikaTouch.sendLog("Net fail "+e.toString() + " Step-"+step+" URL:" + curl);
+			//VikaTouch.sendLog("Net fail "+e.toString() + " Step-"+step+" URL:" + curl);
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), "Step "+step, null));
 		}
 		finally
 		{
