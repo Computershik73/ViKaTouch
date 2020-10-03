@@ -83,7 +83,7 @@ public class VikaNotification {
 
 	public void open()
 	{
-		if(screen!=null) VikaTouch.setDisplay(screen, 1);
+		if(screen!=null && screen != VikaTouch.canvas.currentScreen) VikaTouch.setDisplay(screen, 1);
 	}
 	public static void vib()
 	{

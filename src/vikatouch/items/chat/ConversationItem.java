@@ -39,7 +39,7 @@ public class ConversationItem
 	private String time;
 	private String type;
 	private boolean isGroup;
-	private int id;
+	public int id;
 	public int peerId;
 	private Image ava;
 	//private static Image deleteImg;
@@ -191,10 +191,12 @@ public class ConversationItem
 				avaurl = fixJSONString(chatSettings.getJSONObject("photo").optString("photo_50"));
 				chatSettings.dispose("chatsets");
 			}
-			catch (Throwable e)
+			catch (Exception e)
 			{
 				//System.out.println("conv " + peerId + ": " + e.toString());
 				//chat_settings может не существовать, так-что это исключение игнорируется
+				
+				//if(e instanceof InterruptedException) throw e;
 			}
 			
 			unread = conv.optInt("unread_count");

@@ -32,6 +32,8 @@ public class Dialogs
 	private static Thread downloaderThread2;
 	
 	public static Thread updater = null;
+	
+	public static boolean isUpdatingNow = false;
 
 	private static Runnable runnable;
 	
@@ -44,6 +46,8 @@ public class Dialogs
 		{
 			public void run()
 			{
+				if(isUpdatingNow) return;
+				isUpdatingNow = true;
 				try
 				{
 					if(dialogs.length != Settings.dialogsLength)
@@ -89,7 +93,7 @@ public class Dialogs
 								dialogs[i].disposeJson();
 								item.dispose("item for");
 							}
-							if(sendNofs && hasNew && dialogs.length>1 && dialogs[0]!=null)
+							if(sendNofs && hasNew && dialogs.length>1 && dialogs[0]!=null && !String.valueOf(dialogs[0].id).equals(VikaTouch.userId))
 							{
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40), VikaTouch.dialogsScr));
 							}
@@ -107,13 +111,15 @@ public class Dialogs
 				}
 				catch (VikaNetworkError e)
 				{
-					if(!VikaTouch.offlineMode)
-						VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Сетевая ошибка", "Не удалось обновить сообщения", null));
 					VikaTouch.offlineMode = true;
 				}
 				catch (Throwable e)
 				{
 					VikaTouch.sendLog("Dialogs loading error "+e.toString());
+				}
+				finally
+				{
+					isUpdatingNow = false;
 				}
 				if(async) VikaTouch.loading = true;
 				
@@ -133,6 +139,7 @@ public class Dialogs
 								{
 									if(dialogs[i] != null)
 									{
+										if(isUpdatingNow) return;
 										dialogs[i].getAva();
 									}
 								}

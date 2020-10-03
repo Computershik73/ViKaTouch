@@ -76,6 +76,7 @@ date.justnow=только что
 error.outofmem=Не хватает памяти для работы приложения!
 error.errcode=Код ошибки
 error=Ошибка
+error.net=Сетевая ошибка
 error.additionalinfo=Доп. инфо
 error.description=Возможное описание
 error.contactdevs=за подробной информации обратитесь к разработчику.
