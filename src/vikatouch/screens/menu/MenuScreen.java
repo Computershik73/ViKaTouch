@@ -174,6 +174,7 @@ public class MenuScreen
 	
 	public void scrollToSelected()
 	{
+		if(selectedBtn == 0) return;
 		System.out.println("Y: "+getItemY(selectedBtn-1));
 		scrolled = -(getItemY(selectedBtn-1)-DisplayUtils.height/2+(uiItems[selectedBtn-1].getDrawHeight()/2)+topPanelH+50);
 	}

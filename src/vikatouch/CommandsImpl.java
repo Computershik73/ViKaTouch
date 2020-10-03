@@ -277,6 +277,7 @@ public class CommandsImpl
 			if(s instanceof ChatScreen)
 			{
 				VikaTouch.setDisplay(VikaTouch.dialogsScr, -1);
+				Dialogs.refreshDialogsList(true, false);
 			}
 		}
 		

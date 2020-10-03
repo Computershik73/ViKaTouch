@@ -292,12 +292,38 @@ public abstract class ScrollableCanvas
 		scrolled = -(getItemY(currentItem)-DisplayUtils.height/2+(uiItems[currentItem].getDrawHeight()/2)+MainScreen.topPanelH);
 	}
 	
+	public void selectCentered()
+	{
+		int y = MainScreen.topPanelH;
+		int ye = y;
+		int s = -scrolled + DisplayUtils.height/2;
+		for(int i=0;(i<uiItems.length&&i<uiItems.length);i++)
+		{
+			ye = y + uiItems[i].getDrawHeight();
+			if(y<=s && ye < s)
+			{
+				try
+				{
+					uiItems[currentItem].setSelected(false);
+				} catch (Exception e) {}
+				try
+				{
+					uiItems[i].setSelected(true);
+					currentItem = i;
+				} catch (Exception e) {}
+				return;
+			}
+			y = ye;
+		}
+	}
+	
 	protected final void keysScroll(int dir)
 	{
-		scroll = (short)(dir*40);
+		int d = DisplayUtils.height/12;
+		scroll = (short)(dir*d);
 		//scrollPrev += scroll;
-		scrollingTimer = 25;
-		driftSpeed = (short) (20*dir);
+		scrollingTimer = 40;
+		driftSpeed = (short) (dir*d/2);
 		drift = scroll;
 		scrollPrev = 0;
 	}

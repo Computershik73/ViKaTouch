@@ -666,7 +666,7 @@ public class ChatScreen
 			y += uiItems[i].getDrawHeight();
 			y += msgYMargin;
 		}
-		return y;
+		return y + topPanelH;
 	}
 	
 	public void repeat(int key)
