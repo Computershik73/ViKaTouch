@@ -41,6 +41,7 @@ public class ConversationItem
 	private boolean isGroup;
 	public int id;
 	public int peerId;
+	public int lastSenderId;
 	private Image ava;
 	//private static Image deleteImg;
 	//private static Image unreadImg;
@@ -288,9 +289,9 @@ public class ConversationItem
 				*/
 				text = TextLocal.inst.get("msg.attach.attachment");
 			}
-			int fromId = msg.optInt("from_id");
+			lastSenderId = msg.optInt("from_id");
 			msg.dispose();
-			if(("" + fromId).equalsIgnoreCase(VikaTouch.userId))
+			if(("" + lastSenderId).equalsIgnoreCase(VikaTouch.userId))
 			{
 				nameauthora = "Вы";
 			}
@@ -299,7 +300,7 @@ public class ConversationItem
 				for(int i = 0; i < Dialogs.profiles.length(); i++)
 				{
 					JSONObject profile = Dialogs.profiles.getJSONObject(i);
-					if(fromId == profile.optInt("id"))
+					if(lastSenderId == profile.optInt("id"))
 					{
 						nameauthora = profile.optString("first_name");
 					}

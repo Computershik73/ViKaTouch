@@ -93,7 +93,7 @@ public class Dialogs
 								dialogs[i].disposeJson();
 								item.dispose("item for");
 							}
-							if(sendNofs && hasNew && dialogs.length>1 && dialogs[0]!=null && !String.valueOf(dialogs[0].id).equals(VikaTouch.userId))
+							if(sendNofs && hasNew && dialogs.length>1 && dialogs[0]!=null && !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId))
 							{
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40), VikaTouch.dialogsScr));
 							}
