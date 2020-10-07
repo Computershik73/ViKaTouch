@@ -477,6 +477,11 @@ public class ChatScreen
 			
 			drawHeader(g);
 			drawTextbox(g);
+			/*g.setColor(0, 0, 0);
+			g.fillRect(20, 50, 300, 25);
+			g.setColor(200, 200, 200);
+			g.drawString(scrlDbg, 20, 50, 0);
+			System.out.println(" i"+currentItem);*/
 		}
 		catch (Exception e)
 		{
@@ -717,6 +722,7 @@ public class ChatScreen
 	
 	public void selectCentered()
 	{
+		System.out.println("select center in chat");
 		int y = MainScreen.topPanelH;
 		int ye = y;
 		int s = -scrolled + DisplayUtils.height/2;
@@ -724,7 +730,7 @@ public class ChatScreen
 		{
 			if(uiItems[i] == null) return;
 			ye = y + uiItems[i].getDrawHeight();
-			if(y<=s && ye < s)
+			if(y<=s && ye > s)
 			{
 				try
 				{

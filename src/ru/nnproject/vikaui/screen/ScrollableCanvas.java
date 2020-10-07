@@ -39,6 +39,8 @@ public abstract class ScrollableCanvas
 	protected short scrollPrev;
 	protected short timer;
 	
+	public String scrlDbg = "";
+	
 	
 	/*
 	 * Целевая координата, к которой будет лерпаться прокрутка.
@@ -305,13 +307,14 @@ public abstract class ScrollableCanvas
 	
 	public void selectCentered()
 	{
+		System.out.println("select center");
 		int y = MainScreen.topPanelH;
 		int ye = y;
 		int s = -scrolled + DisplayUtils.height/2;
-		for(int i=0;(i<uiItems.length&&i<uiItems.length);i++)
+		for(int i=0;(i<uiItems.length);i++)
 		{
 			ye = y + uiItems[i].getDrawHeight();
-			if(y<=s && ye < s)
+			if(y<=s && ye > s)
 			{
 				select(i);
 				return;
@@ -323,22 +326,27 @@ public abstract class ScrollableCanvas
 	
 	public void select(int i)
 	{
+		System.out.println("select "+i);
 		if(i<0) i = 0;
 		if(i>=uiItems.length) i = uiItems.length - 1;
 		try
 		{
 			uiItems[currentItem].setSelected(false);
-		} catch (RuntimeException e) {}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
 		try
 		{
 			uiItems[i].setSelected(true);
 			currentItem = i;
-		} catch (RuntimeException e) {}
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	protected final void keysScroll(int dir)
 	{
-		int delta = DisplayUtils.height/2;
+		int delta = DisplayUtils.height/3;
 		int st = 0;
 		int thisItemY = getItemY(currentItem);
 		int topItemY = getItemY(currentItem-1);
@@ -350,13 +358,16 @@ public abstract class ScrollableCanvas
 			down2ItemY = downItemY+uiItems[currentItem+1].getDrawHeight();
 		}
 		catch(RuntimeException e1) { }
-		boolean inItem;
-		int scrY = -scrolled - MainScreen.topPanelH;
+		int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height/2;
+		int br = 0;
+		int sc = 0;
+		scrlDbg = "dir"+dir+" "+topItemY+" "+thisItemY+" "+downItemY+" "+down2ItemY+" d"+delta + " scry"+scrY;
 		if(dir>0)
 		{
 			// up
 			if(scrY-thisItemY<0)
 			{
+				sc=1;
 				selectCentered();
 				thisItemY = getItemY(currentItem);
 				topItemY = getItemY(currentItem-1);
@@ -369,40 +380,51 @@ public abstract class ScrollableCanvas
 			
 			if(scrY-thisItemY > delta)
 			{
-				st = delta;
+				br=1;
+				st = -delta;
 			}
 			else if(scrY-topItemY > delta)
 			{
-				st = delta;
+				br=2;
+				st = -delta;
 				select(currentItem-1);
+			}
+			else if(thisItemY<10)
+			{
+				br = 7;
+				st = -delta;
+				select(0);
 			}
 			else
 			{
-				st = topItemY+1;
+				br=3;
+				st = -topItemY+1;
 				select(currentItem-1);
 			}
 		}
 		else
 		{
 			// down
-			
-			
-			if(downItemY-scrY > delta)
+			if(down2ItemY-scrY > delta && downItemY-scrY <= delta)
 			{
+				br=5;
 				st = delta;
+				select(currentItem+1);
 			}
-			else if(down2ItemY-scrY > delta)
+			else if(downItemY-scrY > delta)
 			{
+				br=4;
 				st = delta;
-				select(currentItem-1);
 			}
 			else
 			{
-				st = down2ItemY-1;
-				select(currentItem-1);
+				br=6;
+				st = (down2ItemY-scrY-1);
+				select(currentItem+1);
 			}
 		}
-		scrollTarget = -st - MainScreen.topPanelH;
+		scrollTarget = Math.min(-MainScreen.topPanelH, -st + scrolled);
+		scrlDbg += " st"+st+ "br"+br+"s"+sc;
 		scrollTargetActive = true;
 	}
 

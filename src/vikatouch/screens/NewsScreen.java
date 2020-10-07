@@ -186,6 +186,10 @@ public class NewsScreen
 				VikaTouch.error(e, ErrorCodes.NEWSPOSTSDRAW);
 			}
 			g.translate(0, -g.getTranslateY());
+			/*g.setColor(0, 0, 0);
+			g.fillRect(20, 50, 300, 25);
+			g.setColor(200, 200, 200);
+			g.drawString(scrlDbg, 20, 50, 0);*/
 		}
 		catch (Exception e)
 		{
