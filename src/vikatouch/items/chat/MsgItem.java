@@ -4,6 +4,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 import org.json.me.JSONArray;
+import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
@@ -92,6 +93,7 @@ public class MsgItem
 			itemDrawHeight = h1*(linesC+1);
 			
 			JSONObject reply = json.optJSONObject("reply_message");
+			JSONArray fwds = json.optJSONArray("fwd_messages");
 			if(reply!=null)
 			{
 				boolean breakReplyText = true;
@@ -140,27 +142,6 @@ public class MsgItem
 					{
 						replyText = CountUtils.countStrMessages(replyFwds.length());
 						breakReplyText = false;
-						forward = new MsgItem[replyFwds.length()];
-						try
-						{
-							for(int i = 0; i<replyFwds.length(); i++)
-							{
-								MsgItem m = new MsgItem(replyFwds.getJSONObject(i));
-								m.parseJSON();
-								int fromId = m.fromid; 
-	
-								String name = (fromId < 0 ? "g" : "") + "id" + fromId;
-								
-								if(fromId > 0 && ChatScreen.profileNames.containsKey(new IntObject(fromId)))
-								{
-									name = (String)ChatScreen.profileNames.get(new IntObject(fromId));
-								}
-								m.showName = true;
-								m.name = (m.foreign ? name : "Вы");
-								forward[i] = m;
-							}
-						}
-						catch(RuntimeException e) { } catch (JSONException e) { }
 					}
 					else
 					{
@@ -182,6 +163,30 @@ public class MsgItem
 						replyName = (String) ChatScreen.profileNames.get(new IntObject(fromId));
 					}
 				}
+			}
+			if(fwds!=null && fwds.length()>0)
+			{
+				forward = new MsgItem[fwds.length()];
+				try
+				{
+					for(int i = 0; i<fwds.length(); i++)
+					{
+						MsgItem m = new MsgItem(fwds.getJSONObject(i));
+						m.parseJSON();
+						int fromId = m.fromid; 
+	
+						String name = (fromId < 0 ? "g" : "") + "id" + fromId;
+						
+						if(fromId > 0 && ChatScreen.profileNames.containsKey(new IntObject(fromId)))
+						{
+							name = (String)ChatScreen.profileNames.get(new IntObject(fromId));
+						}
+						m.showName = true;
+						m.name = (m.foreign ? name : "Вы");
+						forward[i] = m;
+					}
+				}
+				catch(RuntimeException e) { } catch (JSONException e) { }
 			}
 		}
 		catch (Exception e)
@@ -411,7 +416,7 @@ public class MsgItem
 				fwdH=0;
 				for(int i = 0; i<forward.length; i++)
 				{
-					forward[i].paint(g, attY+fwdH, scrolled);
+					forward[i].paint(g, attY+fwdH+y, scrolled);
 					fwdH+=forward[i].getDrawHeight();
 				}
 			}
