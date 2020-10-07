@@ -185,7 +185,7 @@ public class PostItem
 					}
 					else
 					{
-						JSONObject jo2 = new JSONObject(VikaUtils.download(new URLBuilder("users.get").addField("group_id", -xx))).getJSONArray("response").getJSONObject(0);
+						JSONObject jo2 = new JSONObject(VikaUtils.download(new URLBuilder("groups.getById").addField("group_id", -xx))).getJSONArray("response").getJSONObject(0);
 						avaurl = fixJSONString(jo2.optString("photo_50"));
 						name = jo2.optString("name", "");
 					}
@@ -194,51 +194,54 @@ public class PostItem
 			ec = 5;
 			boolean b1 = false;
 			boolean b2 = false;
-			if(NewsScreen.profiles!=null)
+			if(xx>=0)
 			{
-				for(int i = 0; i < NewsScreen.profiles.length(); i++)
+				if(NewsScreen.profiles!=null)
 				{
-					try
+					for(int i = 0; i < NewsScreen.profiles.length(); i++)
 					{
-						JSONObject profile = NewsScreen.profiles.getJSONObject(i);
-						int uid = profile.optInt("id");
-						if(sourceid <= 0)
+						try
 						{
-							b2 = true;
+							JSONObject profile = NewsScreen.profiles.getJSONObject(i);
+							int uid = profile.optInt("id");
+							if(sourceid <= 0)
+							{
+								b2 = true;
+							}
+							if(!b2 && uid == sourceid)
+							{
+								reposterName = "" + profile.optString("first_name") + " " + profile.optString("last_name");
+								b2 = true;
+							}
+							if(xx < 0)
+							{
+								b1 = true;
+							}
+							if(!b1 && uid == xx)
+							{
+								name = "" + profile.optString("first_name") + " " + profile.optString("last_name");
+								b1 = true;
+								JSONObject jo2 = new JSONObject(VikaUtils.download(new URLBuilder("users.get").addField("user_ids", ""+profile.optInt("id")).addField("fields", "photo_50"))).getJSONArray("response").getJSONObject(0);
+								avaurl = fixJSONString(jo2.optString("photo_50"));
+							}
+							if(b1 && b2)
+							{
+								break;
+							}
 						}
-						if(!b2 && uid == sourceid)
+						catch (Exception e)
 						{
-							reposterName = "" + profile.optString("first_name") + " " + profile.optString("last_name");
-							b2 = true;
+							VikaTouch.error(e, ErrorCodes.POSTAVAPROFILES);
+							e.printStackTrace();
 						}
-						if(xx < 0)
-						{
-							b1 = true;
-						}
-						if(!b1 && uid == xx)
-						{
-							name = "" + profile.optString("first_name") + " " + profile.optString("last_name");
-							b1 = true;
-							JSONObject jo2 = new JSONObject(VikaUtils.download(new URLBuilder("users.get").addField("user_ids", ""+profile.optInt("id")).addField("fields", "photo_50"))).getJSONArray("response").getJSONObject(0);
-							avaurl = fixJSONString(jo2.optString("photo_50"));
-						}
-						if(b1 && b2)
-						{
-							break;
-						}
-					}
-					catch (Exception e)
-					{
-						VikaTouch.error(e, ErrorCodes.POSTAVAPROFILES);
-						e.printStackTrace();
 					}
 				}
-			}
-			else
-			{
-				JSONObject u = new JSONObject(VikaUtils.download(new URLBuilder("users.get").addField("user_ids", xx).addField("fields", "photo_50"))).getJSONArray("response").getJSONObject(0);
-				avaurl = fixJSONString(u.optString("photo_50"));
-				name = u.optString("first_name") + " " + u.optString("last_name");
+				else
+				{
+					JSONObject u = new JSONObject(VikaUtils.download(new URLBuilder("users.get").addField("user_ids", xx).addField("fields", "photo_50"))).getJSONArray("response").getJSONObject(0);
+					avaurl = fixJSONString(u.optString("photo_50"));
+					name = u.optString("first_name") + " " + u.optString("last_name");
+				}
 			}
 			ec = 6;
 			itemDrawHeight = 100;
