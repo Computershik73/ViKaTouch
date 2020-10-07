@@ -6,8 +6,10 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONArray;
+import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
@@ -28,6 +30,7 @@ public class NewsScreen
 	public String titleStr;
 	
 	public int newsSource = 0;
+	public boolean fromAtt = false;
 	
 	public NewsScreen()
 	{
@@ -68,8 +71,18 @@ public class NewsScreen
 					//VikaTouch.sendLog(url.toString());
 					//VikaTouch.sendLog(newsSource+" "+(s.length()>210?s.substring(0, 200):s));
 					VikaTouch.loading = true;
-					JSONObject response = new JSONObject(s).getJSONObject("response");
+					JSONObject response = null;
+					try
+					{
+						response = new JSONObject(s).getJSONObject("response");
+					} 
+					catch (JSONException e)
+					{
+						VikaTouch.popup(new InfoPopup(s, null));
+						return;
+					}
 					JSONArray items = response.getJSONArray("items");
+					
 					int itemsCount = items.length();
 					uiItems = new PostItem[itemsCount];
 					
@@ -109,11 +122,39 @@ public class NewsScreen
 
 	public void loadAtt(WallAttachment att)
 	{
-		
+		fromAtt = true;
+		VikaTouch.loading = true;
+		try
+		{
+			hasBackButton = true;
+			VikaTouch.loading = true;
+			uiItems = new PostItem[1];
+			
+			itemsh = 0;
+			VikaTouch.loading = true;
+			JSONObject item = att.json;
+			JSONObject itemCopy;
+			try
+			{
+				itemCopy = item.getJSONArray("copy_history").getJSONObject(0);
+			}
+			catch(Exception e)
+			{
+				itemCopy = item;
+			}
+			uiItems[0] = new PostItem(itemCopy, item);
+			((PostItem) uiItems[0]).parseJSON();
+		}
+		catch (Exception e)
+		{
+			VikaTouch.error(e, -ErrorCodes.NEWSPARSE);
+			e.printStackTrace();
+		}
+		VikaTouch.loading = false;
 	}
 	protected final void callRefresh()
 	{
-		loadPosts();
+		if(!fromAtt) loadPosts();
 	}
 
 	public void draw(Graphics g)

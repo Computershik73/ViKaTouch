@@ -24,6 +24,7 @@ import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
 import vikatouch.attachments.VoiceAttachment;
 import vikatouch.attachments.WallAttachment;
+import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
@@ -54,11 +55,15 @@ public class MsgItem
 	public boolean showName;
 	
 	private int attH = -1;
+	private int fwdH = -1;
 	
 	private boolean hasReply;
 	public String replyName;
 	public String replyText;
 	private boolean attsReady;
+	
+	public boolean isRead = true;
+	public MsgItem[] forward;
 
 	public void ChangeText(String s)
 	{
@@ -72,6 +77,7 @@ public class MsgItem
 	{
 		super.parseJSON();
 		msgWidth = DisplayUtils.width - (DisplayUtils.width<=240?10:40);
+		margin = (DisplayUtils.width<=240?0:10);
 		try
 		{
 			parseAttachments();
@@ -134,6 +140,27 @@ public class MsgItem
 					{
 						replyText = CountUtils.countStrMessages(replyFwds.length());
 						breakReplyText = false;
+						forward = new MsgItem[replyFwds.length()];
+						try
+						{
+							for(int i = 0; i<replyFwds.length(); i++)
+							{
+								MsgItem m = new MsgItem(replyFwds.getJSONObject(i));
+								m.parseJSON();
+								int fromId = m.fromid; 
+	
+								String name = (fromId < 0 ? "g" : "") + "id" + fromId;
+								
+								if(fromId > 0 && ChatScreen.profileNames.containsKey(new IntObject(fromId)))
+								{
+									name = (String)ChatScreen.profileNames.get(new IntObject(fromId));
+								}
+								m.showName = true;
+								m.name = (m.foreign ? name : "Вы");
+								forward[i] = m;
+							}
+						}
+						catch(RuntimeException e) { } catch (JSONException e) { }
 					}
 					else
 					{
@@ -235,13 +262,13 @@ public class MsgItem
 	
 	public void paint(Graphics g, int y, int scrolled)
 	{
-		if(y+scrolled+itemDrawHeight < -50) return;
+		if(!ChatScreen.forceRedraw && y+scrolled+itemDrawHeight < -50) return;
 		// drawing
 		Font font = Font.getFont(0, 0, 8);
 		g.setFont(font);
 		int h1 = font.getHeight();
 		int attY = h1*(linesC+1+(showName?1:0)+(hasReply?2:0));
-		int th = attY + attH;
+		int th = attY + attH + fwdH;
 		itemDrawHeight = th;
 		int textX = 0;
 		int radius = 16;
@@ -257,6 +284,12 @@ public class MsgItem
 				g.setStrokeStyle(Graphics.SOLID);
 				g.drawRoundRect(margin, y, msgWidth, th, radius, radius);
 			}
+			
+			if(!isRead)
+			{
+				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+				g.fillArc(margin+msgWidth+1, y+16, 8, 8, 4, 4);
+			}
 		}
 		else
 		{
@@ -269,6 +302,11 @@ public class MsgItem
 				ColorUtils.setcolor(g, ColorUtils.TEXT);
 				g.setStrokeStyle(Graphics.SOLID);
 				g.drawRoundRect(DisplayUtils.width-(margin+msgWidth), y, msgWidth, th, radius, radius);
+			}
+			if(!isRead)
+			{
+				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+				g.fillArc(DisplayUtils.width-(margin+msgWidth)-9, y+16, 8, 8, 4, 4);
 			}
 		}
 		if(name!=null&&showName)
@@ -353,7 +391,7 @@ public class MsgItem
 				else if(at instanceof WallAttachment)
 				{
 					int x1 = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + msgWidth) + attMargin);
-					g.drawString("Запись на стене", x1+10, y+attY, 0);
+					((WallAttachment) at).draw(g, x1, y+attY, msgWidth - attMargin*2);
 				}
 				else if(at instanceof StickerAttachment)
 				{
@@ -365,6 +403,19 @@ public class MsgItem
 				attY += at.getDrawHeight()+attMargin;
 			}
 		}
+		
+		try
+		{
+			if(forward!=null && forward.length>0)
+			{
+				fwdH=0;
+				for(int i = 0; i<forward.length; i++)
+				{
+					forward[i].paint(g, attY+fwdH, scrolled);
+					fwdH+=forward[i].getDrawHeight();
+				}
+			}
+		} catch (RuntimeException e) { }
 	}
 	
 	public String[] searchLinks()
@@ -615,6 +666,10 @@ public class MsgItem
 					{
 						VideoAttachment va = (VideoAttachment) a;
 						opts[j] = new OptionItem(this, va.title, IconsManager.VIDEOS, j, h);
+					}
+					else if(a.type.equals("wall"))
+					{
+						opts[j] = new OptionItem(this, "Запись на стене", IconsManager.NEWS, j, h);
 					}
 					else if(a.type.equals("audio_message"))
 					{

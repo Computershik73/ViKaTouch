@@ -748,4 +748,105 @@ public final class VikaUtils
 			return str;
 		}
 	}
+	
+	public static String[] searchLinks(String text)
+	{
+		if(text == null || text.length()<2) return null;
+		int lm = 8; // links max (больше на экран не влезет (смотря какой конечно))
+		String[] la = new String[lm];
+		int li = 0; // индекс в массиве
+		int tl = text.length();
+		
+		final String[] glinks = new String[] { "http://", "https://", "rtsp://", "ftp://", "smb://" }; // вроде всё. Ага, я слал/принимал пару раз ссылки на расшаренные папки как smb://server/folder
+		try
+		{
+			//System.out.println(text);
+			//System.out.println("tl "+tl);
+			// Поиск внешних ссылок
+			// сначала ищем их на случай сообщения
+			// @id89277233 @id2323 @id4 @id5 @id6 ... [ещё 100509 @] ... @id888292, http://что-тоТам
+			// В беседе вики такое постоянно.
+			for(int gli=0; gli<glinks.length; gli++)
+			{
+				int ii = 0; // Indexof Index
+				while(true)
+				{
+					ii = text.indexOf(glinks[gli], ii);
+					//System.out.println("ii "+ii);
+					if(ii == -1)
+					{
+						break;
+					}
+					else
+					{
+						int lci = ii+6;
+						while(lci<tl && text.charAt(lci)!=' ') { lci++; }
+						String l = text.substring(ii, lci);
+						la[li] = l;
+						li++;
+						if(li>=lm) return la;
+						ii = lci;
+					}
+				}
+			}
+					
+			// Поиск ссылок ВК
+			int cc = 0; // current char
+			while(cc<tl)
+			{
+				char c = text.charAt(cc);
+				if(c=='@')
+				{
+					int cs = cc;
+					cc++;
+					while(cc<tl && text.charAt(cc)!=' ' && text.charAt(cc)!=']') { cc++; }
+					String l = text.substring(cs, cc);
+					la[li] = l;
+					li++;
+					if(li>=lm) return la;
+				}
+				else if(c=='[')
+				{
+					cc++;
+					int cs = cc;
+					while(cc<tl && text.charAt(cc)!='|') { cc++; }
+					String l = text.substring(cs, cc);
+					la[li] = l;
+					li++;
+					if(li>=lm) return la;
+				}
+				cc++;
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		//System.out.println("links c "+li);
+		return la;
+	}
+	
+	// unfinished
+	public static boolean processVkLink(String link)
+	{
+		link = replace(replace(link, "https://", ""), "http://", "");
+		link = replace(link, "m.vk.com", "vk.com");
+		try
+		{
+			link = link.substring(0, link.indexOf("?"));
+		}
+		catch(Exception e) { }
+		if(link.indexOf("vk.com/")!=0) return false;
+		String target = link.substring(7);
+		if(target.indexOf("wall")==0)
+		{
+			
+		}
+		return true;
+	}
+	
+	public static int lerp(final int start, final int target, final int mul, final int div)
+	{
+		return start + ((target-start) * mul / div);
+	}
 }

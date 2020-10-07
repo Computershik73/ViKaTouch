@@ -78,161 +78,186 @@ public class PostItem
 	{
 		super.parseJSON();
 		super.parseAttachments();
-		//VikaTouch.sendLog(json2.toString());
+		int ec = 0;
 		try
-		{
-			if(text == null || text == "")
-			{
-				text = fixJSONString(json2.optString("text"));
-			}
-		}
-		catch (Exception e)
-		{
-			VikaTouch.error(e, ErrorCodes.POSTTEXT);
-			e.printStackTrace();
-			text = "";
-		}
-		try
-		{
-			likes = json2.optJSONObject("likes").optInt("count");
-			liked = json2.optJSONObject("likes").optInt("user_likes") == 1;
-			canlike = json2.optJSONObject("likes").optInt("can_like") == 1;
-			reposts = json2.optJSONObject("reposts").optInt("count");
-			views = json2.optJSONObject("views").optInt("count");
-			comments = json2.optJSONObject("comments").optInt("count");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-
-		try
-		{
-			JSONObject postSource = json2.getJSONObject("post_source");
-			data = postSource.optString("data");
-		}
-		catch (Exception e)
-		{
-			
-		}
-		
-		try
-		{
-			date = json2.optLong("date");
-			dateS = VikaUtils.parseTime(date);
-		}
-		catch (Exception e)
-		{
-		}
-		
-		type = json2.optString("type"); 
-		
-		copyright = json2.optString("copyright");
-		ownerid = json2.optInt("owner_id");
-		sourceid = json2.optInt("source_id");
-		id = json2.optInt("id");
-		replyownerid = json2.optInt("reply_owner_id");
-		replypostid = json2.optInt("reply_post_id");
-		if(id == 0)
-		{
-			copyright = json.optString("copyright");
-			ownerid = json.optInt("owner_id");
-			id = json.optInt("id");
-			replyownerid = json.optInt("reply_owner_id");
-			replypostid = json.optInt("reply_post_id");
-		}
-		//itemDrawHeight = 82;
-		isreply = replypostid != 0;
-		itemDrawHeight = 72;
-		int xx = 0;
-		xx = replyownerid;
-		if(xx == 0)
-			xx = fromid;
-		if(xx == 0)
-			xx = ownerid;
-		if(xx == 0)
-			xx = sourceid;
-		labelgetnameandphoto:
-		{
-			if(xx < 0)
-			{
-				for(int i = 0; i < NewsScreen.groups.length(); i++)
-				{
-					try
-					{
-						JSONObject group = NewsScreen.groups.getJSONObject(i);
-						final int gid = group.optInt("id");
-						if(gid == -xx)
-						{
-							name = group.optString("name");
-							avaurl = fixJSONString(group.optString("photo_50"));
-							break labelgetnameandphoto;
-						}
-					}
-					catch (Exception e)
-					{
-						VikaTouch.error(e, ErrorCodes.POSTAVAGROUPS);
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		
-		boolean b1 = false;
-		boolean b2 = false;
-		for(int i = 0; i < NewsScreen.profiles.length(); i++)
 		{
 			try
 			{
-				JSONObject profile = NewsScreen.profiles.getJSONObject(i);
-				int uid = profile.optInt("id");
-				if(sourceid <= 0)
+				if(text == null || text == "")
 				{
-					b2 = true;
-				}
-				if(!b2 && uid == sourceid)
-				{
-					reposterName = "" + profile.optString("first_name") + " " + profile.optString("last_name");
-					b2 = true;
-				}
-				if(xx < 0)
-				{
-					b1 = true;
-				}
-				if(!b1 && uid == xx)
-				{
-					name = "" + profile.optString("first_name") + " " + profile.optString("last_name");
-					b1 = true;
-					JSONObject jo2 = new JSONObject(VikaUtils.download(new URLBuilder("users.get").addField("user_ids", ""+profile.optInt("id")).addField("fields", "photo_50"))).getJSONArray("response").getJSONObject(0);
-					avaurl = fixJSONString(jo2.optString("photo_50"));
-				}
-				if(b1 && b2)
-				{
-					break;
+					text = fixJSONString(json2.optString("text"));
 				}
 			}
 			catch (Exception e)
 			{
-				VikaTouch.error(e, ErrorCodes.POSTAVAPROFILES);
+				VikaTouch.error(e, ErrorCodes.POSTTEXT);
+				e.printStackTrace();
+				text = "";
+			}
+			ec = 1;
+			try
+			{
+				likes = json2.optJSONObject("likes").optInt("count");
+				liked = json2.optJSONObject("likes").optInt("user_likes") == 1;
+				canlike = json2.optJSONObject("likes").optInt("can_like") == 1;
+				reposts = json2.optJSONObject("reposts").optInt("count");
+				views = json2.optJSONObject("views").optInt("count");
+				comments = json2.optJSONObject("comments").optInt("count");
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
 			}
+			
+	
+			try
+			{
+				JSONObject postSource = json2.getJSONObject("post_source");
+				data = postSource.optString("data");
+			}
+			catch (Exception e)
+			{
+				
+			}
+			ec = 2;
+			try
+			{
+				date = json2.optLong("date");
+				dateS = VikaUtils.parseTime(date);
+			}
+			catch (Exception e)
+			{
+			}
+			
+			type = json2.optString("type"); 
+			ec = 3;
+			copyright = json2.optString("copyright");
+			ownerid = json2.optInt("owner_id");
+			sourceid = json2.optInt("source_id");
+			id = json2.optInt("id");
+			replyownerid = json2.optInt("reply_owner_id");
+			replypostid = json2.optInt("reply_post_id");
+			if(id == 0)
+			{
+				copyright = json.optString("copyright");
+				ownerid = json.optInt("owner_id");
+				id = json.optInt("id");
+				replyownerid = json.optInt("reply_owner_id");
+				replypostid = json.optInt("reply_post_id");
+			} ec = 3;
+			//itemDrawHeight = 82;
+			isreply = replypostid != 0;
+			itemDrawHeight = 72;
+			int xx = 0;
+			xx = replyownerid;
+			if(xx == 0)
+				xx = fromid;
+			if(xx == 0)
+				xx = ownerid;
+			if(xx == 0)
+				xx = sourceid;
+			ec = 4;
+			labelgetnameandphoto:
+			{
+				if(xx < 0)
+				{
+					if(NewsScreen.groups!=null)
+					{
+						for(int i = 0; i < NewsScreen.groups.length(); i++)
+						{
+							try
+							{
+								JSONObject group = NewsScreen.groups.getJSONObject(i);
+								final int gid = group.optInt("id");
+								if(gid == -xx)
+								{
+									name = group.optString("name");
+									avaurl = fixJSONString(group.optString("photo_50"));
+									break labelgetnameandphoto;
+								}
+							}
+							catch (Exception e)
+							{
+								VikaTouch.error(e, ErrorCodes.POSTAVAGROUPS);
+								e.printStackTrace();
+							}
+						}
+					}
+					else
+					{
+						JSONObject jo2 = new JSONObject(VikaUtils.download(new URLBuilder("users.get").addField("group_id", -xx))).getJSONArray("response").getJSONObject(0);
+						avaurl = fixJSONString(jo2.optString("photo_50"));
+						name = jo2.optString("name", "");
+					}
+				}
+			}
+			ec = 5;
+			boolean b1 = false;
+			boolean b2 = false;
+			if(NewsScreen.profiles!=null)
+			{
+				for(int i = 0; i < NewsScreen.profiles.length(); i++)
+				{
+					try
+					{
+						JSONObject profile = NewsScreen.profiles.getJSONObject(i);
+						int uid = profile.optInt("id");
+						if(sourceid <= 0)
+						{
+							b2 = true;
+						}
+						if(!b2 && uid == sourceid)
+						{
+							reposterName = "" + profile.optString("first_name") + " " + profile.optString("last_name");
+							b2 = true;
+						}
+						if(xx < 0)
+						{
+							b1 = true;
+						}
+						if(!b1 && uid == xx)
+						{
+							name = "" + profile.optString("first_name") + " " + profile.optString("last_name");
+							b1 = true;
+							JSONObject jo2 = new JSONObject(VikaUtils.download(new URLBuilder("users.get").addField("user_ids", ""+profile.optInt("id")).addField("fields", "photo_50"))).getJSONArray("response").getJSONObject(0);
+							avaurl = fixJSONString(jo2.optString("photo_50"));
+						}
+						if(b1 && b2)
+						{
+							break;
+						}
+					}
+					catch (Exception e)
+					{
+						VikaTouch.error(e, ErrorCodes.POSTAVAPROFILES);
+						e.printStackTrace();
+					}
+				}
+			}
+			else
+			{
+				JSONObject u = new JSONObject(VikaUtils.download(new URLBuilder("users.get").addField("user_ids", xx).addField("fields", "photo_50"))).getJSONArray("response").getJSONObject(0);
+				avaurl = fixJSONString(u.optString("photo_50"));
+				name = u.optString("first_name") + " " + u.optString("last_name");
+			}
+			ec = 6;
+			itemDrawHeight = 100;
+	
+			
+			if(data != null && data.equalsIgnoreCase("profile_photo"))
+			{
+				text = "обновил фотографию на странице";
+			}
+			ec = 7;
+			
+			drawText = TextBreaker.breakText(text, Font.getFont(0, 0, 8), DisplayUtils.width - 32);
+			ec= 8;
+			getRes();
 		}
-		
-		itemDrawHeight = 100;
-
-		
-		if(data != null && data.equalsIgnoreCase("profile_photo"))
+		catch(Throwable t)
 		{
-			text = "обновил фотографию на странице";
+			VikaTouch.popup(new InfoPopup("post, code "+ec+" ex "+t.toString(), null));
 		}
-		
-		drawText = TextBreaker.breakText(text, Font.getFont(0, 0, 8), DisplayUtils.width - 32);
-		
-		//if(text==null || text.length()<5)
-			//VikaTouch.sendLog(json2.toString());
-		getRes();
-		
 		System.gc();
 	}
 

@@ -43,37 +43,39 @@ public abstract class MainScreen
 
 	public void release(int x, int y)
 	{
-		if(!dragging || !canScroll)
+		if(!(this instanceof ChatScreen))
 		{
-			int wyw = bbw(DisplayUtils.idispi);
-			if(y < topPanelH)
+			if(!dragging || !canScroll)
 			{
-				if(hasBackButton && x < oneitemheight)
+				int wyw = bbw(DisplayUtils.idispi);
+				if(y < topPanelH)
 				{
-					//VikaTouch.setDisplay(backScreen, -1);
-					VikaTouch.inst.cmdsInst.command(14, this);
+					if(hasBackButton && x < oneitemheight)
+					{
+						VikaTouch.inst.cmdsInst.command(14, this); 
+					}
+					if(!(this instanceof SettingsScreen) && x > DisplayUtils.width - oneitemheight)
+					{
+						VikaTouch.inst.cmdsInst.command(13, this);
+					}
 				}
-				if(!(this instanceof SettingsScreen) && x > DisplayUtils.width - oneitemheight)
+				else if(y >= DisplayUtils.height - bottomPanelH)
 				{
-					VikaTouch.inst.cmdsInst.command(13, this);
-				}
-			}
-			else if(y >= DisplayUtils.height - bottomPanelH)
-			{
-				int acenter = (DisplayUtils.width - wyw) / 2;
-				if(x < wyw)
-				{
-					VikaTouch.inst.cmdsInst.command(0, this);
-				}
-
-				if(x > DisplayUtils.width - wyw)
-				{
-					VikaTouch.inst.cmdsInst.command(2, this);
-				}
-
-				if(x > acenter && x < acenter + wyw)
-				{
-					VikaTouch.inst.cmdsInst.command(1, this);
+					int acenter = (DisplayUtils.width - wyw) / 2;
+					if(x < wyw)
+					{
+						VikaTouch.inst.cmdsInst.command(0, this);
+					}
+	
+					if(x > DisplayUtils.width - wyw)
+					{
+						VikaTouch.inst.cmdsInst.command(2, this);
+					}
+	
+					if(x > acenter && x < acenter + wyw)
+					{
+						VikaTouch.inst.cmdsInst.command(1, this);
+					}
 				}
 			}
 		}

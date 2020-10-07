@@ -32,7 +32,7 @@ import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
 
 public class ChatScreen
-	extends ReturnableListScreen
+	extends MainScreen
 {
 	
 	public boolean ready = false;
@@ -72,6 +72,8 @@ public class ChatScreen
 	
 	public static Thread updater = null;
 	public static boolean updStop = false;
+	
+	public static boolean forceRedraw = false;
 	
 	public static void stopUpdater()
 	{
@@ -165,6 +167,7 @@ public class ChatScreen
 
 	private void parse()
 	{
+		scrollWithKeys = true;
 		VikaCanvasInst.msgColor = 0xffffffff;
 		enterMsgStr = TextLocal.inst.get("msg.entermsg");
 		enterMsgStrSel = TextLocal.inst.get("msg.keyboard");
@@ -250,6 +253,7 @@ public class ChatScreen
 		}
 	}
 
+	int inr = 0, outr = 0;
 	private void messagesChat()
 	{
 		//VikaTouch.sendLog("Messages in chat mode");
@@ -265,7 +269,8 @@ public class ChatScreen
 			JSONObject response = new JSONObject(x).getJSONObject("response");
 			JSONArray profiles = response.getJSONArray("profiles");
 			JSONArray items = response.getJSONArray("items");
-			
+			inr = response.getJSONArray("conversations").getJSONObject(0).optInt("in_read");
+			outr = response.getJSONArray("conversations").getJSONObject(0).optInt("out_read");
 			
 			for(int i = 0; i < profiles.length(); i++)
 			{
@@ -277,6 +282,7 @@ public class ChatScreen
 					profileNames.put(new IntObject(id), firstname + " " + lastname);
 			}
 			//VikaTouch.sendLog(""+items.length()+" msgs");
+			MsgItem last = null;
 			for(int i = 0; i < items.length(); i++)
 			{
 				VikaCanvasInst.msgColor = 0xff00ff00;
@@ -300,19 +306,18 @@ public class ChatScreen
 				
 				m.name = (m.foreign ? name : "Вы");
 				uiItems[uiItems.length-1-i-loadSpace] = m;
-				if(Settings.autoMarkAsRead && i == 0)
+				if(i == 0)
 				{
-					VikaCanvasInst.msgColor = 0xffff00ff;
-					VikaUtils.request(new URLBuilder("messages.markAsRead").addField("start_message_id", ""+m.mid).addField("peer_id", peerId));
-					VikaCanvasInst.msgColor = 0xff00ff00;
+					last = m;
 				}
 				
-				/*if(i%5==4)
-				{
-					Thread.sleep(250);
-					VikaTouch.sendLog("msg "+i+" Mem: "+(Runtime.getRuntime().freeMemory()/1024)+"K total"+(Runtime.getRuntime().totalMemory()/1024));
-				}*/
 				itemsCount = (short) uiItems.length;
+			}
+			if(Settings.autoMarkAsRead && last!=null)
+			{
+				VikaCanvasInst.msgColor = 0xffff00ff;
+				VikaUtils.request(new URLBuilder("messages.markAsRead").addField("start_message_id", ""+last.mid).addField("peer_id", peerId));
+				VikaCanvasInst.msgColor = 0xff00ff00;
 			}
 			x = null;
 			items.dispose();
@@ -404,10 +409,14 @@ public class ChatScreen
 		VikaCanvasInst.msgColor = 0xff00ffff;
 		try
 		{
+			forceRedraw = true;
 			repaint();
-			Thread.sleep(200);
-			scrolled = -65534;
-			currentItem = (short) (uiItems.length-1-loadSpace);
+			Thread.sleep(50);
+			repaint();
+			forceRedraw = false;
+			Thread.sleep(50);
+			currentItem = markMsgs(inr, outr);
+			scrollToSelected();
 			uiItems[currentItem].setSelected(true);
 		}
 		catch (Exception e)
@@ -425,10 +434,40 @@ public class ChatScreen
 		} catch (InterruptedException e) {
 		}
 	}
+	
+	public int markMsgs(int inRead, int outRead)
+	{
+		try
+		{
+			boolean inR = false, outR = false;
+			int r = 0;
+			for(int i=uiItems.length-1; i>=0; i--)
+			{
+				if(uiItems[i]!=null)
+				{
+					MsgItem mi = (MsgItem) uiItems[i];
+					if(mi.mid == inRead)
+					{
+						inR = true;
+						r = i;
+					}
+					if(mi.mid == outRead)
+						outR = true;
+					mi.isRead = mi.foreign?outR:inR;
+				}
+			}
+			return r;
+		}
+		catch(RuntimeException e)
+		{
+			return 0;
+		}
+	}
 
 	public void draw(Graphics g)
 	{
 		update(g);
+		
 		try 
 		{
 			g.translate(0, topPanelH);
@@ -441,8 +480,12 @@ public class ChatScreen
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
 		}
+	}
+	
+	public void drawHUD(Graphics g) 
+	{
+		
 	}
 
 	protected void scrollHorizontally(int deltaX)
@@ -608,6 +651,8 @@ public class ChatScreen
 	{
 		if(buttonSelected == 0)
 		{
+			keysScroll(-1);
+			/*
 			try
 			{
 				uiItems[currentItem].setSelected(false);
@@ -622,7 +667,7 @@ public class ChatScreen
 			}
 			else
 				scrollToSelected();
-			uiItems[currentItem].setSelected(true);
+			uiItems[currentItem].setSelected(true);*/
 		}
 		else
 		{
@@ -635,7 +680,8 @@ public class ChatScreen
 	{
 		if(buttonSelected == 0)
 		{
-			try
+			keysScroll(+1);
+			/*try
 			{
 				uiItems[currentItem].setSelected(false);
 			}
@@ -650,7 +696,7 @@ public class ChatScreen
 			{
 				uiItems[currentItem].setSelected(true);
 			}
-			catch (Exception e) { }
+			catch (Exception e) { }*/
 		}
 		else
 		{
@@ -667,6 +713,32 @@ public class ChatScreen
 			y += msgYMargin;
 		}
 		return y + topPanelH;
+	}
+	
+	public void selectCentered()
+	{
+		int y = MainScreen.topPanelH;
+		int ye = y;
+		int s = -scrolled + DisplayUtils.height/2;
+		for(int i=0;(i<uiItems.length&&i<uiItems.length);i++)
+		{
+			if(uiItems[i] == null) return;
+			ye = y + uiItems[i].getDrawHeight();
+			if(y<=s && ye < s)
+			{
+				try
+				{
+					uiItems[currentItem].setSelected(false);
+				} catch (Exception e) {}
+				try
+				{
+					uiItems[i].setSelected(true);
+					currentItem = i;
+				} catch (Exception e) {}
+				return;
+			}
+			y = ye + msgYMargin;
+		}
 	}
 	
 	public void repeat(int key)
@@ -755,6 +827,7 @@ public class ChatScreen
 	}
 	
 	JSONArray temp1;
+	JSONObject temp2;
 	private void update () throws JSONException
 	{
 		try
@@ -776,12 +849,15 @@ public class ChatScreen
 				{
 					if(x == null || x.length()<10) throw new JSONException("Empty answer");
 					temp1 = null;
+					temp2 = null;
 					Thread parser = new Thread()
 					{
 						public void run()
 						{
 							try {
-								temp1 = new JSONObject(x).getJSONObject("response").getJSONArray("items");
+								JSONObject res = new JSONObject(x).getJSONObject("response");
+								temp1 = res.getJSONArray("items");
+								temp2 = res.getJSONArray("conversations").getJSONObject(0);
 							} catch (Throwable e) {
 								refreshOk = false;
 								return;
@@ -808,6 +884,10 @@ public class ChatScreen
 					return;
 				}
 				items = temp1;
+				
+				int inRead = temp2.optInt("in_read");
+				int outRead = temp2.optInt("out_read");
+				
 				int newMsgCount = items.length();
 				System.out.println(newMsgCount+"");
 				if(newMsgCount==0)
@@ -898,6 +978,7 @@ public class ChatScreen
 						hasSpace--;
 						VikaCanvasInst.updColor = 0xffff00ff;
 					}
+					markMsgs(inRead, outRead);
 				}	
 				System.gc();
 				
@@ -1042,9 +1123,14 @@ public class ChatScreen
 			for(int i=0; i<uiItems.length; i++)
 			{
 				if(uiItems[i] == null) continue;
-				y+=msgYMargin;
-				if(y+scrolled < DisplayUtils.height) uiItems[i].paint(g, y, scrolled);
-				y+=uiItems[i].getDrawHeight();
+				try
+				{
+					y+=msgYMargin;
+					if(y+scrolled < DisplayUtils.height || forceRedraw) uiItems[i].paint(g, y, scrolled);
+					y+=uiItems[i].getDrawHeight();
+				}
+				catch(RuntimeException e)
+				{ }
 			}
 			this.itemsh = y + 50;
 		}

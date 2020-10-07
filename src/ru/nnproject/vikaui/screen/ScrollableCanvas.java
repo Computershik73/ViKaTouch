@@ -6,6 +6,7 @@ import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.screens.MainScreen;
+import vikatouch.utils.VikaUtils;
 
 public abstract class ScrollableCanvas
 	extends VikaScreen
@@ -37,6 +38,16 @@ public abstract class ScrollableCanvas
 	public short scrollingTimer;
 	protected short scrollPrev;
 	protected short timer;
+	
+	
+	/*
+	 * Целевая координата, к которой будет лерпаться прокрутка.
+	 */
+	public int scrollTarget;
+	/*
+	 * Если false, лерпаться не будет.
+	 */
+	public boolean scrollTargetActive;
 	
 	public ScrollableCanvas()
 	{
@@ -302,34 +313,116 @@ public abstract class ScrollableCanvas
 			ye = y + uiItems[i].getDrawHeight();
 			if(y<=s && ye < s)
 			{
-				try
-				{
-					uiItems[currentItem].setSelected(false);
-				} catch (Exception e) {}
-				try
-				{
-					uiItems[i].setSelected(true);
-					currentItem = i;
-				} catch (Exception e) {}
+				select(i);
 				return;
 			}
 			y = ye;
 		}
 	}
 	
+	
+	public void select(int i)
+	{
+		if(i<0) i = 0;
+		if(i>=uiItems.length) i = uiItems.length - 1;
+		try
+		{
+			uiItems[currentItem].setSelected(false);
+		} catch (RuntimeException e) {}
+		try
+		{
+			uiItems[i].setSelected(true);
+			currentItem = i;
+		} catch (RuntimeException e) {}
+	}
+	
 	protected final void keysScroll(int dir)
 	{
-		int d = DisplayUtils.height/12;
-		scroll = (short)(dir*d);
-		//scrollPrev += scroll;
-		scrollingTimer = 40;
-		driftSpeed = (short) (dir*d/2);
-		drift = scroll;
-		scrollPrev = 0;
+		int delta = DisplayUtils.height/2;
+		int st = 0;
+		int thisItemY = getItemY(currentItem);
+		int topItemY = getItemY(currentItem-1);
+		int downItemY = thisItemY+50;
+		int down2ItemY = downItemY+50;
+		try
+		{
+			downItemY = thisItemY+uiItems[currentItem].getDrawHeight();
+			down2ItemY = downItemY+uiItems[currentItem+1].getDrawHeight();
+		}
+		catch(RuntimeException e1) { }
+		boolean inItem;
+		int scrY = -scrolled - MainScreen.topPanelH;
+		if(dir>0)
+		{
+			// up
+			if(scrY-thisItemY<0)
+			{
+				selectCentered();
+				thisItemY = getItemY(currentItem);
+				topItemY = getItemY(currentItem-1);
+				try
+				{
+					downItemY = thisItemY+uiItems[currentItem].getDrawHeight();
+				}
+				catch(RuntimeException e1) { }
+			}
+			
+			if(scrY-thisItemY > delta)
+			{
+				st = delta;
+			}
+			else if(scrY-topItemY > delta)
+			{
+				st = delta;
+				select(currentItem-1);
+			}
+			else
+			{
+				st = topItemY+1;
+				select(currentItem-1);
+			}
+		}
+		else
+		{
+			// down
+			
+			
+			if(downItemY-scrY > delta)
+			{
+				st = delta;
+			}
+			else if(down2ItemY-scrY > delta)
+			{
+				st = delta;
+				select(currentItem-1);
+			}
+			else
+			{
+				st = down2ItemY-1;
+				select(currentItem-1);
+			}
+		}
+		scrollTarget = -st - MainScreen.topPanelH;
+		scrollTargetActive = true;
 	}
 
 	protected final void update(Graphics g)
 	{
+		if(scrollTargetActive)
+		{
+			scroll = 0;
+			if(Math.abs(scrolled-scrollTarget)<4)
+			{
+				scrolled = scrollTarget;
+				scrollTargetActive = false;
+			}
+			else
+			{
+				scrolled = VikaUtils.lerp(scrolled, scrollTarget, 15, 100);
+			}
+			g.translate(0, scrolled);
+			return;
+		}
 		try
 		{
 			if(!poorScrolling())
@@ -351,7 +444,6 @@ public abstract class ScrollableCanvas
 		{
 			
 		}
-		boolean d2 = scroll != 0;
 		if(itemsh > vmeshautsa)
 		{
 			canScroll = true;
@@ -364,7 +456,7 @@ public abstract class ScrollableCanvas
 				scrolled = 0;
 			}
 		}
-		if(d2)
+		if(scroll != 0)
 		{
 			scrolled = scrolled + scroll;
 			if(scrolled > 0)
@@ -401,10 +493,12 @@ public abstract class ScrollableCanvas
 	
 	public int getItemY(int n)
 	{
+		if(uiItems==null) return 1;
 		int y=0;
 		for(int i=0;(i<uiItems.length&&i<n);i++)
 		{
-			y += uiItems[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
+			if(uiItems[i] != null)
+				y += uiItems[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
 		}
 		return y;
 	}
