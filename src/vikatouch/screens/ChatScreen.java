@@ -478,10 +478,10 @@ public class ChatScreen
 			drawHeader(g);
 			drawTextbox(g);
 			/*g.setColor(0, 0, 0);
-			g.fillRect(20, 50, 300, 25);
+			g.fillRect(0, 60, 300, 40);
 			g.setColor(200, 200, 200);
-			g.drawString(scrlDbg, 20, 50, 0);
-			System.out.println(" i"+currentItem);*/
+			g.drawString(scrlDbg, 0, 60, 0);
+			g.drawString("scr:"+scrolled+" i"+currentItem, 0,80,0);*/
 		}
 		catch (Exception e)
 		{

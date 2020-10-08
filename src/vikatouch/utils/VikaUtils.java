@@ -849,4 +849,8 @@ public final class VikaUtils
 	{
 		return start + ((target-start) * mul / div);
 	}
+	public static int clamp(final int val, final int min, final int max)
+	{
+		return Math.max(Math.min(val, max), min);
+	}
 }

@@ -355,10 +355,11 @@ public abstract class ScrollableCanvas
 		try
 		{
 			downItemY = thisItemY+uiItems[currentItem].getDrawHeight();
+			down2ItemY = downItemY+50;
 			down2ItemY = downItemY+uiItems[currentItem+1].getDrawHeight();
 		}
 		catch(RuntimeException e1) { }
-		int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height/2;
+		int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height*3/4;
 		int br = 0;
 		int sc = 0;
 		scrlDbg = "dir"+dir+" "+topItemY+" "+thisItemY+" "+downItemY+" "+down2ItemY+" d"+delta + " scry"+scrY;
@@ -378,44 +379,37 @@ public abstract class ScrollableCanvas
 				catch(RuntimeException e1) { }
 			}
 			
+			st = -delta;
 			if(scrY-thisItemY > delta)
-			{
-				br=1;
-				st = -delta;
-			}
+			{ br=1; }
 			else if(scrY-topItemY > delta)
 			{
 				br=2;
-				st = -delta;
 				select(currentItem-1);
 			}
 			else if(thisItemY<10)
 			{
 				br = 7;
-				st = -delta;
 				select(0);
 			}
 			else
 			{
 				br=3;
-				st = -topItemY+1;
+				st = topItemY-scrY+1;
 				select(currentItem-1);
 			}
 		}
 		else
 		{
 			// down
+			st = delta;
 			if(down2ItemY-scrY > delta && downItemY-scrY <= delta)
 			{
 				br=5;
-				st = delta;
 				select(currentItem+1);
 			}
 			else if(downItemY-scrY > delta)
-			{
-				br=4;
-				st = delta;
-			}
+			{ br=4; }
 			else
 			{
 				br=6;
@@ -423,8 +417,9 @@ public abstract class ScrollableCanvas
 				select(currentItem+1);
 			}
 		}
-		scrollTarget = Math.min(-MainScreen.topPanelH, -st + scrolled);
+		scrollTarget = VikaUtils.clamp(-st + scrolled, -itemsh, -MainScreen.topPanelH);
 		scrlDbg += " st"+st+ "br"+br+"s"+sc;
+		System.out.println(scrlDbg);
 		scrollTargetActive = true;
 	}
 
