@@ -6,6 +6,7 @@ import javax.microedition.lcdui.Graphics;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.locale.TextLocal;
 import vikatouch.screens.NewsScreen;
 
 public class WallAttachment
@@ -14,7 +15,10 @@ public class WallAttachment
 	public void parseJSON()
 	{
 		this.type = "wall";
+		title = TextLocal.inst.get("msg.attach.wall");
 	}
+	
+	public static String title = "";
 	
 	public int getDrawHeight() { return 30; }
 	
@@ -33,7 +37,7 @@ public class WallAttachment
 		ColorUtils.setcolor(g, ColorUtils.COLOR1);
 		Font f = Font.getFont(0, Font.STYLE_BOLD, Font.SIZE_SMALL);
 		g.setFont(f);
-		g.drawString("Запись на стене", x1+34, y1 + 15 - f.getHeight()/2, 0);
+		g.drawString(title, x1+34, y1 + 15 - f.getHeight()/2, 0);
 	}
 
 }

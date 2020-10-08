@@ -127,10 +127,10 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 		}
 		hasBackButton = true;
 		this.id = id;
-		Load();
+		load();
 	}
 	
-	public void Load()
+	public void load()
 	{
 		if(downloaderThread != null && downloaderThread.isAlive())
 			downloaderThread.interrupt();
@@ -339,7 +339,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 							{
 								VikaUtils.download(new URLBuilder("groups.join").addField("group_id", id));
 							}
-							Load();
+							load();
 						}
 					}, null));
 					break;

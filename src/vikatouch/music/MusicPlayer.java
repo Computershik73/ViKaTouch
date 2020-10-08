@@ -747,26 +747,28 @@ public class MusicPlayer extends MainScreen
 	
 	public void options()
 	{
+		int h = 50;
 		OptionItem[] opts = new OptionItem[]
 		{
-			new OptionItem(this,TextLocal.inst.get("player.playlist"),IconsManager.MENU,-1,40),
-			new OptionItem(this,TextLocal.inst.get("player.loop"),loop?IconsManager.APPLY:IconsManager.REFRESH,0,40),
-			new OptionItem(this,TextLocal.inst.get("player.random"),random?IconsManager.APPLY:IconsManager.PLAY,1,40),
-			new OptionItem(this,TextLocal.inst.get("player.seek"),IconsManager.SEARCH,2,40),
-			new OptionItem(this,TextLocal.inst.get("player.playagain"),IconsManager.BACK,3,40),
-			new OptionItem(this,TextLocal.inst.get("player.download"),IconsManager.DOWNLOAD,4,40),
-			new OptionItem(this,TextLocal.inst.get("player.troubleshooting"),IconsManager.SETTINGS,5,40),
-			new OptionItem(this,TextLocal.inst.get("player.hideapp"),IconsManager.CLOSE,6,40),
+			new OptionItem(this,TextLocal.inst.get("player.playlist"),IconsManager.MENU,-1,h),
+			new OptionItem(this,TextLocal.inst.get("player.loop"),loop?IconsManager.APPLY:IconsManager.REFRESH,0,h),
+			new OptionItem(this,TextLocal.inst.get("player.random"),random?IconsManager.APPLY:IconsManager.PLAY,1,h),
+			new OptionItem(this,TextLocal.inst.get("player.seek"),IconsManager.SEARCH,2,h),
+			new OptionItem(this,TextLocal.inst.get("player.playagain"),IconsManager.BACK,3,h),
+			new OptionItem(this,TextLocal.inst.get("player.download"),IconsManager.DOWNLOAD,4,h),
+			new OptionItem(this,TextLocal.inst.get("player.troubleshooting"),IconsManager.SETTINGS,5,h),
+			new OptionItem(this,TextLocal.inst.get("player.hideapp"),IconsManager.CLOSE,6,h),
 		};
 		VikaTouch.popup(new AutoContextMenu(opts));
 	}
 	
 	public void troubleOptions()
 	{
+		int h = 60;
 		OptionItem[] opts = new OptionItem[]
 		{
-			new OptionItem(this,TextLocal.inst.get("player.updatelinks"),IconsManager.REFRESH,10,40),
-			new OptionItem(this,TextLocal.inst.get("player.forcedreboot"),IconsManager.CLOSE,11,40),
+			new OptionItem(this,TextLocal.inst.get("player.updatelinks"),IconsManager.REFRESH,10,h),
+			new OptionItem(this,TextLocal.inst.get("player.forcedreboot"),IconsManager.CLOSE,11,h),
 		};
 		VikaTouch.popup(new AutoContextMenu(opts));
 	}

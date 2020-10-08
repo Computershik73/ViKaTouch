@@ -8,6 +8,8 @@ import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -20,6 +22,8 @@ import vikatouch.attachments.ISocialable;
 import vikatouch.attachments.PhotoAttachment;
 import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
+import vikatouch.items.menu.OptionItem;
+import vikatouch.locale.TextLocal;
 import vikatouch.screens.NewsScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
@@ -27,7 +31,7 @@ import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
 public class PostItem
-	extends JSONUIItem implements ISocialable
+	extends JSONUIItem implements ISocialable, IMenu
 {
 	
 	private JSONObject json2;
@@ -67,6 +71,8 @@ public class PostItem
 	protected boolean hasPrevImg;
 	public long date;
 	public String dateS;
+	
+	private int xx;
 	
 	// tap data
 	int repX, comX;
@@ -148,7 +154,7 @@ public class PostItem
 			//itemDrawHeight = 82;
 			isreply = replypostid != 0;
 			itemDrawHeight = 72;
-			int xx = 0;
+			xx = 0;
 			xx = replyownerid;
 			if(xx == 0)
 				xx = fromid;
@@ -457,12 +463,15 @@ public class PostItem
 
 	public void tap(int x, int y)
 	{
+		boolean post = true;
 		if(y >= itemDrawHeight-45)
 		{
+			post = false;
 			if(x<repX)
 			{
 				like(!liked);
 			}
+			
 		}
 		else if(attsY0!=null)
 		{
@@ -470,15 +479,29 @@ public class PostItem
 			{
 				if(attsY0[i]!=0 && y > attsY0[i])
 				{
+					post = false;
 					attachments[i].press();
 				}
 			}
+		}
+		
+		if(post) options(false);
+	}
+
+	private void options(boolean keys) {
+		int h = 50;
+		OptionItem[] o = new OptionItem[keys?3:2];
+		o[0] = new OptionItem(this,name==null?"Page":name,IconsManager.FRIENDS,1,h);
+		o[1] = new OptionItem(this,TextLocal.inst.get("wall.links"),IconsManager.LINK,2,h);
+		if(keys)
+		{
+			o[3] = new OptionItem(this,TextLocal.inst.get(liked?"wall.unlike":"wall.like"),liked?IconsManager.LIKE_F:IconsManager.LIKE,3,h),
 		}
 	}
 
 	public void keyPressed(int key)
 	{
-		
+		if(key == -5) options(true);
 	}
 
 	public boolean canSave() {
@@ -538,6 +561,59 @@ public class PostItem
 
 	public void openComments() {
 		// TODO Auto-generated method stub
+		
+	}
+
+	public void onMenuItemPress(int i) {
+		if(i==1)
+		{
+			VikaTouch.setDisplay(VikaUtils.openPage(xx), 1);
+		}
+		else if(i==2)
+		{
+			String[] links = VikaUtils.searchLinks(text);
+			int c = 0;
+			while(links[c]!=null)
+			{
+				c++;
+			}
+			if(c==0)
+			{
+				VikaTouch.popup(new InfoPopup("Ссылки не найдены либо произошла ошибка.", null));
+			}
+			else
+			{
+				OptionItem[] opts2 = new OptionItem[c];
+				int h = DisplayUtils.height>240?36:30; // вот как делается адаптация, а не твои километровые свитчи и да, я буду ещё долго ворчать.
+				for(int j = 0; j < c; j++)
+				{
+					int icon = IconsManager.LINK;
+					if(links[j].indexOf("id")==0) { icon = IconsManager.FRIENDS; }
+					if(links[j].indexOf("club")==0) { icon = IconsManager.GROUPS; }
+					if(links[j].indexOf("rtsp")==0) { icon = IconsManager.VIDEOS; }
+					opts2[j] = new OptionItem(this, links[j], icon, -j, h);
+				}
+				VikaTouch.popup(new AutoContextMenu(opts2));
+			}
+		}
+		else if(i==3)
+		{
+			like(!liked);
+		}
+		else
+		{
+			try
+			{
+				String s = VikaUtils.searchLinks(text)[-i];
+				VikaUtils.openLink(s);
+			}
+			catch (RuntimeException e) 
+			{
+			}
+		}
+	}
+
+	public void onMenuItemOption(int i) {
 		
 	}
 }
