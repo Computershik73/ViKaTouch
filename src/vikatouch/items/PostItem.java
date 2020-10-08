@@ -495,7 +495,7 @@ public class PostItem
 		o[1] = new OptionItem(this,TextLocal.inst.get("wall.links"),IconsManager.LINK,2,h);
 		if(keys)
 		{
-			o[3] = new OptionItem(this,TextLocal.inst.get(liked?"wall.unlike":"wall.like"),liked?IconsManager.LIKE_F:IconsManager.LIKE,3,h),
+			o[3] = new OptionItem(this,TextLocal.inst.get(liked?"wall.unlike":"wall.like"),liked?IconsManager.LIKE_F:IconsManager.LIKE,3,h);
 		}
 	}
 
