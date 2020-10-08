@@ -46,8 +46,8 @@ public class AudioTrackItem
 		
 		try
 		{
-			name = json.optString("title");
-			artist = json.optString("artist");
+			name = json.optString("title").intern();
+			artist = json.optString("artist").intern();
 			id = json.optInt("id");
 			owner_id = json.optInt("owner_id");
 			length = json.optInt("duration");
@@ -58,6 +58,8 @@ public class AudioTrackItem
 		{
 			e.printStackTrace();
 		}
+		
+		disposeJson();
 
 		System.gc();
 	}
@@ -98,7 +100,7 @@ public class AudioTrackItem
 		{
 			if(MusicPlayer.inst == null)
 			{
-				System.out.println("Calling player");
+				//System.out.println("Calling player");
 				MusicPlayer.launch(playlist, indexInPL);
 			}
 			else if(MusicPlayer.inst.playlist == playlist)
