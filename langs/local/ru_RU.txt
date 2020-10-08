@@ -134,6 +134,7 @@ title.membersw=Участники %1
 title.musicw=Музыка %1
 title.playlistsw=Плейлисты %1
 title.albumsw=Альбомы %1
+title.comments=Комментарии
 
 friend.remove=Удалить из друзей
 friend.add=Добавить в друзья
@@ -152,6 +153,7 @@ msg.attach.fwd=Пересланное сообщение
 msg.attach.attachment=Вложение
 msg.attach.attachments=Вложения
 msg.attach.video=Видеозапись
+msg.attach.wall=Запись на стене
 msg.keyboard=Нажмите ОК для ввода
 msg.entermsg=Введите сообщение...
 msg.typing=печатает...
@@ -172,6 +174,7 @@ msg.delete=Удалить
 msg.edit=Редактировать
 msg.markasread=Прочитано
 msg.reply=Ответить
+msg.write=Написать
 
 count.message=сообщение
 count.messages=сообщений
@@ -307,3 +310,9 @@ player.accessfailed=Медиа-сервер закрыл доступ к ауд�
 player.playererror=Ошибка плеера
 player.internalerror=Неизвестная внутренняя ошибка (-2)
 player.cancel=Отменить загрузку?
+
+wall.like=Нравится
+wall.unlike=Не нравится
+wall.links=Ссылки...
+wall.repost=Репост
+wall.comments=Комментарии

@@ -629,7 +629,7 @@ public class MsgItem
 				else
 				{
 					OptionItem[] opts2 = new OptionItem[c];
-					int h = DisplayUtils.height>240?36:30; // вот как делается адаптация, а не твои километровые свитчи и да, я буду ещё долго ворчать.
+					int h = DisplayUtils.height>240?50:30; // вот как делается адаптация, а не твои километровые свитчи и да, я буду ещё долго ворчать.
 					for(int j = 0; j < c; j++)
 					{
 						int icon = IconsManager.LINK;
@@ -674,7 +674,7 @@ public class MsgItem
 					}
 					else if(a.type.equals("wall"))
 					{
-						opts[j] = new OptionItem(this, "Запись на стене", IconsManager.NEWS, j, h);
+						opts[j] = new OptionItem(this, TextLocal.inst.get("msg.attach.wall"), IconsManager.NEWS, j, h);
 					}
 					else if(a.type.equals("audio_message"))
 					{
