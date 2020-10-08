@@ -30,6 +30,9 @@ import vikatouch.VikaTouch;
 import vikatouch.caching.ImageStorage;
 import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.locale.TextLocal;
+import vikatouch.screens.MainScreen;
+import vikatouch.screens.page.GroupPageScreen;
+import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.url.URLBuilder;
 import vikatouch.utils.url.URLDecoder;
@@ -824,6 +827,62 @@ public final class VikaUtils
 		}
 		//System.out.println("links c "+li);
 		return la;
+	}
+	
+	public static MainScreen openPage(int id)
+	{
+		if(id<0)
+		{
+			GroupPageScreen p = new GroupPageScreen(-id);
+			p.load();
+			return p;
+		}
+		else
+		{
+			ProfilePageScreen p = new ProfilePageScreen(id);
+			p.load();
+			return p;
+		}
+	}
+	
+	public static void openLink(String s)
+	{
+		try
+		{
+			if(s.indexOf("@")==0)
+			{
+				// упоминание
+			}
+			else if(s.indexOf("id")==0)
+			{
+				try
+				{
+					VikaTouch.setDisplay(VikaUtils.openPage(Integer.parseInt(s.substring(2))), 1);
+				}
+				catch(RuntimeException e) { }
+			}
+			else if(s.indexOf("rtsp://")!=-1)
+			{
+				VikaTouch.openRtspLink(s);
+			}
+			else if(s.indexOf("youtube.com")!=-1)
+			{
+				if(!Settings.symtube)
+				{
+					VikaTouch.appInst.platformRequest(s);
+				}
+				else
+				{
+					VikaTouch.appInst.platformRequest("http://vikamobile.ru/getl.php?url="+URLDecoder.encode(s));
+				}
+			}
+			else
+				VikaTouch.appInst.platformRequest(s);
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	// unfinished

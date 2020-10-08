@@ -541,33 +541,9 @@ public class MsgItem
 			try
 			{
 				String s = searchLinks()[i];
-				if(s.indexOf("@")==0)
-				{
-					// упоминание
-				}
-				else if(s.indexOf("id")==0)
-				{
-					// сслка на профиль
-				}
-				else if(s.indexOf("rtsp://")!=-1)
-				{
-					VikaTouch.openRtspLink(s);
-				}
-				else if(s.indexOf("youtube.com")!=-1)
-				{
-					if(!Settings.symtube)
-					{
-						VikaTouch.appInst.platformRequest(s);
-					}
-					else
-					{
-						VikaTouch.appInst.platformRequest("http://vikamobile.ru/getl.php?url="+URLDecoder.encode(s));
-					}
-				}
-				else
-					VikaTouch.appInst.platformRequest(s);
+				VikaUtils.openLink(s);
 			}
-			catch (Exception e) 
+			catch (RuntimeException e) 
 			{
 				e.printStackTrace();
 			}
