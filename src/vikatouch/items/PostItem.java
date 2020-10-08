@@ -391,6 +391,12 @@ public class PostItem
 		
 		cy+=40;
 		itemDrawHeight = cy;
+		
+		if(selected)
+		{
+			ColorUtils.setcolor(g, ColorUtils.COLOR1);
+			g.fillRect(0, y, 3, cy);
+		}
 	}
 	
 	public void loadAtts()
@@ -435,9 +441,9 @@ public class PostItem
 
 	public void getRes()
 	{
-		(new Thread() {
+		//(new Thread() {
 			
-			public void run() {
+			//public void run() {
 				ava = VikaTouch.cameraImg;
 				if(!Settings.dontLoadAvas && avaurl != null && !dontLoadAva)
 				{
@@ -452,8 +458,8 @@ public class PostItem
 					}
 				}
 				loadAtts();
-			}
-		}).start();
+			//}
+		//}).start();
 	}
 	
 	public int getDrawHeight()
@@ -495,7 +501,7 @@ public class PostItem
 		o[1] = new OptionItem(this,TextLocal.inst.get("wall.links"),IconsManager.LINK,2,h);
 		if(keys)
 		{
-			o[3] = new OptionItem(this,TextLocal.inst.get(liked?"wall.unlike":"wall.like"),liked?IconsManager.LIKE_F:IconsManager.LIKE,3,h);
+			o[2] = new OptionItem(this,TextLocal.inst.get(liked?"wall.unlike":"wall.like"),liked?IconsManager.LIKE_F:IconsManager.LIKE,3,h);
 		}
 		VikaTouch.popup(new AutoContextMenu(o));
 	}

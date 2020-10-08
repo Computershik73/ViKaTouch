@@ -239,6 +239,8 @@ public class NewsScreen
 	
 	public void onLeave()
 	{
+		profiles = null;
+		groups = null;
 		VikaTouch.newsScr = null;
 	}
 
