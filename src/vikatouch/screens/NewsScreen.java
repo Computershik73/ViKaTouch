@@ -185,8 +185,8 @@ public class NewsScreen
 			{
 				VikaTouch.error(e, ErrorCodes.NEWSPOSTSDRAW);
 			}
-			/*g.translate(0, -g.getTranslateY());
-			g.setColor(0, 0, 0);
+			g.translate(0, -g.getTranslateY());
+			/*g.setColor(0, 0, 0);
 			g.fillRect(0, 60, 300, 25);
 			g.setColor(200, 200, 200);
 			g.drawString(scrlDbg, 0, 60, 0);*/
@@ -206,7 +206,7 @@ public class NewsScreen
 	{
 		if(!dragging)
 		{
-			if(y > 58 && y < DisplayUtils.height - oneitemheight)
+			if(y > topPanelH && y < DisplayUtils.height - oneitemheight)
 			{
 				int yy = topPanelH+10;
 				for(int i = 0; i < uiItems.length; i++)

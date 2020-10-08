@@ -209,25 +209,16 @@ public class GroupsScreen
 	{
 		try
 		{
-			switch(DisplayUtils.idispi)
+			if(y > topPanelH && y < DisplayUtils.height - bottomPanelH)
 			{
-				case DisplayUtils.DISPLAY_ALBUM:
-				case DisplayUtils.DISPLAY_PORTRAIT:
+				int h = 50;
+				int yy1 = y - (scrolled + topPanelH);
+				int i = yy1 / h;
+				if(i < 0)
+					i = 0;
+				if(!dragging)
 				{
-					if(y > 58 && y < DisplayUtils.height - oneitemheight)
-					{
-						int h = 48 + (DocItem.BORDER * 2);
-						int yy1 = y - (scrolled + 58);
-						int i = yy1 / h;
-						if(i < 0)
-							i = 0;
-						if(!dragging)
-						{
-							uiItems[i].tap(x, yy1 - (h * i));
-						}
-						break;
-					}
-					break;
+					uiItems[i].tap(x, yy1 - (h * i));
 				}
 	
 			}

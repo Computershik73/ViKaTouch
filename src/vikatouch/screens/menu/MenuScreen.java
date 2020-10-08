@@ -871,20 +871,24 @@ public class MenuScreen
 	{
 		if(!dragging)
 		{
-			if(y > 58 && y < DisplayUtils.height-50)
+			try
 			{
-				int y1 = scrolled + 140;
-				for(int i = 0; i < itemsCount; i++)
+				if(y > topPanelH && y < DisplayUtils.height-bottomPanelH)
 				{
-					int y2 = y1 + uiItems[i].getDrawHeight();
-					if(y > y1 && y < y2)
+					int y1 = scrolled + topPanelH+82;
+					for(int i = 0; i < itemsCount; i++)
 					{
-						uiItems[i].tap(x, y - y1);
-						break;
+						int y2 = y1 + uiItems[i].getDrawHeight();
+						if(y > y1 && y < y2)
+						{
+							uiItems[i].tap(x, y - y1);
+							break;
+						}
+						y1 = y2;	
 					}
-					y1 = y2;	
 				}
 			}
+			catch (RuntimeException e) { }
 		}
 		super.release(x, y);
 	}

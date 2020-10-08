@@ -497,6 +497,7 @@ public class PostItem
 		{
 			o[3] = new OptionItem(this,TextLocal.inst.get(liked?"wall.unlike":"wall.like"),liked?IconsManager.LIKE_F:IconsManager.LIKE,3,h);
 		}
+		VikaTouch.popup(new AutoContextMenu(o));
 	}
 
 	public void keyPressed(int key)
