@@ -417,7 +417,7 @@ public abstract class ScrollableCanvas
 				select(currentItem+1);
 			}
 		}
-		scrollTarget = VikaUtils.clamp(-st + scrolled, -itemsh, -MainScreen.topPanelH);
+		scrollTarget = VikaUtils.clamp(scrolled - st, -itemsh, 0);
 		scrlDbg += " st"+st+ "br"+br+"s"+sc;
 		System.out.println(scrlDbg);
 		scrollTargetActive = true;
