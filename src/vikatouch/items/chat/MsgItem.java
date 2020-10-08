@@ -293,7 +293,7 @@ public class MsgItem
 			if(!isRead)
 			{
 				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-				g.fillArc(margin+msgWidth+1, y+16, 8, 8, 4, 4);
+				g.fillArc(margin+msgWidth+1, y+16, 8, 8, 0, 360);
 			}
 		}
 		else
@@ -310,8 +310,9 @@ public class MsgItem
 			}
 			if(!isRead)
 			{
+				//System.out.println("unread out");
 				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-				g.fillArc(DisplayUtils.width-(margin+msgWidth)-9, y+16, 8, 8, 4, 4);
+				g.fillArc(DisplayUtils.width-(margin+msgWidth)-9, y+16, 8, 8, 0, 360);
 			}
 		}
 		if(name!=null&&showName)
