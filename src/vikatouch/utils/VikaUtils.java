@@ -231,7 +231,6 @@ public final class VikaUtils
 			step = 1;
 			Connection conn = Connector.open(url);
 			step = 2;
-			//System.out.println("conn is " + conn.toString() + " " + conn.getClass().getName());
 			httpconn = (HttpConnection) conn;
 			httpconn.setRequestMethod("GET");
 			httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
@@ -243,7 +242,6 @@ public final class VikaUtils
 			VikaCanvasInst.netColor = 0xffff7f00;
 			step = 5;
 			StringBuffer sb = new StringBuffer();
-			//Display.getDisplay(VikaTouch.appInst).vibrate(100);
 			char[] buffer;
 			int i;
 			if (httpconn.getResponseCode() != 200 && httpconn.getResponseCode() != 401)
@@ -287,7 +285,6 @@ public final class VikaUtils
 			}
 			else
 			{
-				//System.out.println("yay"+httpconn.getResponseCode());
 				buffer = new char[10000];
 				step = 14;
 				while ((i = isr.read(buffer, 0, buffer.length)) != -1)
@@ -295,8 +292,6 @@ public final class VikaUtils
 					VikaCanvasInst.netColor = 0xff00ff00;
 					sb.append(buffer, 0, i);
 				}
-				//Thread.sleep(300);
-				//Display.getDisplay(VikaTouch.appInst).vibrate(100);
 				buffer = null;
 				step = 15;
 			}
@@ -305,16 +300,13 @@ public final class VikaUtils
 			step = 16;
 			//result = replace(sb.toString(), "<br>", " ");
 		}
-		catch (Throwable e)
+		catch (RuntimeException e)
 		{
-			String curl = url;
-			try
-			{
-				curl = url.substring(0, 56);
-			}
-			catch(Exception e1) { }
-			//VikaTouch.sendLog("Net fail "+e.toString() + " Step-"+step+" URL:" + curl);
-			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), "Step "+step, null));
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", step "+step, null));
+		}
+		catch (IOException e)
+		{
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", step "+step, null));
 		}
 		finally
 		{
@@ -325,19 +317,32 @@ public final class VikaUtils
 					isr.close();
 				if(is != null)
 					is.close();
+			}
+			catch (IOException e)
+			{
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", disposing data", null));
+			}
+			catch (RuntimeException e)
+			{
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", disposing data", null));
+			}
+			try
+			{
 				VikaCanvasInst.netColor = 0xff0000ff;
 				if(httpconn != null)
 					httpconn.close();
 				VikaCanvasInst.netColor = 0xff00ffff;
-				//Thread.sleep(300);
 			}
-			catch (Throwable e)
+			catch (IOException e)
 			{
-				VikaTouch.sendLog("Net dispose error "+e.toString());
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", disposing http", null));
+			}
+			catch (RuntimeException e)
+			{
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", disposing http", null));
 			}
 		}
 		VikaCanvasInst.netColor = 0xff000000;
-		//Display.getDisplay(VikaTouch.appInst).vibrate(100);
 		return result;
 	}
 	/*

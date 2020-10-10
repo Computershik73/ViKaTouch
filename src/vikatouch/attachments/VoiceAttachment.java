@@ -3,6 +3,7 @@ package vikatouch.attachments;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
+import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.popup.ContextMenu;
@@ -129,9 +130,10 @@ public class VoiceAttachment
 		}
 		else if(i==1)
 		{
+			String x = "0";
 			try
 			{
-				String x = VikaUtils.download(new URLBuilder("messages.getById")
+				x = VikaUtils.download(new URLBuilder("messages.getById")
 						.addField("message_ids", String.valueOf(mid)).addField("extended", 1));
 				JSONObject r = new JSONObject(x).getJSONObject("response").getJSONArray("items").getJSONObject(0);
 				MsgItem m = new MsgItem(r);
@@ -144,6 +146,11 @@ public class VoiceAttachment
 				{
 					VikaTouch.popup(new InfoPopup(v.text, null));
 				}
+			}
+			catch (JSONException e)
+			{
+				VikaTouch.popup(new InfoPopup("Transcript parse error", null));
+				VikaTouch.sendLog(x);
 			}
 			catch (Exception e)
 			{

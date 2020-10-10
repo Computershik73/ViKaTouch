@@ -186,7 +186,7 @@ public class MsgItem
 						forward[i] = m;
 					}
 				}
-				catch(RuntimeException e) { } catch (JSONException e) { }
+				catch(RuntimeException e) { }
 			}
 		}
 		catch (Exception e)

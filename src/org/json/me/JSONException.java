@@ -1,6 +1,6 @@
 package org.json.me;
 
-public class JSONException extends Exception {
+public class JSONException extends RuntimeException {
 	private Throwable cause;
 
 	public JSONException(String var1) {
