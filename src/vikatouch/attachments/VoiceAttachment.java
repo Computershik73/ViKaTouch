@@ -49,10 +49,7 @@ public class VoiceAttachment
 			name = TextLocal.inst.get("msg.attach.voice");
 			size = json.optInt("duration");
 			length = MusicPlayer.time(size);
-			if(!json.isNull("url"))
-			{
-				musUrl = fixJSONString(json.optString("link_mp3"));
-			}
+			musUrl = fixJSONString(json.optString("link_mp3"));
 			text = json.optString("transcript");
 			if(text!=null && text.length()>2)
 			{

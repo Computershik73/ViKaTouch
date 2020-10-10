@@ -344,11 +344,15 @@ public class ChatScreen
 			// скачка сообщений
 			uiItems = new PressableUIItem[Settings.messagesPerLoad+loadSpace];
 			//VikaTouch.sendLog("Requesting history");
-			String x = VikaUtils.download(new URLBuilder("messages.getHistory").addField("peer_id", peerId).addField("count", Settings.messagesPerLoad).addField("offset", 0));
+			String x = VikaUtils.download(new URLBuilder("messages.getHistory").addField("peer_id", peerId).addField("count", Settings.messagesPerLoad).addField("offset", 0).addField("extended", 1));
 			//VikaTouch.sendLog("Requesting history ok");
 			VikaCanvasInst.msgColor = 0xffffff00;
-			JSONArray json = new JSONObject(x).getJSONObject("response").getJSONArray("items");
+			JSONObject res = new JSONObject(x).getJSONObject("response");
+			JSONArray json = res.getJSONArray("items");
 			profileNames.put(new IntObject(peerId), title);
+			inr = res.getJSONArray("conversations").getJSONObject(0).optInt("in_read");
+			outr = res.getJSONArray("conversations").getJSONObject(0).optInt("out_read");
+			
 			for(int i = 0; i<json.length();i++) 
 			{
 				VikaCanvasInst.msgColor = 0xff00ff00;
@@ -439,25 +443,24 @@ public class ChatScreen
 	{
 		try
 		{
-			VikaTouch.sendLog("in:"+inRead+" out:"+outRead);
-			boolean inR = false, outR = false;
-			int r = 0;
+			int l = Math.min(inRead, outRead);
+			//VikaTouch.sendLog("in:"+inRead+" out:"+outRead);
+			boolean r = false;
+			int rn = 0;
 			for(int i=uiItems.length-1; i>=0; i--)
 			{
 				if(uiItems[i]!=null)
 				{
 					MsgItem mi = (MsgItem) uiItems[i];
-					if(mi.mid == inRead)
+					if(mi.mid == l)
 					{
-						inR = true;
-						r = i;
+						r = true;
+						rn = i;
 					}
-					if(mi.mid == outRead)
-						outR = true;
-					mi.isRead = mi.foreign?outR:inR;
+					mi.isRead = r;
 				}
 			}
-			return r;
+			return rn;
 		}
 		catch(RuntimeException e)
 		{
@@ -986,8 +989,8 @@ public class ChatScreen
 						hasSpace--;
 						VikaCanvasInst.updColor = 0xffff00ff;
 					}
-					markMsgs(inRead, outRead);
 				}	
+				markMsgs(inRead, outRead);
 				System.gc();
 				
 			}

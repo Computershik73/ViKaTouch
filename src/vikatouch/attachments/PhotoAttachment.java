@@ -25,7 +25,7 @@ public class PhotoAttachment
 	public PhotoSize[] sizes = new PhotoSize[10];
 	
 	// for msg
-	public int renderH;
+	public int renderH = 20;
 	public int renderW;
 	public Image renderImg = null;
 	
