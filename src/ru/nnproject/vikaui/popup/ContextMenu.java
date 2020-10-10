@@ -90,12 +90,18 @@ public class ContextMenu extends VikaNotice {
 	
 	public void press(int x, int y)
 	{
+		lastx = x; lasty = y;
 		dragging = false;
 	}
 	
+	int lastx=0, lasty=0;
+	
 	public void drag(int x, int y)
 	{
-		dragging = true;
+		if(Math.abs(x-lastx)>3||Math.abs(y-lasty)>3)
+		{
+			dragging = true;
+		}
 	}
 	public void release(int x, int y)
 	{
