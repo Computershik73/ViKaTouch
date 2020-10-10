@@ -121,6 +121,10 @@ public class VoiceAttachment
 		{
 			try
 			{
+				MusicPlayer mp = new MusicPlayer();
+				mp.voice = this;
+				mp.firstLoad();
+				VikaTouch.setDisplay(mp, 1);
 			}
 			catch(Exception e)
 			{ }

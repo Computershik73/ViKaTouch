@@ -34,6 +34,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.attachments.VoiceAttachment;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.items.music.AudioTrackItem;
 import vikatouch.locale.TextLocal;
@@ -58,6 +59,8 @@ public class MusicPlayer extends MainScreen
 	public boolean inSeekMode = false;
 	public boolean controlsBlocked = false;
 	public long seekTime;
+	
+	public VoiceAttachment voice;
 	
 	public String url;
 	
@@ -126,7 +129,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void loadTrack()
 	{
-		if(VikaTouch.canvas.currentScreen != this)
+		if(VikaTouch.canvas.currentScreen != this && voice == null)
 		{
 			VikaTouch.notificate(new VikaNotification(VikaNotification.NEXT_TRACK, "Сейчас играет", VikaUtils.cut(getC().name, 40), this));
 		}
@@ -143,8 +146,6 @@ public class MusicPlayer extends MainScreen
 		loadTrackInfo();
 		time = "";
 		totalTime = "";
-		//case Settings.AUDIO_LOADANDPLAY
-		//TODO methods
 		inst = this;
 		byte[] aByteArray207 = null;
 		System.gc();
@@ -194,7 +195,7 @@ public class MusicPlayer extends MainScreen
 								((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
 							}
 							catch (Exception e) { }
-							totalTime = time(getC().length);
+							totalTime = time(voice==null?getC().length:voice.size);
 							stop = false;
 							player.addPlayerListener(inst);
 							getCover();
@@ -207,6 +208,10 @@ public class MusicPlayer extends MainScreen
 							if(es.indexOf("nvalid")!=-1 && es.indexOf("esponse")!=-1)
 							{
 								es = TextLocal.inst.get("player.accessfailed");
+							}
+							else
+							{
+								es = "Online mode loading: "+es;
 							}
 							VikaTouch.popup(new InfoPopup(es, null, TextLocal.inst.get("player.playererror"), null));
 						}
@@ -544,6 +549,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void next()
 	{
+		if(voice!=null) return;
 		if(controlsBlocked) return;
 		if(inSeekMode)
 		{
@@ -569,6 +575,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void prev()
 	{
+		if(voice!=null) return;
 		if(controlsBlocked) return;
 		if(inSeekMode)
 		{
@@ -617,7 +624,7 @@ public class MusicPlayer extends MainScreen
 			if(player==null) return;
 			curr = inSeekMode?seekTime:player.getMediaTime();
 			time = time(curr/1000000L);
-			dur = Settings.audioMode == Settings.AUDIO_PLAYONLINE ? getC().length*1000000L : player.getDuration();
+			dur = Settings.audioMode == Settings.AUDIO_PLAYONLINE ? (voice==null?getC().length:voice.size)*1000000L : player.getDuration();
 		}
 		try
 		{
@@ -642,11 +649,20 @@ public class MusicPlayer extends MainScreen
 	
 	public void loadTrackInfo()
 	{
-		title = getC().name;
-		artist = getC().artist;
-		Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
-		titleW = f.stringWidth(title);
-		artistW = f.stringWidth(artist);
+		if(voice == null)
+		{
+			title = getC().name;
+			artist = getC().artist;
+			Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
+			titleW = f.stringWidth(title);
+			artistW = f.stringWidth(artist);
+		}
+		else
+		{
+			title = TextLocal.inst.get("msg.attach.voice");
+			artist = "";
+			titleW = artistW = 0;
+		}
 	}
 	
 	public void onRotate()
@@ -676,6 +692,7 @@ public class MusicPlayer extends MainScreen
 	
 	public void getCover()
 	{
+		if(voice!=null) return;
 		if(DisplayUtils.height<=220) return;
 		if (title != null && Settings.loadITunesCovers) {
 			String q = "http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
@@ -787,6 +804,11 @@ public class MusicPlayer extends MainScreen
 	
 	public String getMp3Link()
 	{
+		if(voice!=null)
+		{
+			String s = voice.musUrl;
+			return s;
+		}
 		String turl = getC().mp3;
 		boolean https;
 		boolean extra;
@@ -921,9 +943,9 @@ public class MusicPlayer extends MainScreen
 				volumeX1 = hdw+40;
 				volumeX2 = dw - 40;
 				if(!inSeekMode) g.drawImage(buttons[5], textAnchor-125, dh-50, 0);
-				if(!inSeekMode || tick) g.drawImage(buttons[0], textAnchor-75, dh-50, 0);
+				if((voice==null||inSeekMode)&&(!inSeekMode || tick)) g.drawImage(buttons[0], textAnchor-75, dh-50, 0);
 				g.drawImage(buttons[isPlaying?3:1], textAnchor-25, dh-50, 0);
-				if(!inSeekMode || tick) g.drawImage(buttons[2], textAnchor+25, dh-50, 0);
+				if((voice==null||inSeekMode)&&(!inSeekMode || tick)) g.drawImage(buttons[2], textAnchor+25, dh-50, 0);
 				if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], textAnchor+75, dh-50, 0);
 				
 				g.drawString(artist, textAnchor+(artistW>hdw?currAx:0), dh/2-f.getHeight(), Graphics.HCENTER | Graphics.TOP);
@@ -938,9 +960,9 @@ public class MusicPlayer extends MainScreen
 				volumeX1 = 50;
 				volumeX2 = dw - 50;
 				if(!inSeekMode) g.drawImage(buttons[5], hdw-125, dh-50, 0);
-				if(!inSeekMode || tick) g.drawImage(buttons[0], hdw-75, dh-50, 0);
+				if((voice==null||inSeekMode)&&(!inSeekMode || tick)) g.drawImage(buttons[0], hdw-75, dh-50, 0);
 				g.drawImage(buttons[isPlaying?3:1], hdw-25, dh-50, 0);
-				if(!inSeekMode || tick) g.drawImage(buttons[2], hdw+25, dh-50, 0);
+				if((voice==null||inSeekMode)&&(!inSeekMode || tick)) g.drawImage(buttons[2], hdw+25, dh-50, 0);
 				if(!inSeekMode) g.drawImage(buttons[(backScreenIsPlaylist()?4:6)], hdw+75, dh-50, 0);
 				
 				g.drawString(artist, textAnchor+(artistW>dw?currAx:0), timeY-f.getHeight()*3/2, Graphics.HCENTER | Graphics.TOP);
@@ -950,7 +972,7 @@ public class MusicPlayer extends MainScreen
 			g.drawRect(x1, timeY, x2-x1, 10);
 			if(isReady) 
 			{
-				g.fillRect(x1+2, timeY+2, currX-x1-4, 6);
+				g.fillRect(x1+2, timeY+2, Math.min(currX-x1-4, x2-x1-4), 6);
 			}
 			else
 			{
@@ -1052,7 +1074,11 @@ public class MusicPlayer extends MainScreen
 		else if(x>anchor+75)
 		{
 			if(controlsBlocked) return;
-			if(!inSeekMode) VikaTouch.inst.cmdsInst.command(14, this);
+			if(!inSeekMode)
+			{
+				if(voice!=null) pause();
+				VikaTouch.inst.cmdsInst.command(14, this);
+			}
 		}
 		else if(x>anchor+25)
 		{
@@ -1116,7 +1142,11 @@ public class MusicPlayer extends MainScreen
 		else if(key == -7 /*|| key == */) //TODO вспомнить кнопку "назад" на SE
 		{
 			if(controlsBlocked) return;
-			if(!inSeekMode) VikaTouch.inst.cmdsInst.command(14, this);
+			if(!inSeekMode)
+			{
+				if(voice!=null) pause();
+				VikaTouch.inst.cmdsInst.command(14, this);
+			}
 		}
 	}
 	
