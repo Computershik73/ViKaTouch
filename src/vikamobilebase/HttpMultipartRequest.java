@@ -1,9 +1,17 @@
 package vikamobilebase;
 
-//UNUSED
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import javax.microedition.io.Connector;
+import javax.microedition.io.HttpConnection;
+
 public class HttpMultipartRequest
 {
-	/*
+	
 	private byte[] byteArray = null;
 	private String url = null;
 
@@ -99,5 +107,4 @@ public class HttpMultipartRequest
 
 		return var4;
 	}
-	*/
 }
