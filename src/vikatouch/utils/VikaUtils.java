@@ -306,7 +306,12 @@ public final class VikaUtils
 		}
 		catch (IOException e)
 		{
-			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", step "+step, null));
+			String es = e.toString();
+			if(es.indexOf("-33")!=-1)
+			{
+				es = "Connection timeout";
+			}
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), es+", step "+step, null));
 		}
 		finally
 		{
