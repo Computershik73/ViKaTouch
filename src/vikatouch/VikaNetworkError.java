@@ -1,5 +1,5 @@
 package vikatouch;
 
-public class VikaNetworkError extends Exception {
+public class VikaNetworkError extends RuntimeException {
 
 }
