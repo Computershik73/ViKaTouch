@@ -31,6 +31,16 @@ public class AudioTrackItem
 	public int indexInPL;
 	public String mp3;
 	
+	public AudioTrackItem()
+	{
+		id = 0; owner_id = 0;
+		name = ""; artist = "";
+		length = 5;
+		lengthS = "null";
+		playlist = null;
+		mp3 = "";
+	}
+	
 	public AudioTrackItem(JSONObject json, MusicScreen s, int i)
 	{
 		super(json);

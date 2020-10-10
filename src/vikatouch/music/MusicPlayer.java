@@ -775,7 +775,14 @@ public class MusicPlayer extends MainScreen
 	
 	public AudioTrackItem getC()
 	{
-		return ((AudioTrackItem) playlist.uiItems[current]);
+		try
+		{
+			return ((AudioTrackItem) playlist.uiItems[current]);
+		}
+		catch(RuntimeException e)
+		{
+			return new AudioTrackItem(); // fake item
+		}
 	}
 	
 	public String getMp3Link()

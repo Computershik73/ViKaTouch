@@ -11,6 +11,8 @@ public abstract class JSONUIItem
 	public int itemDrawHeight;
 	public boolean selected;
 
+	public JSONUIItem() { } 
+	
 	public JSONUIItem(JSONObject json)
 	{
 		super(json);

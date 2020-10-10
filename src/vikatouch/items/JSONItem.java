@@ -15,6 +15,8 @@ public class JSONItem
 		this.json = json;
 	}
 	
+	public JSONItem () { }
+	
 	public Attachment[] attachments = new Attachment[5];
 
 	public int fromid;
