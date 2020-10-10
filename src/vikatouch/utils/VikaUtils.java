@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
@@ -218,7 +219,55 @@ public final class VikaUtils
 		return res;
 	}
 	
-	public static String download(String url)
+	public static String download(String var1) {
+		ByteArrayOutputStream var4 = null;  
+		try {
+	        
+			var4 = new ByteArrayOutputStream();
+	         HttpConnection var13 = null;
+	         var13	= (HttpConnection) Connector.open(var1);
+	         var13.setRequestMethod("GET");
+	         var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+	         
+	         InputStream var14 = var13.openInputStream();
+	         long var8 = var13.getLength();
+	         byte[] var6 = new byte[16384];
+	         long var10 = 0L;
+
+	         int var7;
+	         
+			while((var7 = var14.read(var6)) != -1) {
+	            var10 += (long)var7;
+	            var4.write(var6, 0, var7);
+	            var4.flush();
+	            
+	         }
+
+	         var14.close();
+	         var13.close();
+	         var4.close();
+	        
+
+	         
+
+	         
+	      } catch (Exception var12) {
+	         
+
+	         
+	      }
+		String str = null;
+		try {
+			str = new String(var4.toByteArray(),"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return str;
+	   }
+	
+	
+	public static String download_old(String url)
 	{
 		int step=0;
 		VikaCanvasInst.netColor = 0xffff0000;
@@ -291,6 +340,7 @@ public final class VikaUtils
 				{
 					VikaCanvasInst.netColor = 0xff00ff00;
 					sb.append(buffer, 0, i);
+					
 				}
 				buffer = null;
 				step = 15;
@@ -306,12 +356,7 @@ public final class VikaUtils
 		}
 		catch (IOException e)
 		{
-			String es = e.toString();
-			if(es.indexOf("-33")!=-1)
-			{
-				es = "Connection timeout";
-			}
-			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), es+", step "+step, null));
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", step "+step, null));
 		}
 		finally
 		{
@@ -345,6 +390,8 @@ public final class VikaUtils
 			catch (RuntimeException e)
 			{
 				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", disposing http", null));
+			} catch (Throwable eee) {
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), eee.toString()+", disposing http", null));
 			}
 		}
 		VikaCanvasInst.netColor = 0xff000000;
