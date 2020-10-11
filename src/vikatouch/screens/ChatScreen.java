@@ -444,7 +444,7 @@ public class ChatScreen
 		try
 		{
 			int l = Math.min(inRead, outRead);
-			//VikaTouch.sendLog("in:"+inRead+" out:"+outRead);
+			// VikaTouch.sendLog("in:"+inRead+" out:"+outRead);
 			boolean r = false;
 			int rn = 0;
 			for(int i=uiItems.length-1; i>=0; i--)
@@ -464,7 +464,7 @@ public class ChatScreen
 		}
 		catch(RuntimeException e)
 		{
-			VikaTouch.sendLog("Marking: "+e.toString());
+			//VikaTouch.sendLog("Marking: "+e.toString());
 			return 0;
 		}
 	}

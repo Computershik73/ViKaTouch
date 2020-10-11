@@ -195,7 +195,7 @@ public final class VikaUtils
 		if(VikaTouch.musicIsProxied)
 		{
 			final String x = URLDecoder.encode(url);
-			return download("http://vkt.nnproject.tk/tokenproxy.php?" + x);
+			return download("http://vikamobile.ru:80/tokenproxy.php?" + x);
 		}
 		else
 		{
