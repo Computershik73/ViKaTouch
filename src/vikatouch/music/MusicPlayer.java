@@ -166,7 +166,7 @@ public class MusicPlayer extends MainScreen
 				tpath = "file:///C:/";
 			final String path = tpath + "vikaMusicCache.mp3";
 			
-			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
+			if ((Settings.audioMode == Settings.AUDIO_PLAYONLINE) || (this.voice!=null))
 			{
 				loader = new Thread()
 				{
