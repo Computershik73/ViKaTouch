@@ -903,6 +903,7 @@ public class ChatScreen
 				System.out.println(newMsgCount+"");
 				if(newMsgCount==0)
 				{
+					markMsgs(inRead, outRead);
 					more = false;
 					break;
 				}
@@ -910,6 +911,7 @@ public class ChatScreen
 				{
 					if(items.getJSONObject(0).optLong("id")==mid)
 					{
+						markMsgs(inRead, outRead);
 						more = false;
 						break;
 					}
@@ -989,8 +991,9 @@ public class ChatScreen
 						hasSpace--;
 						VikaCanvasInst.updColor = 0xffff00ff;
 					}
+					markMsgs(inRead, outRead);
 				}	
-				markMsgs(inRead, outRead);
+				
 				System.gc();
 				
 			}
