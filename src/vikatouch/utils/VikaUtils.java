@@ -231,7 +231,7 @@ public final class VikaUtils
 	         
 	         InputStream var14 = var13.openInputStream();
 	         long var8 = var13.getLength();
-	         byte[] var6 = new byte[16384];
+	         byte[] var6 = new byte[16384]; 
 	         long var10 = 0L;
 
 	         int var7;

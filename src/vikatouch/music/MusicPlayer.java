@@ -160,13 +160,13 @@ public class MusicPlayer extends MainScreen
 				VikaTouch.popup(new InfoPopup("Player closing error", null));
 			}
 			url = getMp3Link();
-			VikaTouch.sendLog(url);
+			//VikaTouch.sendLog(url);
 			String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private") : System.getProperty("fileconn.dir.music"));
 			if(tpath == null)
 				tpath = "file:///C:/";
 			final String path = tpath + "vikaMusicCache.mp3";
 			
-			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
+			if ((Settings.audioMode == Settings.AUDIO_PLAYONLINE) || (this.voice!=null))
 			{
 				loader = new Thread()
 				{
