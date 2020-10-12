@@ -1172,7 +1172,7 @@ public class MusicPlayer extends MainScreen
 		else if(i==2)
 		{
 			if(controlsBlocked) return;
-			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
+			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE || voice != null)
 			{
 				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("player.rewindimpossible"), null));
 			}
@@ -1187,7 +1187,7 @@ public class MusicPlayer extends MainScreen
 		{
 			if(controlsBlocked) return;
 			if(!isReady) return;
-			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE)
+			if(Settings.audioMode == Settings.AUDIO_PLAYONLINE || voice != null)
 			{
 				try
 				{
@@ -1228,7 +1228,7 @@ public class MusicPlayer extends MainScreen
 		{
 			if(controlsBlocked) return;
 			try {
-				VikaTouch.appInst.platformRequest(getC().mp3);
+				VikaTouch.appInst.platformRequest(url);
 			} catch (ConnectionNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -1244,13 +1244,16 @@ public class MusicPlayer extends MainScreen
 		}
 		else if(i==-1)
 		{
-			if(controlsBlocked) return;
-			if(backScreenIsPlaylist())
+			if(voice != null)
 			{
-				VikaTouch.inst.cmdsInst.command(14, this);
+				if(controlsBlocked) return;
+				if(backScreenIsPlaylist())
+				{
+					VikaTouch.inst.cmdsInst.command(14, this);
+				}
+				else
+					VikaTouch.setDisplay(playlist, 1);
 			}
-			else
-				VikaTouch.setDisplay(playlist, 1);
 		}
 		else if(i==10)
 		{
