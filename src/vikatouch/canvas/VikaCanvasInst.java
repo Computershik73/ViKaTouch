@@ -41,6 +41,9 @@ public class VikaCanvasInst
 	public static int msgColor = 0;
 	
 	public static String timingsStr;
+	
+	public long lastInputTime = 0;
+	public static final long uiSleepTimeout = 8000;
 
 	public VikaCanvasInst()
 	{
@@ -108,8 +111,6 @@ public class VikaCanvasInst
 			}
 			
 			g.setColor(msgColor);
-			g.fillRect(DisplayUtils.width-12, 0, 4, 4);
-			g.setColor(netColor);
 			g.fillRect(DisplayUtils.width-8, 0, 4, 4);
 			g.setColor(updColor);
 			g.fillRect(DisplayUtils.width-4, 0, 4, 4);

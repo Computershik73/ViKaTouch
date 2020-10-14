@@ -53,7 +53,7 @@ public class Settings
 	
 	public static byte dialogsRefreshRate = 0;
 	
-	public static int[] dialogsRefreshRates = new int[] { 0, 5, 10, 20, 30 };
+	public static final int[] dialogsRefreshRates = new int[] { 0, 5, 10, 20, 30 };
 	
 	public static int dialogsLength = 15;
 

@@ -190,6 +190,7 @@ public class MsgItem
 						}
 						m.showName = true;
 						m.name = (m.foreign ? name : "Вы");
+						m.loadAtts();
 						forward[i] = m;
 					}
 				}
@@ -425,6 +426,7 @@ public class MsgItem
 				fwdH=0;
 				for(int i = 0; i<forward.length; i++)
 				{
+					if(forward[i] == null) continue;
 					forward[i].paint(g, attY+fwdH+y, scrolled);
 					fwdH+=forward[i].getDrawHeight();
 				}
