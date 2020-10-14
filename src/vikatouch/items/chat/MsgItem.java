@@ -65,6 +65,9 @@ public class MsgItem
 	
 	public boolean isRead = true;
 	public MsgItem[] forward;
+	
+	public int forwardedX = -1;
+	public int forwardedW = -1;
 
 	public void ChangeText(String s)
 	{
@@ -87,7 +90,7 @@ public class MsgItem
 			foreign = !(""+json.optInt("from_id")).equalsIgnoreCase(VikaTouch.userId);
 			mid = json.optInt("id");
 			int h1 = Font.getFont(0, 0, 8).getHeight();
-			drawText = TextBreaker.breakText(text, Font.getFont(0, 0, Font.SIZE_SMALL), msgWidth-h1);
+			drawText = TextBreaker.breakText(text, Font.getFont(0, 0, Font.SIZE_SMALL), (forwardedW==-1?msgWidth:forwardedW)-h1);
 			linesC = drawText.length;
 			
 			itemDrawHeight = h1*(linesC+1);
@@ -166,12 +169,16 @@ public class MsgItem
 			}
 			if(fwds!=null && fwds.length()>0)
 			{
+				int fwdX = forwardedX==-1 ? (foreign ? (margin*2) : (DisplayUtils.width-msgWidth)) : (forwardedX + margin);
+				int fwdW = forwardedX==-1 ? (msgWidth - margin) : (forwardedW - margin);
 				forward = new MsgItem[fwds.length()];
 				try
 				{
 					for(int i = 0; i<fwds.length(); i++)
 					{
 						MsgItem m = new MsgItem(fwds.getJSONObject(i));
+						m.forwardedW = fwdW;
+						m.forwardedX = fwdX;
 						m.parseJSON();
 						int fromId = m.fromid; 
 	
@@ -274,42 +281,49 @@ public class MsgItem
 		itemDrawHeight = th;
 		int textX = 0;
 		int radius = 16;
-		if(foreign)
+		int msgWidthInner = (forwardedW==-1?msgWidth:forwardedW);
+		if(forwardedX!=-1)
 		{
 			ColorUtils.setcolor(g, ColorUtils.FOREIGNMSG);
-			g.fillRoundRect(margin, y, msgWidth, th, radius, radius);
+			g.fillRoundRect(forwardedX, y, msgWidthInner, th, radius, radius);
+			textX = forwardedX + h1/2;
+		}
+		else if(foreign)
+		{
+			ColorUtils.setcolor(g, ColorUtils.FOREIGNMSG);
+			g.fillRoundRect(margin, y, msgWidthInner, th, radius, radius);
 			g.fillRect(margin, y+th-radius, radius, radius);
 			textX = margin + h1/2;
 			if(selected && ScrollableCanvas.keysMode)
 			{
 				ColorUtils.setcolor(g, ColorUtils.TEXT);
 				g.setStrokeStyle(Graphics.SOLID);
-				g.drawRoundRect(margin, y, msgWidth, th, radius, radius);
+				g.drawRoundRect(margin, y, msgWidthInner, th, radius, radius);
 			}
 			
 			if(!isRead)
 			{
 				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-				g.fillArc(margin+msgWidth+1, y+16, 8, 8, 0, 360);
+				g.fillArc(margin+msgWidthInner+1, y+16, 8, 8, 0, 360);
 			}
 		}
 		else
 		{
 			ColorUtils.setcolor(g, ColorUtils.MYMSG);
-			g.fillRoundRect(DisplayUtils.width-(margin+msgWidth), y, msgWidth, th, radius, radius);
+			g.fillRoundRect(DisplayUtils.width-(margin+msgWidthInner), y, msgWidthInner, th, radius, radius);
 			g.fillRect(DisplayUtils.width-(margin+radius), y+th-radius, radius, radius);
-			textX = DisplayUtils.width-(margin+msgWidth) + h1/2;
+			textX = DisplayUtils.width-(margin+msgWidthInner) + h1/2;
 			if(selected && ScrollableCanvas.keysMode)
 			{
 				ColorUtils.setcolor(g, ColorUtils.TEXT);
 				g.setStrokeStyle(Graphics.SOLID);
-				g.drawRoundRect(DisplayUtils.width-(margin+msgWidth), y, msgWidth, th, radius, radius);
+				g.drawRoundRect(DisplayUtils.width-(margin+msgWidthInner), y, msgWidthInner, th, radius, radius);
 			}
 			if(!isRead)
 			{
 				//System.out.println("unread out");
 				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-				g.fillArc(DisplayUtils.width-(margin+msgWidth)-9, y+16, 8, 8, 0, 360);
+				g.fillArc(DisplayUtils.width-(margin+msgWidthInner)-9, y+16, 8, 8, 0, 360);
 			}
 		}
 		if(name!=null&&showName)
@@ -322,7 +336,7 @@ public class MsgItem
 				time = getTime();
 				//System.out.println("msg time: "+time);
 			}
-			g.drawString(time, textX-h1+msgWidth-font.stringWidth(time), y+h1/2, 0);
+			g.drawString(time, textX-h1+msgWidthInner-font.stringWidth(time), y+h1/2, 0);
 		}
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		for(int i = 0; i < linesC; i++)
@@ -347,11 +361,11 @@ public class MsgItem
 			{
 				Attachment at = attachments[i];
 				if(at==null) continue;
-				
+				int x1 = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + msgWidthInner) + attMargin);
 				if(at instanceof PhotoAttachment)
 				{
 					PhotoAttachment pa = (PhotoAttachment) at;
-					int rx = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + attMargin) - pa.renderW);
+					int rx = forwardedX==-1 ? (foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + attMargin) - pa.renderW)) : (forwardedX + attMargin);
 					if(pa.renderImg == null)
 					{
 						if(Settings.isLiteOrSomething)
@@ -369,7 +383,7 @@ public class MsgItem
 				else if(at instanceof VideoAttachment)
 				{
 					VideoAttachment va = (VideoAttachment) at;
-					int rx = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + attMargin) - va.renderW);
+					int rx = forwardedX==-1 ? (foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + attMargin) - va.renderW)) : (forwardedX + attMargin);
 					if(va.renderImg == null)
 					{
 						if(Settings.isLiteOrSomething)
@@ -382,24 +396,21 @@ public class MsgItem
 					else
 					{
 						g.drawImage(va.renderImg, rx, y+attY, 0);
-						int x1 = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + msgWidth) + attMargin);
 						g.drawString(va.title, x1, y+attY+va.renderH, 0);
 					}
 				}
 				else if(at instanceof DocumentAttachment)
 				{
-					int x1 = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + msgWidth) + attMargin);
-					((DocumentAttachment) at).draw(g, x1, y+attY, msgWidth - attMargin*2);
+					((DocumentAttachment) at).draw(g, x1, y+attY, msgWidthInner - attMargin*2);
 				}
 				else if(at instanceof WallAttachment)
 				{
-					int x1 = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + msgWidth) + attMargin);
-					((WallAttachment) at).draw(g, x1, y+attY, msgWidth - attMargin*2);
+					((WallAttachment) at).draw(g, x1, y+attY, msgWidthInner - attMargin*2);
 				}
 				else if(at instanceof StickerAttachment)
 				{
 					int stickerW = DisplayUtils.width > 250 ? 128 : 64;
-					int rx = foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + attMargin) - stickerW);
+					int rx = forwardedX==-1 ? (foreign ? (margin + attMargin) : (DisplayUtils.width - (margin + attMargin) - stickerW)) : (forwardedX+attMargin);
 					g.drawImage(((StickerAttachment) at).getImage(stickerW), rx, y+attY, 0);
 				}
 				
