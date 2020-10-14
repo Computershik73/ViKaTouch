@@ -179,6 +179,7 @@ public class Dialogs
 					{
 						while(true)
 						{
+							if(Settings.dialogsRefreshRates[Settings.dialogsRefreshRate] == 0) return;
 							Thread.sleep(Settings.dialogsRefreshRates[Settings.dialogsRefreshRate]*1000);
 							if(!(VikaTouch.canvas.currentScreen instanceof ChatScreen)) refreshDialogsList(false, true);
 						}
