@@ -221,51 +221,46 @@ public final class VikaUtils
 	
 	public static String download(String var1) {
 		ByteArrayOutputStream var4 = null;  
-		try {
+		try 
+		{
 	        
 			var4 = new ByteArrayOutputStream();
-	         HttpConnection var13 = null;
-	         var13	= (HttpConnection) Connector.open(var1);
-	         var13.setRequestMethod("GET");
-	         var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+	        HttpConnection var13 = null;
+	        var13 = (HttpConnection) Connector.open(var1);
+	        var13.setRequestMethod("GET");
+	        var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 	         
-	         InputStream var14 = var13.openInputStream();
-	         long var8 = var13.getLength();
-	         byte[] var6 = new byte[16384]; 
-	         long var10 = 0L;
+	        InputStream var14 = var13.openInputStream();
+	        long var8 = var13.getLength();
+	        byte[] var6 = new byte[16384]; 
+	        long var10 = 0L;
 
-	         int var7;
+	        int var7;
 	         
 			while((var7 = var14.read(var6)) != -1) {
 	            var10 += (long)var7;
 	            var4.write(var6, 0, var7);
 	            var4.flush();
-	            
-	         }
+	        }
 
-	         var14.close();
-	         var13.close();
-	         var4.close();
-	        
-
+	        var14.close();
+	        var13.close();
+	        var4.close();
 	         
-
-	         
-	      } catch (Exception var12) {
-	         
-
-	         
-	      }
+	    }
+		catch (Exception e)
+		{
+			
+		}
 		String str = null;
 		try {
-			str = new String(var4.toByteArray(),"UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(var4!=null) str = new String(var4.toByteArray(),"UTF-8");
+			// null pointer головного мозга, ёб ваш торшер, Илья.
+		} catch (IOException e) {
+			
 		}
 		return str;
-	   }
-	
+	}
 	
 	public static String download_old(String url)
 	{
