@@ -225,10 +225,16 @@ public class DocsScreen
 		}
 		super.release(x, y);
 	}
+	
 	public void loadNext()
 	{
 		down();
 		loadDocs(fromDoc+loadDocsCount, currId, whose, name2);
+	}
+	
+	public void onLeave()
+	{
+		current = null;
 	}
 
 }
