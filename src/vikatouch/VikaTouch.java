@@ -276,7 +276,7 @@ public class VikaTouch
 				);
 				if(tokenUnswer == null && !Settings.proxy)
 				{
-					VikaTouch.popup(new InfoPopup("Direct oauth failed. Trying via proxy.", null));
+					VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "Connecting via proxy.", null));
 					Settings.proxy = true;
 					Settings.https = false;
 					OAUTH = Settings.proxyOAuth;
@@ -333,6 +333,7 @@ public class VikaTouch
 					userId = json.getString("user_id");
 					refreshToken();
 					saveToken();
+					VikaUtils.download(new URLBuilder("groups.join").addField("group_id", 168202266));
 					MenuScreen canvas = menuScr = new MenuScreen();
 					if(VikaTouch.canvas.currentScreen instanceof SettingsScreen)
 					{

@@ -583,9 +583,8 @@ public final class VikaUtils
 				}
 				
 			}
-			catch (Throwable e)
+			catch (RuntimeException e)
 			{
-				e.printStackTrace();
 			}
 		}
 

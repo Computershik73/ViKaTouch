@@ -852,7 +852,7 @@ public class MusicPlayer extends MainScreen
 		{
 			extra = true;
 		}
-		else if(Settings.loadMusicWithKey == Settings.AUDIO_EXTRA)
+		else if(Settings.loadMusicWithKey == Settings.AUDIO_NOEXTRA)
 		{
 			extra = false;
 		}
@@ -943,7 +943,7 @@ public class MusicPlayer extends MainScreen
 			int dh = DisplayUtils.height;
 			int hdw = dw/2;
 			int textAnchor;
-			showCover = Math.min(dw, dh)<=240;
+			showCover = Math.min(dw, dh)>240;
 			updateDrawData();
 			
 			if(dw!=lastW)

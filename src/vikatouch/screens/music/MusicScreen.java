@@ -125,6 +125,10 @@ public class MusicScreen
 					}
 					VikaTouch.loading = false;
 				}
+				catch(InterruptedException e1)
+				{
+					return;
+				}
 				catch (Exception e)
 				{
 					e.printStackTrace();
