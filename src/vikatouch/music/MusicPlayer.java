@@ -177,7 +177,7 @@ public class MusicPlayer extends MainScreen
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
-								break;
+								return;
 							}
 						}
 						try
@@ -629,7 +629,7 @@ public class MusicPlayer extends MainScreen
 		try
 		{
 			int dw = DisplayUtils.width;
-			if(dw > DisplayUtils.height)
+			if(dw > DisplayUtils.height && showCover)
 			{
 				// альбом
 				x1 = dw/2+PBMARGIN;
@@ -804,12 +804,24 @@ public class MusicPlayer extends MainScreen
 	
 	public String getMp3Link()
 	{
+		String turl = "";
 		if(voice!=null)
 		{
 			String s = voice.musUrl;
-			return s;
+			if(VikaTouch.mobilePlatform.indexOf("NokiaN97")!=1)
+			{
+				turl = s;
+			}
+			else
+			{
+				// обычно УРЛ голоса в обработке не нуждается.
+				return s;
+			}
 		}
-		String turl = getC().mp3;
+		else
+		{
+			turl = getC().mp3;
+		}
 		boolean https;
 		boolean extra;
 		
@@ -823,7 +835,11 @@ public class MusicPlayer extends MainScreen
 		}
 		else
 		{
-			if(!Settings.https)
+			if(VikaTouch.mobilePlatform.indexOf("NokiaN97")!=1)
+			{
+				https = false;
+			}
+			else if(!Settings.https)
 			{
 				https = false;
 			}
@@ -842,7 +858,14 @@ public class MusicPlayer extends MainScreen
 		}
 		else
 		{
-			extra = Settings.https;
+			if(VikaTouch.mobilePlatform.indexOf("NokiaN97")!=1)
+			{
+				extra = false;
+			}
+			else
+			{
+				extra = Settings.https;
+			}
 		}
 		try
 		{
@@ -911,15 +934,17 @@ public class MusicPlayer extends MainScreen
 	}
 	
 	int timeY;
+	private boolean showCover;
 
 	public void draw(Graphics g) {
 		try
 		{
-			updateDrawData(); //TODO: run in different thread, repeat every 1 sec.
 			int dw = DisplayUtils.width;
 			int dh = DisplayUtils.height;
 			int hdw = dw/2;
 			int textAnchor;
+			showCover = Math.min(dw, dh)<=240;
+			updateDrawData();
 			
 			if(dw!=lastW)
 			{
@@ -934,7 +959,7 @@ public class MusicPlayer extends MainScreen
 			if(-currTx>(titleW/2+hdw)) currTx = titleW/2+hdw;
 			if(-currAx>(artistW/2+hdw)) currAx = artistW/2+hdw;
 			boolean tick = (System.currentTimeMillis()%1000)<500;
-			if(dw>dh)
+			if(dw>dh && showCover)
 			{
 				// альбом
 				textAnchor = dw * 3 / 4;
@@ -1007,7 +1032,7 @@ public class MusicPlayer extends MainScreen
 			g.drawString("Vol", volumeX1-4, volumeY+3-f.getHeight()/2, Graphics.TOP | Graphics.RIGHT);
 			g.drawString(String.valueOf(Settings.playerVolume), volumeX2+4, volumeY+3-f.getHeight()/2, Graphics.TOP | Graphics.LEFT);
 			
-			if(DisplayUtils.height>220)
+			if(showCover)
 			{
 				// cover
 				int coverY = (dw>dh)?((dh-hdw)/2):0;
@@ -1057,7 +1082,7 @@ public class MusicPlayer extends MainScreen
 		}
 		if(y<dh-50) return;
 		int anchor;
-		if(dw>dh)
+		if(dw>dh && showCover)
 		{
 			// альбом
 			anchor = dw * 3 / 4;

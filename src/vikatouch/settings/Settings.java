@@ -59,7 +59,7 @@ public class Settings
 
 	public static boolean sendLogs;
 	
-	public static int audioMode = 0; // добавь пж сохранение -ок
+	public static short audioMode = 0; // добавь пж сохранение -ок
 	
 	public static int rtspMethod = 0;
 	

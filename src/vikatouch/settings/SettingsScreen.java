@@ -305,7 +305,7 @@ public class SettingsScreen
 			}
 			case 9:
 			{
-				Settings.audioMode = var;
+				Settings.audioMode = (short) var;
 				break;
 			}
 			case 10:
