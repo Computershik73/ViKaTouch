@@ -286,45 +286,45 @@ public class MsgItem
 		if(forwardedX!=-1)
 		{
 			ColorUtils.setcolor(g, ColorUtils.FOREIGNMSG);
-			g.fillRoundRect(forwardedX, y, msgWidthInner, th, radius, radius);
+			g.fillRoundRect(forwardedX, y, forwardedW, th, radius, radius);
 			textX = forwardedX + h1/2;
 		}
 		else if(foreign)
 		{
 			ColorUtils.setcolor(g, ColorUtils.FOREIGNMSG);
-			g.fillRoundRect(margin, y, msgWidthInner, th, radius, radius);
+			g.fillRoundRect(margin, y, msgWidth, th, radius, radius);
 			g.fillRect(margin, y+th-radius, radius, radius);
 			textX = margin + h1/2;
 			if(selected && ScrollableCanvas.keysMode)
 			{
 				ColorUtils.setcolor(g, ColorUtils.TEXT);
 				g.setStrokeStyle(Graphics.SOLID);
-				g.drawRoundRect(margin, y, msgWidthInner, th, radius, radius);
+				g.drawRoundRect(margin, y, msgWidth, th, radius, radius);
 			}
 			
 			if(!isRead)
 			{
 				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-				g.fillArc(margin+msgWidthInner+1, y+16, 8, 8, 0, 360);
+				g.fillArc(margin+msgWidth+1, y+16, 8, 8, 0, 360);
 			}
 		}
 		else
 		{
 			ColorUtils.setcolor(g, ColorUtils.MYMSG);
-			g.fillRoundRect(DisplayUtils.width-(margin+msgWidthInner), y, msgWidthInner, th, radius, radius);
+			g.fillRoundRect(DisplayUtils.width-(margin+msgWidth), y, msgWidth, th, radius, radius);
 			g.fillRect(DisplayUtils.width-(margin+radius), y+th-radius, radius, radius);
-			textX = DisplayUtils.width-(margin+msgWidthInner) + h1/2;
+			textX = DisplayUtils.width-(margin+msgWidth) + h1/2;
 			if(selected && ScrollableCanvas.keysMode)
 			{
 				ColorUtils.setcolor(g, ColorUtils.TEXT);
 				g.setStrokeStyle(Graphics.SOLID);
-				g.drawRoundRect(DisplayUtils.width-(margin+msgWidthInner), y, msgWidthInner, th, radius, radius);
+				g.drawRoundRect(DisplayUtils.width-(margin+msgWidth), y, msgWidth, th, radius, radius);
 			}
 			if(!isRead)
 			{
 				//System.out.println("unread out");
 				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-				g.fillArc(DisplayUtils.width-(margin+msgWidthInner)-9, y+16, 8, 8, 0, 360);
+				g.fillArc(DisplayUtils.width-(margin+msgWidth)-9, y+16, 8, 8, 0, 360);
 			}
 		}
 		if(name!=null&&showName)
