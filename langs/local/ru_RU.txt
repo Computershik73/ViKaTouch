@@ -1,7 +1,7 @@
 #info:
 #русский
 #оригинальный язык
-#совместимо с: 2.8.5
+#совместимо с: 2.8.7
 #авторы shinovon, Feodor0090
 #
 #вк авторов:
@@ -10,7 +10,7 @@
 
 langinfo.name=Русский
 #YYYY.MM.DD
-langinfo.version=2020.09.11
+langinfo.version=2020.10.2
 
 langinfo.hints=15
 
@@ -76,7 +76,6 @@ date.justnow=только что
 error.outofmem=Не хватает памяти для работы приложения!
 error.errcode=Код ошибки
 error=Ошибка
-error.net=Сетевая ошибка
 error.additionalinfo=Доп. инфо
 error.description=Возможное описание
 error.contactdevs=за подробной информации обратитесь к разработчику.
@@ -102,21 +101,30 @@ menu.quit=Выход
 menu.members=Участники
 menu.contacts=Контакты
 menu.website=Сайт
+menu.links=Ссылки 
 menu.writemsg=Написать сообщение
 menu.nowebsite=нет
 menu.discussions=Обсуждения
 menu.about=О программе
 menu.loading=Загрузка...
 
+about.devs=Разработчики
+about.vendor=Владелец
+about.testers=Тестировщики приложений 
+
 group=Группа
 group.s=Группы
-group.descriptionempty=[описание пусто]
+group.descriptionempty=[описание пусто] 
+groups.join=Присоединиться к группе 
+groups.leave=Покинуть группу 
 
 title.people=Люди
 title.chats=Сообщения
 title.newsfeed=Новости
-title.docs=Документы
+title.docs=Документы 
+title.docsw=Список документов 
 title.videos=Видео
+title.videosw=Список видео 
 title.loading=загрузка
 title.members=Участники
 title.login=Вход
@@ -146,6 +154,8 @@ subscribe=Подписаться
 music.all=Вся музыка
 
 msg=Сообщение
+msg.online=В сети 
+msg.offline=Офлайн 
 msg.attach.audio=Аудиозапись
 msg.attach.voice=Голосовое сообщение
 msg.attach.reply=Ответ
@@ -208,10 +218,10 @@ user=Пользователь
 settings.system=Основное
 settings.appearance=Интерфейс
 settings.media=Медиа
-settings.help=Помощь
-settings.enabled=Вкл
-settings.disabled=Выкл
+settings.help=Справка
 settings.auto=Автоматически
+settings.enabled=Вкл.
+settings.disabled=Отключено
 settings.directhttps=Напрямую через https
 settings.proxy=Через прокси
 settings.connection=Подключение
@@ -221,8 +231,8 @@ settings.j2meloader=J2ME Loader
 settings.resistive=Резистивный тач
 settings.logout=Выйти из аккаунта
 settings.reset=Настройки по умолчанию
-settings.clearcache=Очистить кэш
 settings.transitionanimation=Анимация переходов
+settings.clearcache=Очистить кешированные изображения
 settings.listslength=Количество элементов в списках
 settings.dontloadavas=Не загружать аватарки
 settings.cacheimages=Кэшировать картинки

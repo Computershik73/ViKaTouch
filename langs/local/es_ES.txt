@@ -1,7 +1,7 @@
 #info:
 #español
 #оригинальный язык
-#совместимо с: пре-бета 2.7.14
+#совместимо с: пре-бета 2.8.7
 #автор: Илья Высоцкий, Jazminrocio
 #
 #вк автора:
@@ -10,7 +10,7 @@
 
 langinfo.name=Español (ES)
 #YYYY.MM.DD
-langinfo.version=2020.09.27
+langinfo.version=2020.10.7
 
 langinfo.hints=2
 
@@ -83,8 +83,8 @@ close=Cerrar aplicación
 
 online=En linea 
 offline=Desconectado 
-wasonlinedate=Estaba en línea
-wasonlinetime=Estaba en línea en
+wasonlinedate=Estaba en línea 
+wasonlinetime=Estaba en línea a las 
 
 menu.videos=Videos
 menu.music=Música
@@ -96,7 +96,7 @@ menu.wall=Pared
 menu.info=Información
 menu.grleave=Salir del grupo
 menu.grjoin=Unirse a un grupo
-menu.groups=Comunidades
+menu.groups=Grupos
 menu.quit=Salir
 menu.members=Participantes
 menu.contacts=Contactos
@@ -114,13 +114,12 @@ about.testers=Comprobadores de la aplicación
 
 group=Grupo
 group.s=Grupos
-group.descriptionempty=[descripción vacía]
-
+group.descriptionempty=[descripción vacía] 
 groups.join=Unirse al grupo 
 groups.leave=Dejar el grupo 
 
 title.people=Gente
-title.chats=Mensajes
+title.chats=Chats
 title.newsfeed=Noticias
 title.docs=Documentos
 title.photos=Sección aun no incluida 
@@ -128,8 +127,8 @@ title.videos=Videos de Amigo
 title.videosw=Lista de videos 
 title.loading=Cargando... 
 title.members=Miembros
-title.login=Inicio de sesión
-title.groups=Grupos
+title.login=Iniciar sesión
+title.groups=Lista de Grupos
 title.friends=Amigos
 title.music=Música
 title.playlists=Listas de Reproducción
@@ -137,7 +136,7 @@ title.album=Álbum
 title.albums=Álbumes
 title.settings=Configuración
 title.friendsw=Amigos %1
-title.documentsw=Documentos %1
+title.documentsw=Documentos %1 
 title.clubsw=Grupos %1
 title.membersw=Miembros %1
 title.musicw=Música %1
@@ -177,13 +176,13 @@ msg.editing=Editando
 msg.failedtoload=No se pudo cargar la información
 msg.failedtoload2=No se pudieron cargar los mensajes
 msg.sendneterror=El mensaje no se envió debido a un error de red.
-msg.senderror=Error al enviar el mensaje
+msg.senderror=Error al enviar el mensaje 
 msg.send=Enviar
 msg.attach=Adjuntar
 msg.stickers=Stickers
 msg.you=Tú
 msg.links=Enlaces
-msg.fwd=Adjuntar msj a otro chat
+msg.fwd=Adjuntar mensajes
 msg.delete=Eliminar
 msg.edit=Editar
 msg.markasread=Leer
@@ -203,7 +202,7 @@ count.audiosfew=Grabaciones de audio
 count.audios=Audios
 
 video=Video
-video.addtosebe=Añadir video
+video.addtosebe=Añadir video 
 video.1view=Ver
 video.views=Vistas
 video.viewsfew=Visitas
@@ -246,39 +245,41 @@ settings.transitionanimation=Animación de transiciones
 settings.listslength=Número de elementos en las listas
 settings.dontloadavas=No cargar avatares
 settings.cacheimages=Imágenes en caché
-settings.historycount=Longitud del historial de correspondencia
+settings.historycount=Cantidad de Historial
 settings.refreshrate=Frecuencia de actualización
 settings.rytelemetry=Envío de estadísticas de uso
 settings.sendlogs=Envío de registros y errores 
-settings.videoresolution=Resolución de vídeo durante la reproducción
+settings.videoresolution=Tipo de Resolución del video
 settings.rtsp=Método para abrir enlaces RTSP
 settings.rtspc.0=Por defecto
-settings.rtspc.1=Llamada del jugador [Symbian]
+settings.rtspc.1=Abrir Reproductor nativo [Symbian]
 settings.rtspc.2=" vlc.exe <MRL>" [KEmulator]
-settings.loadmusicviahttp=Cargar música a través de http 
-settings.dontloadmusicwithkey=No cargar música con llave 
+settings.loadmusicviahttp=Cargar música a través de HTTP 
+settings.dontloadmusicwithkey=No cargar música con cifrado 
 settings.youtube=Abrir YouTube a través de:
 settings.audio=Método de reproducción de audio
 settings.keepaudiocache=Guardar música en caché
 settings.apiproxy=Api Proxy
 settings.authproxy=OAuth Proxy
 settings.language=Idioma
-settings.audioc.0=Reproducir en línea
-settings.audioc.1=Almacenar en caché en RAM y reproducir
-settings.audioc.2=Almacenar en caché en un archivo y reproducir
-settings.audioc.3=Almacenar en caché en un archivo y abrir
-settings.audioc.4=Almacenar en caché y reproducir en el Reproductor del sistema [Symbian]
-settings.audioc.5=Reproducir en línea en el Reproductor del sistema [Symbian]
-settings.audioc.6=Reproducir en VLC [KEmulator]
-settings.audioc.7=Descargar el archivo a través del navegador
+settings.audioc.0=Reproducir en línea 
+settings.audioc.1=Guardar caché en RAM y reproducir 
+settings.audioc.2=Guardar caché en el móvil y jugar 
+settings.audioc.3=Guardar caché en la memoria del teléfono y abrir 
+settings.audioc.4=Reproducir en el reproductor del sistema 
+settings.audioc.5=Reproductor Nativo en Linea(symbian) 
+settings.audioc.6=Reproducir en VLC (KEmulator)
+settings.audioc.7=Descargar por el navegador
 settings.spabilities=Accesibilidad
 settings.debug=Depuración 
-settings.debugcrap=información de depuración en pantalla 
+settings.debugcrap=Información de depuración en pantalla 
 settings.dontloadmusicwithkey=No cargar música con llave 
 settings.itunescovers=Buscar portadas en iTunes 
 settings.loadmusicviahttp=Protocolo
 settings.datafolder=Carpeta de almacenamiento
 settings.automarkasread=Marcar mensajes como leídos 
+settings.dialogscount=Numero de diálogos 
+settings.dialogsrefreshrate=Tiempo de actualizacion de dialogos 
 settings.vibontouch=Vibración al tacto 
 
 back=Atrás
