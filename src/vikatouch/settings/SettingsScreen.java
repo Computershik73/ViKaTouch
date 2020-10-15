@@ -474,12 +474,13 @@ public class SettingsScreen
 			}
 			case 23:
 			{
-				OptionItem[] it = new OptionItem[4];
+				OptionItem[] it = new OptionItem[6];
 				it[0] = new OptionItem(this, "English (UK)", IconsManager.EDIT, 1, oneitemheight);
 				it[1] = new OptionItem(this, "English (US)", IconsManager.EDIT, 2, oneitemheight);
 				it[2] = new OptionItem(this, "Русский", IconsManager.EDIT, 3, oneitemheight);
-				it[3] = new OptionItem(this, "Russian (translit)", IconsManager.EDIT, 4, oneitemheight);
 				it[3] = new OptionItem(this, "Español (ES)", IconsManager.EDIT, 5, oneitemheight);
+				it[4] = new OptionItem(this, "Український", IconsManager.EDIT, 6, oneitemheight);
+				it[5] = new OptionItem(this, "Беларускі", IconsManager.EDIT, 7, oneitemheight);
 				VikaTouch.popup(new AutoContextMenu(it));
 				break;
 			}
@@ -491,11 +492,12 @@ public class SettingsScreen
 			String[] res = new String[] { "240", "360", "480", "720" };
 			Settings.setted = true;
 			Settings.videoResolution = res[j];
+			Settings.saveSettings();
 		}
 		if(i>=1&&i<=9)
 		{
 			int j = i - 1;
-			String[] res = new String[] { "en_UK", "en_US", "ru_RU", "lt_RU", "es_ES" };
+			String[] res = new String[] { "en_UK", "en_US", "ru_RU", "lt_RU", "es_ES", "ua_UA", "by_BY" };
 			Settings.setted = true;
 			Settings.language = res[j];
 			/*VikaTouch.popup(new InfoPopup("Language was changed to "+res[j]+". The application must be restarted.", new Runnable()
@@ -505,6 +507,7 @@ public class SettingsScreen
 					VikaTouch.appInst.destroyApp(false);
 				}
 			}, "Restart required", "Restart"));*/
+			Settings.saveSettings();
 			VikaTouch.popup(new InfoPopup("Settings will be applied after restart", null, "","OK"));
 		}
 	}
@@ -538,6 +541,11 @@ public class SettingsScreen
 	public void onMenuItemOption(int i)
 	{
 		
+	}
+	
+	public void onLeave()
+	{
+		Settings.saveSettings();
 	}
 
 }

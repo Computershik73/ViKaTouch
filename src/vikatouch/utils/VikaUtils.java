@@ -807,7 +807,7 @@ public final class VikaUtils
 	public static String[] searchLinks(String text)
 	{
 		if(text == null || text.length()<2) return null;
-		int lm = 8; // links max (больше на экран не влезет (смотря какой конечно))
+		int lm = 16; // links max (больше на экран не влезет (смотря какой конечно))
 		String[] la = new String[lm];
 		int li = 0; // индекс в массиве
 		int tl = text.length();

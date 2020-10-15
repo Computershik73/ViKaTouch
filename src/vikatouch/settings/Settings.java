@@ -136,7 +136,7 @@ public class Settings
 	 * возможность выбрать, как пинать эту бедную музыку.
 	 */
 	
-	public static final String[] supportedLanguages = {"en_US", "en_UK", "ru_RU"};
+	public static final String[] supportedLanguages = {"en_US", "en_UK", "ru_RU", "es_ES", "by_BY", "ua_UA"};
 
 	static
 	{
