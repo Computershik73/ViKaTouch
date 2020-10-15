@@ -25,13 +25,13 @@ public class UIThread
 			}
 			catch (Throwable e)
 			{
-				VikaTouch.sendLog("Tick failed. "+e.toString());
+				//VikaTouch.sendLog("Tick failed. "+e.toString());
 			}
 			//Thread.yield();
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				VikaTouch.sendLog("UI thread exit");
+				//VikaTouch.sendLog("UI thread exit");
 				return;
 			}
 		}

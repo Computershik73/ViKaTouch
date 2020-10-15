@@ -591,7 +591,9 @@ public class PostItem
 			else
 			{
 				OptionItem[] opts2 = new OptionItem[c];
-				int h = DisplayUtils.height>240?36:30; // вот как делается адаптация, а не твои километровые свитчи и да, я буду ещё долго ворчать.
+				int h = 40;
+				try
+				{
 				for(int j = 0; j < c; j++)
 				{
 					int icon = IconsManager.LINK;
@@ -600,6 +602,8 @@ public class PostItem
 					if(links[j].indexOf("rtsp")==0) { icon = IconsManager.VIDEOS; }
 					opts2[j] = new OptionItem(this, links[j], icon, -j, h);
 				}
+				}
+				catch(RuntimeException e) { }
 				VikaTouch.popup(new AutoContextMenu(opts2));
 			}
 		}

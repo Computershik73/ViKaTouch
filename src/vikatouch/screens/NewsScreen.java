@@ -9,12 +9,16 @@ import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.InfoPopup;
+import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.WallAttachment;
+import vikatouch.items.LoadMoreButtonItem;
 import vikatouch.items.PostItem;
+import vikatouch.json.INextLoadable;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.menu.MenuScreen;
 import vikatouch.utils.VikaUtils;
@@ -22,7 +26,7 @@ import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
 public class NewsScreen
-	extends MainScreen
+	extends MainScreen implements INextLoadable
 {
 	
 	public static JSONArray profiles;
@@ -31,6 +35,11 @@ public class NewsScreen
 	
 	public int newsSource = 0;
 	public boolean fromAtt = false;
+	
+	public String startPost = null;
+	public int offset = 0;
+	
+	static final int count = 15;
 	
 	public NewsScreen()
 	{
@@ -47,15 +56,23 @@ public class NewsScreen
 	
 	public void loadPosts()
 	{
+		loadPosts(true);
+	}
+	public void loadPosts(final boolean fromLatest)
+	{
+		if(fromLatest) offset = 0;
+		final INextLoadable thisC = this;
 		new Thread()
 		{
 			public void run()
 			{
 				VikaTouch.loading = true;
+				
+				int step = 0;
 				try
 				{
-					int count = 50;
 					URLBuilder url;
+					fromAtt = false;
 					if(newsSource == 0)
 					{
 						url = new URLBuilder("newsfeed.get").addField("filters", "post")
@@ -66,7 +83,20 @@ public class NewsScreen
 						url = new URLBuilder("wall.get").addField("filter", "all").addField("extended", 1)
 								.addField("count", count).addField("owner_id", newsSource);
 					}
+					if(!fromLatest && startPost!=null)
+					{
+						if(newsSource == 0)
+						{
+							url = url.addField("start_from", startPost);
+						}
+						else
+						{
+							url.addField("offset", offset);
+						}
+					}
 					hasBackButton = newsSource!=0;
+					
+					step = 1;
 					final String s = VikaUtils.download(url);
 					//VikaTouch.sendLog(url.toString());
 					//VikaTouch.sendLog(newsSource+" "+(s.length()>210?s.substring(0, 200):s));
@@ -81,13 +111,18 @@ public class NewsScreen
 						VikaTouch.popup(new InfoPopup(s, null));
 						return;
 					}
+					step = 2;
 					JSONArray items = response.getJSONArray("items");
-					
+					step = 3;
 					int itemsCount = items.length();
-					uiItems = new PostItem[itemsCount];
-					
+					uiItems = new PressableUIItem[itemsCount+1];
+					step = 4;
+					uiItems[itemsCount] = new LoadMoreButtonItem(thisC);
+					step = 5;
 					profiles = response.getJSONArray("profiles");
 					groups = response.getJSONArray("groups");
+					step = 6;
+					startPost = response.optString("next_from", null);
 					
 					itemsh = 0;
 					for(int i = 0; i < itemsCount; i++)
@@ -99,7 +134,7 @@ public class NewsScreen
 						{
 							itemCopy = item.getJSONArray("copy_history").getJSONObject(0);
 						}
-						catch(Exception e)
+						catch(RuntimeException e)
 						{
 							itemCopy = item;
 						}
@@ -107,12 +142,20 @@ public class NewsScreen
 						((PostItem) uiItems[i]).parseJSON();
 						Thread.sleep(20);
 					}
+					itemsCount++;
 				}
 				catch (Exception e)
 				{
+					VikaTouch.sendLog("news fail step "+step);
 					VikaTouch.error(e, ErrorCodes.NEWSPARSE);
-					e.printStackTrace();
 				}
+				catch (OutOfMemoryError me)
+				{
+					uiItems[0] = null;
+					System.gc();
+					VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error.outofmem"), null));
+				}
+				// другим ошибкам разрешаем выпасть из потока
 				VikaTouch.loading = false;
 			}
 		}.start();
@@ -154,7 +197,7 @@ public class NewsScreen
 	}
 	protected final void callRefresh()
 	{
-		if(!fromAtt) loadPosts();
+		if(!fromAtt) loadPosts(true);
 	}
 
 	public void draw(Graphics g)
@@ -235,6 +278,14 @@ public class NewsScreen
 	protected void scrollHorizontally(int deltaX)
 	{
 		
+	}
+	
+	public void loadNext()
+	{
+		if(newsSource != 0) { offset+=count; }
+		scrolled = 0;
+		currentItem = 0;
+		loadPosts(false);
 	}
 	
 	public void onLeave()

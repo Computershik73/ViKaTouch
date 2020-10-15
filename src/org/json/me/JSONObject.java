@@ -743,7 +743,7 @@ public class JSONObject {
     public int optInt(String key, int defaultValue) {
         try {
             return getInt(key);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return defaultValue;
         }
     }
