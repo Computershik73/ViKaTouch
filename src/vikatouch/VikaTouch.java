@@ -83,7 +83,7 @@ public class VikaTouch
 	public static VikaCanvasInst canvas;
 	public CommandsImpl cmdsInst;
 	private String errReason;
-	private String tokenUnswer;
+	private String tokenAnswer;
 	private SplashScreen splash;
 	public static VikaTouch inst;
 	public static VikaTouchApp appInst;
@@ -248,21 +248,42 @@ public class VikaTouch
 	public boolean login(final String user, final String pass)
 	{
 		//илья ты заебал со своей безопасностью, пошел нахуй
-		if (user.length() > 0)
+		if (user == null || user.length() == 0)
 		{
-			try
+			errReason = "login is invalid";
+			return false;
+		}
+		try
+		{
+			if(!Settings.proxy)
 			{
-				if(!Settings.proxy)
-				{
-					Settings.proxy = false;
-					Settings.https = true;
-					OAUTH = Settings.httpsOAuth;
-				}
-				else
-				{
-					OAUTH = Settings.proxyOAuth;
-				}
-				tokenUnswer = VikaUtils.download(
+				Settings.proxy = false;
+				Settings.https = true;
+				OAUTH = Settings.httpsOAuth;
+			}
+			else
+			{
+				OAUTH = Settings.proxyOAuth;
+			}
+			
+			tokenAnswer = VikaUtils.download(
+				new URLBuilder(OAUTH, "token")
+				.addField("grant_type", "password")
+				.addField("client_id", "2685278")
+				.addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
+				.addField("username", user)
+				.addField("password", pass)
+				.addField("scope", "notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
+				.addField("2fa_supported", 1)
+				.addField("force_sms", 1)
+			);
+			if(tokenAnswer == null && !Settings.proxy)
+			{
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "Connecting via proxy.", null));
+				Settings.proxy = true;
+				Settings.https = false;
+				OAUTH = Settings.proxyOAuth;
+				tokenAnswer = VikaUtils.download(
 					new URLBuilder(OAUTH, "token")
 					.addField("grant_type", "password")
 					.addField("client_id", "2685278")
@@ -272,99 +293,48 @@ public class VikaTouch
 					.addField("scope", "notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
 					.addField("2fa_supported", 1)
 					.addField("force_sms", 1)
-					.toString()
 				);
-				if(tokenUnswer == null && !Settings.proxy)
-				{
-					VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "Connecting via proxy.", null));
-					Settings.proxy = true;
-					Settings.https = false;
-					OAUTH = Settings.proxyOAuth;
-					tokenUnswer = VikaUtils.download(
-						new URLBuilder(OAUTH, "token")
-						.addField("grant_type", "password")
-						.addField("client_id", "2685278")
-						.addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
-						.addField("username", user)
-						.addField("password", pass)
-						.addField("scope", "notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
-						.addField("2fa_supported", 1)
-						.addField("force_sms", 1)
-						.toString()
-					);
-				}
-				/*
-				if(tokenUnswer == null)
-				{
-					tokenUnswer = VikaUtils.download(
-							new URLBuilder("http://vkt.nnproject.tk", "oauthproxy.php")
-							.addField("url", "token")
-							.addField("token", "1")
-							.addField("kate", "1")
-							.addField("user", user)
-							.addField("pass", pass)
-							.toString());
-				}
-				*/
-				if(tokenUnswer == null)
-				{
-					errReason = "network error!";
-					return false;
-				}
-				System.out.println(tokenUnswer);
-				errReason = tokenUnswer;
-				if(tokenUnswer.indexOf("error") >= 0)
-				{
-					if(tokenUnswer.indexOf("need_captcha") > 0)
-					{
-						return captcha(user, pass);
-					}
-					if(tokenUnswer.indexOf("2fa") > 0)
-					{
-						return code(user, pass, tokenUnswer);
-					}
-					errReason = tokenUnswer;
-					return false;
-				}
-				else
-				{
-					JSONObject json = new JSONObject(tokenUnswer);
-					accessToken = json.getString("access_token");
-					userId = json.getString("user_id");
-					refreshToken();
-					saveToken();
-					VikaUtils.download(new URLBuilder("groups.join").addField("group_id", 168202266));
-					MenuScreen canvas = menuScr = new MenuScreen();
-					if(VikaTouch.canvas.currentScreen instanceof SettingsScreen)
-					{
-						((SettingsScreen)VikaTouch.canvas.currentScreen).backScreen = canvas;
-					}
-					else
-					{
-						setDisplay(canvas, 1);
-					}
-					
-					Dialogs.refreshDialogsList(true, false);
-					return true;
-				}
 			}
-			catch (NullPointerException e)
+			if(tokenAnswer == null)
 			{
-				errReason = "no internet: "+e.toString();
-				e.printStackTrace();
+				errReason = "Network error!";
 				return false;
 			}
-			catch (Exception e)
+			
+			errReason = tokenAnswer;
+			if(tokenAnswer.indexOf("error") >= 0)
 			{
-				errReason = e.toString();
+				if(tokenAnswer.indexOf("need_captcha") > 0)
+				{
+					return captcha(user, pass);
+				}
+				if(tokenAnswer.indexOf("2fa") > 0)
+				{
+					return code(user, pass, tokenAnswer);
+				}
+				errReason = tokenAnswer;
 				return false;
+			}
+			else
+			{
+				JSONObject json = new JSONObject(tokenAnswer);
+				accessToken = json.getString("access_token");
+				userId = json.getString("user_id");
+				refreshToken();
+				saveToken();
+				VikaUtils.download(new URLBuilder("groups.join").addField("group_id", 168202266));
+				MenuScreen canvas = menuScr = new MenuScreen();
+				setDisplay(canvas, 1);
+				
+				Dialogs.refreshDialogsList(true, false);
+				return true;
 			}
 		}
-		else
+		catch (Throwable e)
 		{
-			errReason = "login is invalid";
+			errReason = e.toString();
+			return false;
 		}
-		return false;
 	}
 
 	private boolean code(String user, String pass, String tokenUnswer)
@@ -471,7 +441,7 @@ public class VikaTouch
 		try
 		{
 			captchaScr = new CaptchaScreen();
-			captchaScr.obj = new CaptchaObject(new JSONObject(tokenUnswer));
+			captchaScr.obj = new CaptchaObject(new JSONObject(tokenAnswer));
 			captchaScr.obj.parseJSON();
 			canvas.showCaptcha = true;
 			CaptchaScreen.finished = false;
@@ -479,7 +449,7 @@ public class VikaTouch
 			{
 				if(captchaScr != null && CaptchaScreen.finished)
 				{
-					tokenUnswer = VikaUtils.download(
+					tokenAnswer = VikaUtils.download(
 					new URLBuilder(OAUTH, "token")
 						.addField("grant_type", "password")
 						.addField("client_id", "2685278")
@@ -491,16 +461,16 @@ public class VikaTouch
 						.addField("captcha_key", CaptchaScreen.input)
 						.toString()
 					);
-					errReason = tokenUnswer;
-					if(tokenUnswer.indexOf("need_captcha") > 0)
+					errReason = tokenAnswer;
+					if(tokenAnswer.indexOf("need_captcha") > 0)
 					{
 						return captcha(user, pass);
 					}
-					if(tokenUnswer.indexOf("error") >= 0)
+					if(tokenAnswer.indexOf("error") >= 0)
 					{
 						return false;
 					}
-					JSONObject json = new JSONObject(tokenUnswer);
+					JSONObject json = new JSONObject(tokenAnswer);
 					accessToken = json.getString("access_token");
 					userId = json.getString("user_id");
 					//accessToken = tokenUnswer.substring(tokenUnswer.indexOf("access_token") + 15,

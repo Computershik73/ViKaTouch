@@ -25,7 +25,8 @@ public class LoginScreen
 	private static Image login;
 	//private static Image settingsImg;
 	private static boolean pressed;
-	public static boolean vse;
+	public static boolean loginSucsess;
+	public boolean isLoggingInNow = false;
 	public static String user = "";
 	public static String pass = "";
 	public static Thread thread;
@@ -72,9 +73,49 @@ public class LoginScreen
 		keysMode = true;
 	}
 	
+	public void login()
+	{
+		if(user != null && user.length() >= 5 && pass != null && pass.length() >= 6)
+		{
+			if(!loginSucsess)
+			{
+				new Thread()
+				{
+					public void run()
+					{
+						try
+						{
+							isLoggingInNow = true;
+							VikaTouch.loading = true;
+							loginSucsess = VikaTouch.inst.login(user, pass);
+							
+							String reason;
+							if(!loginSucsess && (reason = VikaTouch.getReason()) != null)
+							{
+								//VikaTouch.popup(new InfoPopup(reason, null, failedStr, "OK"));
+								VikaTouch.warn(reason, failedStr);
+							}
+						}
+						finally
+						{
+							isLoggingInNow = false;
+							VikaTouch.loading = false;
+						}
+					}
+				}.start();
+			}
+		}
+		else
+		{
+			VikaTouch.loading = false;
+			VikaTouch.warn(warnStr);
+		}
+	}
+	
 	public final void press(int key)
 	{
 		keysMode = true;
+		if(isLoggingInNow) return;
 		if((key == -5) || (key==Canvas.FIRE))
 		{
 			if(selectedBtn == 0)
@@ -87,12 +128,10 @@ public class LoginScreen
 					thread.interrupt();
 				thread = new Thread()
 				{
-
 					public void run()
 					{
 						user = TextEditor.inputString(loginStr, user, 28, false);
 						repaint();
-						interrupt();
 					}
 				};
 				thread.start();
@@ -107,50 +146,13 @@ public class LoginScreen
 					{
 						pass = TextEditor.inputString(passwordStr, pass, 32, false);
 						repaint();
-						interrupt();
 					}
 				};
 				thread.start();
 			}
 			else if(selectedBtn == 3) 
 			{
-				if(user != null && user.length() >= 5 && pass != null && pass.length() >= 6)
-				{
-					if(!vse)
-					{
-						new Thread(
-								new Runnable()
-								{
-									public void run()
-									{
-										//логин
-										if(VikaTouch.DEMO_MODE)
-										{
-											vse = true;
-											VikaScreen canvas = new MenuScreen();
-											VikaTouch.setDisplay(canvas, 1);
-										}
-										else
-										{
-											vse = VikaTouch.inst.login(user, pass);
-										}
-										String reason;
-										if(!vse && (reason = VikaTouch.getReason()) != null)
-										{
-											//VikaTouch.popup(new InfoPopup(reason, null, failedStr, "OK"));
-											VikaTouch.warn(reason, failedStr);
-											VikaTouch.loading = false;
-										}
-									}
-								}
-							).start();
-					}
-				}
-				else
-				{
-					VikaTouch.loading = false;
-					VikaTouch.warn(warnStr);
-				}
+				login();
 			}
 		}
 		else if ((key == -2) || (key==Canvas.DOWN))
@@ -283,6 +285,7 @@ public class LoginScreen
 	}
 	
 	public final void press(int x, int y) {
+		if(isLoggingInNow) return;
 		if(x > DisplayUtils.width - 50 && y < 50)
 		{
 			VikaTouch.inst.cmdsInst.command(13, this);
@@ -291,7 +294,7 @@ public class LoginScreen
 		if(y>tapCoords[4]&&y<tapCoords[5])
 		{
 			pressed = true;
-			if(!vse)
+			if(!loginSucsess)
 				repaint();
 		}
 		else if(y>tapCoords[0]&&y<tapCoords[1])
@@ -327,56 +330,18 @@ public class LoginScreen
 	}
 
 	public final void release(int x, int y) {
+		
+		if(isLoggingInNow) return;
 		if(pressed)
 		{
 			pressed = false;
 			if(y>tapCoords[4]&&y<tapCoords[5])
 			{
-				if(user != null && user.length() >= 5 && pass != null && pass.length() >= 6)
-				{
-					if(!vse)
-					{
-						VikaTouch.loading = true;
-						new Thread(
-								new Runnable()
-								{
-									public void run()
-									{
-										//логин
-										if(VikaTouch.DEMO_MODE)
-										{
-											vse = true;
-											VikaScreen canvas = new MenuScreen();
-											VikaTouch.setDisplay(canvas, 1);
-										}
-										else
-										{
-											vse = VikaTouch.inst.login(user, pass);
-										}
-										String reason;
-										if(!vse && (reason = VikaTouch.getReason()) != null)
-										{
-											if(reason.indexOf("invalid_user") > 0)
-												reason = warnStr;
-											//VikaTouch.popup(new InfoPopup(reason, null, failedStr, "OK"));
-											VikaTouch.warn(reason, failedStr);
-											VikaTouch.loading = false;
-										}
-									}
-								}
-							).start();
-					}
-				}
-				else
-				{
-
-					VikaTouch.loading = false;
-					VikaTouch.warn(warnStr);
-				}
+				login();
 			}
 			else
 			{
-				if(!vse)
+				if(!loginSucsess)
 					repaint();
 			}
 		}

@@ -186,6 +186,7 @@ public class Dialogs
 					}
 					catch(Throwable t)
 					{
+						isUpdatingNow = false;
 						return;
 					}
 				}
