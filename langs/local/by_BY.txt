@@ -158,6 +158,7 @@ msg.online=Підключений
 msg.offline=Па-за сеткай 
 msg.attach.audio=Запіс аўдыя
 msg.attach.reply=Адказ
+msg.attach.photo=Фатаграфія
 msg.attach.fwd=Перасланае паведамленне 
 msg.attach.attachments=Укладанні
 msg.attach.attachment=Файл укладання

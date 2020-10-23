@@ -163,6 +163,7 @@ msg.attach.reply=Respuesta
 msg.attach.fwd=Mensaje Reenviado 
 msg.attach.attachments=Archivos Adjuntos 
 msg.attach.attachment=Archivo Adjunto
+msg.attach.photo=Foto
 msg.attach.video=Vídeo
 msg.attach.voice=Mensaje de voz 
 msg.write=Escribir 

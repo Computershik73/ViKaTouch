@@ -134,6 +134,7 @@ public class MenuScreen
 		//TODO ENABLE ON OBT
 		VikaTouch.sendStats();
 		
+		
 		(new Thread()
 		{
 			public void run()

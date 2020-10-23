@@ -156,6 +156,7 @@ music.all=Вся музыка
 msg=Сообщение
 msg.online=В сети 
 msg.offline=Офлайн 
+msg.attach.photo=Фотография
 msg.attach.audio=Аудиозапись
 msg.attach.voice=Голосовое сообщение
 msg.attach.reply=Ответ

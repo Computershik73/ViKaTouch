@@ -141,6 +141,7 @@ subscribe=Follow
 msg=Message
 msg.attach.audio=Audio
 msg.attach.reply=Answer
+msg.attach.photo=Photo
 msg.attach.fwd=Forwarded message
 msg.attach.attachment=Attachment
 msg.attach.video=Video

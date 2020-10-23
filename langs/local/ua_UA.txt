@@ -163,6 +163,7 @@ msg.attach.fwd=Переадресоване повідомлення
 msg.attach.attachments=Вкладення 
 msg.attach.attachment=Файл вкладення
 msg.attach.video=Відео
+msg.attach.photo=Фотографія
 msg.attach.voice=Голосове повідомлення 
 msg.write=Написати 
 msg.entermsg=Написати повідомлення ...

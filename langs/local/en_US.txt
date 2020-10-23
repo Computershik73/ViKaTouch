@@ -146,6 +146,7 @@ msg.attach.reply=Answer
 msg.attach.fwd=Forwarded message
 msg.attach.attachment=Attachment
 msg.attach.video=Video
+msg.attach.photo=Photo
 msg.entermsg=Enter message...
 msg.attach.voice=Voice message
 msg.attach.reply=Ответ

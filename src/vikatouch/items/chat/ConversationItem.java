@@ -6,6 +6,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
@@ -258,23 +259,42 @@ public class ConversationItem
 			
 			String nameauthora = "";
 			
+			
+			
 			if(text == "" || text == null || text.length() == 0 || text.length() == 1)
 			{
-				/*
-				if(lastmessage.attachments != null && lastmessage.attachments.length != 0 && lastmessage.attachments[0] != null)
-				{
+				JSONArray attachments = msg.optJSONArray("attachments");	
+			//	if(lastmessage.attachments != null && lastmessage.attachments.length != 0 && lastmessage.attachments[0] != null)
+				//{
 					try
 					{
-						if(lastmessage.attachments[1] != null)
+						if(attachments.optJSONObject(0).optString("type").equals("photo"))
 						{
-							text = "Вложения";
+							text = TextLocal.inst.get("msg.attach.photo");
+						} else {
+							if (attachments.optJSONObject(0).optString("type").equals("audio")) {
+								text = TextLocal.inst.get("msg.attach.audio");
+							} else {
+								if (attachments.optJSONObject(0).optString("type").equals("video")) {
+									text = TextLocal.inst.get("msg.attach.video");
+								} else {
+									if (attachments.optJSONObject(0).optString("type").equals("wall")) {
+										text = TextLocal.inst.get("msg.attach.wall");
+									} else {
+										
+											text = TextLocal.inst.get("msg.attach.attachment");
+										
+									}
+								}
+							}
 						}
+						
 					}
 					catch (ArrayIndexOutOfBoundsException e)
 					{
-						if(lastmessage.attachments[0] instanceof PhotoAttachment)
+					/*	if(lastmessage.attachments[0] instanceof PhotoAttachment)
 						{
-							text = "Фотография";
+							text = TextLocal.inst.get("msg.attach.photo");
 						}
 						else if(lastmessage.attachments[0] instanceof AudioAttachment)
 						{
@@ -283,11 +303,11 @@ public class ConversationItem
 						else
 						{
 							text = "Вложение";
-						}
+						}*/
 					}
-				}
-				*/
-				text = TextLocal.inst.get("msg.attach.attachment");
+			//	}
+				
+				//text = TextLocal.inst.get("msg.attach.attachment");
 			}
 			lastSenderId = msg.optInt("from_id");
 			msg.dispose();

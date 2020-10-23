@@ -130,6 +130,7 @@ subscribe=Podpisatsya
 msg=Soobshenie
 msg.attach.audio=Audiozapis
 msg.attach.reply=Otvet
+msg.attach.photo=Foto
 msg.attach.fwd=Pereslannoe soobshenie
 msg.attach.attachment=Vlozenie
 msg.attach.video=Videozapis
