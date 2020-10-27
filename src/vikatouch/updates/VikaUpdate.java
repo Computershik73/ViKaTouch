@@ -26,8 +26,10 @@ public class VikaUpdate {
 			step = 3;
 			String[] cvers = VEUtils.split(VikaTouch.getVersion(), 3, '.');
 			step = 4;
+			vers[2]=vers[2].substring(0, vers[2].length()-1);
 			//VikaTouch.sendLog("vers: " + vers[0]+ " "+ vers[1]+" "+vers[2]);
 			//VikaTouch.sendLog("cvers: " + cvers[0]+ " "+ cvers[1]+" "+cvers[2]);
+			//VikaTouch.sendLog(String.valueOf(vers[0].equals(cvers[0])) + String.valueOf(vers[1].equals(cvers[1])) + vers[2]+"=="+cvers[2]+"="+String.valueOf(vers[2].equals(cvers[2])));
 			if(!vers[0].equals(cvers[0]) || !vers[1].equals(cvers[1]) || !vers[2].equals(cvers[2]))
 			{
 				VikaUpdate vu = new VikaUpdate();
