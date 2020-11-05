@@ -149,6 +149,7 @@ public class ChatScreen
 	}
 	
 	public static Hashtable profileNames = new Hashtable();
+	public static Hashtable groupNames = new Hashtable();
 	
 	public ChatScreen(int peerId, String title)
 	{
@@ -268,6 +269,7 @@ public class ChatScreen
 			VikaCanvasInst.msgColor = 0xffffff00;
 			JSONObject response = new JSONObject(x).getJSONObject("response");
 			JSONArray profiles = response.getJSONArray("profiles");
+			JSONArray groups = response.getJSONArray("groups");
 			JSONArray items = response.getJSONArray("items");
 			inr = response.getJSONArray("conversations").getJSONObject(0).optInt("in_read");
 			outr = response.getJSONArray("conversations").getJSONObject(0).optInt("out_read");
@@ -280,6 +282,14 @@ public class ChatScreen
 				int id = profile.optInt("id");
 				if(id > 0 && firstname != null)
 					profileNames.put(new IntObject(id), firstname + " " + lastname);
+			}
+			for(int i = 0; i < groups.length(); i++)
+			{
+				JSONObject group = groups.getJSONObject(i);
+				String name = group.optString("name");
+				int id = -group.optInt("id");
+				if(name != null)
+					groupNames.put(new IntObject(id), name);
 			}
 			//VikaTouch.sendLog(""+items.length()+" msgs");
 			MsgItem last = null;
@@ -295,6 +305,10 @@ public class ChatScreen
 				if(fromId > 0 && profileNames.containsKey(new IntObject(fromId)))
 				{
 					name = (String)profileNames.get(new IntObject(fromId));
+				} else {
+					if (groupNames.containsKey(new IntObject(fromId))) {
+					name = (String)groupNames.get(new IntObject(fromId));
+					}
 				}
 				
 				boolean chain = false;

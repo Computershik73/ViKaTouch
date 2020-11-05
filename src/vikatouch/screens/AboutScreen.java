@@ -1,5 +1,8 @@
 package vikatouch.screens;
 
+import java.util.Hashtable;
+import java.util.Vector;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
@@ -10,7 +13,9 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.CommandsImpl;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
-
+import apibridge.*;
+import apibridge.entities.BridgeException;
+import apibridge.entities.BridgeResult;
 public class AboutScreen
 	extends ScrollableCanvas
 {
@@ -39,7 +44,7 @@ public class AboutScreen
 		};
 	}
 	*/
-
+	private APIBridge bridge;
 	private static String backStr;
 	private static String publisherStr;
 	private static String devsStr;
@@ -59,6 +64,7 @@ public class AboutScreen
 		
 		testersStr = TextLocal.inst.get("about.testers");
 		
+       
 		//teamStr = TextLocal.inst.get("about.team");
 	}
 	
@@ -76,6 +82,7 @@ public class AboutScreen
 		g.drawString("Версия: " + VikaTouch.getVersion(), Font.getFont(0, 0, Font.SIZE_LARGE).stringWidth("Vika Touch") + 12, 20, 0);
 
 		g.setFont(Font.getFont(0, 0, Font.SIZE_MEDIUM));
+		
 		/*
 		g.drawString("Издатель:", 32, 48, 0);
 		g.drawString("Ilya Visotsky", 32, 72, 0);
@@ -111,6 +118,7 @@ public class AboutScreen
 
 		ColorUtils.setcolor(g, 0);
 		g.drawString(backStr, 0, DisplayUtils.height - 24, 0);
+		
 	}
 	
 	public void release(int x, int y)

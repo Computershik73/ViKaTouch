@@ -44,7 +44,8 @@ public class SettingsScreen
 		backItem = new OptionItem(this, TextLocal.inst.get("back"), IconsManager.BACK, 0, oneitemheight);
 		
 		String[] dialogsRR = new String[] { eOd[0], "5", "10", "20", "30" };
-
+		String[] notifModes = new String[] { "0", "1", "2" };
+		
 		// частота обновления
 		int rr = -1;
 		for(int i=0;i<refreshVals.length;i++)
@@ -132,6 +133,9 @@ public class SettingsScreen
 					oneitemheight, countVals, j0, null),
 			new SettingMenuItem(this, TextLocal.inst.get("settings.dialogsrefreshrate"), IconsManager.REFRESH, 21, 
 					oneitemheight, dialogsRR, Settings.dialogsRefreshRate, null),
+
+			new SettingMenuItem(this, TextLocal.inst.get("settings.notificationmode"), IconsManager.REFRESH, 22, 
+					oneitemheight, notifModes, Settings.notifmode, null),
 		};
 		mediaList = new PressableUIItem[]
 		{
@@ -368,6 +372,9 @@ public class SettingsScreen
 				Settings.dialogsRefreshRate = (byte) var;
 				break;
 			}
+			case 22: {
+				Settings.notifmode = var;
+			}
 		}
 		Settings.saveSettings();
 		// а вариант "поменял настройку и закрыл приложение" не? Оно кст и не работало, т.к. 14 команда давно не используется. И вообще, точно ли тот командИмпл нужен, когда всё кругом на оптион айтемах с их IMenu...
@@ -481,6 +488,14 @@ public class SettingsScreen
 				it[3] = new OptionItem(this, "Español (ES)", IconsManager.EDIT, 5, oneitemheight);
 				it[4] = new OptionItem(this, "Український", IconsManager.EDIT, 6, oneitemheight);
 				it[5] = new OptionItem(this, "Беларускі", IconsManager.EDIT, 7, oneitemheight);
+				VikaTouch.popup(new AutoContextMenu(it));
+				break;
+			}
+			case 22: {
+				OptionItem[] it = new OptionItem[3];
+				it[0] = new OptionItem(this, TextLocal.inst.get("settings.disabled"), IconsManager.EDIT, 1, oneitemheight);
+				it[1] = new OptionItem(this, TextLocal.inst.get("settings.vibrationonly"), IconsManager.EDIT, 1, oneitemheight);
+				it[2] = new OptionItem(this, TextLocal.inst.get("settings.notifsoundon"), IconsManager.EDIT, 2, oneitemheight);
 				VikaTouch.popup(new AutoContextMenu(it));
 				break;
 			}

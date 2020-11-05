@@ -53,7 +53,7 @@ public class Dialogs
 					if(dialogs.length != Settings.dialogsLength)
 						dialogs = new ConversationItem[Settings.dialogsLength];
 					itemsCount = Settings.dialogsLength;
-					if(async) VikaTouch.loading = true;
+					//if(async) VikaTouch.loading = true;
 					String x = VikaUtils.downloadE(new URLBuilder("messages.getConversations").addField("count", "1"));
 					
 					try
@@ -99,6 +99,7 @@ public class Dialogs
 							}
 							items.dispose("items");
 							x = null;
+							
 						}
 						response.dispose("response");
 					}
@@ -107,7 +108,7 @@ public class Dialogs
 						e.printStackTrace();
 					}
 
-					if(async) VikaTouch.loading = false;
+					//if(async) VikaTouch.loading = false;
 				}
 				catch (VikaNetworkError e)
 				{

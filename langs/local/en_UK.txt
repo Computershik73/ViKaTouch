@@ -139,11 +139,13 @@ friend.cancel=Request sent (cancel)
 subscribe=Follow
 
 msg=Message
+msg.attach.wall=Posting
 msg.attach.audio=Audio
 msg.attach.reply=Answer
 msg.attach.photo=Photo
 msg.attach.fwd=Forwarded message
 msg.attach.attachment=Attachment
+msg.attach.attachments=Attachments
 msg.attach.video=Video
 msg.entermsg=Enter message...
 msg.attach.voice=Voice message

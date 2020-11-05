@@ -135,8 +135,11 @@ public class Settings
 	 * Поэтому в установке дефолтных настроек надо будет подбирать автоматом, но давать юзеру
 	 * возможность выбрать, как пинать эту бедную музыку.
 	 */
+	public static int notifmode = 0;
 	
 	public static final String[] supportedLanguages = {"en_US", "en_UK", "ru_RU", "es_ES", "by_BY", "ua_UA"};
+
+	 
 
 	static
 	{
@@ -187,6 +190,9 @@ public class Settings
 			        // 2.8.7
 			        dialogsRefreshRate = is.readByte();
 			        dialogsLength = is.readInt();
+			        //2.8.10
+			        notifmode = is.readInt();
+			        
 		        }
 		        catch (Exception e)
 		        {
@@ -251,6 +257,8 @@ public class Settings
 		        // 2.8.7
 		        os.writeByte(dialogsRefreshRate);
 		        os.writeInt(dialogsLength);
+		        //2.8.10
+		        os.writeInt(notifmode);
 		
 		        final byte[] b = baos.toByteArray();
 		        rs.addRecord(b, 0, b.length);
@@ -296,6 +304,7 @@ public class Settings
 		fullscreen = true;
 		vibOnTouch = false;
 		dialogsRefreshRate = (byte) (isLiteOrSomething?0:2);
+		notifmode=2;
 		
 		//язык соотвествующий настройкам устройства
 		try

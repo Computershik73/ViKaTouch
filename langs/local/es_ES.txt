@@ -156,13 +156,15 @@ subscribe=Suscribirse
 music.all=Toda la música
 
 msg=Mensaje
+msg.attach.wall=Publicación
 msg.online=En linea 
 msg.offline=Desconectado 
 msg.attach.audio=Grabación de Audio
 msg.attach.reply=Respuesta
 msg.attach.fwd=Mensaje Reenviado 
 msg.attach.attachments=Archivos Adjuntos 
-msg.attach.attachment=Archivo Adjunto
+msg.attach.attachment=Archivos Adjuntos
+msg.attach.attachments=Attachments
 msg.attach.photo=Foto
 msg.attach.video=Vídeo
 msg.attach.voice=Mensaje de voz 

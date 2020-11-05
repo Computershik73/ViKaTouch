@@ -90,7 +90,69 @@ public class MsgItem
 			foreign = !(""+json.optInt("from_id")).equalsIgnoreCase(VikaTouch.userId);
 			mid = json.optInt("id");
 			int h1 = Font.getFont(0, 0, 8).getHeight();
+		//	27864
+			String textt = "";
+			int ii=0;
+			//String a = "\u05D0\u05D1";
+			//byte[] xxx = text.getBytes("UTF-8");
+			
+			//for (int ii=0; ii<xxx.length-1; ii++) {
+			///	textt += Integer.toBinaryString(xxx[ii]).+ " ";
+			//}
+			//textt = VikaUtils.replace(text, from, to);
+			while (ii<text.length()) {
+				
+			if ((((long)text.toCharArray()[ii])==55357) || (((long)text.toCharArray()[ii])==55358)) {
+				ii++;
+				if (((long)text.toCharArray()[ii])==56834) {
+					textt += String.valueOf((char)57349);
+				}
+				if (((long)text.toCharArray()[ii])==56832) {
+					textt += String.valueOf((char)57350);
+				}
+				if (((long)text.toCharArray()[ii])==56835) {
+					textt += String.valueOf((char)57351);
+				}
+				if (((long)text.toCharArray()[ii])==56836) {
+					textt += String.valueOf((char)57352);
+				}
+				if (((long)text.toCharArray()[ii])==56833) {
+					textt += String.valueOf((char)57353);
+				}
+				if (((long)text.toCharArray()[ii])==56837) {
+					textt += String.valueOf((char)57354);
+				}
+				if (((long)text.toCharArray()[ii])==56838) {
+					textt += String.valueOf((char)57355);
+				}
+				if (((long)text.toCharArray()[ii])==56611) {
+					textt += String.valueOf((char)57349); //временно
+				}
+				
+				
+				
+				
+			} else {
+				textt+=String.valueOf(text.toCharArray()[ii]);
+				
+			}
+					//String.valueOf((char) 27864);
+			//	(long)	text.toCharArray()[ii];
+			
+			//	textt+=(long)text.toCharArray()[ii]+" ";
+
+			ii++;
+			}
+			//int b1, b2, ucs;
+				//b1 = str[0] & 0x1f; b2 = str[1] & 0x3f;
+				//ucs = (b1 << 6) | b2;
+			
+			//textt = VikaUtils.replace(textt, "5535756834", String.valueOf((char)57349));
+			
+			text=textt;
 			drawText = TextBreaker.breakText(text, Font.getFont(0, 0, Font.SIZE_SMALL), (forwardedW==-1?msgWidth:forwardedW)-h1);
+			//отладка
+			
 			linesC = drawText.length;
 			
 			itemDrawHeight = h1*(linesC+1);

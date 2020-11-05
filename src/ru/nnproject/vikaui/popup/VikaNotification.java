@@ -4,12 +4,16 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.media.Manager;
+import javax.microedition.media.Player;
+import javax.microedition.media.control.VolumeControl;
 
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.settings.Settings;
 
 public class VikaNotification {
 	
@@ -93,12 +97,27 @@ public class VikaNotification {
 			{
 				try
 				{
+					if (vikatouch.settings.Settings.notifmode==1) {
 					Display d = Display.getDisplay(VikaTouch.appInst);
-					d.vibrate(50);
-					Thread.sleep(100);
-					d.vibrate(50);
-					Thread.sleep(100);
-					d.vibrate(50);
+					d.vibrate(1000);
+					
+					//Thread.sleep(100);
+					//d.vibrate(1000);
+					//Thread.sleep(100);
+					//d.vibrate(1000);
+					} else {
+						if (vikatouch.settings.Settings.notifmode==2) {
+							Player notifplayer = Manager.createPlayer("http://vikamobile.ru:80/music/bb2.mp3");
+							notifplayer.realize();
+							try
+							{
+								((VolumeControl) notifplayer.getControl("VolumeControl")).setLevel(100);
+							}
+							catch (Exception e) { }
+							
+							notifplayer.start();
+						}
+					}
 				} catch (Exception e) {
 				}
 			}
