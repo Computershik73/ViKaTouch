@@ -8,6 +8,7 @@ import javax.microedition.lcdui.Image;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -95,6 +96,7 @@ public class MenuScreen
 			}
 			catch (Throwable a)
 			{
+				VikaTouch.popup(new InfoPopup(a.toString(), null, TextLocal.inst.get("player.playererror"), null));
 				VikaTouch.sendLog("Menu profile info: "+a.toString()+" uid:"+VikaTouch.userId);
 			}
 		}
@@ -114,7 +116,7 @@ public class MenuScreen
 			aboutStr = TextLocal.inst.get("menu.about");
 		}
 		catch (Exception e)
-		{
+		{VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
 			
 		}
 		int uiih = DisplayUtils.compact?30:50; // е72, ландшафт 240, СЕ портрет

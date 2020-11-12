@@ -26,6 +26,7 @@ import javax.microedition.lcdui.Image;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.popup.VikaNotification;
 import tube42.lib.imagelib.ImageUtils;
+
 import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
 import vikatouch.caching.ImageStorage;
@@ -518,10 +519,17 @@ public final class VikaUtils
 	public static Image downloadImage(String url) 
 			throws IOException
 	{
-		//if(!Settings.https)
-			url = replace(url, "https:", "http:");
+		if(!Settings.https)
+			//url = replace(url, "https:", "http:");
+			//if (VikaBase.vkApi != "https://api.vk.com:443") {
+				url = replace(
+						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.xtrafrancyz.net/_/cs"), 
+								"https://vk-api", "http://vk-api"),
+						"https:\\/\\/vk-api", "http://vk-api"), "https://sun", "http://vk-api-proxy.xtrafrancyz.net/_/sun");
+		//url = replace(url, )
 		// кеширование картинок включается если запрос http
-		boolean caching = !startsWith(url, "file") && Settings.cacheImages;
+		boolean caching = false;
+				//!startsWith(url, "file") && Settings.cacheImages;
 		if(url.indexOf("camera_50") >= 0)
 		{
 			return VikaTouch.cameraImg;

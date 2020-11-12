@@ -264,6 +264,7 @@ public class VikaTouch
 			else
 			{
 				OAUTH = Settings.proxyOAuth;
+				API = Settings.proxyApi;
 			}
 			
 			tokenAnswer = VikaUtils.download(
@@ -277,6 +278,7 @@ public class VikaTouch
 				.addField("2fa_supported", 1)
 				.addField("force_sms", 1)
 			);
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "1"+tokenAnswer, null));
 			if(tokenAnswer == null && !Settings.proxy)
 			{
 				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "Connecting via proxy.", null));
@@ -295,6 +297,7 @@ public class VikaTouch
 					.addField("force_sms", 1)
 				);
 			}
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "2"+tokenAnswer, null));
 			if(tokenAnswer == null)
 			{
 				errReason = "Network error!";
@@ -313,6 +316,7 @@ public class VikaTouch
 					return code(user, pass, tokenAnswer);
 				}
 				errReason = tokenAnswer;
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "3"+tokenAnswer, null));
 				return false;
 			}
 			else
@@ -320,19 +324,26 @@ public class VikaTouch
 				JSONObject json = new JSONObject(tokenAnswer);
 				accessToken = json.getString("access_token");
 				userId = json.getString("user_id");
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "4"+tokenAnswer, null));
 				refreshToken();
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "5"+tokenAnswer, null));
 				saveToken();
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "6"+tokenAnswer, null));
 				VikaUtils.download(new URLBuilder("groups.join").addField("group_id", 168202266));
 				MenuScreen canvas = menuScr = new MenuScreen();
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "7"+tokenAnswer, null));
 				setDisplay(canvas, 1);
 				
 				Dialogs.refreshDialogsList(true, false);
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "8"+tokenAnswer, null));
 				return true;
 			}
 		}
 		catch (Throwable e)
 		{
-			errReason = e.toString();
+			errReason = e.getMessage();
+					VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", errReason, null));
+			//VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
 			return false;
 		}
 	}
@@ -406,7 +417,8 @@ public class VikaTouch
 	private void refreshToken()
 	{
 		String refreshToken;
-		if(VikaUtils.music(URLBuilder.makeSimpleURL("audio.get")).indexOf("confirmation") >= 0)
+		String m = VikaUtils.music(URLBuilder.makeSimpleURL("audio.get"));
+		if(m.indexOf("confirmation") >= 0)
 		{
 			String recept = ":APA91bFAM-gVwLCkCABy5DJPPRH5TNDHW9xcGu_OLhmdUSA8zuUsBiU_DexHrTLLZWtzWHZTT5QUaVkBk_GJVQyCE_yQj9UId3pU3vxvizffCPQISmh2k93Fs7XH1qPbDvezEiMyeuLDXb5ebOVGehtbdk_9u5pwUw";
 			String surl = new URLBuilder(API, "auth.refreshToken", false).addField("access_token", accessToken).addField("v", "5.120").addField("receipt", recept).toString();
@@ -433,6 +445,9 @@ public class VikaTouch
 			{
 				e.printStackTrace();
 			}
+		} else {
+			JSONObject resp = new JSONObject(m).getJSONObject("response");
+			accessToken = resp.getString("token");
 		}
 	}
 
@@ -911,7 +926,10 @@ public class VikaTouch
 		}
 		else
 		{
-			API = Settings.https?"https://api.vk.com:443":Settings.proxyApi;
+			//API = Settings.https?"https://api.vk.com:443":Settings.proxyApi;
+			OAUTH = Settings.proxyOAuth;
+			API=Settings.proxyApi;
+			Settings.proxy = true;
 		}
 		try
 		{

@@ -7,6 +7,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -92,7 +93,7 @@ public class LoginScreen
 							String reason;
 							if(!loginSucsess && (reason = VikaTouch.getReason()) != null)
 							{
-								//VikaTouch.popup(new InfoPopup(reason, null, failedStr, "OK"));
+								VikaTouch.popup(new InfoPopup(reason, null, failedStr, "OK"));
 								VikaTouch.warn(reason, failedStr);
 							}
 						}

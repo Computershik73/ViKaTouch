@@ -122,7 +122,7 @@ public class Dialogs
 				{
 					isUpdatingNow = false;
 				}
-				if(async) VikaTouch.loading = true;
+				//if(async) VikaTouch.loading = true;
 				
 				runUpdater();
 				//поток качающий картинки
@@ -134,7 +134,7 @@ public class Dialogs
 						{
 							try
 							{
-								VikaTouch.loading = true;
+							//	VikaTouch.loading = true;
 								
 								for(int i = 0; i < itemsCount; i++)
 								{

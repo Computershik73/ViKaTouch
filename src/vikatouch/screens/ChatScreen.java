@@ -221,6 +221,7 @@ public class ChatScreen
 				catch (Exception e)
 				{
 					this.title2 = TextLocal.inst.get("msg.failedtoload");
+					VikaTouch.sendLog(e.getMessage());
 				}
 			}
 			else
@@ -239,6 +240,7 @@ public class ChatScreen
 					catch (JSONException e)
 					{
 						this.title2 = "Ошибка JSON";
+						VikaTouch.sendLog(e.getMessage());
 					}
 				}
 				catch (Exception e)
@@ -269,7 +271,7 @@ public class ChatScreen
 			VikaCanvasInst.msgColor = 0xffffff00;
 			JSONObject response = new JSONObject(x).getJSONObject("response");
 			JSONArray profiles = response.getJSONArray("profiles");
-			JSONArray groups = response.getJSONArray("groups");
+			JSONArray groups = response.optJSONArray("groups");
 			JSONArray items = response.getJSONArray("items");
 			inr = response.getJSONArray("conversations").getJSONObject(0).optInt("in_read");
 			outr = response.getJSONArray("conversations").getJSONObject(0).optInt("out_read");
@@ -283,6 +285,7 @@ public class ChatScreen
 				if(id > 0 && firstname != null)
 					profileNames.put(new IntObject(id), firstname + " " + lastname);
 			}
+			if (groups!=null ) {
 			for(int i = 0; i < groups.length(); i++)
 			{
 				JSONObject group = groups.getJSONObject(i);
@@ -290,6 +293,7 @@ public class ChatScreen
 				int id = -group.optInt("id");
 				if(name != null)
 					groupNames.put(new IntObject(id), name);
+			}
 			}
 			//VikaTouch.sendLog(""+items.length()+" msgs");
 			MsgItem last = null;
@@ -397,6 +401,7 @@ public class ChatScreen
 		{
 			this.title2 = TextLocal.inst.get("msg.failedtoload2");
 			e.printStackTrace();
+			VikaTouch.sendLog(e.getMessage());
 		}
 		finally
 		{
@@ -504,6 +509,7 @@ public class ChatScreen
 		}
 		catch (Exception e)
 		{
+			VikaTouch.sendLog(e.getMessage());
 		}
 	}
 	
@@ -940,7 +946,8 @@ public class ChatScreen
 					{
 						try
 						{
-							JSONArray profiles = new JSONObject(x).getJSONObject("response").getJSONArray("profiles");
+							JSONArray profiles = new JSONObject(x).getJSONObject("response").optJSONArray("profiles");
+							JSONArray groups = new JSONObject(x).getJSONObject("response").optJSONArray("groups");
 							for(int i = 0; i < profiles.length(); i++)
 							{
 								JSONObject profile = profiles.getJSONObject(i);
@@ -950,6 +957,16 @@ public class ChatScreen
 								if(id > 0 && firstname != null)
 									profileNames.put(new IntObject(id), firstname + " " + lastname);
 							}
+							if (groups!=null ) {
+								for(int i = 0; i < groups.length(); i++)
+								{
+									JSONObject group = groups.getJSONObject(i);
+									String name = group.optString("name");
+									int id = -group.optInt("id");
+									if(name != null)
+										groupNames.put(new IntObject(id), name);
+								}
+								}
 						}
 						catch(JSONException e)
 						{ }
@@ -1165,6 +1182,7 @@ public class ChatScreen
 		catch(Exception e)
 		{
 			VikaTouch.error(e, -8);
+			VikaTouch.sendLog(e.getMessage());
 		}
 	}
 
