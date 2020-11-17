@@ -37,7 +37,7 @@ public class JSONItem
 		{
 			if(!json.isNull("attachments"))
 			{
-				JSONArray attachments = json.getJSONArray("attachments");
+				JSONArray attachments = json.optJSONArray("attachments");
 				if(this.attachments.length > attachments.length())
 				{
 					this.attachments = new Attachment[attachments.length()];
@@ -48,14 +48,18 @@ public class JSONItem
 					{
 						break;
 					}
-					this.attachments[i] = Attachment.parse(attachments.getJSONObject(i));
+					this.attachments[i] = Attachment.parse(attachments.optJSONObject(i));
 				}
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		}
+		} 
+		catch (Throwable e)
+		{
+			e.printStackTrace();
+		} 
 	}
 	
 	public String getTime()

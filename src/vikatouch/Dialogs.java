@@ -53,7 +53,7 @@ public class Dialogs
 					if(dialogs.length != Settings.dialogsLength)
 						dialogs = new ConversationItem[Settings.dialogsLength];
 					itemsCount = Settings.dialogsLength;
-					//if(async) VikaTouch.loading = true;
+					if(async) VikaTouch.loading = true;
 					String x = VikaUtils.downloadE(new URLBuilder("messages.getConversations").addField("count", "1"));
 					
 					try
@@ -107,8 +107,8 @@ public class Dialogs
 					{
 						e.printStackTrace();
 					}
-
-					//if(async) VikaTouch.loading = false;
+					catch (Throwable e) {}
+					if(async) VikaTouch.loading = false;
 				}
 				catch (VikaNetworkError e)
 				{
@@ -198,21 +198,25 @@ public class Dialogs
 
 	public static void openDialog(ConversationItem dialogItem)
 	{
+		//VikaTouch.appInst.notifyDestroyed();
+		VikaTouch.sendLog(String.valueOf(dialogItem.peerId)+" "+String.valueOf(dialogItem.title));
 		openDialog(dialogItem.peerId, dialogItem.title);
 	}
 
 	public static void openDialog(int peerId)
 	{
+		//VikaTouch.appInst.notifyDestroyed();
 		VikaTouch.setDisplay(new ChatScreen(peerId), 1);
 	}
 
 	public static void openDialog(int peerId, String title)
 	{
+		//VikaTouch.appInst.notifyDestroyed();
 		try
 		{
 			VikaTouch.setDisplay(new ChatScreen(peerId, title), 1);
 		}
-		catch(Exception e)
+		catch(Throwable e)
 		{
 			VikaTouch.sendLog("Dialog fail. "+e.toString());
 		}

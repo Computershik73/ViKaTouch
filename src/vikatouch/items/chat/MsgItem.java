@@ -173,8 +173,8 @@ public class MsgItem
 					{
 						if(replyAttachs.length() == 1)
 						{
-							JSONObject att = replyAttachs.getJSONObject(0);
-							String type = att.getString("type");
+							JSONObject att = replyAttachs.optJSONObject(0);
+							String type = att.optString("type");
 							//VikaTouch.sendLog(type);
 							if(type.equals("photo"))
 							{
@@ -238,7 +238,7 @@ public class MsgItem
 				{
 					for(int i = 0; i<fwds.length(); i++)
 					{
-						MsgItem m = new MsgItem(fwds.getJSONObject(i));
+						MsgItem m = new MsgItem(fwds.optJSONObject(i));
 						m.forwardedW = fwdW;
 						m.forwardedX = fwdX;
 						m.parseJSON();
@@ -334,6 +334,7 @@ public class MsgItem
 	
 	public void paint(Graphics g, int y, int scrolled)
 	{
+		try {
 		if(!ChatScreen.forceRedraw && y+scrolled+itemDrawHeight < -50) return;
 		// drawing
 		Font font = Font.getFont(0, 0, 8);
@@ -494,6 +495,9 @@ public class MsgItem
 				}
 			}
 		} catch (RuntimeException e) { }
+		} catch (Throwable e) {
+			VikaTouch.sendLog(e.getMessage());
+		}
 	}
 	
 	public String[] searchLinks()

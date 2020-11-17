@@ -5,6 +5,7 @@ import javax.microedition.lcdui.Graphics;
 import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.DisplayUtils;
+import vikatouch.VikaTouch;
 import vikatouch.screens.MainScreen;
 import vikatouch.utils.VikaUtils;
 
@@ -60,6 +61,7 @@ public abstract class ScrollableCanvas
 
 	public final void drag(int x, int y)
 	{
+		try {
 		keysMode = false;
 		if(!dragging)
 			lasty = starty;
@@ -105,6 +107,11 @@ public abstract class ScrollableCanvas
 		lastx = x;
 		lasty = y;
 		timer = 0;
+		}
+		catch (Throwable e)
+		{
+			VikaTouch.sendLog("drag "+ e.getMessage());
+		}
 	}
 
 	protected abstract void scrollHorizontally(int deltaX);
@@ -131,6 +138,7 @@ public abstract class ScrollableCanvas
 
 	public void release(int x, int y)
 	{
+		try {
 		VikaCanvas.debugString = "released " + x +" " +y;
 		if(!poorScrolling() && timer < 7)
 		{
@@ -144,10 +152,17 @@ public abstract class ScrollableCanvas
 		endy = y;
 		dragging = false;
 		repaint();
+		}
+		catch (Throwable e)
+		{
+			VikaTouch.sendLog("release "+ e.getMessage());
+		}
 	}
 	
 	public void press(int key)
 	{
+		try
+		{
 		if(key != -12 && key != -20)
 		{
 			keysMode = true;
@@ -177,18 +192,18 @@ public abstract class ScrollableCanvas
 			uiItems[currentItem].keyPressed(key);
 		}
 		repaint();
-		try
-		{
+		
 			VikaCanvas.debugString = "" + key + " " + DisplayUtils.canvas.getKeyName(key) + " " + currentItem + " " + itemsCount + " " + uiItems[currentItem].isSelected();
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
-			
+			VikaTouch.sendLog("press "+ e.getMessage());
 		}
 	}
 	
 	public void repeat(int key)
 	{
+		try {
 		if(key != -12 && key != -20)
 		{
 			keysMode = true;
@@ -202,6 +217,11 @@ public abstract class ScrollableCanvas
 			down();
 		}
 		repaint();
+		}
+		catch (Throwable e)
+		{
+			VikaTouch.sendLog("repeat "+ e.getMessage());
+		}
 	}
 	
 	private int scrolebd;
@@ -260,11 +280,7 @@ public abstract class ScrollableCanvas
 			try
 			{
 				uiItems[currentItem].setSelected(false);
-			}
-			catch (Exception e)
-			{
-				
-			}
+			
 			currentItem++;
 			if(currentItem >= itemsCount)
 			{
@@ -272,6 +288,11 @@ public abstract class ScrollableCanvas
 			}
 			scrollToSelected();
 			uiItems[currentItem].setSelected(true);
+			}
+			catch (Throwable e)
+			{
+				VikaTouch.sendLog("down2 "+ e.getMessage());
+			}
 		}
 	}
 
@@ -286,7 +307,11 @@ public abstract class ScrollableCanvas
 		{
 			uiItems[currentItem].setSelected(false);
 		}
-		catch (Exception e) { }
+		catch (Throwable e) {
+		
+			VikaTouch.sendLog("UPsetSelected "+ e.getMessage());
+		
+		}
 		currentItem--;
 		if(currentItem < 0)
 		{
@@ -297,16 +322,23 @@ public abstract class ScrollableCanvas
 		{
 			uiItems[currentItem].setSelected(true);
 		}
-		catch (Exception e) { }
+		catch (Throwable e) { 
+			VikaTouch.sendLog("UPsetSelected2 "+ e.getMessage());
+		}
 	}
 	
 	public void scrollToSelected()
 	{
+		try {
 		scrolled = -(getItemY(currentItem)-DisplayUtils.height/2+(uiItems[currentItem].getDrawHeight()/2)+MainScreen.topPanelH);
+		} catch (Throwable e) {
+			VikaTouch.sendLog("scrollToSelected "+ e.getMessage());
+		}
 	}
 	
 	public void selectCentered()
 	{
+		try {
 		System.out.println("select center");
 		int y = MainScreen.topPanelH;
 		int ye = y;
@@ -321,11 +353,15 @@ public abstract class ScrollableCanvas
 			}
 			y = ye;
 		}
+		} catch (Throwable e) {
+			VikaTouch.sendLog("selectCentered "+ e.getMessage());
+		}
 	}
 	
 	
 	public void select(int i)
 	{
+		try {
 		System.out.println("select "+i);
 		if(i<0) i = 0;
 		if(i>=uiItems.length) i = uiItems.length - 1;
@@ -342,10 +378,14 @@ public abstract class ScrollableCanvas
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 		}
+		} catch (Throwable e) {
+			VikaTouch.sendLog("select "+ e.getMessage());
+		}
 	}
 	
 	protected final void keysScroll(int dir)
 	{
+		try {
 		int delta = DisplayUtils.height/3;
 		int st = 0;
 		int thisItemY = getItemY(currentItem);
@@ -421,10 +461,14 @@ public abstract class ScrollableCanvas
 		scrlDbg += " st"+st+ "br"+br+"s"+sc;
 		System.out.println(scrlDbg);
 		scrollTargetActive = true;
+		} catch (Throwable e) {
+			VikaTouch.sendLog("keyscroll "+ e.getMessage());
+		}
 	}
 
 	protected final void update(Graphics g)
 	{
+		try {
 		if(scrollTargetActive)
 		{
 			scroll = 0;
@@ -501,6 +545,9 @@ public abstract class ScrollableCanvas
 		}
 		if(!poorScrolling())
 			scroll = 0;
+		} catch (Throwable e) {
+			VikaTouch.sendLog("update "+ e.getMessage());
+		}
 	}
 
 	protected void callRefresh()
@@ -510,6 +557,7 @@ public abstract class ScrollableCanvas
 	
 	public int getItemY(int n)
 	{
+		try {
 		if(uiItems==null) return 1;
 		int y=0;
 		for(int i=0;(i<uiItems.length&&i<n);i++)
@@ -518,6 +566,10 @@ public abstract class ScrollableCanvas
 				y += uiItems[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
 		}
 		return y;
+		} catch (Throwable e) {
+			VikaTouch.sendLog("getItemY "+ e.getMessage());
+		}
+		return 0;
 	}
 	
 }

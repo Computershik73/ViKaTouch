@@ -171,6 +171,7 @@ msg.delete=Delete
 msg.edit=Edit
 msg.markasread=Read
 msg.reply=Reply
+msg.write=Write
 
 count.message=message
 count.messages=messages
