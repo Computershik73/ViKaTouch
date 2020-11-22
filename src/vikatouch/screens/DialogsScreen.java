@@ -128,43 +128,45 @@ public class DialogsScreen
 
 	public void draw(Graphics g)
 	{
+		if(Dialogs.dialogs == null) { return; }
 		ColorUtils.setcolor(g, 0);
 		g.setFont(Font.getFont(0, 0, 8));
 		itemsh = Dialogs.itemsCount * 63;
 		double multiplier = (double)DisplayUtils.height / 640.0;
 		double ww = 10.0 * multiplier;
 		int w = (int)ww;
-		try
-		{
+		//try
+		//{
 			update(g);
 			int y = oneitemheight + w;
-			try
-			{
+			
 				if(Dialogs.dialogs !=null)
 				{
 					for(int i = 0; i < Dialogs.itemsCount; i++)
 					{
+						try {
 						if(Dialogs.dialogs[i] != null)
 						{
 							Dialogs.dialogs[i].paint(g, y, scrolled);
 							y += Dialogs.dialogs[i].itemDrawHeight;
 						}
+						}
+						catch (Throwable e)
+						{
+							e.printStackTrace();
+							//VikaTouch.error(e, ErrorCodes.DIALOGSITEMDRAW);
+						}
 					}
 				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				VikaTouch.error(e, ErrorCodes.DIALOGSITEMDRAW);
-			}
+			
 			g.translate(0, -g.getTranslateY());
 			
-		}
-		catch (Exception e)
+	/*	}
+		catch (Throwable e)
 		{
 			VikaTouch.error(e, ErrorCodes.DIALOGSDRAW);
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public final void drawHUD(Graphics g)
@@ -209,7 +211,7 @@ public class DialogsScreen
 				}
 			}
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			e.printStackTrace();
 		}
@@ -230,12 +232,15 @@ public class DialogsScreen
 					if(i < 0)
 						i = 0;
 					unselectAll();
+					if(Dialogs.dialogs[i] != null)
+					{
 					Dialogs.dialogs[i].pressed();
-					//repaint();
+					}
+					repaint();
 				}
 			}
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			e.printStackTrace();
 		}

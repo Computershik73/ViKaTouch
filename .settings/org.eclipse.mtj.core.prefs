@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+obfuscate_use_project=true
+proguard_options=-overloadaggressively -optimizationpasses 3
+proguard_use_specified=true

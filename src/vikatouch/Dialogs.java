@@ -53,12 +53,12 @@ public class Dialogs
 					if(dialogs.length != Settings.dialogsLength)
 						dialogs = new ConversationItem[Settings.dialogsLength];
 					itemsCount = Settings.dialogsLength;
-					if(async) VikaTouch.loading = true;
+					//if(async) VikaTouch.loading = true;
 					String x = VikaUtils.downloadE(new URLBuilder("messages.getConversations").addField("count", "1"));
 					
 					try
 					{
-						if(async) VikaTouch.loading = true;
+						//if(async) VikaTouch.loading = true;
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = response.getJSONArray("items");
 						JSONObject item = items.getJSONObject(0);
@@ -125,6 +125,8 @@ public class Dialogs
 				//if(async) VikaTouch.loading = true;
 				
 				runUpdater();
+				//if(downloaderThread2 != null && downloaderThread2.isAlive())
+					//downloaderThread2.interrupt();
 				//поток качающий картинки
 				if(!Settings.dontLoadAvas)
 				{
@@ -132,25 +134,32 @@ public class Dialogs
 					{
 						public void run()
 						{
-							try
-							{
-							//	VikaTouch.loading = true;
-								
-								for(int i = 0; i < itemsCount; i++)
+							//if(isUpdatingNow) return;
+								//VikaTouch.loading = true;
+								int n=Settings.dialogsLength;
+								if (VikaTouch.mobilePlatform.indexOf("S60")<0) {
+									n=0;
+								}
+								for(int i = 0; i < n; i++)
 								{
+									try
+									{
 									if(dialogs[i] != null)
 									{
-										if(isUpdatingNow) return;
+										if(isUpdatingNow) break;
+										//dialogs[i].text=dialogs[i].avaurl;
 										dialogs[i].getAva();
+										
+									}
+									}
+									catch(Throwable e)
+									{
+										VikaTouch.sendLog("Dialogs avas error "+e.getMessage());
 									}
 								}
-							}
-							catch(Throwable e)
-							{
-								VikaTouch.sendLog("Dialogs avas error "+e.toString());
-							}
 							
-							VikaTouch.loading = false;
+							
+							//VikaTouch.loading = false;
 						}
 					};
 					downloaderThread2.start();
@@ -199,7 +208,8 @@ public class Dialogs
 	public static void openDialog(ConversationItem dialogItem)
 	{
 		//VikaTouch.appInst.notifyDestroyed();
-		VikaTouch.sendLog(String.valueOf(dialogItem.peerId)+" "+String.valueOf(dialogItem.title));
+		//VikaTouch.sendLog(String.valueOf(dialogItem.peerId)+" "+String.valueOf(dialogItem.title));
+		//VikaTouch.error(String.valueOf(dialogItem.peerId)+" "+String.valueOf(dialogItem.title), false);
 		openDialog(dialogItem.peerId, dialogItem.title);
 	}
 
@@ -218,7 +228,8 @@ public class Dialogs
 		}
 		catch(Throwable e)
 		{
-			VikaTouch.sendLog("Dialog fail. "+e.toString());
+			//VikaTouch.sendLog("Dialog fail. "+e.toString());
+			VikaTouch.appInst.notifyDestroyed();
 		}
 	}
 

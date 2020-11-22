@@ -268,16 +268,17 @@ public class ChatScreen
 						this.title2 = "Ошибка JSON";
 						VikaTouch.sendLog(e.getMessage());
 					}
-				}
-				catch (Throwable e)
-				{
-					this.title2 = TextLocal.inst.get("msg.failedtoload");
-				}
+				
 				(new Thread() {
 					public void run() {
 						messagesDialog();
 					}
 				}).start();
+				}
+				catch (Throwable e)
+				{
+					this.title2 = TextLocal.inst.get("msg.failedtoload");
+				}
 			}
 		}
 	}
@@ -287,8 +288,7 @@ public class ChatScreen
 	{
 		String errst="f";
 		//VikaTouch.sendLog("Messages in chat mode");
-		try
-		{
+		
 			VikaCanvasInst.msgColor = 0xffff0000;
 			// скачка сообщений
 			uiItems = new PressableUIItem[Settings.messagesPerLoad+loadSpace];
@@ -333,8 +333,10 @@ public class ChatScreen
 			}
 			//VikaTouch.sendLog(""+items.length()+" msgs");
 			MsgItem last = null;
-			for(int i = 0; i < items.length()-1; i++)
+			for(int i = 0; i < items.length(); i++)
 			{
+				try
+				{
 				VikaCanvasInst.msgColor = 0xff00ff00;
 				errst="msg"+String.valueOf(i);
 				MsgItem m = new MsgItem(items.optJSONObject(i));
@@ -366,20 +368,36 @@ public class ChatScreen
 				m.name = (m.foreign ? name : "Вы");
 				errst="mui"+String.valueOf(i);
 				uiItems[uiItems.length-1-i-loadSpace] = m;
+				errst="mui2"+String.valueOf(i);
 				if(i == 0)
 				{
 					last = m;
 				}
-				
+				errst="mui3"+String.valueOf(i);
 				itemsCount = (short) uiItems.length;
+				errst="mui4"+String.valueOf(i);
+				}
+				catch (Throwable e)
+				{
+					/*try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}*/
+					//VikaTouch.sendLog(errst + e.getMessage());
+					this.title2 = errst + e.getMessage();
+							//TextLocal.inst.get("msg.failedtoload2");
+					
+				}
 			}
-			if(Settings.autoMarkAsRead && last!=null)
+			/*if(Settings.autoMarkAsRead && last!=null)
 			{
 				VikaCanvasInst.msgColor = 0xffff00ff;
 				VikaUtils.request(new URLBuilder("messages.markAsRead").addField("start_message_id", ""+last.mid).addField("peer_id", peerId));
 				VikaCanvasInst.msgColor = 0xff00ff00;
 				errst="msgauto";
-			}
+			}*/
 			x = null;
 			items.dispose();
 			profiles.dispose();
@@ -387,23 +405,18 @@ public class ChatScreen
 			errst="msgdisp";
 			loadAtts();
 			errst="loadat";
-		}
-		catch (Throwable e)
-		{
-			this.title2 = errst + e.getMessage();
-					//TextLocal.inst.get("msg.failedtoload2");
-			VikaTouch.sendLog(e.getMessage());
-		}
-		finally
-		{
 			ready = true;
-		}
+		
+	
+	//	finally
+		//{
+			
+		//}
 	}
 
 	private void messagesDialog()
 	{
-		try
-		{
+		
 			VikaCanvasInst.msgColor = 0xffff0000;
 			// скачка сообщений
 			uiItems = new PressableUIItem[Settings.messagesPerLoad+loadSpace];
@@ -411,14 +424,16 @@ public class ChatScreen
 			String x = VikaUtils.download(new URLBuilder("messages.getHistory").addField("peer_id", peerId).addField("count", Settings.messagesPerLoad).addField("offset", 0).addField("extended", 1));
 			//VikaTouch.sendLog("Requesting history ok");
 			VikaCanvasInst.msgColor = 0xffffff00;
-			JSONObject res = new JSONObject(x).getJSONObject("response");
-			JSONArray json = res.getJSONArray("items");
+			JSONObject res = new JSONObject(x).optJSONObject("response");
+			JSONArray json = res.optJSONArray("items");
 			profileNames.put(new IntObject(peerId), title);
-			inr = res.getJSONArray("conversations").getJSONObject(0).optInt("in_read");
-			outr = res.getJSONArray("conversations").getJSONObject(0).optInt("out_read");
+			inr = res.optJSONArray("conversations").optJSONObject(0).optInt("in_read");
+			outr = res.optJSONArray("conversations").optJSONObject(0).optInt("out_read");
 			
 			for(int i = 0; i<json.length();i++) 
 			{
+				try
+				{
 				VikaCanvasInst.msgColor = 0xff00ff00;
 				MsgItem m = new MsgItem(json.getJSONObject(i));
 				m.parseJSON();
@@ -427,7 +442,7 @@ public class ChatScreen
 				boolean chain = false;
 				if(i+1<json.length())
 				{
-					chain = fromId == json.getJSONObject(i+1).optInt("from_id");
+					chain = fromId == json.optJSONObject(i+1).optInt("from_id");
 				}
 				m.showName = !chain;
 						
@@ -439,20 +454,21 @@ public class ChatScreen
 					VikaUtils.request(new URLBuilder("messages.markAsRead").addField("start_message_id", ""+m.mid).addField("peer_id", peerId));
 					VikaCanvasInst.msgColor = 0xff00ff00;
 				}
+				}
+				catch (Throwable e)
+				{
+					this.title2 = TextLocal.inst.get("msg.failedtoload2");
+					e.printStackTrace();
+					//VikaTouch.sendLog(e.getMessage());
+				}
 			}
 			itemsCount = (short) uiItems.length;
 			loadAtts();
-		}
-		catch (Throwable e)
-		{
-			this.title2 = TextLocal.inst.get("msg.failedtoload2");
-			e.printStackTrace();
-			VikaTouch.sendLog(e.getMessage());
-		}
-		finally
-		{
+		
+		
+		
 			ready = true;
-		}
+		
 	}
 	
 	public void loadAtts()
@@ -1228,7 +1244,7 @@ public class ChatScreen
 		}
 		catch(Throwable e)
 		{
-			VikaTouch.error(e, -8);
+			//VikaTouch.error(e, -8);
 			VikaTouch.sendLog(e.getMessage());
 		}
 	}

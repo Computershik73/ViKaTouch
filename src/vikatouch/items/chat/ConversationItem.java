@@ -67,7 +67,8 @@ public class ConversationItem
 
 		//if(!DisplayUtils.compact)
 		//{
-			Image img = null;
+		ava = VikaTouch.cameraImg;
+		Image img = null;
 			try
 			{
 				img = VikaTouch.cameraImg;
@@ -79,13 +80,14 @@ public class ConversationItem
 					}
 					catch (Exception e)
 					{
-						
+						ava = VikaTouch.cameraImg;
 					}
 				}
 				ava = ResizeUtils.resizeChatAva(img);
 			}
-			catch (Exception e)
+			catch (Throwable e)
 			{
+				ava = VikaTouch.cameraImg;
 				
 			}
 		//}
@@ -181,19 +183,21 @@ public class ConversationItem
 	{
 		try
 		{
-			JSONObject conv = json.getJSONObject("conversation");
-			JSONObject peer = conv.getJSONObject("peer");
+			JSONObject conv = json.optJSONObject("conversation");
+			JSONObject peer = conv.optJSONObject("peer");
 			peerId = peer.optInt("id");
 			//System.out.println(json.toString());
 			try
 			{
-				JSONObject chatSettings = conv.getJSONObject("chat_settings");
+				if (!conv.isNull("chat_settings")) {
+				JSONObject chatSettings = conv.optJSONObject("chat_settings");
 				title = fixJSONString(chatSettings.optString("title"));
 				isGroup = chatSettings.optBoolean("is_group_channel");
 				avaurl = fixJSONString(chatSettings.getJSONObject("photo").optString("photo_50"));
 				chatSettings.dispose("chatsets");
+				}
 			}
-			catch (Exception e)
+			catch (Throwable e)
 			{
 				//System.out.println("conv " + peerId + ": " + e.toString());
 				//chat_settings может не существовать, так-что это исключение игнорируется
@@ -241,15 +245,15 @@ public class ConversationItem
 				}	
 			}
 		}
-		catch (JSONException e)
+		catch (Throwable e)
 		{
-			VikaTouch.error(e, ErrorCodes.CONVERPARSE);
+			//VikaTouch.error(e, ErrorCodes.CONVERPARSE);
 			e.printStackTrace();
 		}
 		
 		try
 		{
-			JSONObject msg = json.getJSONObject("last_message");
+			JSONObject msg = json.optJSONObject("last_message");
 
 			date = msg.optLong("date");
 			
@@ -290,7 +294,7 @@ public class ConversationItem
 						}
 						
 					}
-					catch (ArrayIndexOutOfBoundsException e)
+					catch (Throwable e)
 					{
 					/*	if(lastmessage.attachments[0] instanceof PhotoAttachment)
 						{
@@ -338,7 +342,7 @@ public class ConversationItem
 				text = text.substring(0, 26) + "...";
 			}
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			e.printStackTrace();
 		}

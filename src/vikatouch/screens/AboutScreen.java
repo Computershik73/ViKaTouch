@@ -13,9 +13,7 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.CommandsImpl;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
-import apibridge.*;
-import apibridge.entities.BridgeException;
-import apibridge.entities.BridgeResult;
+
 public class AboutScreen
 	extends ScrollableCanvas
 {
@@ -44,7 +42,7 @@ public class AboutScreen
 		};
 	}
 	*/
-	private APIBridge bridge;
+	
 	private static String backStr;
 	private static String publisherStr;
 	private static String devsStr;

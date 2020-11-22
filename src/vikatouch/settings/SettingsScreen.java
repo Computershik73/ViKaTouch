@@ -535,7 +535,7 @@ public class SettingsScreen
 		try
 		{
 			uiItems[currentItem].setSelected(false); // точно упадёт на старте - списка то ещё нет.
-		} catch (Exception e) { }
+		} catch (Throwable e) { }
 		try
 		{
 			uiItems = l;
@@ -547,7 +547,7 @@ public class SettingsScreen
 				uiItems[0].setSelected(true);
 			}
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			e.printStackTrace();
 		}

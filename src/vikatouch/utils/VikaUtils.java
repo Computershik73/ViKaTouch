@@ -519,6 +519,7 @@ public final class VikaUtils
 	public static Image downloadImage(String url) 
 			throws IOException
 	{
+		try {
 		if(!Settings.https)
 			//url = replace(url, "https:", "http:");
 			//if (VikaBase.vkApi != "https://api.vk.com:443") {
@@ -542,8 +543,7 @@ public final class VikaUtils
 		String filename = null;
 		if(caching)
 		{
-			try
-			{
+			
 				filename = url;
 
 				if(filename.indexOf("?") > 0)
@@ -590,10 +590,7 @@ public final class VikaUtils
 					return image;
 				}
 				
-			}
-			catch (RuntimeException e)
-			{
-			}
+			
 		}
 
 		//ByteArrayOutputStream baos = null;
@@ -672,6 +669,9 @@ public final class VikaUtils
 				ImageStorage.save(filename, image);
 			}
 		 return image;
+		} catch (Throwable e) {
+			return VikaTouch.cameraImg;
+		}
 		 /*
 		try
 		{
