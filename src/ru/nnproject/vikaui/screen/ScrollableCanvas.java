@@ -197,7 +197,7 @@ public abstract class ScrollableCanvas
 		}
 		catch (Throwable e)
 		{
-			VikaTouch.sendLog("press "+ e.getMessage());
+			//VikaTouch.sendLog("press "+ e.getMessage());
 		}
 	}
 	

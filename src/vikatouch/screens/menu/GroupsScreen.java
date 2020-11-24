@@ -46,7 +46,7 @@ public class GroupsScreen
 		try {
 			if(downloaderThread != null && downloaderThread.isAlive())
 				downloaderThread.interrupt();
-		} catch (Exception e) { }
+		} catch (Throwable e) { }
 	}
 	
 	public static Thread downloaderThread;
@@ -83,55 +83,82 @@ public class GroupsScreen
 
 			public void run()
 			{
+				String err="0";
 				try
 				{
 					VikaTouch.loading = true;
 					String x = VikaUtils.download(new URLBuilder("groups.get").addField("extended", "1")
 							.addField("count", Settings.simpleListsLength).addField("fields", "members_count,counters").addField("user_id", id).addField("offset", from));
-					try
-					{
+					err="1";
+					//VikaTouch.sendLog(x.substring(0, 700));
+					//x = vikatouch.json.JSONBase.fixJSONString(x);
+					err="2";
 						VikaTouch.loading = true;
-						repaint();
-						JSONObject response = new JSONObject(x).getJSONObject("response");
-						JSONArray items = response.getJSONArray("items");
+						err="3";
+						//repaint();
+						err="4";
+						JSONObject response = new JSONObject(x).optJSONObject("response");
+						err="5";
+						JSONArray items = response.optJSONArray("items");
+						err="6";
 						totalItems = response.getInt("count");
+						err="7";
 						itemsCount = (short) items.length();
+						err="8";
 						//System.out.println(totalItems + " - "+itemsCount);
 						canLoadMore = totalItems > from+Settings.simpleListsLength;
+						err="9";
 						uiItems = new PressableUIItem[itemsCount+(canLoadMore?1:0)];
+						err="10";
 						for(int i = 0; i < itemsCount; i++)
 						{
-							VikaTouch.loading = true;
-							JSONObject item = items.getJSONObject(i);
+							//try
+							//{
+								err=String.valueOf(i)+" i";
+								VikaTouch.loading = true;
+							JSONObject item = items.optJSONObject(i);
 							uiItems[i] = new GroupItem(item);
 							((GroupItem) uiItems[i]).parseJSON();
+						/*}
+						catch (JSONException e)
+						{
+							e.printStackTrace();
+							VikaTouch.sendLog(String.valueOf(i)+" "+ e.getMessage());
+							//VikaTouch.error(e, ErrorCodes.GROUPSPARSE);
+						} catch (Throwable e) {
+							VikaTouch.sendLog(e.getMessage());
+						}*/
 						}
+						//err=String.valueOf(i)+" i2";
 						range = " ("+(from+1)+"-"+(itemsCount+from)+")";
+						//err=String.valueOf(i)+" i3";
 						if(canLoadMore) {
 							uiItems[itemsCount] = new LoadMoreButtonItem(thisC);
 							itemsCount++;
 						}
-					}
-					catch (JSONException e)
-					{
-						e.printStackTrace();
-						VikaTouch.error(e, ErrorCodes.GROUPSPARSE);
-					}
+						err="11";
 					if(keysMode) {
 						currentItem = 0;
+						err="12";
+						if (uiItems!=null)
 						uiItems[0].setSelected(true);
+						err="13";
 					}
 					VikaTouch.loading = true;
+					err="14";
 					String name = name1;
 					if(name == null && name2 != null)
 						name = name2;
-					
+					err="15";
 					if(name == null || name2 == null)
 						formattedTitle = TextLocal.inst.get("title.groups");
 					else
 						formattedTitle = TextLocal.inst.getFormatted("title.groupsw", new String[] { name, name2 });
+								err="1";
 					repaint();
+					err="16";
 					Thread.sleep(1000);
+					err="17";
 					VikaTouch.loading = true;
 					if(!Settings.dontLoadAvas)
 					{
@@ -145,16 +172,19 @@ public class GroupsScreen
 				}
 				catch (NullPointerException e)
 				{
+					VikaTouch.sendLog(err+ " null " +e.getMessage());
 					e.printStackTrace();
 				}
 				catch (InterruptedException e)
 				{
+					VikaTouch.sendLog(err+ " inter " +e.getMessage());
 					e.printStackTrace();
 				}
-				catch (Exception e)
+				catch (Throwable e)
 				{
 					e.printStackTrace();
-					VikaTouch.error(e, ErrorCodes.GROUPSLOAD);
+					VikaTouch.sendLog(err+ " th " +e.getMessage());
+					//VikaTouch.error(e, ErrorCodes.GROUPSLOAD);
 				}
 				VikaTouch.loading = false;
 			}
@@ -165,6 +195,9 @@ public class GroupsScreen
 	}
 	public void draw(Graphics g)
 	{
+		if (uiItems==null) {
+			return;
+		}
 		ColorUtils.setcolor(g, 0);
 		g.setFont(Font.getFont(0, 0, 8));
 		itemsh = itemsCount * 52;
@@ -172,28 +205,30 @@ public class GroupsScreen
 		{
 			update(g);
 			int y = topPanelH;
-			try
-			{
+			
 				if(uiItems != null)
 				{
 					for(int i = 0; i < itemsCount; i++)
 					{
+						try
+						{
 						if(uiItems[i] != null)
 						{
 							uiItems[i].paint(g, y, scrolled);
 							y += uiItems[i].getDrawHeight();
 						}
+						}
+						catch (Throwable e)
+						{
+							VikaTouch.error(e, ErrorCodes.GROUPSITEMDRAW);
+						}
 	
 					}
 				}
-			}
-			catch (Exception e)
-			{
-				VikaTouch.error(e, ErrorCodes.GROUPSITEMDRAW);
-			}
+			
 			g.translate(0, -g.getTranslateY());
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			VikaTouch.error(e, ErrorCodes.GROUPSDRAW);
 			e.printStackTrace();
@@ -230,7 +265,7 @@ public class GroupsScreen
 			// Я? я ни на что, просто оно реально плюётся если тапнуть под последним. Ничего не трогай, сломаем. (с) Feodor0090
 			// ок че
 		}
-		catch (Exception e) 
+		catch (Throwable e) 
 		{
 			e.printStackTrace();
 		}
