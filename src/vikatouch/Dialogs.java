@@ -94,6 +94,7 @@ public class Dialogs extends TimerTask {
 							}
 							if (sendNofs && hasNew && dialogs.length > 1 && dialogs[0] != null
 									&& !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId)) {
+								VikaTouch.notify("type", dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40));
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,
 										VikaUtils.cut(dialogs[0].text, 40), VikaTouch.dialogsScr));
 							}
