@@ -237,7 +237,7 @@ public class VikaTouch
 		canvas.currentScreen = s;
 		canvas.paint();
 		DisplayUtils.checkdisplay();
-		loading = true;
+		//loading = true;
 	}
 
 	public static boolean isPaused()
@@ -817,7 +817,7 @@ public class VikaTouch
 
 	public void start()
 	{
-		loading = true;
+		//loading = true;
 		DisplayUtils.checkdisplay();
 		canvas = new VikaCanvasInst();
 		setDisplay(canvas);

@@ -288,7 +288,7 @@ public class CommandsImpl
 	{
 		if(!(s instanceof NewsScreen))
 		{
-			VikaTouch.loading = true;
+			//VikaTouch.loading = true;
 			
 			if(VikaTouch.newsScr == null)
 			{
@@ -305,7 +305,7 @@ public class CommandsImpl
 	{
 		if(!(s instanceof DialogsScreen))
 		{
-			VikaTouch.loading = true;
+			//VikaTouch.loading = true;
 
 			if(VikaTouch.dialogsScr == null)
 				VikaTouch.dialogsScr = new DialogsScreen();

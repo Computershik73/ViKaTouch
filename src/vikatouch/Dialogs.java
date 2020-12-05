@@ -36,6 +36,8 @@ public class Dialogs
 	public static boolean isUpdatingNow = false;
 
 	private static Runnable runnable;
+
+	protected static boolean avasLoaded;
 	
 	public static void refreshDialogsList(final boolean async, final boolean sendNofs)
 	{
@@ -67,6 +69,10 @@ public class Dialogs
 						try
 						{
 							hasNew = dialogs[0] == null || !VikaUtils.cut(item.getJSONObject("last_message").optString("text"), 7).equalsIgnoreCase(VikaUtils.cut(dialogs[0].lasttext, 7));
+							if(hasNew) {
+								avasLoaded = false;
+							}
+							
 						}
 						catch (Exception e)
 						{ }
@@ -128,7 +134,7 @@ public class Dialogs
 				//if(downloaderThread2 != null && downloaderThread2.isAlive())
 					//downloaderThread2.interrupt();
 				//поток качающий картинки
-				if(!Settings.dontLoadAvas)
+				if(!Settings.dontLoadAvas && !avasLoaded)
 				{
 					downloaderThread2 = new Thread()
 					{
@@ -158,7 +164,7 @@ public class Dialogs
 									}
 								}
 							
-							
+							avasLoaded = true;
 							//VikaTouch.loading = false;
 						}
 					};

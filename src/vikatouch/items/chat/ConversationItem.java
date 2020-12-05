@@ -67,31 +67,26 @@ public class ConversationItem
 
 		//if(!DisplayUtils.compact)
 		//{
-		ava = VikaTouch.cameraImg;
-		Image img = null;
-			try
-			{
+		if(ava == null || ava == VikaTouch.cameraImg) {
+			ava = VikaTouch.cameraImg;
+			Image img = null;
+			try {
 				img = VikaTouch.cameraImg;
 				if(avaurl != null && !Settings.dontLoadAvas)
 				{
-					try
-					{
+					try {
 						img = VikaUtils.downloadImage(avaurl);
-					}
-					catch (Exception e)
-					{
+					} catch (Exception e) {
 						ava = VikaTouch.cameraImg;
 					}
 				}
 				ava = ResizeUtils.resizeChatAva(img);
+			} catch (Throwable e) {
+				ava = VikaTouch.cameraImg;	
 			}
-			catch (Throwable e)
-			{
-				ava = VikaTouch.cameraImg;
-				
-			}
+		}
 		//}
-		avaurl = null;
+		//avaurl = null;
 	}
 	
 	public String getTime()

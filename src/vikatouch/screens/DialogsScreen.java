@@ -26,7 +26,7 @@ public class DialogsScreen
 	{
 		super();
 		
-		VikaTouch.loading = true;
+		//VikaTouch.loading = true;
 		
 		if(VikaTouch.menuScr == null)
 		{
@@ -40,8 +40,9 @@ public class DialogsScreen
 
 	protected final void callRefresh()
 	{
-		VikaTouch.loading = true;
+		//VikaTouch.loading = true;
 		Dialogs.refreshDialogsList(true, false);
+		//VikaTouch.loading = false;
 	}
 	
 	public final void press(int key)
