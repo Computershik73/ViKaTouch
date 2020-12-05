@@ -39,457 +39,343 @@ import vikatouch.settings.Settings;
 import vikatouch.utils.url.URLBuilder;
 import vikatouch.utils.url.URLDecoder;
 
+public final class VikaUtils {
+	public static String parseShortTime(final long paramLong) {
+		final Calendar cal = Calendar.getInstance();
 
-public final class VikaUtils
-{
-	public static String parseShortTime(final long paramLong)
-	{
-		final Calendar cal = Calendar.getInstance();
-		
 		final Date date = new Date(paramLong * 1000L);
 		final Date currentDate = new Date(System.currentTimeMillis());
-		
+
 		cal.setTime(date);
 		final int day = cal.get(Calendar.DAY_OF_MONTH);
 		final int year = cal.get(Calendar.YEAR);
 		final int month = cal.get(Calendar.MONTH);
-		
+
 		cal.setTime(currentDate);
 		final int currentYear = cal.get(Calendar.YEAR);
-		
-	    final String time = time(date);
-	    
-	    final long dayDelta = (paramLong / 60L / 60L / 24L) - (System.currentTimeMillis() / 1000L / 60L / 60L / 24L);
-	    
-	    String result = "Давно";
-	    
-	    parsing:
-	    {
-		    if(dayDelta == 0)
-		    {
-		    	result = time;
-		    	break parsing;
-		    }
-		    else if(dayDelta == 1)
-		    {
-		    	result = TextLocal.inst.get("date.yesterday");
-		    	break parsing;
-		    }
-		    else if(currentYear == year)
-		    {
-		    	result = TextLocal.inst.formatChatDate(day, month);
-		    	break parsing;
-		    }
-		    else
-		    {
-		    	result = TextLocal.inst.formatChatDate(day, month, year);
-		    	break parsing;
-		    }
-	    }
-	    
-	    return result;
+
+		final String time = time(date);
+
+		final long dayDelta = (paramLong / 60L / 60L / 24L) - (System.currentTimeMillis() / 1000L / 60L / 60L / 24L);
+
+		String result = "Давно";
+
+		parsing: {
+			if (dayDelta == 0) {
+				result = time;
+				break parsing;
+			} else if (dayDelta == 1) {
+				result = TextLocal.inst.get("date.yesterday");
+				break parsing;
+			} else if (currentYear == year) {
+				result = TextLocal.inst.formatChatDate(day, month);
+				break parsing;
+			} else {
+				result = TextLocal.inst.formatChatDate(day, month, year);
+				break parsing;
+			}
+		}
+
+		return result;
 	}
-	
-	public static String parseTime(final long paramLong)
-	{
+
+	public static String parseTime(final long paramLong) {
 		final Calendar cal = Calendar.getInstance();
-		
+
 		final Date date = new Date(paramLong * 1000L);
 		final Date currentDate = new Date(System.currentTimeMillis());
-		
+
 		cal.setTime(date);
 		final int day = cal.get(Calendar.DAY_OF_MONTH);
 		final int year = cal.get(Calendar.YEAR);
 		final int month = cal.get(Calendar.MONTH);
-		
+
 		cal.setTime(currentDate);
 		final int currentYear = cal.get(Calendar.YEAR);
-		
-	    final String time = time(date);
-	    
-	    final long dayDelta = (paramLong / 60L / 60L / 24L) - (System.currentTimeMillis() / 1000L / 60L / 60L / 24L);
-	    
-	    String result;
-	    
-	    parsing:
-	    {
-		    if(dayDelta == 0)
-		    {
-		    	result = TextLocal.inst.get("date.todayat");
-		    	result += " " + time;
-		    	break parsing;
-		    }
-		    else if(dayDelta == 1)
-		    {
-		    	result = TextLocal.inst.get("date.yesterday");
-		    	result += " " + time;
-		    	break parsing;
-		    }
-		    else if(currentYear == year)
-		    {
-		    	result = TextLocal.inst.formatShortDate(day, month);
-		    	break parsing;
-		    }
-		    else
-		    {
-		    	result = TextLocal.inst.formatDate(day, month, year);
-		    	break parsing;
-		    }
-	    }
-	    
-	    return result;
+
+		final String time = time(date);
+
+		final long dayDelta = (paramLong / 60L / 60L / 24L) - (System.currentTimeMillis() / 1000L / 60L / 60L / 24L);
+
+		String result;
+
+		parsing: {
+			if (dayDelta == 0) {
+				result = TextLocal.inst.get("date.todayat");
+				result += " " + time;
+				break parsing;
+			} else if (dayDelta == 1) {
+				result = TextLocal.inst.get("date.yesterday");
+				result += " " + time;
+				break parsing;
+			} else if (currentYear == year) {
+				result = TextLocal.inst.formatShortDate(day, month);
+				break parsing;
+			} else {
+				result = TextLocal.inst.formatDate(day, month, year);
+				break parsing;
+			}
+		}
+
+		return result;
 	}
-	
-	public static String parseMsgTime(final long paramLong)
-	{
+
+	public static String parseMsgTime(final long paramLong) {
 		/*
-		final Calendar cal = Calendar.getInstance();
-		
-		final Date date = new Date(paramLong * 1000L);
-		final Date currentDate = new Date(System.currentTimeMillis());
-		
-		cal.setTime(date);
-		final int day = cal.get(Calendar.DAY_OF_MONTH);
-		final int year = cal.get(Calendar.YEAR);
-		final int month = cal.get(Calendar.MONTH);
-		
-		cal.setTime(currentDate);
-		final int currentYear = cal.get(Calendar.YEAR);
-		
-	    final String time = time(date);
-	    
-	    final long dayDelta = (paramLong / 60L / 60L / 24L) - (System.currentTimeMillis() / 1000L / 60L / 60L / 24L);
-	    
-	    String result;
-	    
-	    parsing:
-	    {
-		    if(dayDelta == 0)
-		    {
-		    	result = time;
-		    	break parsing;
-		    }
-		    else if(dayDelta == 1)
-		    {
-		    	result = TextLocal.inst.get("date.yesterday") + " " + time;
-		    	break parsing;
-		    }
-		    else if(currentYear == year)
-		    {
-		    	result = TextLocal.inst.formatChatDate(day, month) + " " + time;
-		    	break parsing;
-		    }
-		    else
-		    {
-		    	result = TextLocal.inst.formatChatDate(day, month, year) + " " + time;
-		    	break parsing;
-		    }
-	    }
-	    
-	    return result;
-	    */
+		 * final Calendar cal = Calendar.getInstance();
+		 * 
+		 * final Date date = new Date(paramLong * 1000L); final Date currentDate = new
+		 * Date(System.currentTimeMillis());
+		 * 
+		 * cal.setTime(date); final int day = cal.get(Calendar.DAY_OF_MONTH); final int
+		 * year = cal.get(Calendar.YEAR); final int month = cal.get(Calendar.MONTH);
+		 * 
+		 * cal.setTime(currentDate); final int currentYear = cal.get(Calendar.YEAR);
+		 * 
+		 * final String time = time(date);
+		 * 
+		 * final long dayDelta = (paramLong / 60L / 60L / 24L) -
+		 * (System.currentTimeMillis() / 1000L / 60L / 60L / 24L);
+		 * 
+		 * String result;
+		 * 
+		 * parsing: { if(dayDelta == 0) { result = time; break parsing; } else
+		 * if(dayDelta == 1) { result = TextLocal.inst.get("date.yesterday") + " " +
+		 * time; break parsing; } else if(currentYear == year) { result =
+		 * TextLocal.inst.formatChatDate(day, month) + " " + time; break parsing; } else
+		 * { result = TextLocal.inst.formatChatDate(day, month, year) + " " + time;
+		 * break parsing; } }
+		 * 
+		 * return result;
+		 */
 		return parseShortTime(paramLong);
 	}
-	
-	public static String music(final String url)
-	{
-		if(VikaTouch.musicIsProxied)
-		{
+
+	public static String music(final String url) {
+		if (VikaTouch.musicIsProxied) {
 			final String x = URLDecoder.encode(url);
 			return download("http://vikamobile.ru:80/tokenproxy.php?" + x);
-		}
-		else
-		{
+		} else {
 			return download(url);
 		}
 	}
-	
-	public static String download(URLBuilder url)
-	{
+
+	public static String download(URLBuilder url) {
 		return download(url.toString());
 	}
-	
-	public static String downloadE(URLBuilder url) throws VikaNetworkError
-	{
+
+	public static String downloadE(URLBuilder url) throws VikaNetworkError {
 		String res = download(url);
-		if(res==null)
-		{
-			VikaTouch.offlineMode=true;
+		if (res == null) {
+			VikaTouch.offlineMode = true;
 			throw new VikaNetworkError();
 		}
 		return res;
 	}
-	
+
 	public static String download(String var1) {
-		ByteArrayOutputStream var4 = null;  
-		try 
-		{
-	        
+		ByteArrayOutputStream var4 = null;
+		try {
+
 			var4 = new ByteArrayOutputStream();
-	        HttpConnection var13 = null;
-	        var13 = (HttpConnection) Connector.open(var1);
-	        var13.setRequestMethod("GET");
-	        var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
-	         
-	        InputStream var14 = var13.openInputStream();
-	        long var8 = var13.getLength();
-	        byte[] var6 = new byte[16384]; 
-	        long var10 = 0L;
+			HttpConnection var13 = null;
+			var13 = (HttpConnection) Connector.open(var1);
+			var13.setRequestMethod("GET");
+			var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 
-	        int var7;
-	         
-			while((var7 = var14.read(var6)) != -1) {
-	            var10 += (long)var7;
-	            var4.write(var6, 0, var7);
-	            var4.flush();
-	        }
+			InputStream var14 = var13.openInputStream();
+			long var8 = var13.getLength();
+			byte[] var6 = new byte[16384];
+			long var10 = 0L;
 
-	        var14.close();
-	        var13.close();
-	        var4.close();
-	         
-	    }
-		catch (Exception e)
-		{
-			
+			int var7;
+
+			while ((var7 = var14.read(var6)) != -1) {
+				var10 += (long) var7;
+				var4.write(var6, 0, var7);
+				var4.flush();
+			}
+
+			var14.close();
+			var13.close();
+			var4.close();
+
+		} catch (Exception e) {
+
 		}
 		String str = null;
 		try {
-			if(var4!=null) str = new String(var4.toByteArray(),"UTF-8");
+			if (var4 != null)
+				str = new String(var4.toByteArray(), "UTF-8");
 			// null pointer головного мозга, ёб ваш торшер, Илья.
 		} catch (IOException e) {
-			
+
 		}
 		return str;
 	}
-	
-	public static String download_old(String url)
-	{
-		int step=0;
+
+	public static String download_old(String url) {
+		int step = 0;
 		VikaCanvasInst.netColor = 0xffff0000;
 		HttpConnection httpconn = null;
 		InputStream is = null;
 		InputStreamReader isr = null;
 		String result = null;
-		try
-		{
+		try {
 			step = 1;
 			Connection conn = Connector.open(url);
 			step = 2;
 			httpconn = (HttpConnection) conn;
 			httpconn.setRequestMethod("GET");
-			httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+			httpconn.setRequestProperty("User-Agent",
+					"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 			step = 3;
 			is = httpconn.openInputStream();
 			step = 4;
 			VikaCanvasInst.netColor = 0xffff00ff;
-			isr = new InputStreamReader(is, "UTF-8"); 
+			isr = new InputStreamReader(is, "UTF-8");
 			VikaCanvasInst.netColor = 0xffff7f00;
 			step = 5;
 			StringBuffer sb = new StringBuffer();
 			char[] buffer;
 			int i;
-			if (httpconn.getResponseCode() != 200 && httpconn.getResponseCode() != 401)
-			{
-				//System.out.println("not 200 and not 401");
-				if(httpconn.getHeaderField("Location") != null)
-				{
+			if (httpconn.getResponseCode() != 200 && httpconn.getResponseCode() != 401) {
+				// System.out.println("not 200 and not 401");
+				if (httpconn.getHeaderField("Location") != null) {
 					String replacedURL = httpconn.getHeaderField("Location");
 					step = 6;
-					try
-					{
+					try {
 						isr.close();
+					} catch (IOException e) {
 					}
-					catch (IOException e)
-					{ }
 					step = 7;
 					httpconn.close();
 					step = 8;
 					httpconn = (HttpConnection) Connector.open(replacedURL);
 					step = 9;
 					httpconn.setRequestMethod("GET");
-					httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+					httpconn.setRequestProperty("User-Agent",
+							"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 					step = 10;
 					is = httpconn.openInputStream();
 					step = 11;
 					isr = new InputStreamReader(is, "UTF-16");
 					step = 12;
 					sb = new StringBuffer();
-					if (httpconn.getResponseCode() == 200 || httpconn.getResponseCode() == 401)
-					{
+					if (httpconn.getResponseCode() == 200 || httpconn.getResponseCode() == 401) {
 						buffer = new char[10000];
-	
-						while ((i = isr.read(buffer, 0, buffer.length)) != -1)
-						{
+
+						while ((i = isr.read(buffer, 0, buffer.length)) != -1) {
 							sb.append(buffer, 0, i);
 						}
-	
+
 					}
 					step = 13;
 				}
-			}
-			else
-			{
+			} else {
 				buffer = new char[10000];
 				step = 14;
-				while ((i = isr.read(buffer, 0, buffer.length)) != -1)
-				{
+				while ((i = isr.read(buffer, 0, buffer.length)) != -1) {
 					VikaCanvasInst.netColor = 0xff00ff00;
 					sb.append(buffer, 0, i);
-					
+
 				}
 				buffer = null;
 				step = 15;
 			}
-			
+
 			result = sb.toString();
 			step = 16;
-			//result = replace(sb.toString(), "<br>", " ");
-		}
-		catch (RuntimeException e)
-		{
-			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", step "+step, null));
-		}
-		catch (IOException e)
-		{
-			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", step "+step, null));
-		}
-		finally
-		{
-			try
-			{
+			// result = replace(sb.toString(), "<br>", " ");
+		} catch (RuntimeException e) {
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
+					e.toString() + ", step " + step, null));
+		} catch (IOException e) {
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
+					e.toString() + ", step " + step, null));
+		} finally {
+			try {
 				VikaCanvasInst.netColor = 0xffffff00;
-				if(isr != null)
+				if (isr != null)
 					isr.close();
-				if(is != null)
+				if (is != null)
 					is.close();
+			} catch (IOException e) {
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
+						e.toString() + ", disposing data", null));
+			} catch (RuntimeException e) {
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
+						e.toString() + ", disposing data", null));
 			}
-			catch (IOException e)
-			{
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", disposing data", null));
-			}
-			catch (RuntimeException e)
-			{
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", disposing data", null));
-			}
-			try
-			{
+			try {
 				VikaCanvasInst.netColor = 0xff0000ff;
-				if(httpconn != null)
+				if (httpconn != null)
 					httpconn.close();
 				VikaCanvasInst.netColor = 0xff00ffff;
-			}
-			catch (IOException e)
-			{
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", disposing http", null));
-			}
-			catch (RuntimeException e)
-			{
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), e.toString()+", disposing http", null));
+			} catch (IOException e) {
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
+						e.toString() + ", disposing http", null));
+			} catch (RuntimeException e) {
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
+						e.toString() + ", disposing http", null));
 			} catch (Throwable eee) {
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"), eee.toString()+", disposing http", null));
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
+						eee.toString() + ", disposing http", null));
 			}
 		}
 		VikaCanvasInst.netColor = 0xff000000;
 		return result;
 	}
+
 	/*
-	
-	public static String sendPostRequest(String url, String vars)
-	{
-		HttpConnection httpconn = null;
-		DataInputStream dis = null;
-		DataOutputStream dos = null;
-		String result = "";
+	 * 
+	 * public static String sendPostRequest(String url, String vars) {
+	 * HttpConnection httpconn = null; DataInputStream dis = null; DataOutputStream
+	 * dos = null; String result = "";
+	 * 
+	 * try { httpconn = (HttpConnection) Connector.open(url, 3);
+	 * httpconn.setRequestMethod("POST"); dos = httpconn.openDataOutputStream();
+	 * byte[] bytes = vars.getBytes();
+	 * 
+	 * int i; for (i = 0; i < bytes.length; ++i) { dos.writeByte(bytes[i]); } dis =
+	 * new DataInputStream(httpconn.openInputStream()); for (; (i = dis.read()) !=
+	 * -1; result += (char) i); } catch (IOException e) { result = "ERROR"; }
+	 * finally { try { if (httpconn != null) { httpconn.close(); } } catch
+	 * (IOException e) {
+	 * 
+	 * }
+	 * 
+	 * try { if (dis != null) { dis.close(); } } catch (IOException e) {
+	 * 
+	 * }
+	 * 
+	 * try { if (dos != null) { dos.close(); } } catch (IOException e) {
+	 * 
+	 * }
+	 * 
+	 * }
+	 * 
+	 * return result; }
+	 * 
+	 * public static String strToHex(String str) { char[] chars = str.toCharArray();
+	 * StringBuffer sb = new StringBuffer();
+	 * 
+	 * for (int i = 0; i < chars.length; ++i) { char c = chars[i];
+	 * sb.append(Integer.toHexString(c).toUpperCase()); }
+	 * 
+	 * return sb.toString(); }
+	 * 
+	 */
+	public static String replace(String str, String from, String to) {
 
-		try {
-			httpconn = (HttpConnection) Connector.open(url, 3);
-			httpconn.setRequestMethod("POST");
-			dos = httpconn.openDataOutputStream();
-			byte[] bytes = vars.getBytes();
-
-			int i;
-			for (i = 0; i < bytes.length; ++i)
-			{
-				dos.writeByte(bytes[i]);
-			}
-			dis = new DataInputStream(httpconn.openInputStream());
-			for (; (i = dis.read()) != -1; result += (char) i);
-		}
-		catch (IOException e)
-		{
-			result = "ERROR";
-		}
-		finally
-		{
-			try
-			{
-				if (httpconn != null)
-				{
-					httpconn.close();
-				}
-			}
-			catch (IOException e)
-			{
-				
-			}
-
-			try
-			{
-				if (dis != null)
-				{
-					dis.close();
-				}
-			}
-			catch (IOException e)
-			{
-				
-			}
-
-			try
-			{
-				if (dos != null)
-				{
-					dos.close();
-				}
-			}
-			catch (IOException e)
-			{
-				
-			}
-
-		}
-
-		return result;
-	}
-
-	public static String strToHex(String str)
-	{
-		char[] chars = str.toCharArray();
-		StringBuffer sb = new StringBuffer();
-
-		for (int i = 0; i < chars.length; ++i)
-		{
-			char c = chars[i];
-			sb.append(Integer.toHexString(c).toUpperCase());
-		}
-
-		return sb.toString();
-	}
-	
-	*/
-	public static String replace(String str, String from, String to)
-	{
-		
 		final StringBuffer sb = new StringBuffer();
 		int j = str.indexOf(from);
 		int k = 0;
-		
-		if(j == -1)
+
+		if (j == -1)
 			return str;
 
-		for (int i = from.length(); j != -1; j = str.indexOf(from, k))
-		{
+		for (int i = from.length(); j != -1; j = str.indexOf(from, k)) {
 			sb.append(str.substring(k, j)).append(to);
 			k = j + i;
 		}
@@ -497,17 +383,14 @@ public final class VikaUtils
 		sb.append(str.substring(k, str.length()));
 		return sb.toString();
 	}
-	
-	
-	public static boolean startsWith(String str, String need)
-	{
+
+	public static boolean startsWith(String str, String need) {
 		int l = need.length();
-		return str.substring(0,l).equalsIgnoreCase(need);
+		return str.substring(0, l).equalsIgnoreCase(need);
 	}
-	
-	public static Image resize(Image image, int width, int height)
-	{
-		
+
+	public static Image resize(Image image, int width, int height) {
+
 		int origWidth = image.getWidth();
 		int origHeight = image.getHeight();
 		if (height == -1) {
@@ -516,232 +399,133 @@ public final class VikaUtils
 		return ImageUtils.resize(image, width, height, false, false);
 	}
 
-	public static Image downloadImage(String url) 
-			throws IOException
-	{
+	public static Image downloadImage(String url) throws IOException {
 		try {
-		if(!Settings.https)
-			//url = replace(url, "https:", "http:");
-			//if (VikaBase.vkApi != "https://api.vk.com:443") {
+			if (!Settings.https)
+				// url = replace(url, "https:", "http:");
+				// if (VikaBase.vkApi != "https://api.vk.com:443") {
 				url = replace(
-						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.xtrafrancyz.net/_/cs"), 
-								"https://vk-api", "http://vk-api"),
-						"https:\\/\\/vk-api", "http://vk-api"), "https://sun", "http://vk-api-proxy.xtrafrancyz.net/_/sun");
-		//url = replace(url, )
-		// кеширование картинок включается если запрос http
-		boolean caching = false;
-				//!startsWith(url, "file") && Settings.cacheImages;
-		if(url.indexOf("camera_50") >= 0)
-		{
-			return VikaTouch.cameraImg;
-		}
-		if(url.indexOf("php") >= 0 || url.indexOf("getVideoPreview") >= 0)
-		{
-			caching = false;
-		}
-		//System.out.println(url + " " + caching);
-		String filename = null;
-		if(caching)
-		{
-			
+						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.xtrafrancyz.net/_/cs"),
+								"https://vk-api", "http://vk-api"), "https:\\/\\/vk-api", "http://vk-api"),
+						"https://sun", "http://vk-api-proxy.xtrafrancyz.net/_/sun");
+			// url = replace(url, )
+			// кеширование картинок включается если запрос http
+			boolean caching = false;
+			// !startsWith(url, "file") && Settings.cacheImages;
+			if (url.indexOf("camera_50") >= 0) {
+				return VikaTouch.cameraImg;
+			}
+			if (url.indexOf("php") >= 0 || url.indexOf("getVideoPreview") >= 0) {
+				caching = false;
+			}
+			// System.out.println(url + " " + caching);
+			String filename = null;
+			if (caching) {
+
 				filename = url;
 
-				if(filename.indexOf("?") > 0)
+				if (filename.indexOf("?") > 0)
 					filename = filename.substring(0, filename.indexOf("?"));
-				
-				filename = 
-					replace(
-						replace(
-							replace(
-								replace(
-									replace(
-										replace(
-											replace(
-												replace(
-													replace(
-														replace(
-															replace(
-																replace(
-																	replace(
-																		replace(
-																			replace(
-										filename
-										, VikaTouch.API, "")
-										, "vk-api-proxy.xtrafrancyz.net", "")
-										, "?ava=1", "")
-										, ".userapi.", "")
-						, "http:", "")
-						, "https:", "")
-						, "=", "")
-						, "?", "")
-						, ":80", "")
-						, "\\", "")
-						, "/", "")
-						, ":443", "")
-						, "_", "")
-						, "vk.comimages", "")
-						, "com", "");
-			
-				//System.out.println(filename+" ||| "+url);
-			
+
+				filename = replace(
+						replace(replace(replace(replace(
+								replace(replace(replace(replace(replace(replace(
+										replace(replace(replace(replace(filename, VikaTouch.API, ""),
+												"vk-api-proxy.xtrafrancyz.net", ""), "?ava=1", ""), ".userapi.", ""),
+										"http:", ""), "https:", ""), "=", ""), "?", ""), ":80", ""), "\\", ""),
+								"/", ""), ":443", ""), "_", ""), "vk.comimages", ""),
+						"com", "");
+
+				// System.out.println(filename+" ||| "+url);
+
 				Image image = ImageStorage.get(filename);
-				if(image != null)
-				{
+				if (image != null) {
 					return image;
 				}
-				
-			
-		}
 
-		//ByteArrayOutputStream baos = null;
-		final Connection con = Connector.open(url);
-		if(con instanceof HttpConnection)
-		{
-			HttpConnection var2 = (HttpConnection) con; 
-			var2.setRequestMethod("GET");
-			var2.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
-			int respcode = var2.getResponseCode();
-			if (respcode != 200 && respcode != 401) {
-				if(var2.getHeaderField("Location") != null)
-				{
-					url = var2.getHeaderField("Location");
-				}
-				else
-				{
-					
-					throw new IOException("" + respcode);
-				}
 			}
-			
-			var2.close();
-		}
-		else if(con instanceof FileConnection)
-		{
-			caching = false;
+
+			// ByteArrayOutputStream baos = null;
+			final Connection con = Connector.open(url);
+			if (con instanceof HttpConnection) {
+				HttpConnection var2 = (HttpConnection) con;
+				var2.setRequestMethod("GET");
+				var2.setRequestProperty("User-Agent",
+						"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+				int respcode = var2.getResponseCode();
+				if (respcode != 200 && respcode != 401) {
+					if (var2.getHeaderField("Location") != null) {
+						url = var2.getHeaderField("Location");
+					} else {
+
+						throw new IOException("" + respcode);
+					}
+				}
+
+				var2.close();
+			} else if (con instanceof FileConnection) {
+				caching = false;
+				con.close();
+
+				DataInputStream dis = ((FileConnection) Connector.open(url)).openDataInputStream();
+
+				return Image.createImage(dis);
+
+				/*
+				 * try { int length = (int) fileconn.fileSize(); byte[] imgBytes = new
+				 * byte[length];
+				 * 
+				 * dis.readFully(imgBytes);
+				 * 
+				 * try { return Image.createImage(imgBytes, 0, imgBytes.length); } catch
+				 * (IllegalArgumentException e) {
+				 * 
+				 * } } finally { if (dis != null) { dis.close(); }
+				 * 
+				 * if (fileconn != null) { fileconn.close(); }
+				 * 
+				 * if (baos != null) { baos.close(); }
+				 * 
+				 * }
+				 */
+			}
 			con.close();
+			DataInputStream cin = ((ContentConnection) Connector.open(url)).openDataInputStream();
 
-			DataInputStream dis = ((FileConnection) Connector.open(url)).openDataInputStream();
-
-			return Image.createImage(dis);
-			
-			/*
-			try
-			{
-				int length = (int) fileconn.fileSize();
-				byte[] imgBytes = new byte[length];
-				
-				dis.readFully(imgBytes);
-				
-				try
-				{
-					return Image.createImage(imgBytes, 0, imgBytes.length);
-				}
-				catch (IllegalArgumentException e)
-				{
-					
-				}
-			}
-			finally
-			{
-				if (dis != null)
-				{
-					dis.close();
-				}
-
-				if (fileconn != null)
-				{
-					fileconn.close();
-				}
-
-				if (baos != null)
-				{
-					baos.close();
-				}
-
-			}*/
-		}
-		con.close();
-		DataInputStream cin = ((ContentConnection) Connector.open(url)).openDataInputStream();
-
-		Image image = Image.createImage(cin);
-		 if(image != null && caching)
-			{
+			Image image = Image.createImage(cin);
+			if (image != null && caching) {
 				ImageStorage.save(filename, image);
 			}
-		 return image;
+			return image;
 		} catch (Throwable e) {
 			return VikaTouch.cameraImg;
 		}
-		 /*
-		try
-		{
-			 /*
-			int length;
-			byte[] imgBytes;
-			if ((length = (int) contconn.getLength()) != -1)
-			{
-				imgBytes = new byte[length];
-				cin.readFully(imgBytes);
-			}
-			else
-			{
-				baos = new ByteArrayOutputStream();
-				
-				int i;
-				while ((i = cin.read()) != -1)
-				{
-					baos.write(i);
-				}
-
-				imgBytes = baos.toByteArray();
-				baos.close();
-			}
-			try
-			{
-				Image image = Image.createImage(imgBytes, 0, imgBytes.length);
-				try
-				{
-					if(image != null && caching)
-					{
-						ImageStorage.save(filename, image);
-					}
-				}
-				catch (Exception e)
-				{
-					
-				}
-				return image;
-			}
-			catch (IllegalArgumentException e)
-			{
-				
-			}
-			
-		}
-		finally
-		{
-			if (cin != null)
-			{
-				cin.close();
-			}
-
-			if (contconn != null)
-			{
-				contconn.close();
-			}
-
-			if (baos != null)
-			{
-				baos.close();
-			}
-		}
-
-		return null;
-		*/
+		/*
+		 * try { /* int length; byte[] imgBytes; if ((length = (int)
+		 * contconn.getLength()) != -1) { imgBytes = new byte[length];
+		 * cin.readFully(imgBytes); } else { baos = new ByteArrayOutputStream();
+		 * 
+		 * int i; while ((i = cin.read()) != -1) { baos.write(i); }
+		 * 
+		 * imgBytes = baos.toByteArray(); baos.close(); } try { Image image =
+		 * Image.createImage(imgBytes, 0, imgBytes.length); try { if(image != null &&
+		 * caching) { ImageStorage.save(filename, image); } } catch (Exception e) {
+		 * 
+		 * } return image; } catch (IllegalArgumentException e) {
+		 * 
+		 * }
+		 * 
+		 * } finally { if (cin != null) { cin.close(); }
+		 * 
+		 * if (contconn != null) { contconn.close(); }
+		 * 
+		 * if (baos != null) { baos.close(); } }
+		 * 
+		 * return null;
+		 */
 	}
 
-	public static String time(Date date)
-	{
+	public static String time(Date date) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		int hours = cal.get(11);
@@ -749,39 +533,31 @@ public final class VikaUtils
 		String time = TextLocal.inst.formatTime(hours, minutes);
 		return time;
 	}
-/*
-	public static String fullDate(Date date)
-	{
 
-		final Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		int month = cal.get(Calendar.MONTH);
-		int year = cal.get(Calendar.YEAR);
-		int hour = cal.get(Calendar.HOUR);
-		int minutes = cal.get(Calendar.MINUTE);
-		return TextLocal.inst.formatFullDate(day, month, year, hour, minutes);
-	}
-*/
-	public static void request(URLBuilder url)
-		throws IOException
-	{
+	/*
+	 * public static String fullDate(Date date) {
+	 * 
+	 * final Calendar cal = Calendar.getInstance(); cal.setTime(date); int day =
+	 * cal.get(Calendar.DAY_OF_MONTH); int month = cal.get(Calendar.MONTH); int year
+	 * = cal.get(Calendar.YEAR); int hour = cal.get(Calendar.HOUR); int minutes =
+	 * cal.get(Calendar.MINUTE); return TextLocal.inst.formatFullDate(day, month,
+	 * year, hour, minutes); }
+	 */
+	public static void request(URLBuilder url) throws IOException {
 		makereq(url.toString());
 	}
 
-	public static void makereq(String url)
-		throws IOException
-	{
+	public static void makereq(String url) throws IOException {
 		HttpConnection httpconn = null;
 		Connection conn = Connector.open(url);
 		httpconn = (HttpConnection) conn;
 		httpconn.setRequestMethod("GET");
 		httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
-		httpconn.openInputStream();	
+		httpconn.openInputStream();
 		httpconn.close();
 	}
-	
-	//функция адаптированна* из вика мобиле
+
+	// функция адаптированна* из вика мобиле
 	public static String strToHex(String var0) {
 		char[] var4 = var0.toCharArray();
 		StringBuffer var1 = new StringBuffer();
@@ -793,182 +569,160 @@ public final class VikaUtils
 
 		return var1.toString();
 	}
-	
-	public static String cut(String str, int l)
-	{
-		if(str==null) return "".intern();
-		try
-		{
-			if(str.length()<l+2)
-			{
+
+	public static String cut(String str, int l) {
+		if (str == null)
+			return "".intern();
+		try {
+			if (str.length() < l + 2) {
 				return str;
 			}
-			return str.substring(0, l)+"...";
-		}
-		catch (StringIndexOutOfBoundsException e)
-		{
+			return str.substring(0, l) + "...";
+		} catch (StringIndexOutOfBoundsException e) {
 			return str;
 		}
 	}
-	
-	public static String[] searchLinks(String text)
-	{
-		if(text == null || text.length()<2) return null;
+
+	public static String[] searchLinks(String text) {
+		if (text == null || text.length() < 2)
+			return null;
 		int lm = 16; // links max (больше на экран не влезет (смотря какой конечно))
 		String[] la = new String[lm];
 		int li = 0; // индекс в массиве
 		int tl = text.length();
-		
-		final String[] glinks = new String[] { "http://", "https://", "rtsp://", "ftp://", "smb://" }; // вроде всё. Ага, я слал/принимал пару раз ссылки на расшаренные папки как smb://server/folder
-		try
-		{
-			//System.out.println(text);
-			//System.out.println("tl "+tl);
+
+		final String[] glinks = new String[] { "http://", "https://", "rtsp://", "ftp://", "smb://" }; // вроде всё.
+																										// Ага, я
+																										// слал/принимал
+																										// пару раз
+																										// ссылки на
+																										// расшаренные
+																										// папки как
+																										// smb://server/folder
+		try {
+			// System.out.println(text);
+			// System.out.println("tl "+tl);
 			// Поиск внешних ссылок
 			// сначала ищем их на случай сообщения
-			// @id89277233 @id2323 @id4 @id5 @id6 ... [ещё 100509 @] ... @id888292, http://что-тоТам
+			// @id89277233 @id2323 @id4 @id5 @id6 ... [ещё 100509 @] ... @id888292,
+			// http://что-тоТам
 			// В беседе вики такое постоянно.
-			for(int gli=0; gli<glinks.length; gli++)
-			{
+			for (int gli = 0; gli < glinks.length; gli++) {
 				int ii = 0; // Indexof Index
-				while(true)
-				{
+				while (true) {
 					ii = text.indexOf(glinks[gli], ii);
-					//System.out.println("ii "+ii);
-					if(ii == -1)
-					{
+					// System.out.println("ii "+ii);
+					if (ii == -1) {
 						break;
-					}
-					else
-					{
-						int lci = ii+6;
-						while(lci<tl && text.charAt(lci)!=' ') { lci++; }
+					} else {
+						int lci = ii + 6;
+						while (lci < tl && text.charAt(lci) != ' ') {
+							lci++;
+						}
 						String l = text.substring(ii, lci);
 						la[li] = l;
 						li++;
-						if(li>=lm) return la;
+						if (li >= lm)
+							return la;
 						ii = lci;
 					}
 				}
 			}
-					
+
 			// Поиск ссылок ВК
 			int cc = 0; // current char
-			while(cc<tl)
-			{
+			while (cc < tl) {
 				char c = text.charAt(cc);
-				if(c=='@')
-				{
+				if (c == '@') {
 					int cs = cc;
 					cc++;
-					while(cc<tl && text.charAt(cc)!=' ' && text.charAt(cc)!=']') { cc++; }
+					while (cc < tl && text.charAt(cc) != ' ' && text.charAt(cc) != ']') {
+						cc++;
+					}
 					String l = text.substring(cs, cc);
 					la[li] = l;
 					li++;
-					if(li>=lm) return la;
-				}
-				else if(c=='[')
-				{
+					if (li >= lm)
+						return la;
+				} else if (c == '[') {
 					cc++;
 					int cs = cc;
-					while(cc<tl && text.charAt(cc)!='|') { cc++; }
+					while (cc < tl && text.charAt(cc) != '|') {
+						cc++;
+					}
 					String l = text.substring(cs, cc);
 					la[li] = l;
 					li++;
-					if(li>=lm) return la;
+					if (li >= lm)
+						return la;
 				}
 				cc++;
 			}
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//System.out.println("links c "+li);
+		// System.out.println("links c "+li);
 		return la;
 	}
-	
-	public static MainScreen openPage(int id)
-	{
-		if(id<0)
-		{
+
+	public static MainScreen openPage(int id) {
+		if (id < 0) {
 			GroupPageScreen p = new GroupPageScreen(-id);
 			p.load();
 			return p;
-		}
-		else
-		{
+		} else {
 			ProfilePageScreen p = new ProfilePageScreen(id);
 			p.load();
 			return p;
 		}
 	}
-	
-	public static void openLink(String s)
-	{
-		try
-		{
-			if(s.indexOf("@")==0)
-			{
+
+	public static void openLink(String s) {
+		try {
+			if (s.indexOf("@") == 0) {
 				// упоминание
-			}
-			else if(s.indexOf("id")==0)
-			{
-				try
-				{
+			} else if (s.indexOf("id") == 0) {
+				try {
 					VikaTouch.setDisplay(VikaUtils.openPage(Integer.parseInt(s.substring(2))), 1);
+				} catch (RuntimeException e) {
 				}
-				catch(RuntimeException e) { }
-			}
-			else if(s.indexOf("rtsp://")!=-1)
-			{
+			} else if (s.indexOf("rtsp://") != -1) {
 				VikaTouch.openRtspLink(s);
-			}
-			else if(s.indexOf("youtube.com")!=-1)
-			{
-				if(!Settings.symtube)
-				{
+			} else if (s.indexOf("youtube.com") != -1) {
+				if (!Settings.symtube) {
 					VikaTouch.appInst.platformRequest(s);
+				} else {
+					VikaTouch.appInst.platformRequest("http://vikamobile.ru/getl.php?url=" + URLDecoder.encode(s));
 				}
-				else
-				{
-					VikaTouch.appInst.platformRequest("http://vikamobile.ru/getl.php?url="+URLDecoder.encode(s));
-				}
-			}
-			else
+			} else
 				VikaTouch.appInst.platformRequest(s);
-		}
-		catch (Exception e) 
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// unfinished
-	public static boolean processVkLink(String link)
-	{
+	public static boolean processVkLink(String link) {
 		link = replace(replace(link, "https://", ""), "http://", "");
 		link = replace(link, "m.vk.com", "vk.com");
-		try
-		{
+		try {
 			link = link.substring(0, link.indexOf("?"));
+		} catch (Exception e) {
 		}
-		catch(Exception e) { }
-		if(link.indexOf("vk.com/")!=0) return false;
+		if (link.indexOf("vk.com/") != 0)
+			return false;
 		String target = link.substring(7);
-		if(target.indexOf("wall")==0)
-		{
-			
+		if (target.indexOf("wall") == 0) {
+
 		}
 		return true;
 	}
-	
-	public static int lerp(final int start, final int target, final int mul, final int div)
-	{
-		return start + ((target-start) * mul / div);
+
+	public static int lerp(final int start, final int target, final int mul, final int div) {
+		return start + ((target - start) * mul / div);
 	}
-	public static int clamp(final int val, final int min, final int max)
-	{
+
+	public static int clamp(final int val, final int min, final int max) {
 		return Math.max(Math.min(val, max), min);
 	}
 }

@@ -30,19 +30,18 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	public int currentOption;
 	String help;
 	public boolean noyes;
-	
-	public int drawX; public int fillW; // for context menu
-	
-	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, int[] list, int curr, String info)
-	{
+
+	public int drawX;
+	public int fillW; // for context menu
+
+	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, int[] list, int curr, String info) {
 		this.h = h;
 		this.optN = optN;
 		icon = ic;
 		text = title;
 		ss = s;
 		opts = new String[list.length];
-		for(int i=0;i<list.length;i++)
-		{
+		for (int i = 0; i < list.length; i++) {
 			opts[i] = String.valueOf(list[i]);
 		}
 		currentOption = curr;
@@ -50,9 +49,9 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 		f = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
 	}
-	
-	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, String[] list, int curr, String info)
-	{
+
+	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, String[] list, int curr,
+			String info) {
 		this.h = h;
 		this.optN = optN;
 		icon = ic;
@@ -64,9 +63,9 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 		f = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
 	}
-	
-	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, String[] list, int curr, String info, boolean noyesset)
-	{
+
+	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, String[] list, int curr,
+			String info, boolean noyesset) {
 		this.h = h;
 		this.optN = optN;
 		icon = ic;
@@ -79,23 +78,24 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
 		noyes = noyesset;
 	}
-	
+
 	public void paint(Graphics g, int y, int scrolled) {
-		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && s)?ColorUtils.BUTTONCOLOR:0);
-		g.setFont((ScrollableCanvas.keysMode && s)?sf:f);
+		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && s) ? ColorUtils.BUTTONCOLOR : 0);
+		g.setFont((ScrollableCanvas.keysMode && s) ? sf : f);
 		int x = drawX + 48;
-		if(icon == -1)
+		if (icon == -1)
 			x = x - 40;
-		if(icon != -1)
-			g.drawImage(((ScrollableCanvas.keysMode && s)?(IconsManager.selIco):(IconsManager.ico))[icon], drawX + 12, y + (h/2 - 12), 0);
-		try
-		{
-			g.drawString(text, x, y + ((h/4) - (((ScrollableCanvas.keysMode && s)?sf:f).getHeight()/2)), 0);
+		if (icon != -1)
+			g.drawImage(((ScrollableCanvas.keysMode && s) ? (IconsManager.selIco) : (IconsManager.ico))[icon],
+					drawX + 12, y + (h / 2 - 12), 0);
+		try {
+			g.drawString(text, x, y + ((h / 4) - (((ScrollableCanvas.keysMode && s) ? sf : f).getHeight() / 2)), 0);
 			ColorUtils.setcolor(g, ColorUtils.TEXT2);
 			g.setFont(f);
-			g.drawString(opts[currentOption], x, y + ((h*3/4) - (f.getHeight()/2)), 0);
+			g.drawString(opts[currentOption], x, y + ((h * 3 / 4) - (f.getHeight() / 2)), 0);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		catch(Exception e) { e.printStackTrace(); }
 	}
 
 	public int getDrawHeight() {
@@ -107,20 +107,18 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	}
 
 	public void keyPressed(int key) {
-		if(key == KEY_OK)
-		{
+		if (key == KEY_OK) {
 			OptionItem[] po = new OptionItem[opts.length];
-			for(int i=0;i<opts.length;i++)
-			{
-				if(noyes) {
-					po[i] = new OptionItem(this, opts[i], (i==0)?IconsManager.CLOSE : IconsManager.APPLY, i, 40);
+			for (int i = 0; i < opts.length; i++) {
+				if (noyes) {
+					po[i] = new OptionItem(this, opts[i], (i == 0) ? IconsManager.CLOSE : IconsManager.APPLY, i, 40);
 				} else {
-					po[i] = new OptionItem(this, opts[i], (currentOption==i)?IconsManager.APPLY:IconsManager.SETTINGS, i, 40);
+					po[i] = new OptionItem(this, opts[i],
+							(currentOption == i) ? IconsManager.APPLY : IconsManager.SETTINGS, i, 40);
 				}
 			}
 			VikaTouch.popup(new AutoContextMenu(po));
-		} else if(help!=null && key == KEY_FUNC)
-		{
+		} else if (help != null && key == KEY_FUNC) {
 			VikaTouch.popup(new InfoPopup(help, null, TextLocal.inst.get("settings.help"), null));
 		}
 	}
@@ -133,13 +131,11 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 		s = selected;
 	}
 
-	public void addDrawHeight(int i)
-	{
+	public void addDrawHeight(int i) {
 		h += i;
 	}
 
-	public void setDrawHeight(int i)
-	{
+	public void setDrawHeight(int i) {
 		h = i;
 	}
 
@@ -149,8 +145,7 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	}
 
 	public void onMenuItemOption(int i) {
-		if(help!=null)
-		{
+		if (help != null) {
 			VikaTouch.popup(new InfoPopup(help, null, TextLocal.inst.get("settings.help"), null));
 		}
 	}
