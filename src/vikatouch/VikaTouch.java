@@ -584,7 +584,7 @@ public class VikaTouch {
 		String errortitle = error + "!";
 		inst.errReason = e.toString();
 		boolean fatal = e instanceof IOException
-				|| e instanceof NullPointerException
+				|| e instanceof NullPointerException;
 		if (fatal) {
 			crashed = true;
 		}
