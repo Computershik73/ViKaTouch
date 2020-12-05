@@ -224,6 +224,7 @@ public class VikaTouch {
 				Settings.proxy = false;
 				Settings.https = true;
 				OAUTH = Settings.httpsOAuth;
+				API = Settings.httpsApi;
 			} else {
 				OAUTH = Settings.proxyOAuth;
 				API = Settings.proxyApi;
@@ -752,34 +753,50 @@ public class VikaTouch {
 						OAUTH = "https://oauth.vk.com:443";
 						API = "https://api.vk.com:443";
 						Settings.https = true;
+						Settings.proxy = false;
 					} else if (mobilePlatform.indexOf("3.1") > 0) {
 						OAUTH = Settings.proxyOAuth;
 						API = Settings.proxyApi;
 						Settings.proxy = true;
+						Settings.https = false;
 					} else {
 						OAUTH = Settings.proxyOAuth;
 						API = Settings.proxyApi;
 						Settings.proxy = true;
+						Settings.https = false;
 					}
 				} else {
 					OAUTH = "https://oauth.vk.com:443";
 					API = "https://api.vk.com:443";
 					Settings.https = true;
+					Settings.proxy = false;
 				}
 
 			} else {
 				OAUTH = Settings.proxyOAuth;
 				API = Settings.proxyApi;
 				Settings.proxy = true;
+				Settings.https = false;
 			}
 		} else {
 			// API = Settings.https?"https://api.vk.com:443":Settings.proxyApi;
-			OAUTH = Settings.proxyOAuth;
-			API = Settings.proxyApi;
-			Settings.proxy = true;
+			if(Settings.proxy) {
+				if(Settings.https) {
+					OAUTH = VikaUtils.replace(Settings.proxyOAuth, "http:", "https:");
+					API = VikaUtils.replace(Settings.proxyApi, "http:", "https:");
+				} else {
+					OAUTH = Settings.proxyOAuth;
+					API = Settings.proxyApi;
+				}
+			} else if(Settings.https) {
+				OAUTH = Settings.httpsOAuth;
+				API = Settings.httpsApi;
+			} else {
+				OAUTH = Settings.httpsOAuth;
+				API = Settings.proxyApi;
+			}
 		}
 		try {
-
 			final VikaScreen canvas;
 			if (DEMO_MODE || getToken()) {
 				SplashScreen.currState = 5;

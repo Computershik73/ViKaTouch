@@ -49,7 +49,7 @@ public class VikaCanvasInst extends VikaCanvas {
 
 		DisplayUtils.canvas = this;
 
-		if(!(DisplayUtils.width < 240)) {
+		if(!(getWidth() < 240)) {
 			try {
 				InputStream in = this.getClass().getResourceAsStream("/loading.gif");
 				d = new GifDecoder();

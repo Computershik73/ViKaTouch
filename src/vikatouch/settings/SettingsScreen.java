@@ -484,7 +484,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 	}
 
 	public void onLeave() {
-		// Settings.saveSettings();
+		 Settings.saveSettings();
 	}
 
 }
