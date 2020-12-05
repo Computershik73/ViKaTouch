@@ -462,7 +462,8 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		else
 			hasBackButton = false;
 		try {
-			uiItems[currentItem].setSelected(false); // точно упадёт на старте - списка то ещё нет.
+			if(uiItems != null)
+				uiItems[currentItem].setSelected(false); // точно упадёт на старте - списка то ещё нет.
 		} catch (Throwable e) {
 		}
 		try {

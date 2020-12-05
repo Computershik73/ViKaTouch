@@ -236,7 +236,7 @@ public class VikaTouch {
 							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
 					.addField("2fa_supported", 1).addField("force_sms", 1));
 			VikaTouch.notificate(
-					new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "1" + tokenAnswer, null));
+					new VikaNotification(VikaNotification.ERROR, "Auth debug", "1" + tokenAnswer, null));
 			if (tokenAnswer == null && !Settings.proxy) {
 				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed",
 						"Connecting via proxy.", null));
@@ -251,7 +251,7 @@ public class VikaTouch {
 						.addField("2fa_supported", 1).addField("force_sms", 1));
 			}
 			VikaTouch.notificate(
-					new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "2" + tokenAnswer, null));
+					new VikaNotification(VikaNotification.ERROR, "Auth debug", "2" + tokenAnswer, null));
 			if (tokenAnswer == null) {
 				errReason = "Network error!";
 				return false;
@@ -267,34 +267,34 @@ public class VikaTouch {
 				}
 				errReason = tokenAnswer;
 				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "3" + tokenAnswer, null));
+						new VikaNotification(VikaNotification.ERROR, "Auth debug", "3" + tokenAnswer, null));
 				return false;
 			} else {
 				JSONObject json = new JSONObject(tokenAnswer);
 				accessToken = json.getString("access_token");
 				userId = json.getString("user_id");
 				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "4" + tokenAnswer, null));
+						new VikaNotification(VikaNotification.ERROR, "Auth debug", "4" + tokenAnswer, null));
 				refreshToken();
 				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "5" + tokenAnswer, null));
+						new VikaNotification(VikaNotification.ERROR, "Auth debug", "5" + tokenAnswer, null));
 				saveToken();
 				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "6" + tokenAnswer, null));
+						new VikaNotification(VikaNotification.ERROR, "Auth debug", "6" + tokenAnswer, null));
 				VikaUtils.download(new URLBuilder("groups.join").addField("group_id", 168202266));
 				MenuScreen canvas = menuScr = new MenuScreen();
 				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "7" + tokenAnswer, null));
+						new VikaNotification(VikaNotification.ERROR, "Auth debug", "7" + tokenAnswer, null));
 				setDisplay(canvas, 1);
 
 				Dialogs.refreshDialogsList(true, false);
 				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", "8" + tokenAnswer, null));
+						new VikaNotification(VikaNotification.ERROR, "Auth debug", "8" + tokenAnswer, null));
 				return true;
 			}
 		} catch (Throwable e) {
 			errReason = e.getMessage();
-			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed", errReason, null));
+			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Auth failed", errReason, null));
 			// VikaTouch.popup(new InfoPopup(e.toString(), null,
 			// TextLocal.inst.get("player.playererror"), null));
 			return false;
