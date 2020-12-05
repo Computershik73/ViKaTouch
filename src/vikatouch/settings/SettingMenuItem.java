@@ -29,6 +29,7 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	public String[] opts;
 	public int currentOption;
 	String help;
+	public boolean noyes;
 	
 	public int drawX; public int fillW; // for context menu
 	
@@ -64,12 +65,22 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
 	}
 	
+	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, String[] list, int curr, String info, boolean noyesset)
+	{
+		this.h = h;
+		this.optN = optN;
+		icon = ic;
+		text = title;
+		ss = s;
+		opts = list;
+		currentOption = curr;
+		help = info;
+		f = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
+		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
+		noyes = noyesset;
+	}
+	
 	public void paint(Graphics g, int y, int scrolled) {
-		/*if(ScrollableCanvas.keysMode && s)
-		{
-			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-			g.fillRect(drawX, y, fillW==0?DisplayUtils.width:fillW, h);
-		}*/
 		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && s)?ColorUtils.BUTTONCOLOR:0);
 		g.setFont((ScrollableCanvas.keysMode && s)?sf:f);
 		int x = drawX + 48;
@@ -101,7 +112,11 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 			OptionItem[] po = new OptionItem[opts.length];
 			for(int i=0;i<opts.length;i++)
 			{
-				po[i] = new OptionItem(this, opts[i], (currentOption==i)?IconsManager.APPLY:IconsManager.SETTINGS, i, 40);
+				if(noyes) {
+					po[i] = new OptionItem(this, opts[i], (i==0)?IconsManager.CLOSE : IconsManager.APPLY, i, 40);
+				} else {
+					po[i] = new OptionItem(this, opts[i], (currentOption==i)?IconsManager.APPLY:IconsManager.SETTINGS, i, 40);
+				}
 			}
 			VikaTouch.popup(new AutoContextMenu(po));
 		} else if(help!=null && key == KEY_FUNC)

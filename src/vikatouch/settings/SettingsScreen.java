@@ -39,12 +39,21 @@ public class SettingsScreen
 	{
 		super();
 		hasBackButton = true;
-		String[] eOd = new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") };
 		oneitemheight = (short) (DisplayUtils.compact?30:50);
 		backItem = new OptionItem(this, TextLocal.inst.get("back"), IconsManager.BACK, 0, oneitemheight);
+
 		
+		initAllSettsList();
+		
+		titleStr = TextLocal.inst.get("title.settings");
+		switchList(menuList);
+	}
+
+	private void initAllSettsList() {
+
+		String[] eOd = new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") };
 		String[] dialogsRR = new String[] { eOd[0], "5", "10", "20", "30" };
-		String[] notifModes = new String[] { "0", "1", "2" };
+		String[] notifModes = new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.vibro"), TextLocal.inst.get("settings.sound")};
 		
 		// частота обновления
 		int rr = -1;
@@ -90,114 +99,111 @@ public class SettingsScreen
 			j0 = countValDef;
 			Settings.dialogsLength = countVals[j0];
 		}
-		
 		menuList = new PressableUIItem[]
-		{
-			new OptionItem(this, TextLocal.inst.get("settings.system"), IconsManager.DEVICE, -100, oneitemheight),
-			new OptionItem(this, TextLocal.inst.get("settings.appearance"), IconsManager.MENU, -101, oneitemheight),
-			new OptionItem(this, TextLocal.inst.get("title.chats"), IconsManager.MSGS, -105, oneitemheight),
-			new OptionItem(this, TextLocal.inst.get("settings.media"), IconsManager.PLAY, -102, oneitemheight),
-			new OptionItem(this, TextLocal.inst.get("settings.spabilities"), IconsManager.FRIENDS, -103, oneitemheight),
-			new OptionItem(this, TextLocal.inst.get("settings.debug"), IconsManager.SETTINGS, -104, oneitemheight),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.sendlogs"), IconsManager.SEND, 12, 
-					oneitemheight, eOd, Settings.sendLogs?1:0, null),
-			new OptionItem(this, TextLocal.inst.get("settings.reset"), IconsManager.SETTINGS, -3, oneitemheight),
-			new OptionItem(this, TextLocal.inst.get("menu.about"), IconsManager.INFO, 31, oneitemheight),
-			new OptionItem(this, TextLocal.inst.get("settings.logout"), IconsManager.BACK, -1, oneitemheight),
-		};
-		systemList = new PressableUIItem[]
-		{
-			backItem,
-			new SettingMenuItem(this, TextLocal.inst.get("settings.connection"), IconsManager.LINK, 3, 
-					oneitemheight, new String[] { TextLocal.inst.get("settings.proxy"), TextLocal.inst.get("settings.directhttps") }, 
-					Settings.https?1:0, null),
-			
-			new SettingMenuItem(this, TextLocal.inst.get("settings.cacheimages"), IconsManager.PHOTOS, 1, 
-					oneitemheight, eOd, Settings.cacheImages?1:0, null),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.listslength"), IconsManager.MENU, 5, 
-				oneitemheight, countVals, j, null),
-			
-			
-		};
-		msgList = new PressableUIItem[]
-		{
-			backItem,
-			new SettingMenuItem(this, TextLocal.inst.get("settings.historycount"), IconsManager.MSGS, 6, 
-					oneitemheight, countVals, j, null),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.refreshrate"), IconsManager.REFRESH, 7, 
-				oneitemheight, refreshVals, rr, null),
-			//блять я тебя захуярю
-			/**/new SettingMenuItem(this, TextLocal.inst.get("settings.automarkasread"), IconsManager.APPLY, 15, 
-					oneitemheight, eOd, Settings.autoMarkAsRead?1:0, null),/**/
-			new SettingMenuItem(this, TextLocal.inst.get("settings.dialogscount"), IconsManager.MENU, 20, 
-					oneitemheight, countVals, j0, null),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.dialogsrefreshrate"), IconsManager.REFRESH, 21, 
-					oneitemheight, dialogsRR, Settings.dialogsRefreshRate, null),
+				{
+					new OptionItem(this, TextLocal.inst.get("settings.system"), IconsManager.DEVICE, -100, oneitemheight),
+					new OptionItem(this, TextLocal.inst.get("settings.appearance"), IconsManager.MENU, -101, oneitemheight),
+					new OptionItem(this, TextLocal.inst.get("title.chats"), IconsManager.MSGS, -105, oneitemheight),
+					new OptionItem(this, TextLocal.inst.get("settings.media"), IconsManager.PLAY, -102, oneitemheight),
+					new OptionItem(this, TextLocal.inst.get("settings.spabilities"), IconsManager.FRIENDS, -103, oneitemheight),
+					new OptionItem(this, TextLocal.inst.get("settings.debug"), IconsManager.SETTINGS, -104, oneitemheight),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.sendlogs"), IconsManager.SEND, 12, 
+							oneitemheight, eOd, Settings.sendLogs?1:0, null),
+					new OptionItem(this, TextLocal.inst.get("settings.reset"), IconsManager.SETTINGS, -3, oneitemheight),
+					new OptionItem(this, TextLocal.inst.get("menu.about"), IconsManager.INFO, 31, oneitemheight),
+					new OptionItem(this, TextLocal.inst.get("settings.logout"), IconsManager.BACK, -1, oneitemheight),
+				};
+				systemList = new PressableUIItem[]
+				{
+					backItem,
+					new SettingMenuItem(this, TextLocal.inst.get("settings.connection"), IconsManager.LINK, 3, 
+							oneitemheight, new String[] { TextLocal.inst.get("settings.proxy"), TextLocal.inst.get("settings.directhttps") }, 
+							Settings.https?1:0, null),
+					
+					//new SettingMenuItem(this, TextLocal.inst.get("settings.cacheimages"), IconsManager.PHOTOS, 1, 
+					//		oneitemheight, eOd, Settings.cacheImages?1:0, null, true),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.listslength"), IconsManager.MENU, 5, 
+						oneitemheight, countVals, j, null),
+					
+					
+				};
+				msgList = new PressableUIItem[]
+				{
+					backItem,
+					new SettingMenuItem(this, TextLocal.inst.get("settings.historycount"), IconsManager.MSGS, 6, 
+							oneitemheight, countVals, j, null),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.refreshrate"), IconsManager.REFRESH, 7, 
+						oneitemheight, refreshVals, rr, null),
+					//блять я тебя захуярю
+					/**/new SettingMenuItem(this, TextLocal.inst.get("settings.automarkasread"), IconsManager.APPLY, 15, 
+							oneitemheight, eOd, Settings.autoMarkAsRead?1:0, null, true),/**/
+					new SettingMenuItem(this, TextLocal.inst.get("settings.dialogscount"), IconsManager.MENU, 20, 
+							oneitemheight, countVals, j0, null),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.dialogsrefreshrate"), IconsManager.REFRESH, 21, 
+							oneitemheight, dialogsRR, Settings.dialogsRefreshRate, null),
 
-			new SettingMenuItem(this, TextLocal.inst.get("settings.notificationmode"), IconsManager.REFRESH, 22, 
-					oneitemheight, notifModes, Settings.notifmode, null),
-		};
-		mediaList = new PressableUIItem[]
-		{
-			backItem,
-			new OptionItem(this, TextLocal.inst.get("settings.videoresolution"), IconsManager.VIDEOS, 21, oneitemheight),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.audio"), IconsManager.MUSIC, 9, 
-					oneitemheight, new String[] { TextLocal.inst.get("settings.audioc.0"), TextLocal.inst.get("settings.audioc.1"),
-							TextLocal.inst.get("settings.audioc.2"), TextLocal.inst.get("settings.audioc.3"),
-							TextLocal.inst.get("settings.audioc.4"), TextLocal.inst.get("settings.audioc.5"),
-							TextLocal.inst.get("settings.audioc.6"), TextLocal.inst.get("settings.audioc.7")}, 
-					Settings.audioMode, null), // Это все способы открыть аудио. В теории. UPD: ну-ну.
-			new SettingMenuItem(this, TextLocal.inst.get("settings.rtsp"), IconsManager.LINK, 13, 
-					oneitemheight, new String[] { TextLocal.inst.get("settings.rtspc.0"), TextLocal.inst.get("settings.rtspc.1"),
-							TextLocal.inst.get("settings.rtspc.2") }, 
-					Settings.rtspMethod, null),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.loadmusicviahttp"), IconsManager.DOWNLOAD, 16, 
-					oneitemheight, new String[] { TextLocal.inst.get("settings.auto"), "HTTP", "HTTPS" }, 
-					Settings.loadMusicViaHttp, null),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.dontloadmusicwithkey"), IconsManager.DOWNLOAD, 18, 
-					oneitemheight, new String[] { TextLocal.inst.get("settings.auto"), TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") }, 
-					Settings.loadMusicWithKey, null),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.itunescovers"), IconsManager.PHOTOS, 17, 
-					oneitemheight, eOd, 
-					Settings.loadITunesCovers?1:0, null),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.youtube"), IconsManager.PLAY, 14, 
-					oneitemheight, new String[] { "m.youtube.com", "SymTube" }, 
-					Settings.https?1:0, null),
-		};
-		specialAbilitiesList = new PressableUIItem[]
-		{
-			backItem,
-			new SettingMenuItem(this, TextLocal.inst.get("settings.sensor"), IconsManager.DEVICE, 4, 
-					oneitemheight, new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.j2meloader"), TextLocal.inst.get("settings.resistive"), TextLocal.inst.get("settings.kemulator") }, 
-					Settings.sensorMode, TextLocal.inst.get("settings.sensorInfo")),
-			
+					new SettingMenuItem(this, TextLocal.inst.get("settings.notificationmode"), IconsManager.REFRESH, 22, 
+							oneitemheight, notifModes, Settings.notifmode, null),
+				};
+				mediaList = new PressableUIItem[]
+				{
+					backItem,
+					new OptionItem(this, TextLocal.inst.get("settings.videoresolution"), IconsManager.VIDEOS, 21, oneitemheight),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.audio"), IconsManager.MUSIC, 9, 
+							oneitemheight, new String[] { TextLocal.inst.get("settings.audioc.0"), TextLocal.inst.get("settings.audioc.1"),
+									TextLocal.inst.get("settings.audioc.2"), TextLocal.inst.get("settings.audioc.3"),
+									TextLocal.inst.get("settings.audioc.4"), TextLocal.inst.get("settings.audioc.5"),
+									TextLocal.inst.get("settings.audioc.6"), TextLocal.inst.get("settings.audioc.7")}, 
+							Settings.audioMode, null), // Это все способы открыть аудио. В теории. UPD: ну-ну.
+					new SettingMenuItem(this, TextLocal.inst.get("settings.rtsp"), IconsManager.LINK, 13, 
+							oneitemheight, new String[] { TextLocal.inst.get("settings.rtspc.0"), TextLocal.inst.get("settings.rtspc.1"),
+									TextLocal.inst.get("settings.rtspc.2") }, 
+							Settings.rtspMethod, null),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.loadmusicviahttp"), IconsManager.DOWNLOAD, 16, 
+							oneitemheight, new String[] { TextLocal.inst.get("settings.auto"), "HTTP", "HTTPS" }, 
+							Settings.loadMusicViaHttp, null),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.dontloadmusicwithkey"), IconsManager.DOWNLOAD, 18, 
+							oneitemheight, new String[] { TextLocal.inst.get("settings.auto"), TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") }, 
+							Settings.loadMusicWithKey, null),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.itunescovers"), IconsManager.PHOTOS, 17, 
+							oneitemheight, eOd, 
+							Settings.loadITunesCovers?1:0, null, true),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.youtube"), IconsManager.PLAY, 14, 
+							oneitemheight, new String[] { "m.youtube.com", "SymTube" }, 
+							Settings.https?1:0, null),
+				};
+				specialAbilitiesList = new PressableUIItem[]
+				{
+					backItem,
+					new SettingMenuItem(this, TextLocal.inst.get("settings.sensor"), IconsManager.DEVICE, 4, 
+							oneitemheight, new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.j2meloader"), TextLocal.inst.get("settings.resistive"), TextLocal.inst.get("settings.kemulator") }, 
+							Settings.sensorMode, TextLocal.inst.get("settings.sensorInfo")),
+					
 
-			new SettingMenuItem(this, TextLocal.inst.get("settings.dontloadavas"), IconsManager.PHOTOS, 2, 
-					oneitemheight, eOd, Settings.dontLoadAvas?1:0, null),
-		};
+					new SettingMenuItem(this, TextLocal.inst.get("settings.dontloadavas"), IconsManager.PHOTOS, 2, 
+							oneitemheight, eOd, Settings.dontLoadAvas?1:0, null, true),
+				};
 
-		debugList = new PressableUIItem[]
-		{
-			backItem,
-			//new OptionItem(this, TextLocal.inst.get("settings.clearсache"), IconsManager.CLOSE, -2, oneitemheight),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.debugcrap"), IconsManager.DEVICE, 10, 
-					oneitemheight, eOd, Settings.debugInfo?1:0, null),
-		};
-		uiList = new PressableUIItem[]
-		{
-			backItem,
-			/*new SettingMenuItem(this, TextLocal.inst.get("settings.transitionanimation"), IconsManager.ANIMATION, 0, 
-				oneitemheight, eOd, Settings.animateTransition?1:0, null),
-			*/
-			// как известно, анимация давно сломанна, да и вообще в ней нет смысла т.к. при открытии экрана всё лагает.
-			
-			new OptionItem(this, TextLocal.inst.get("settings.language"), IconsManager.EDIT, 23, oneitemheight),
-			new SettingMenuItem(this, TextLocal.inst.get("settings.vibontouch"), IconsManager.DEVICE, 19, 
-					oneitemheight, eOd, Settings.vibOnTouch?1:0, null)
-		};
+				debugList = new PressableUIItem[]
+				{
+					backItem,
+					//new OptionItem(this, TextLocal.inst.get("settings.clearсache"), IconsManager.CLOSE, -2, oneitemheight),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.debugcrap"), IconsManager.DEVICE, 10, 
+							oneitemheight, eOd, Settings.debugInfo?1:0, null, true),
+				};
+				uiList = new PressableUIItem[]
+				{
+					backItem,
+					/*new SettingMenuItem(this, TextLocal.inst.get("settings.transitionanimation"), IconsManager.ANIMATION, 0, 
+						oneitemheight, eOd, Settings.animateTransition?1:0, null),
+					*/
+					// как известно, анимация давно сломанна, да и вообще в ней нет смысла т.к. при открытии экрана всё лагает.
+					
+					new OptionItem(this, TextLocal.inst.get("settings.language"), IconsManager.EDIT, 23, oneitemheight),
+					new SettingMenuItem(this, TextLocal.inst.get("settings.vibontouch"), IconsManager.DEVICE, 19, 
+							oneitemheight, eOd, Settings.vibOnTouch?1:0, null, true)
+				};
 		
-		titleStr = TextLocal.inst.get("title.settings");
-		switchList(menuList);
 	}
 
 	public void draw(Graphics g)
@@ -376,7 +382,8 @@ public class SettingsScreen
 				Settings.notifmode = var;
 			}
 		}
-		Settings.saveSettings();
+		initAllSettsList();
+		//Settings.saveSettings();
 		// а вариант "поменял настройку и закрыл приложение" не? Оно кст и не работало, т.к. 14 команда давно не используется. И вообще, точно ли тот командИмпл нужен, когда всё кругом на оптион айтемах с их IMenu...
 	}
 
@@ -507,7 +514,7 @@ public class SettingsScreen
 			String[] res = new String[] { "240", "360", "480", "720" };
 			Settings.setted = true;
 			Settings.videoResolution = res[j];
-			Settings.saveSettings();
+			//Settings.saveSettings();
 		}
 		if(i>=1&&i<=9)
 		{
@@ -522,9 +529,11 @@ public class SettingsScreen
 					VikaTouch.appInst.destroyApp(false);
 				}
 			}, "Restart required", "Restart"));*/
-			Settings.saveSettings();
+			//Settings.saveSettings();
 			VikaTouch.popup(new InfoPopup("Settings will be applied after restart", null, "","OK"));
 		}
+
+		initAllSettsList();
 	}
 
 	private void switchList(PressableUIItem[] l) {
@@ -560,7 +569,7 @@ public class SettingsScreen
 	
 	public void onLeave()
 	{
-		Settings.saveSettings();
+	//	Settings.saveSettings();
 	}
 
 }

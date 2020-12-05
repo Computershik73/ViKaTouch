@@ -1059,7 +1059,7 @@ public class VikaTouch
 
 	public void stop()
 	{
-		//Settings.saveSettings();
+		Settings.saveSettings();
 		if(VikaTouch.accessToken != null && VikaTouch.accessToken != "")
 		{
 			try

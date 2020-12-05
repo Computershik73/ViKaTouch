@@ -1,7 +1,6 @@
 #info:
 #русский
 #оригинальный язык
-#совместимо с: 2.8.7
 #авторы shinovon, Feodor0090
 #
 #вк авторов:
@@ -222,7 +221,7 @@ settings.media=Медиа
 settings.help=Справка
 settings.auto=Автоматически
 settings.enabled=Вкл.
-settings.disabled=Отключено
+settings.disabled=Откл.
 settings.directhttps=Напрямую через https
 settings.proxy=Через прокси
 settings.connection=Подключение
@@ -271,6 +270,10 @@ settings.automarkasread=Помечать сообщения как прочит�
 settings.vibontouch=Вибрация при касаниях
 settings.dialogscount=Количество диалогов
 settings.dialogsrefreshrate=Частота обновления диалогов (с)
+settings.kemulator=KEmulator
+settings.notificationmode=Режим уведомлений
+settings.vibro=Вибрация
+settings.sound=Звук
 
 back=Назад
 select=Выбрать

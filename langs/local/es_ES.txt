@@ -1,7 +1,5 @@
 #info:
 #español
-#оригинальный язык
-#совместимо с: пре-бета 2.8.7
 #автор: Илья Высоцкий, Jazminrocio
 #
 #вк автора:
@@ -270,7 +268,7 @@ settings.audioc.1=Guardar caché en RAM y reproducir
 settings.audioc.2=Guardar caché en el móvil y jugar 
 settings.audioc.3=Guardar caché en la memoria del teléfono y abrir 
 settings.audioc.4=Reproducir en el reproductor del sistema 
-settings.audioc.5=Reproductor Nativo en Linea(symbian) 
+settings.audioc.5=Reproductor Nativo en Linea (symbian) 
 settings.audioc.6=Reproducir en VLC (KEmulator)
 settings.audioc.7=Descargar por el navegador
 settings.spabilities=Accesibilidad
@@ -284,6 +282,7 @@ settings.automarkasread=Marcar mensajes como leídos
 settings.dialogscount=Numero de diálogos 
 settings.dialogsrefreshrate=Tiempo de actualizacion de dialogos 
 settings.vibontouch=Vibración al tacto 
+settings.kemulator=KEmulator
 
 back=Atrás
 select=Seleccionar

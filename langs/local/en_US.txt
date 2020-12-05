@@ -1,6 +1,4 @@
 #info:
-#english
-#compatible with: pre-beta 2.7.11
 #English (US)
 #authors: shinovon
 #
@@ -240,12 +238,13 @@ settings.audio=Audio play method
 settings.apiproxy=Api Proxy
 settings.authproxy=OAuth Proxy
 settings.language=Language
-settings.audioc.0=Play online
 settings.audioc.1=Cache into RAM and play
-settings.audioc.2=Cache into phone memory and play
-settings.audioc.3=Play in system player
-settings.audioc.4=Run VLC
-settings.audioc.5=Download file via browser
+settings.audioc.2=Cache into file and play
+settings.audioc.3=Cache into file and open
+settings.audioc.4=Cache and play in system player
+settings.audioc.5=Play in system player
+settings.audioc.6=Play in VLC [KEmulator]
+settings.audioc.7=Download file via browser
 settings.spabilities=Special abilities
 settings.debug=Debug
 settings.debugcrap=Debug information on display
@@ -254,6 +253,10 @@ settings.itunescovers=Look for covers in ITunes
 settings.loadmusicviahttp=Using protocol
 settings.datafolder=Data folder
 settings.automarkasread=Mark messages as read
+settings.kemulator=KEmulator
+settings.notificationmode=Notification mode
+settings.vibro=Vibration
+settings.sound=Sound
 
 back=Back
 select=Select
