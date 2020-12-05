@@ -1,6 +1,6 @@
 VikaTouch-Edition: openbeta
 Nokia-MIDlet-Background-Event: run
-MIDlet-Version: 2.8.11
+MIDlet-Version: 2.8.12
 MIDlet-Info-URL: http://vikamobile.ru
 Manifest-Version: 1.0
 MicroEdition-Configuration: CLDC-1.1

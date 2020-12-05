@@ -6,6 +6,7 @@ import java.util.Random;
 
 import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.Connector;
+import javax.microedition.io.SocketConnection;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
@@ -527,10 +528,66 @@ public class VikaTouch {
 		} catch (Exception e) {
 		}
 	}
+<<<<<<< Updated upstream
 
 	public static void sendLog(String action, String x) {
 		String main = action + ": ViKa Touch " + getRelease() + " Version: " + getVersion() + ", device: "
 				+ mobilePlatform;
+=======
+	
+	public static void notify (String type, String title, String subtitle) {
+		String reply = "";
+		int ch;
+		SocketConnection socket = null;
+		OutputStream os = null;
+		//InputStream is = null;
+		try {
+			socket =(SocketConnection)Connector.open("socket://127.0.0.1:2020");
+		    String request = //"ViKaNotification\nName=ViKa Touch\nTitle="+title+"\nSubTitle=Test\nMaskIconName=\nBadgeType=0\nBadgeNumber=0\nUseNotification\nUsePopup\nUseLockScreen\nUsePopup\nCloseOnTap\nUseVibration\nOverrideFormat\nStatusIcon=69\nUserData={\"key\":\"value\"}"; 
+		    		"ViKaNotification\nName="+title+"\nTitle="+title+"\nSubTitle="+subtitle+"\nMaskIconName=\nBadgeType=2\nBadgeNumber=1\nUseNotification\nUseLockScreen\nUserData={\"key\":\""+title+"\"}\nStatusIcon=69\nUseLight\nUseAudio\nAudioPath=\nUseVibration\nCloseOnTap\nSecondsFromNow=1";
+		   // socket = (SocketConnection)Connector.open(name, Connector.READ_WRITE, true);
+		    os = socket.openOutputStream();
+		    os.write(request.getBytes("UTF-8"));
+		  //  is = socket.openInputStream();                
+		   /* while( true) {                           
+		        ch = is.read(); 
+		        if(ch == -1) break;
+		        if(ch < 0 && ch != -1){
+		            break;
+		        }
+		        reply += (char) ch;
+		        if(ch == '?'){
+		            break;
+		        }
+		    }*/
+		   // socketReply(GlobalFunctions.Split(reply, "|"));                    
+		} catch (IOException ex){
+		   // socketError("Error: " + ex);
+		} catch (NullPointerException ex){
+		    //socketError("Error: " + ex);
+		} catch (ArrayIndexOutOfBoundsException ex){
+		   // socketError("Error: " + ex);
+		} catch (StringIndexOutOfBoundsException ex){
+		    //socketError("Error: " + ex);
+		} catch (Exception ex){
+		   // socketError("Error: " + ex);
+		} finally {
+		    try {
+		        // Close open streams and the socket
+		     //   is.close();
+		        os.close();                
+		        socket.close();
+		    } catch (IOException ex) {
+		        ex.printStackTrace();
+		    }
+		}
+	}
+	
+	
+	public static void sendLog(String action, String x)
+	{
+		String main = action + ": ViKa Touch " + getRelease() + " Version: " + getVersion() + ", device: " + mobilePlatform;
+>>>>>>> Stashed changes
 		String details = "";
 		sendLog(main + details + ".\n" + x);
 	}
