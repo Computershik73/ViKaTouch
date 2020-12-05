@@ -141,7 +141,7 @@ public class ChatScreen extends MainScreen {
 		title2 = TextLocal.inst.get("title2.loading");
 		this.title = title;
 		this.peerId = peerId;
-		VikaTouch.sendLog(String.valueOf(this.title) + " " + String.valueOf(this.peerId));
+		//VikaTouch.sendLog(String.valueOf(this.title) + " " + String.valueOf(this.peerId));
 		parse();
 	}
 
