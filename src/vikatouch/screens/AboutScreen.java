@@ -1,15 +1,8 @@
 package vikatouch.screens;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.microedition.io.Connector;
-import javax.microedition.io.SocketConnection;
-import javax.microedition.io.StreamConnection;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
@@ -36,7 +29,6 @@ public class AboutScreen extends ScrollableCanvas {
 	private static String devsStr;
 	private static String teamStr;
 	private String testersStr;
-	String recx;
 
 	public AboutScreen() {
 		super();
@@ -93,9 +85,6 @@ public class AboutScreen extends ScrollableCanvas {
 			g.drawString("rilliane829", 32, 48 + (11 * 24), 0);
 			g.drawString("nikitashustol", 32, 48 + (12 * 24), 0);
 			g.drawString("rehdzi", 32, 48 + (13 * 24), 0);
-			if (recx!=null) {
-			g.drawString(recx, 32, 48 + (14 * 24), 0);
-			}
 		}
 
 		g.translate(0, -g.getTranslateY());

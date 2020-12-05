@@ -92,19 +92,10 @@ public class Dialogs extends TimerTask {
 								dialogs[i].disposeJson();
 								item.dispose("item for");
 							}
-<<<<<<< Updated upstream
 							if (sendNofs && hasNew && dialogs.length > 1 && dialogs[0] != null
 									&& !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId)) {
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,
 										VikaUtils.cut(dialogs[0].text, 40), VikaTouch.dialogsScr));
-=======
-							if(sendNofs && hasNew && dialogs.length>1 && dialogs[0]!=null && !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId))
-							{
-								//VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40), VikaTouch.dialogsScr));
-								VikaTouch.notify("type", dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40));
-								//VikaTouch.notify("type", dialogs[1].title, VikaUtils.cut(dialogs[1].text, 40));
-								
->>>>>>> Stashed changes
 							}
 							items.dispose("items");
 							x = null;
