@@ -11,15 +11,15 @@ import vikatouch.music.MusicPlayer;
 public class MusicMenuItem extends OptionItem {
 
 	public String origStr;
+
 	public MusicMenuItem(IMenu m, String t, int ic, int i, int h) {
 		super(m, t, ic, i, h);
 		origStr = t;
 	}
-	
-	public void paint(Graphics g, int y, int scrolled)
-	{
-		icon = (MusicPlayer.inst==null)?IconsManager.MUSIC:IconsManager.PLAY;
-		text = (MusicPlayer.inst==null)?origStr:(origStr+" ("+MusicPlayer.inst.title+")");
+
+	public void paint(Graphics g, int y, int scrolled) {
+		icon = (MusicPlayer.inst == null) ? IconsManager.MUSIC : IconsManager.PLAY;
+		text = (MusicPlayer.inst == null) ? origStr : (origStr + " (" + MusicPlayer.inst.title + ")");
 		super.paint(g, y, scrolled);
 	}
 

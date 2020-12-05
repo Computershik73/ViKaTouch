@@ -15,28 +15,26 @@ public class ContextMenu extends VikaNotice {
 	public OptionItem[] items;
 	public int selected = 0;
 	private boolean dragging;
-	
-	public ContextMenu(OptionItem[] list) 
-	{
+
+	public ContextMenu(OptionItem[] list) {
 		items = list;
-		if(ScrollableCanvas.keysMode)
+		if (ScrollableCanvas.keysMode)
 			items[selected].setSelected(true);
 	}
-	
+
 	public void draw(Graphics g) {
 		int itemsH = 16; // margin = 8
-		int width = Math.min(DisplayUtils.width-8, 350);
-		int x = DisplayUtils.width/2 - width/2;
-		for(int i=0; i < items.length; i++)
-		{
-			items[i].drawX = x+8;
-			items[i].fillW = width-16;
+		int width = Math.min(DisplayUtils.width - 8, 350);
+		int x = DisplayUtils.width / 2 - width / 2;
+		for (int i = 0; i < items.length; i++) {
+			items[i].drawX = x + 8;
+			items[i].fillW = width - 16;
 			itemsH = itemsH + items[i].getDrawHeight();
 		}
-		
+
 		int th = itemsH;
-		int y = DisplayUtils.height/2 - th/2;
-		
+		int y = DisplayUtils.height / 2 - th / 2;
+
 		// BG
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRoundRect(x, y, width, th, 16, 16);
@@ -44,96 +42,80 @@ public class ContextMenu extends VikaNotice {
 		g.setStrokeStyle(Graphics.SOLID);
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawRoundRect(x, y, width, th, 16, 16);
-		
+
 		int cy = 8 + y;
-		for(int i=0; i < items.length; i++)
-		{
+		for (int i = 0; i < items.length; i++) {
 			items[i].paint(g, cy, 0);
 			cy = cy + items[i].getDrawHeight();
 		}
 	}
-	
-	public void press(int key)
-	{
+
+	public void press(int key) {
 		ScrollableCanvas.keysMode = true;
-		try
-		{
-			if(key == PressableUIItem.KEY_OK)
-			{
+		try {
+			if (key == PressableUIItem.KEY_OK) {
 				VikaTouch.canvas.currentAlert = null;
 				items[selected].keyPressed(PressableUIItem.KEY_OK);
-			}
-			else if(key == -1)
-			{
+			} else if (key == -1) {
 				items[selected].setSelected(false);
-				selected--; 
-				if(selected<0) selected = items.length-1;
+				selected--;
+				if (selected < 0)
+					selected = items.length - 1;
 				items[selected].setSelected(true);
-			}
-			else if(key == -2)
-			{
+			} else if (key == -2) {
 				items[selected].setSelected(false);
 				selected++;
-				if(selected>=items.length) selected = 0;
+				if (selected >= items.length)
+					selected = 0;
 				items[selected].setSelected(true);
-			}
-			else if(key == PressableUIItem.KEY_RFUNC)
-			{
+			} else if (key == PressableUIItem.KEY_RFUNC) {
 				VikaTouch.canvas.currentAlert = null;
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void press(int x, int y)
-	{
-		lastx = x; lasty = y;
+
+	public void press(int x, int y) {
+		lastx = x;
+		lasty = y;
 		dragging = false;
 	}
-	
-	int lastx=0, lasty=0;
-	
-	public void drag(int x, int y)
-	{
-		if(Math.abs(x-lastx)>3||Math.abs(y-lasty)>3)
-		{
+
+	int lastx = 0, lasty = 0;
+
+	public void drag(int x, int y) {
+		if (Math.abs(x - lastx) > 3 || Math.abs(y - lasty) > 3) {
 			dragging = true;
 		}
 	}
-	public void release(int x, int y)
-	{
-		if(dragging)
+
+	public void release(int x, int y) {
+		if (dragging)
 			return;
 		int margin = 8;
 		int itemsH = margin * 2; // margin = 8
-		int width = Math.min(DisplayUtils.width-8, 350);
-		int rx = DisplayUtils.width/2 - width/2;
-		for(int i=0; i < items.length; i++)
-		{
-			items[i].drawX = x+margin;
-			items[i].fillW = width-margin * 2;
+		int width = Math.min(DisplayUtils.width - 8, 350);
+		int rx = DisplayUtils.width / 2 - width / 2;
+		for (int i = 0; i < items.length; i++) {
+			items[i].drawX = x + margin;
+			items[i].fillW = width - margin * 2;
 			itemsH = itemsH + items[i].getDrawHeight();
 		}
-		
+
 		int th = itemsH;
-		int ry = DisplayUtils.height/2 - th/2;
-		
-		if(x < rx || x > rx + width || y < ry || y > ry + th)
-		{
+		int ry = DisplayUtils.height / 2 - th / 2;
+
+		if (x < rx || x > rx + width || y < ry || y > ry + th) {
 			VikaTouch.canvas.currentAlert = null;
 			return;
 		}
-		
+
 		int tapY = y - ry;
 		int currY = margin;
-		for(int i=0; i < items.length; i++) 
-		{
+		for (int i = 0; i < items.length; i++) {
 			int h = items[i].getDrawHeight();
-			if(tapY>currY&&tapY<currY+h)
-			{
+			if (tapY > currY && tapY < currY + h) {
 				VikaTouch.canvas.currentAlert = null;
 				items[i].tap(x - rx, tapY - currY);
 				return;

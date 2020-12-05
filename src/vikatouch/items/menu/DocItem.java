@@ -25,9 +25,7 @@ import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 
-public class DocItem
-	extends JSONUIItem implements ISocialable
-{
+public class DocItem extends JSONUIItem implements ISocialable {
 	public String name;
 	public String url;
 	private String iconUrl;
@@ -39,12 +37,12 @@ public class DocItem
 	private String ext;
 	private int type;
 	private String time;
-	
-	//private static Image downloadBI = null;
+
+	// private static Image downloadBI = null;
 
 	public static final int BORDER = 1;
 
-	//типы вложения
+	// типы вложения
 	private static final int TYPE_TEXT = 1;
 	private static final int TYPE_ARCHIVE = 2;
 	private static final int TYPE_GIF = 3;
@@ -54,7 +52,7 @@ public class DocItem
 	private static final int TYPE_EBOOK = 7;
 	private static final int TYPE_UNKNOWN = 8;
 	private static final int TYPE_UNDEFINED = 0;
-	
+
 	private static Image doczipImg;
 	private static Image docsisImg;
 	private static Image docjarImg;
@@ -63,14 +61,11 @@ public class DocItem
 	private static Image docfileImg;
 	private static Image doctxtImg;
 
-	public DocItem(JSONObject json)
-	{
+	public DocItem(JSONObject json) {
 		super(json);
 		itemDrawHeight = 50;
-		try
-		{
-			if(doczipImg == null)
-			{
+		try {
+			if (doczipImg == null) {
 				doczipImg = ResizeUtils.resizeItemPreview(Image.createImage("/doczip.png"));
 				docsisImg = ResizeUtils.resizeItemPreview(Image.createImage("/docsis.png"));
 				doctxtImg = ResizeUtils.resizeItemPreview(Image.createImage("/doctxt.png"));
@@ -79,19 +74,15 @@ public class DocItem
 				docvidImg = ResizeUtils.resizeItemPreview(Image.createImage("/docvid.png"));
 				docjarImg = ResizeUtils.resizeItemPreview(Image.createImage("/docjar.png"));
 			}
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void parseJSON()
-	{
-		//System.out.println(json.toString());
+	public void parseJSON() {
+		// System.out.println(json.toString());
 
-		try
-		{
+		try {
 			date = json.optInt("date");
 			name = json.optString("title");
 			url = fixJSONString(json.optString("url"));
@@ -99,64 +90,48 @@ public class DocItem
 			ext = json.optString("ext");
 			type = json.optInt("type");
 
-			if(!json.isNull("preview"))
-			{
-				prevSizes = PhotoSize.parseSizes(json.getJSONObject("preview").getJSONObject("photo").getJSONArray("sizes"));
+			if (!json.isNull("preview")) {
+				prevSizes = PhotoSize
+						.parseSizes(json.getJSONObject("preview").getJSONObject("photo").getJSONArray("sizes"));
 
 				PhotoSize iconPs = null;
 				PhotoSize prevPs = null;
 
-				try
-				{
+				try {
 					iconPs = PhotoSize.getSize(prevSizes, "s");
-					if(iconPs==null) throw new Exception();
-				}
-				catch (Exception e)
-				{
-					try
-					{
+					if (iconPs == null)
+						throw new Exception();
+				} catch (Exception e) {
+					try {
 						iconPs = PhotoSize.getSize(prevSizes, "d");
-					}
-					catch (Exception e3)
-					{
+					} catch (Exception e3) {
 						e3.printStackTrace();
 					}
 				}
-				try
-				{
+				try {
 					prevPs = PhotoSize.getSize(prevSizes, "x");
-					if(prevPs==null) throw new Exception();
-				}
-				catch (Exception e1)
-				{
-					try
-					{
+					if (prevPs == null)
+						throw new Exception();
+				} catch (Exception e1) {
+					try {
 						prevPs = PhotoSize.getSize(prevSizes, "o");
-					}
-					catch (Exception e2)
-					{
-						//не достучались до превьюхи..
+					} catch (Exception e2) {
+						// не достучались до превьюхи..
 					}
 				}
 
-				if(iconPs != null)
-				{
+				if (iconPs != null) {
 					iconUrl = fixJSONString(iconPs.url);
 				}
 
-				if(prevPs != null)
-				{
+				if (prevPs != null) {
 					prevImgUrl = fixJSONString(prevPs.url);
 				}
 			}
-		}
-		catch (JSONException e)
-		{
-			//e.printStackTrace();
-			//Предпросмотр не завезли - видимо не картинка. Ну и ладно.
-		}
-		catch (Exception e)
-		{
+		} catch (JSONException e) {
+			// e.printStackTrace();
+			// Предпросмотр не завезли - видимо не картинка. Ну и ладно.
+		} catch (Exception e) {
 			e.printStackTrace();
 			VikaTouch.error(e, ErrorCodes.DOCPARSE);
 		}
@@ -166,152 +141,128 @@ public class DocItem
 		System.gc();
 	}
 
-	private void setDrawHeight()
-	{
+	private void setDrawHeight() {
 		itemDrawHeight = 50 + (BORDER * 2);
 	}
 
-	public void paint(Graphics g, int y, int scrolled)
-	{
-		if(ScrollableCanvas.keysMode && selected)
-		{
+	public void paint(Graphics g, int y, int scrolled) {
+		if (ScrollableCanvas.keysMode && selected) {
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 			g.fillRect(0, y, DisplayUtils.width, itemDrawHeight);
 		}
-		
-		if(iconImg == null)
+
+		if (iconImg == null)
 			iconImg = getIcon();
 
-		if(time == null)
+		if (time == null)
 			time = getTime();
 		ColorUtils.setcolor(g, 0);
-		if(name != null)
+		if (name != null)
 			g.drawString(name, 73, y, 0);
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
 		g.drawString(size / 1000 + "кб, " + time, 73, y + 24, 0);
-		if(iconImg != null)
-		{
+		if (iconImg != null) {
 			g.drawImage(iconImg, 14, y + BORDER, 0);
 		}
-		if(!ScrollableCanvas.keysMode)
-		{
-			try
-			{
-				//if(downloadBI == null)
-				//{
-				//	downloadBI = Image.createImage("/downloadBtn.png");
-				//}
+		if (!ScrollableCanvas.keysMode) {
+			try {
+				// if(downloadBI == null)
+				// {
+				// downloadBI = Image.createImage("/downloadBtn.png");
+				// }
 				int iy = (itemDrawHeight - 24) / 2;
-				if(iy < 0)
+				if (iy < 0)
 					iy = 0;
 				iy += y;
 				g.drawImage(IconsManager.ico[IconsManager.DOWNLOAD], DisplayUtils.width - 24, y, 0);
-			} 
-			catch (Exception e)
-			{
-				
+			} catch (Exception e) {
+
 			}
 		}
 	}
 
-	private Image getIcon()
-	{
+	private Image getIcon() {
 		Image img = null;
-		try
-		{
+		try {
 			img = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(iconUrl));
-		}
-		catch (Exception e)
-		{
-			try
-			{
-				switch(type)
-				{
-					case TYPE_PHOTO:
-					case TYPE_GIF:
-						return VikaTouch.cameraImg;
-					case TYPE_AUDIO:
-						return docmusImg;
-					case TYPE_VIDEO:
-						return docvidImg;
-					case TYPE_ARCHIVE:
-						if(ext.toLowerCase().indexOf("sis") != VikaTouch.INDEX_FALSE)
-						{
-							return docsisImg;
-						}
-						else
-							return doczipImg;
-					case TYPE_TEXT:
-					case TYPE_EBOOK:
-						return doctxtImg;
-					case TYPE_UNKNOWN:
-					case TYPE_UNDEFINED:
-					default:
-						if(ext.toLowerCase().indexOf("jar") != VikaTouch.INDEX_FALSE || ext.toLowerCase().indexOf("jad") != VikaTouch.INDEX_FALSE)
-						{
-							return docjarImg;
-						}
-						else if(ext.toLowerCase().indexOf("sis") != VikaTouch.INDEX_FALSE)
-						{
-							return docsisImg;
-						}
-						else if(ext.toLowerCase().indexOf("rar") != VikaTouch.INDEX_FALSE || ext.toLowerCase().indexOf("zip") != VikaTouch.INDEX_FALSE || ext.toLowerCase().indexOf("tar") != VikaTouch.INDEX_FALSE || ext.toLowerCase().indexOf("7z") != VikaTouch.INDEX_FALSE)
-						{
-							return doczipImg;
-						}
-						/*else if(ext.toLowerCase().indexOf("torrent") != VikaTouch.INDEX_FALSE)
-						{
-							return ResizeUtils.resizeItemPreview(Image.createImage("/doctorr.png"));
-						}*/
-						else
-						{
-							return docfileImg;
-						}
+		} catch (Exception e) {
+			try {
+				switch (type) {
+				case TYPE_PHOTO:
+				case TYPE_GIF:
+					return VikaTouch.cameraImg;
+				case TYPE_AUDIO:
+					return docmusImg;
+				case TYPE_VIDEO:
+					return docvidImg;
+				case TYPE_ARCHIVE:
+					if (ext.toLowerCase().indexOf("sis") != VikaTouch.INDEX_FALSE) {
+						return docsisImg;
+					} else
+						return doczipImg;
+				case TYPE_TEXT:
+				case TYPE_EBOOK:
+					return doctxtImg;
+				case TYPE_UNKNOWN:
+				case TYPE_UNDEFINED:
+				default:
+					if (ext.toLowerCase().indexOf("jar") != VikaTouch.INDEX_FALSE
+							|| ext.toLowerCase().indexOf("jad") != VikaTouch.INDEX_FALSE) {
+						return docjarImg;
+					} else if (ext.toLowerCase().indexOf("sis") != VikaTouch.INDEX_FALSE) {
+						return docsisImg;
+					} else if (ext.toLowerCase().indexOf("rar") != VikaTouch.INDEX_FALSE
+							|| ext.toLowerCase().indexOf("zip") != VikaTouch.INDEX_FALSE
+							|| ext.toLowerCase().indexOf("tar") != VikaTouch.INDEX_FALSE
+							|| ext.toLowerCase().indexOf("7z") != VikaTouch.INDEX_FALSE) {
+						return doczipImg;
+					}
+					/*
+					 * else if(ext.toLowerCase().indexOf("torrent") != VikaTouch.INDEX_FALSE) {
+					 * return ResizeUtils.resizeItemPreview(Image.createImage("/doctorr.png")); }
+					 */
+					else {
+						return docfileImg;
+					}
 				}
-			}
-			catch (Exception e2)
-			{
+			} catch (Exception e2) {
 
 			}
 		}
 		return img;
 	}
-	
+
 	public void startPreview() {
-		if(type == TYPE_PHOTO)
-		{
-			
-			if(prevImgUrl==null) { return; }
+		if (type == TYPE_PHOTO) {
+
+			if (prevImgUrl == null) {
+				return;
+			}
 			DocsScreen.current.isPreviewShown = true;
-			(new Thread()
-			{
-				public void run()
-				{
-					try
-					{
-						//System.out.println("Начато скачивание превью");
+			(new Thread() {
+				public void run() {
+					try {
+						// System.out.println("Начато скачивание превью");
 						Image img = VikaUtils.downloadImage(prevImgUrl);
-						//System.out.println("Ресайз превью: исходное "+img.getWidth()+"х"+img.getHeight());
-						
-						double aspectR = (double)img.getWidth() / (double)img.getHeight();
-						double SAR = (double)DisplayUtils.width / (double)DisplayUtils.height;
+						// System.out.println("Ресайз превью: исходное
+						// "+img.getWidth()+"х"+img.getHeight());
+
+						double aspectR = (double) img.getWidth() / (double) img.getHeight();
+						double SAR = (double) DisplayUtils.width / (double) DisplayUtils.height;
 						boolean vertical = aspectR < SAR;
-						int w = 0; int h = 0;
-						if(vertical) {
+						int w = 0;
+						int h = 0;
+						if (vertical) {
 							h = DisplayUtils.height;
-							w = (int)(h*aspectR);
-						}
-						else
-						{
+							w = (int) (h * aspectR);
+						} else {
 							w = DisplayUtils.width;
-							h = (int)(w/aspectR);
+							h = (int) (w / aspectR);
 						}
-						DocsScreen.current.previewX = (DisplayUtils.width - w)/2;
-						DocsScreen.current.previewY = (DisplayUtils.height - h)/2;
+						DocsScreen.current.previewX = (DisplayUtils.width - w) / 2;
+						DocsScreen.current.previewY = (DisplayUtils.height - h) / 2;
 						DocsScreen.current.previewImage = VikaUtils.resize(img, w, h);
-					}
-					catch(Exception e)
-					{
+					} catch (Exception e) {
 						DocsScreen.current.isPreviewShown = false;
 						VikaTouch.error(e, ErrorCodes.DOCPREVIEWLOAD);
 					}
@@ -320,62 +271,41 @@ public class DocItem
 		}
 	}
 
-	public void tap(int x, int y)
-	{
-		try
-		{
-			if(x<DisplayUtils.width - 50)
-			{
+	public void tap(int x, int y) {
+		try {
+			if (x < DisplayUtils.width - 50) {
 				startPreview();
-			}
-			else
-			{
+			} else {
 				VikaTouch.appInst.platformRequest(url);
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 
 		}
 	}
-	
-	public void keyPressed(int key)
-	{
-		if(DocsScreen.current.isPreviewShown)
-		{
+
+	public void keyPressed(int key) {
+		if (DocsScreen.current.isPreviewShown) {
 			DocsScreen.current.isPreviewShown = false;
 			DocsScreen.current.previewImage = null;
 			return;
 		}
-		if(type == TYPE_PHOTO)
-		{
-			if(key == KEY_FUNC)
-			{
-				try
-				{
+		if (type == TYPE_PHOTO) {
+			if (key == KEY_FUNC) {
+				try {
 					VikaTouch.appInst.platformRequest(url);
-				}
-				catch (ConnectionNotFoundException e) 
-				{
-					
+				} catch (ConnectionNotFoundException e) {
+
 				}
 			}
-			if(key == KEY_OK)
-			{
+			if (key == KEY_OK) {
 				startPreview();
 			}
-		}
-		else
-		{
-			if(key == KEY_OK || key == KEY_FUNC)
-			{
-				try
-				{
+		} else {
+			if (key == KEY_OK || key == KEY_FUNC) {
+				try {
 					VikaTouch.appInst.platformRequest(url);
-				}
-				catch (ConnectionNotFoundException e) 
-				{
-					
+				} catch (ConnectionNotFoundException e) {
+
 				}
 			}
 		}
@@ -389,6 +319,7 @@ public class DocItem
 	public void save() {
 		// TODO
 	}
+
 	public void send() {
 		// TODO
 	}
@@ -396,10 +327,22 @@ public class DocItem
 	public void repost() {
 		// TODO
 	}
-	
-	public void openComments() { }
-	public boolean canLike() { return false; }
-	public boolean getLikeStatus() { return false; }
-	public void like(boolean val) { }
-	public boolean commentsAliveable() { return false; }
+
+	public void openComments() {
+	}
+
+	public boolean canLike() {
+		return false;
+	}
+
+	public boolean getLikeStatus() {
+		return false;
+	}
+
+	public void like(boolean val) {
+	}
+
+	public boolean commentsAliveable() {
+		return false;
+	}
 }

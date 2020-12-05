@@ -13,14 +13,11 @@ import vikatouch.items.menu.VideoItem;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.url.URLBuilder;
 
-public class VideoAttachment
-	extends ImageAttachment
-{
-	public VideoAttachment()
-	{
+public class VideoAttachment extends ImageAttachment {
+	public VideoAttachment() {
 		this.type = "video";
 	}
-	
+
 	public int albumid;
 	public long ownerid;
 	public int userid = 100;
@@ -30,15 +27,14 @@ public class VideoAttachment
 	public int origheight;
 	public PhotoSize[] sizes = new PhotoSize[10];
 	public String title;
-	
+
 	// for msg
 	public int renderH;
 	public int renderW;
 	public Image renderImg = null;
-	
-	public void parseJSON()
-	{
-		//VikaTouch.sendLog(json.toString());
+
+	public void parseJSON() {
+		// VikaTouch.sendLog(json.toString());
 		sizes = PhotoSize.parseSizes(json.optJSONArray("image"));
 		origwidth = json.optInt("width");
 		origheight = json.optInt("height");
@@ -49,83 +45,67 @@ public class VideoAttachment
 		userid = json.optInt("user_id");
 		title = json.optString("title");
 	}
-	
-	public PhotoSize getMessageImage()
-	{
-		return PhotoSize.searchSmallerSize(sizes, Math.min((int)(DisplayUtils.width*0.6), MsgItem.msgWidth - MsgItem.attMargin*2));
+
+	public PhotoSize getMessageImage() {
+		return PhotoSize.searchSmallerSize(sizes,
+				Math.min((int) (DisplayUtils.width * 0.6), MsgItem.msgWidth - MsgItem.attMargin * 2));
 	}
-	
-	public void loadForMessage ()
-	{
-		try 
-		{
+
+	public void loadForMessage() {
+		try {
 			PhotoSize ps = getMessageImage();
 			Image i = VikaUtils.downloadImage(ps.url);
-			int w = Math.min((int)(DisplayUtils.width*0.6), MsgItem.msgWidth - MsgItem.attMargin*2);
-			if(ps.width>w)
-			{
+			int w = Math.min((int) (DisplayUtils.width * 0.6), MsgItem.msgWidth - MsgItem.attMargin * 2);
+			if (ps.width > w) {
 				i = VikaUtils.resize(i, w, -1);
 			}
-			
+
 			renderH = i.getHeight();
 			renderW = i.getWidth();
 			renderImg = i;
-		} 
-		catch (Exception e) 
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void loadForNews ()
-	{
-		try 
-		{
+
+	public void loadForNews() {
+		try {
 			PhotoSize ps = PhotoSize.searchSmallerSize(sizes, DisplayUtils.width);
 			Image i = VikaUtils.downloadImage(ps.url);
 			renderH = i.getHeight();
 			renderW = i.getWidth();
 			renderImg = i;
-		} 
-		catch (Exception e) 
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public int getDrawHeight() { return renderH + Font.getFont(0, 0, 8).getHeight(); }
-	
-	
-	public void press()
-	{
-		try
-		{
-			String x = VikaUtils.download(new URLBuilder("video.get")
-					.addField("videos", String.valueOf(ownerid)+"_"+id+(key==null?"":("_"+key))));
+	public int getDrawHeight() {
+		return renderH + Font.getFont(0, 0, 8).getHeight();
+	}
+
+	public void press() {
+		try {
+			String x = VikaUtils.download(new URLBuilder("video.get").addField("videos",
+					String.valueOf(ownerid) + "_" + id + (key == null ? "" : ("_" + key))));
 			JSONObject r = new JSONObject(x).getJSONObject("response").getJSONArray("items").getJSONObject(0);
 			VideoItem i = new VideoItem(r);
 			i.parseJSON();
 			i.keyPressed(-5);
-		}
-		catch (Exception e)
-		{
-			VikaTouch.sendLog("Video att press: "+e.toString());
+		} catch (Exception e) {
+			VikaTouch.sendLog("Video att press: " + e.toString());
 		}
 	}
-	
 
-	public Image getPreviewImage()
-	{
+	public Image getPreviewImage() {
 		return null;
 	}
 
-	public Image getFullImage()
-	{
+	public Image getFullImage() {
 		return null;
 	}
 
-	public Image getImage(int height)
-	{
+	public Image getImage(int height) {
 		return null;
 	}
 

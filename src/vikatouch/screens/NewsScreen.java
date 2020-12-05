@@ -1,6 +1,5 @@
 package vikatouch.screens;
 
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -25,89 +24,73 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
-public class NewsScreen
-	extends MainScreen implements INextLoadable
-{
-	
+public class NewsScreen extends MainScreen implements INextLoadable {
+
 	public static JSONArray profiles;
 	public static JSONArray groups;
 	public String titleStr;
-	
+
 	public int newsSource = 0;
 	public boolean fromAtt = false;
-	
+
 	public String startPost = null;
 	public int offset = 0;
-	
+
 	static final int count = 15;
-	
-	public NewsScreen()
-	{
+
+	public NewsScreen() {
 		super();
 		titleStr = TextLocal.inst.get("title.newsfeed");
-		
+
 		VikaTouch.loading = true;
-		
-		if(VikaTouch.menuScr == null)
+
+		if (VikaTouch.menuScr == null)
 			VikaTouch.menuScr = new MenuScreen();
-		
+
 		scrollWithKeys = true;
 	}
-	
-	public void loadPosts()
-	{
+
+	public void loadPosts() {
 		loadPosts(true);
 	}
-	public void loadPosts(final boolean fromLatest)
-	{
-		if(fromLatest) offset = 0;
+
+	public void loadPosts(final boolean fromLatest) {
+		if (fromLatest)
+			offset = 0;
 		final INextLoadable thisC = this;
-		new Thread()
-		{
-			public void run()
-			{
+		new Thread() {
+			public void run() {
 				VikaTouch.loading = true;
-				
+
 				int step = 0;
-				try
-				{
+				try {
 					URLBuilder url;
 					fromAtt = false;
-					if(newsSource == 0)
-					{
-						url = new URLBuilder("newsfeed.get").addField("filters", "post")
-							.addField("count", count).addField("fields", "groups,profiles,items");
-					}
-					else
-					{
+					if (newsSource == 0) {
+						url = new URLBuilder("newsfeed.get").addField("filters", "post").addField("count", count)
+								.addField("fields", "groups,profiles,items");
+					} else {
 						url = new URLBuilder("wall.get").addField("filter", "all").addField("extended", 1)
 								.addField("count", count).addField("owner_id", newsSource);
 					}
-					if(!fromLatest && startPost!=null)
-					{
-						if(newsSource == 0)
-						{
+					if (!fromLatest && startPost != null) {
+						if (newsSource == 0) {
 							url = url.addField("start_from", startPost);
-						}
-						else
-						{
+						} else {
 							url.addField("offset", offset);
 						}
 					}
-					hasBackButton = newsSource!=0;
-					
+					hasBackButton = newsSource != 0;
+
 					step = 1;
 					final String s = VikaUtils.download(url);
-					//VikaTouch.sendLog(url.toString());
-					//VikaTouch.sendLog(newsSource+" "+(s.length()>210?s.substring(0, 200):s));
+					// VikaTouch.sendLog(url.toString());
+					// VikaTouch.sendLog(newsSource+" "+(s.length()>210?s.substring(0, 200):s));
 					VikaTouch.loading = true;
 					JSONObject response = null;
-					try
-					{
+					try {
 						response = new JSONObject(s).getJSONObject("response");
-					} 
-					catch (JSONException e)
-					{
+					} catch (JSONException e) {
 						VikaTouch.popup(new InfoPopup(s, null));
 						return;
 					}
@@ -115,7 +98,7 @@ public class NewsScreen
 					JSONArray items = response.getJSONArray("items");
 					step = 3;
 					int itemsCount = items.length();
-					uiItems = new PressableUIItem[itemsCount+1];
+					uiItems = new PressableUIItem[itemsCount + 1];
 					step = 4;
 					uiItems[itemsCount] = new LoadMoreButtonItem(thisC);
 					step = 5;
@@ -123,19 +106,15 @@ public class NewsScreen
 					groups = response.getJSONArray("groups");
 					step = 6;
 					startPost = response.optString("next_from", null);
-					
+
 					itemsh = 0;
-					for(int i = 0; i < itemsCount; i++)
-					{
+					for (int i = 0; i < itemsCount; i++) {
 						VikaTouch.loading = true;
 						JSONObject item = items.getJSONObject(i);
 						JSONObject itemCopy;
-						try
-						{
+						try {
 							itemCopy = item.getJSONArray("copy_history").getJSONObject(0);
-						}
-						catch(RuntimeException e)
-						{
+						} catch (RuntimeException e) {
 							itemCopy = item;
 						}
 						uiItems[i] = new PostItem(itemCopy, item);
@@ -143,14 +122,10 @@ public class NewsScreen
 						Thread.sleep(20);
 					}
 					itemsCount++;
-				}
-				catch (Exception e)
-				{
-					VikaTouch.sendLog("news fail step "+step);
+				} catch (Exception e) {
+					VikaTouch.sendLog("news fail step " + step);
 					VikaTouch.error(e, ErrorCodes.NEWSPARSE);
-				}
-				catch (OutOfMemoryError me)
-				{
+				} catch (OutOfMemoryError me) {
 					uiItems[0] = null;
 					System.gc();
 					VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error.outofmem"), null));
@@ -159,115 +134,92 @@ public class NewsScreen
 				VikaTouch.loading = false;
 			}
 		}.start();
-		
+
 		System.gc();
 	}
 
-	public void loadAtt(WallAttachment att)
-	{
+	public void loadAtt(WallAttachment att) {
 		fromAtt = true;
 		VikaTouch.loading = true;
-		try
-		{
+		try {
 			hasBackButton = true;
 			VikaTouch.loading = true;
 			uiItems = new PostItem[1];
-			
+
 			itemsh = 0;
 			VikaTouch.loading = true;
 			JSONObject item = att.json;
 			JSONObject itemCopy;
-			try
-			{
+			try {
 				itemCopy = item.getJSONArray("copy_history").getJSONObject(0);
-			}
-			catch(Exception e)
-			{
+			} catch (Exception e) {
 				itemCopy = item;
 			}
 			uiItems[0] = new PostItem(itemCopy, item);
 			((PostItem) uiItems[0]).parseJSON();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			VikaTouch.error(e, -ErrorCodes.NEWSPARSE);
 			e.printStackTrace();
 		}
 		VikaTouch.loading = false;
 	}
-	protected final void callRefresh()
-	{
-		if(!fromAtt) loadPosts(true);
+
+	protected final void callRefresh() {
+		if (!fromAtt)
+			loadPosts(true);
 	}
 
-	public void draw(Graphics g)
-	{
-		try
-		{
-			
+	public void draw(Graphics g) {
+		try {
+
 			update(g);
-			
-			int y = topPanelH+10;
-			try
-			{
-				if(uiItems!=null)
-				{
-					for(int i = 0; i < uiItems.length; i++)
-					{
-						if(uiItems[i] != null)
-						{
-							if(y+scrolled < DisplayUtils.height) uiItems[i].paint(g, y, scrolled);
+
+			int y = topPanelH + 10;
+			try {
+				if (uiItems != null) {
+					for (int i = 0; i < uiItems.length; i++) {
+						if (uiItems[i] != null) {
+							if (y + scrolled < DisplayUtils.height)
+								uiItems[i].paint(g, y, scrolled);
 							y += uiItems[i].getDrawHeight();
 						}
 					}
-					
-					itemsh = y+50;
+
+					itemsh = y + 50;
 				}
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				VikaTouch.error(e, ErrorCodes.NEWSPOSTSDRAW);
 			}
 			g.translate(0, -g.getTranslateY());
-			/*g.setColor(0, 0, 0);
-			g.fillRect(0, 60, 300, 25);
-			g.setColor(200, 200, 200);
-			g.drawString(scrlDbg, 0, 60, 0);*/
-		}
-		catch (Exception e)
-		{
+			/*
+			 * g.setColor(0, 0, 0); g.fillRect(0, 60, 300, 25); g.setColor(200, 200, 200);
+			 * g.drawString(scrlDbg, 0, 60, 0);
+			 */
+		} catch (Exception e) {
 			VikaTouch.error(e, ErrorCodes.NEWSDRAW);
 			e.printStackTrace();
 		}
 	}
-	public final void drawHUD(Graphics g)
-	{
+
+	public final void drawHUD(Graphics g) {
 		drawHUD(g, titleStr);
 	}
-	
-	public final void release(int x, int y)
-	{
-		if(!dragging)
-		{
-			if(y > topPanelH && y < DisplayUtils.height - oneitemheight)
-			{
-				int yy = topPanelH+10;
-				for(int i = 0; i < uiItems.length; i++)
-				{
-					try
-					{
+
+	public final void release(int x, int y) {
+		if (!dragging) {
+			if (y > topPanelH && y < DisplayUtils.height - oneitemheight) {
+				int yy = topPanelH + 10;
+				for (int i = 0; i < uiItems.length; i++) {
+					try {
 						int y1 = scrolled + yy;
 						int y2 = y1 + uiItems[i].getDrawHeight();
 						yy += uiItems[i].getDrawHeight();
-						if(y > y1 && y < y2)
-						{
-							//VikaTouch.sendLog(i+" x"+x+" y"+(y1-y));
+						if (y > y1 && y < y2) {
+							// VikaTouch.sendLog(i+" x"+x+" y"+(y1-y));
 							uiItems[i].tap(x, y - y1);
 						}
-					}
-					catch (Exception e)
-					{
-						
+					} catch (Exception e) {
+
 					}
 				}
 			}
@@ -275,21 +227,20 @@ public class NewsScreen
 		super.release(x, y);
 	}
 
-	protected void scrollHorizontally(int deltaX)
-	{
-		
+	protected void scrollHorizontally(int deltaX) {
+
 	}
-	
-	public void loadNext()
-	{
-		if(newsSource != 0) { offset+=count; }
+
+	public void loadNext() {
+		if (newsSource != 0) {
+			offset += count;
+		}
 		scrolled = 0;
 		currentItem = 0;
 		loadPosts(false);
 	}
-	
-	public void onLeave()
-	{
+
+	public void onLeave() {
 		profiles = null;
 		groups = null;
 		VikaTouch.newsScr = null;

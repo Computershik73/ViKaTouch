@@ -1,6 +1,5 @@
 package vikatouch.screens;
 
-public class AgreementScreen 
-{
-	
+public class AgreementScreen {
+
 }

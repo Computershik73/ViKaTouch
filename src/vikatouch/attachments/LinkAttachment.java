@@ -1,12 +1,9 @@
 package vikatouch.attachments;
 
-public class LinkAttachment
-	extends Attachment
-{
+public class LinkAttachment extends Attachment {
 
-	public void parseJSON()
-	{
-		
+	public void parseJSON() {
+
 	}
 
 }

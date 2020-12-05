@@ -1,16 +1,11 @@
 package vikatouch.utils;
 
-public class DebugUtils
-{
+public class DebugUtils {
 
-	public static void printStackTrace()
-	{
-		try
-		{
+	public static void printStackTrace() {
+		try {
 			throw new Exception();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

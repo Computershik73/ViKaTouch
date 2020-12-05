@@ -584,13 +584,7 @@ public class VikaTouch {
 		String errortitle = error + "!";
 		inst.errReason = e.toString();
 		boolean fatal = e instanceof IOException
-				|| e instanceof NullPointerException/* || e instanceof OutOfMemoryError */;
-		// if(e instanceof java.net.SocketException) fatal = false; // Почему нету? Если
-		// КЕмуль плюётся?
-		// ПОТОМУ ЧТО КЭМУЛЬ ЭТО ЖАВА SE
-		// ЭТО НАДО ЗНАТЬ!!1
-		// я рад за него. Так как это говно ловить то?
-		// если в cldc1.1 это не имплементированно то значит никак.
+				|| e instanceof NullPointerException
 		if (fatal) {
 			crashed = true;
 		}
@@ -692,7 +686,6 @@ public class VikaTouch {
 	}
 
 	public void start() {
-		// loading = true;
 		DisplayUtils.checkdisplay();
 		canvas = new VikaCanvasInst();
 		setDisplay(canvas);
@@ -863,10 +856,7 @@ public class VikaTouch {
 					&& mobilePlatform.indexOf("5.1") <= 0 && mobilePlatform.indexOf("Samsung") < 0) {
 				VikaTouch.appInst.platformRequest(urlF);
 			} else {
-				VikaTouch.appInst.platformRequest(System.getProperty("fileconn.dir.music") + "test.ram");// Ввел новый
-																											// адрес,
-																											// тут
-																											// закончились1
+				VikaTouch.appInst.platformRequest(System.getProperty("fileconn.dir.music") + "test.ram");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

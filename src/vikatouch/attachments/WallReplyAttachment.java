@@ -1,12 +1,9 @@
- package vikatouch.attachments;
+package vikatouch.attachments;
 
-public class WallReplyAttachment
-	extends Attachment
-{
+public class WallReplyAttachment extends Attachment {
 
-	public void parseJSON()
-	{
-		
+	public void parseJSON() {
+
 	}
 
 }

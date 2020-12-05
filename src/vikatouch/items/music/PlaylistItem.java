@@ -22,28 +22,23 @@ public class PlaylistItem extends JSONUIItem {
 	private Image iconImg;
 	private int size;
 	private String bigCoverUrl;
-	
-	public PlaylistItem(JSONObject json)
-	{
+
+	public PlaylistItem(JSONObject json) {
 		super(json);
 		setDrawHeight();
 	}
 
-	public void parseJSON()
-	{
+	public void parseJSON() {
 		System.out.println(json.toString());
 
-		try
-		{
+		try {
 			name = json.optString("title");
 			size = json.optInt("count");
 			owner_id = json.optInt("owner_id");
 			id = json.optInt("id");
 			iconUrl = fixJSONString(json.getJSONObject("photo").optString("photo_135"));
 			bigCoverUrl = fixJSONString(json.getJSONObject("photo").optString("photo_600"));
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -51,68 +46,55 @@ public class PlaylistItem extends JSONUIItem {
 		System.gc();
 	}
 
-	private void setDrawHeight()
-	{
+	private void setDrawHeight() {
 		itemDrawHeight = 102;
 	}
 
-	public void paint(Graphics g, int y, int scrolled)
-	{
-		if(iconImg == null)
-		{
+	public void paint(Graphics g, int y, int scrolled) {
+		if (iconImg == null) {
 			ColorUtils.setcolor(g, 6);
-			g.fillRect(1, y+1, 100, 100);
-		}
-		else
-		{
-			g.drawImage(iconImg, 1, y+1, 0);
+			g.fillRect(1, y + 1, 100, 100);
+		} else {
+			g.drawImage(iconImg, 1, y + 1, 0);
 		}
 
-		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && selected)?ColorUtils.BUTTONCOLOR:0);
+		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && selected) ? ColorUtils.BUTTONCOLOR : 0);
 		g.setFont(Font.getFont(0, 0, Font.SIZE_MEDIUM));
-		if(name != null)
-			g.drawString(name, 102, y+12, 0);
+		if (name != null)
+			g.drawString(name, 102, y + 12, 0);
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
 		g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
-		g.drawString(size+" аудиозаписей", 102, y + 46, 0);
+		g.drawString(size + " аудиозаписей", 102, y + 46, 0);
 	}
 
-	private Image getIcon()
-	{
+	private Image getIcon() {
 		Image img = null;
-		try
-		{
-			if(!Settings.dontLoadAvas)
+		try {
+			if (!Settings.dontLoadAvas)
 				img = VikaUtils.resize(VikaUtils.downloadImage(iconUrl), 100, 100);
-		}
-		catch (Exception e)
-		{
-			
+		} catch (Exception e) {
+
 		}
 		return img;
 	}
-	
-	public void loadIcon()
-	{
+
+	public void loadIcon() {
 		iconImg = getIcon();
 	}
-	
+
 	public void open() {
 		MusicScreen pls = new MusicScreen();
-		pls.load(owner_id,id,name);
+		pls.load(owner_id, id, name);
 		pls.coverUrl = bigCoverUrl;
 		VikaTouch.setDisplay(pls, 1);
 	}
 
-	public void tap(int x, int y)
-	{
+	public void tap(int x, int y) {
 		open();
 	}
-	
-	public void keyPressed(int key)
-	{
-		if(key == KEY_OK)
-		{
+
+	public void keyPressed(int key) {
+		if (key == KEY_OK) {
 			open();
 		}
 	}
