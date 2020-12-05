@@ -30,7 +30,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	public String currentInfo;
 	public long currentInfoStartTime;
 	public VikaNotification currentNof;
-	public double slide;
+	//public double slide;
 	public VikaScreen oldScreen;
 	public static String busyStr;
 
@@ -49,17 +49,19 @@ public class VikaCanvasInst extends VikaCanvas {
 
 		DisplayUtils.canvas = this;
 
-		try {
-			InputStream in = this.getClass().getResourceAsStream("/loading.gif");
-			d = new GifDecoder();
-			int err = d.read(in);
-			if (err == 0) {
-				frame = d.getImage();
+		if(!(DisplayUtils.width < 240)) {
+			try {
+				InputStream in = this.getClass().getResourceAsStream("/loading.gif");
+				d = new GifDecoder();
+				int err = d.read(in);
+				if (err == 0) {
+					frame = d.getImage();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		slide = 0.0d;
+		//slide = 0.0d;
 		busyStr = "Busy...";
 	}
 
@@ -111,8 +113,8 @@ public class VikaCanvasInst extends VikaCanvas {
 		DisplayUtils.checkdisplay();
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
+		/*
 		try {
-
 			if (Settings.animateTransition && oldScreen != null) {
 				int slideI = (int) (slide * (double) DisplayUtils.width);
 				if (Settings.slideAnim) {
@@ -139,6 +141,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			VikaTouch.error(e, -2);
 			e.printStackTrace();
 		}
+		*/
 		long csrT = System.currentTimeMillis();
 		try {
 
@@ -157,7 +160,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			VikaTouch.captchaScr.draw(g);
 		}
 
-		g.translate(-g.getTranslateX(), 0);
+		//g.translate(-g.getTranslateX(), 0);
 
 		long hudrT = System.currentTimeMillis();
 		csrT = hudrT - csrT;
@@ -302,7 +305,7 @@ public class VikaCanvasInst extends VikaCanvas {
 
 	public void tick() {
 		if (Display.getDisplay(VikaTouch.appInst).getCurrent() instanceof VikaCanvasInst) {
-			if (VikaTouch.loading) {
+			if (VikaTouch.loading && !(DisplayUtils.width < 240)) {
 				updategif();
 				/*
 				 * if(Settings.animateTransition) { oldScreen = null; slide = 0; }

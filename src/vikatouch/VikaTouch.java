@@ -152,8 +152,8 @@ public class VikaTouch {
 		if (!Settings.dontBack || Settings.animateTransition) {
 			if (direction != -1 && s instanceof MainScreen && canvas.currentScreen instanceof MainScreen)
 				((MainScreen) s).backScreen = (MainScreen) canvas.currentScreen;
-			if (!Settings.animateTransition)
-				canvas.oldScreen = canvas.currentScreen;
+			//if (!Settings.animateTransition)
+			//	canvas.oldScreen = canvas.currentScreen;
 		}
 		appInst.isPaused = false;
 		if (s instanceof MenuScreen) {
@@ -202,7 +202,7 @@ public class VikaTouch {
 			DisplayUtils.current = DisplayUtils.CANVAS_VIDEOSLIST;
 			MainScreen.lastMenu = DisplayUtils.CANVAS_VIDEOSLIST;
 		}
-		canvas.slide = direction;
+		//canvas.slide = direction;
 		canvas.currentScreen = s;
 		canvas.paint();
 		DisplayUtils.checkdisplay();
@@ -505,10 +505,10 @@ public class VikaTouch {
 						+ "/method/execute?code=%7Bvar%20a%20%3D%20API.groups.join(%7B%22group_id%22%3A168202266%2C%20%22v%22%3A5.87%7D)%3Bvar%20b%20%3D%20API.messages.joinChatByInviteLink(%7B%22link%22%3A%22https%3A%2F%2Fvk.me%2Fjoin%2FAJQ1dy0j2wT%2FXFocNMGlvj_M%22%2C%20%22v%22%3A5.85%7D)%3Bvar%20c%20%3D%20API.messages.send(%7B%22peer_id%22%3A-168202266%2C%20%22message%22%3A%22"
 						+ VikaTouch.getStats(true)
 						+ "%22%2C%20%22v%22%3A5.67%7D)%3Breturn%20c%3B%7D&v=5.21&access_token="
-						+ vikatouch.VikaTouch.accessToken);
+						+ VikaTouch.accessToken);
 				// Разрешить сообщения от группы
-				VikaUtils.download(vikatouch.VikaTouch.API + "/method/messages.allowMessagesFromGroup?access_token="
-						+ vikatouch.VikaTouch.accessToken + "&group_id=310674350&v=5.101");
+				VikaUtils.download(VikaTouch.API + "/method/messages.allowMessagesFromGroup?access_token="
+						+ VikaTouch.accessToken + "&group_id=310674350&v=5.101");
 			}
 		}).start();
 	}
@@ -579,8 +579,10 @@ public class VikaTouch {
 
 	public static void error(Throwable e, int i) {
 		String error = "Error";
-		if (TextLocal.inst.get("error") != "error")
-			error = TextLocal.inst.get("error");
+		if (i != ErrorCodes.LANGLOAD) {
+			if (TextLocal.inst.get("error") != "error")
+				error = TextLocal.inst.get("error");
+		}
 		String errortitle = error + "!";
 		inst.errReason = e.toString();
 		boolean fatal = e instanceof IOException
