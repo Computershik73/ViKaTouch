@@ -13,6 +13,7 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
+import vikatouch.screens.page.GroupPageScreen;
 import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.ResizeUtils;
@@ -27,33 +28,51 @@ public class MemberItem extends JSONUIItem {
 	private boolean online;
 	private JSONArray profiles;
 	private String avaurl;
+	private JSONArray groups;
 
 	public static final int BORDER = 1;
 
-	public MemberItem(int id, JSONArray profiles) {
+	public MemberItem(int id, JSONArray profiles, JSONArray groups) {
 		super(null);
 		this.profiles = profiles;
 		itemDrawHeight = 52;
 		ava = VikaTouch.cameraImg;
+		this.id = id;
 		name = "id" + id;
+		this.groups = groups;
 	}
 
 	public void parseJSON() {
-		for(int i = 0; i < profiles.length(); i++) {
-			try {
-				if(profiles.getJSONObject(i).getInt("id") == id) {
-					JSONObject json = profiles.getJSONObject(i);
-					name = json.optString("first_name") + " " + json.optString("last_name");
-					online = json.optInt("online") == 1;
-					if (!Settings.dontLoadAvas)
-						avaurl = fixJSONString(json.optString("photo_50"));
-					break;
+		if(id < 0) {
+			for(int i = 0; i < groups.length(); i++) {
+				try {
+					if(groups.getJSONObject(i).getInt("id") == -id) {
+						JSONObject json = groups.getJSONObject(i);
+						name = json.optString("name");
+						if (!Settings.dontLoadAvas)
+							avaurl = fixJSONString(json.optString("photo_50"));
+						break;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			}
+		} else {
+			for(int i = 0; i < profiles.length(); i++) {
+				try {
+					if(profiles.getJSONObject(i).getInt("id") == id) {
+						JSONObject json = profiles.getJSONObject(i);
+						name = json.optString("first_name") + " " + json.optString("last_name");
+						online = json.optInt("online") == 1;
+						if (!Settings.dontLoadAvas)
+							avaurl = fixJSONString(json.optString("photo_50"));
+						break;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
-
 		setDrawHeight();
 	}
 
@@ -97,10 +116,18 @@ public class MemberItem extends JSONUIItem {
 	}
 
 	public void tap(int x, int y) {
-		try {
-			VikaTouch.setDisplay(new ProfilePageScreen(id), 1);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(id < 0) {
+			try {
+				VikaTouch.setDisplay(new GroupPageScreen(-id), 1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				VikaTouch.setDisplay(new ProfilePageScreen(id), 1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

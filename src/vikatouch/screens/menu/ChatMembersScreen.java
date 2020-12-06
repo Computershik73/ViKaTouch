@@ -79,12 +79,15 @@ public class ChatMembersScreen extends MainScreen {
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = response.getJSONArray("items");
 						JSONArray profiles = response.getJSONArray("profiles");
+						JSONArray groups = response.getJSONArray("groups");
 						itemsCount = (short) items.length();
 						uiItems = new PressableUIItem[itemsCount];
 						for (int i = 0; i < itemsCount; i++) {
+							
 							JSONObject item = items.getJSONObject(i);
-							uiItems[i] = new MemberItem(item.getInt("member_id"), profiles);
+							uiItems[i] = new MemberItem(item.getInt("member_id"), profiles, groups);
 							((MemberItem) uiItems[i]).parseJSON();
+							
 						}
 						if (keysMode) {
 							currentItem = 0;
