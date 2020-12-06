@@ -669,7 +669,8 @@ public class ChatScreen extends MainScreen {
 														int len = (int) fc.fileSize();
 														byte[] var5 = new byte[len];
 														in.readFully(var5, 0, len);
-														VikaUtils.sendPhoto(ChatScreen.this.peerId, var5);
+														VikaUtils.sendPhoto(ChatScreen.this.peerId, var5, ChatScreen.this.inputText);
+														ChatScreen.this.inputText = "";
 														return;
 													} else {
 														return;
@@ -728,7 +729,8 @@ public class ChatScreen extends MainScreen {
 															}
 															var220.close();
 															var201.close();
-															VikaUtils.sendPhoto(ChatScreen.this.peerId, var5);
+															VikaUtils.sendPhoto(ChatScreen.this.peerId, var5, ChatScreen.this.inputText);
+															ChatScreen.this.inputText = "";
 															list = null;
 															VikaTouch.setDisplay(VikaTouch.canvas);
 														} catch (Exception e) {

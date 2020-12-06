@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Random;
 import java.util.Vector;
 
 import javax.microedition.io.Connection;
@@ -814,7 +815,7 @@ public final class VikaUtils {
 		return list;
 	}
 
-	public static void sendPhoto(int peerId, byte[] var5) {
+	public static void sendPhoto(int peerId, byte[] var5, String text) {
 		String var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
 				+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=5.120");
 
@@ -841,14 +842,34 @@ public final class VikaUtils {
 		var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
 
 		var175 = var17.substring(var17.indexOf("\"id") + 5, var17.indexOf("owner_id") - 2);
-
+		URLBuilder url;
 		if (peerId < 2000000000L) {
-			VikaUtils.download(VikaTouch.API + "/method/messages.send?user_id=" + peerId + "&attachment=photo" + var217
-					+ "_" + var175 + "&access_token=" + VikaTouch.accessToken + "&v=5.60");
+			url = new URLBuilder("messages.send")
+			.addField("user_id", peerId)
+			.addField("random_id", new Random().nextInt(100))
+			.addField("attachment", "photo" + var217 + "_" + var175);
+			if(text != null && text.length() > 0) {
+				url = url.addField("text", text);
+			}
+		} else if(peerId < 0l) {
+			peerId = -peerId;
+			url = new URLBuilder("messages.send")
+			.addField("group_id", peerId)
+			.addField("random_id", new Random().nextInt(100))
+			.addField("attachment", "photo" + var217 + "_" + var175);
+			if(text != null && text.length() > 0) {
+				url = url.addField("text", text);
+			}
 		} else {
 			peerId -= 2000000000L;
-			VikaUtils.download(VikaTouch.API + "/method/messages.send?chat_id=" + peerId + "&attachment=photo" + var217
-					+ "_" + var175 + "&access_token=" + VikaTouch.accessToken + "&v=5.60");
+			url = new URLBuilder("messages.send")
+			.addField("chat_id", peerId)
+			.addField("random_id", new Random().nextInt(100))
+			.addField("attachment", "photo" + var217 + "_" + var175);
+			if(text != null && text.length() > 0) {
+				url = url.addField("text", text);
+			}
 		}
+		VikaUtils.download(url);
 	}
 }

@@ -58,8 +58,13 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	public final void drag(int x, int y) {
 		try {
 			keysMode = false;
-			if (!dragging)
-				lasty = starty;
+			if (!dragging) {
+				if (poorScrolling()) {
+					lasty = y;
+				} else {
+					lasty = starty;
+				}
+			}
 			final int deltaX = lastx - x;
 			final int deltaY = lasty - y;
 			final int ndeltaX = Math.abs(deltaX);
@@ -72,7 +77,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 					if (Math.abs(scroll / 3) > Math.abs(driftSpeed))
 						driftSpeed = (short) (scroll / 3);
 					if (poorScrolling())
-						scroll *= 4;
+						scroll *= 16;
 				} else {
 					scrollHorizontally(deltaX);
 				}
@@ -83,6 +88,10 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				}
 			} else if (DisplayUtils.canvas.isSensorModeJ2MELoader()) {
 				if (ndeltaY > 4 || ndeltaX > 4) {
+					dragging = true;
+				}
+			} else {
+				if (ndeltaY > 2 || ndeltaX > 2) {
 					dragging = true;
 				}
 			}
