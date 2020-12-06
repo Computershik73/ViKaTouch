@@ -43,7 +43,7 @@ public class MemberItem extends JSONUIItem {
 	}
 
 	public void parseJSON() {
-		if(id < 0) {
+		if(id < 0 && groups != null) {
 			for(int i = 0; i < groups.length(); i++) {
 				try {
 					if(groups.getJSONObject(i).getInt("id") == -id) {
