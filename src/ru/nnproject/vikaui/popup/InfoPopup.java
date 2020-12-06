@@ -8,7 +8,6 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaTouch;
-import vikatouch.screens.MainScreen;
 
 public class InfoPopup extends VikaNotice {
 	private String[] lines;
@@ -81,12 +80,10 @@ public class InfoPopup extends VikaNotice {
 	}
 
 	public void release(int x, int y) {
-		int width = Math.min(DisplayUtils.width - 8, 350);
 		Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
 		int h1 = f.getHeight();
 		int th = h1 * 4 + h1 * linesCount;
 		int ry = DisplayUtils.height / 2 - th / 2;
-		int rx = DisplayUtils.width / 2 - width / 2;
 
 		if (y > ry + h1 * (linesCount + 1) && y < ry + th - h1) {
 			if (x > DisplayUtils.width / 2 - 25 && x < DisplayUtils.width / 2 + 25) {

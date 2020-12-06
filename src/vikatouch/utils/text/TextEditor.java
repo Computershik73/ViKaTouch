@@ -8,7 +8,6 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.ImageItem;
-import javax.microedition.lcdui.Item;
 import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 

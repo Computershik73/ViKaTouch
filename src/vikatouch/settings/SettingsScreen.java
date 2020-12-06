@@ -6,7 +6,6 @@ import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.ConfirmBox;
-import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.Reader;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -153,13 +152,13 @@ public class PictFont
       
       int retval = 0;
       
-      int majorVersion = Integer.MIN_VALUE;
-      int minorVersion = Integer.MIN_VALUE;
+      //int majorVersion = Integer.MIN_VALUE;
+      //int minorVersion = Integer.MIN_VALUE;
       
       StringBuffer key = new StringBuffer(40);
       StringBuffer value = new StringBuffer(80);
       
-      String rangesStr = null;
+     // String rangesStr = null;
       while ((retval >= 0) && ((retval = parser.readPair(key, value)) >= -1))
       {
         String keyStr = key.toString().toLowerCase();
@@ -168,12 +167,12 @@ public class PictFont
         {
           if (keyStr.equals("version_major"))
           {
-            majorVersion = Integer.parseInt(valueStr);
+            //majorVersion = Integer.parseInt(valueStr);
             continue;
           }
           if (keyStr.equals("version_minor"))
           {
-            minorVersion = Integer.parseInt(valueStr);
+            //minorVersion = Integer.parseInt(valueStr);
             continue;
           }
           if (keyStr.equals("style"))
@@ -449,8 +448,8 @@ public class PictFont
       ByteArrayOutputStream baos = null;
       DataOutputStream dos = null;
       byte[] b = null;
-      int maxBuffSize = 16384;
-      int maxImageSize = 4096;
+      //int maxBuffSize = 16384;
+     // int maxImageSize = 4096;
       
       System.gc();
       try
@@ -692,7 +691,7 @@ public class PictFont
           bais = new ByteArrayInputStream(b);
           dis = new DataInputStream(bais);
           
-          String storedName = dis.readUTF();
+          dis.readUTF();
           infoID = dis.readInt();
           imageID = dis.readInt();
           

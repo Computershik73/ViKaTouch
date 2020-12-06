@@ -2,7 +2,6 @@ package vikatouch.screens.menu;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONArray;
 import org.json.me.JSONException;

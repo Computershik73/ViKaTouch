@@ -2,12 +2,9 @@ package vikatouch.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
@@ -15,19 +12,13 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.microedition.io.Connection;
-import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.ContentConnection;
 import javax.microedition.io.HttpConnection;
-import javax.microedition.io.HttpsConnection;
-import javax.microedition.io.InputConnection;
 import javax.microedition.io.file.FileConnection;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
 
-import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import tube42.lib.imagelib.ImageUtils;
@@ -191,14 +182,14 @@ public final class VikaUtils {
 			var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 
 			InputStream var14 = var13.openInputStream();
-			long var8 = var13.getLength();
+			//long var8 = var13.getLength();
 			byte[] var6 = new byte[16384];
-			long var10 = 0L;
+			//long var10 = 0L;
 
 			int var7;
 
 			while ((var7 = var14.read(var6)) != -1) {
-				var10 += (long) var7;
+				//var10 += (long) var7;
 				var4.write(var6, 0, var7);
 				var4.flush();
 			}

@@ -180,7 +180,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 		}
 	}
 
-	private int scrolebd;
+	//private int scrolebd;
 
 	protected void down() {
 		if (scrollWithKeys) {

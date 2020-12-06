@@ -30,8 +30,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import vikatouch.utils.DebugUtils;
-
 /**
  * A JSONObject is an unordered collection of name/value pairs. Its
  * external form is a string wrapped in curly braces with colons between the
@@ -116,7 +114,7 @@ public class JSONObject {
          *  or null.
          */
         public boolean equals(Object object) {
-            return object == null || object == this;
+            return object == null || object == this || object == clone();
         }
 
 

@@ -1,11 +1,7 @@
 package vikatouch.screens;
 
-import java.io.IOException;
-
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -13,8 +9,6 @@ import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.menu.MenuScreen;
-import vikatouch.utils.VikaUtils;
-import vikatouch.utils.error.ErrorCodes;
 
 public class DialogsScreen extends MainScreen {
 

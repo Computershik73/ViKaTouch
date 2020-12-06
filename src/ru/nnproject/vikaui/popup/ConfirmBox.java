@@ -7,7 +7,6 @@ import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
-import vikatouch.screens.MainScreen;
 
 public class ConfirmBox extends VikaNotice {
 

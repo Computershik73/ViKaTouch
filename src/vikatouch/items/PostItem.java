@@ -1,7 +1,5 @@
 package vikatouch.items;
 
-import java.util.Random;
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -61,8 +59,8 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 
 	public boolean isreply;
 	private int sourceid;
-	private String reposterName;
-	private String type;
+	//private String reposterName;
+	//private String type;
 	private String data;
 	private boolean dontLoadAva;
 	protected boolean hasPrevImg;
@@ -116,7 +114,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			} catch (Exception e) {
 			}
 
-			type = json2.optString("type");
+			//type = json2.optString("type");
 			ec = 3;
 			copyright = json2.optString("copyright");
 			ownerid = json2.optInt("owner_id");
@@ -183,8 +181,8 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 								b2 = true;
 							}
 							if (!b2 && uid == sourceid) {
-								reposterName = "" + profile.optString("first_name") + " "
-										+ profile.optString("last_name");
+								//reposterName = "" + profile.optString("first_name") + " "
+								//		+ profile.optString("last_name");
 								b2 = true;
 							}
 							if (xx < 0) {

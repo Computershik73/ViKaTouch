@@ -1,7 +1,5 @@
 package ru.nnproject.vikaui;
 
-import vikatouch.VikaTouch;
-
 public class UIThread extends Thread {
 
 	private VikaCanvas canvas;

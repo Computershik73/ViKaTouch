@@ -13,7 +13,6 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
-import vikatouch.settings.Settings;
 
 public class VikaNotification {
 

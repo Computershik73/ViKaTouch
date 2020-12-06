@@ -1,7 +1,6 @@
 package vikatouch.utils.url;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Hashtable;
 
 public final class URLDecoder {
 

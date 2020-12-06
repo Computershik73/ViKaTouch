@@ -6,13 +6,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import javax.microedition.rms.RecordStore;
-import javax.microedition.rms.RecordStoreException;
-import javax.microedition.rms.RecordStoreFullException;
-import javax.microedition.rms.RecordStoreNotFoundException;
 
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
-import vikatouch.locale.LangObject;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.error.ErrorCodes;

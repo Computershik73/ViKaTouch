@@ -1,6 +1,5 @@
 package ru.nnproject.vikaui.popup;
 
-import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 import ru.nnproject.vikaui.menu.items.PressableUIItem;

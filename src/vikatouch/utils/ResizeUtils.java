@@ -2,7 +2,6 @@ package vikatouch.utils;
 
 import javax.microedition.lcdui.Image;
 
-import ru.nnproject.vikaui.utils.DisplayUtils;
 import tube42.lib.imagelib.ImageUtils;
 
 public class ResizeUtils {

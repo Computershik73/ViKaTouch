@@ -290,7 +290,7 @@ public final class ImageUtils
                 
                 
                 // interpolate in x
-                int c12, c34, c1234;
+                int c12, c34;
                 int c1 = buffer1[x_a1];
                 int c3 = buffer1[x_b1];
                 
