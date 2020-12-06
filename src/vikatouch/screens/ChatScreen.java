@@ -2,10 +2,8 @@ package vikatouch.screens;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Random;
-import java.util.Vector;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
@@ -23,13 +21,11 @@ import org.json.me.JSONObject;
 
 import ru.nnproject.kemulator.filemanagerapi.AbstractFileManager;
 import ru.nnproject.kemulator.filemanagerapi.FileManagerAPI;
-import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.EmptyMenu;
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
-import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -39,9 +35,6 @@ import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.items.chat.MsgItem;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
-import vikatouch.music.MusicPlayer;
-import vikatouch.screens.menu.PlaylistsScreen;
-import vikatouch.screens.music.MusicScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.IntObject;
 import vikatouch.utils.VikaUtils;
@@ -703,7 +696,6 @@ public class ChatScreen extends MainScreen {
 														ByteArrayOutputStream var201 = new ByteArrayOutputStream();
 
 														try {
-															boolean var229 = true;
 															FileConnection var197 = (FileConnection) Connector.open(
 																	String.valueOf(
 																			VikaUtils.filesVector.elementAt(var194)),
@@ -734,12 +726,8 @@ public class ChatScreen extends MainScreen {
 																var5 = new byte[var196];
 																var220.readFully(var5, 0, var196);
 															}
-
-															var229 = true;
 															var220.close();
 															var201.close();
-															var229 = true;
-															String var11 = null;
 															VikaUtils.sendPhoto(ChatScreen.this.peerId, var5);
 															list = null;
 															VikaTouch.setDisplay(VikaTouch.canvas);
