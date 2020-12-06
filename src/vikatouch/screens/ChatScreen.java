@@ -690,7 +690,7 @@ public class ChatScreen extends MainScreen {
 														return;
 													}
 												}
-											} catch (Exception e) {
+											} catch (Throwable e) {
 												e.printStackTrace();
 											}
 											list = VikaUtils.selectPhoto("main");

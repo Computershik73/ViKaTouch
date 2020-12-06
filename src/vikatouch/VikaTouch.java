@@ -823,13 +823,9 @@ public class VikaTouch {
 		} else {
 			// API = Settings.https?"https://api.vk.com:443":Settings.proxyApi;
 			if(Settings.proxy) {
-				if(Settings.https) {
-					OAUTH = VikaUtils.replace(Settings.proxyOAuth, "http:", "https:");
-					API = VikaUtils.replace(Settings.proxyApi, "http:", "https:");
-				} else {
-					OAUTH = Settings.proxyOAuth;
-					API = Settings.proxyApi;
-				}
+				OAUTH = Settings.proxyOAuth;
+				API = Settings.proxyApi;
+				Settings.https = false;
 			} else if(Settings.https) {
 				OAUTH = Settings.httpsOAuth;
 				API = Settings.httpsApi;

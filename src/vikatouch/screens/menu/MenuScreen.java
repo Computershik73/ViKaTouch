@@ -65,6 +65,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 				if (true) {
 					String var10 = VikaUtils.download(new URLBuilder("users.get").addField("user_ids", VikaTouch.userId)
 							.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
+					System.out.println(var10);
 					JSONObject profileobj = new JSONObject(var10).getJSONArray("response").getJSONObject(0);
 					name = profileobj.optString("first_name");
 					lastname = profileobj.optString("last_name");
