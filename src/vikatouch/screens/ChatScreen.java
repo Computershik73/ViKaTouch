@@ -1,17 +1,31 @@
 package vikatouch.screens;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
 
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.List;
 
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import ru.nnproject.kemulator.filemanagerapi.AbstractFileManager;
+import ru.nnproject.kemulator.filemanagerapi.FileManagerAPI;
 import ru.nnproject.vikaui.VikaCanvas;
+import ru.nnproject.vikaui.menu.EmptyMenu;
+import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
@@ -23,7 +37,11 @@ import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaTouch;
 import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.items.chat.MsgItem;
+import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
+import vikatouch.music.MusicPlayer;
+import vikatouch.screens.menu.PlaylistsScreen;
+import vikatouch.screens.music.MusicScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.IntObject;
 import vikatouch.utils.VikaUtils;
@@ -141,7 +159,8 @@ public class ChatScreen extends MainScreen {
 		title2 = TextLocal.inst.get("title2.loading");
 		this.title = title;
 		this.peerId = peerId;
-		//VikaTouch.sendLog(String.valueOf(this.title) + " " + String.valueOf(this.peerId));
+		// VikaTouch.sendLog(String.valueOf(this.title) + " " +
+		// String.valueOf(this.peerId));
 		parse();
 	}
 
@@ -548,7 +567,7 @@ public class ChatScreen extends MainScreen {
 						showTextBox();
 					} else if (x < 50) {
 						// прикреп
-						VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
+						addAtt();
 					} else if (x > DisplayUtils.width - 40) {
 						// отправить
 						send();
@@ -595,7 +614,9 @@ public class ChatScreen extends MainScreen {
 				break;
 			case 1:
 				// прикреп
-				VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
+				// VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях",
+				// null));
+				addAtt();
 				break;
 			case 2:
 				showTextBox();
@@ -620,6 +641,163 @@ public class ChatScreen extends MainScreen {
 			VikaTouch.inst.cmdsInst.command(14, this);
 		}
 		repaint();
+	}
+
+	private void addAtt() {
+
+		IMenu m = new EmptyMenu() {
+			public void onMenuItemPress(int i) {
+				try {
+					final boolean fotka;
+					if (i == 0) {
+						fotka = true;
+					} else if (i == 1) {
+						fotka = false;
+					} else {
+						fotka = false;
+					}
+
+					IMenu m = new EmptyMenu() {
+						private List list;
+
+						public void onMenuItemPress(int i) {
+							try {
+								if (i == 0) {
+									if (fotka) {
+										try {
+											if (System.getProperty("kemulator.filemanagerapi.version") != null) {
+													AbstractFileManager fm = FileManagerAPI.getInstance("Открыть файл",
+															FileManagerAPI.NATIVE);
+													fm.setFilterExtensions(new String[] { ".jpg", ".jpeg", ".png"},
+															"Любое изображение");
+													if (fm.openFile()) {
+														FileConnection fc = fm.getFileConnection();
+														DataInputStream in = fc.openDataInputStream();
+														int len = (int) fc.fileSize();
+														byte[] var5 = new byte[len];
+														in.readFully(var5, 0, len);
+														VikaUtils.sendPhoto(ChatScreen.this.peerId, var5);
+														return;
+													} else {
+														return;
+													}
+												}
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+											list = VikaUtils.selectPhoto("main");
+											VikaTouch.setDisplay(list);
+											final Command back = new Command("Назад", 2, 0);
+											final Command dirBack = new Command("Назад", 2, 0);
+											final Command preview = new Command("Предпросмотр", 8, 1);
+											list.addCommand(back);
+											list.addCommand(List.SELECT_COMMAND);
+											list.addCommand(preview);
+											list.setCommandListener(new CommandListener() {
+
+												public void commandAction(Command arg0, Displayable arg1) {
+													if (arg0 == List.SELECT_COMMAND) {
+														int var194 = list.getSelectedIndex();
+														int var196;
+														byte[] var5 = null;
+														ByteArrayOutputStream var201 = new ByteArrayOutputStream();
+
+														try {
+															boolean var229 = true;
+															FileConnection var197 = (FileConnection) Connector.open(
+																	String.valueOf(
+																			VikaUtils.filesVector.elementAt(var194)),
+																	1);
+															// заходить в папку
+															if (var197.isDirectory()) {
+																list = VikaUtils.selectPhoto(var197.getURL());
+																VikaTouch.setDisplay(list);
+																list.addCommand(dirBack);
+																list.addCommand(List.SELECT_COMMAND);
+																list.addCommand(preview);
+																list.setCommandListener(this);
+																return;
+															}
+															DataInputStream var220 = null;
+															if (!var197.exists()) {
+																list.append(
+																		"File " + var197.getName() + " doesn't exist!",
+																		(Image) null);
+															} else {
+																var196 = (int) var197.fileSize();
+																if (var196 > 600 * 1024) {
+																	// файл весит больше 600 кб
+																	VikaTouch.popup(new InfoPopup("Фото весит более 600кб, и не может быть отправлено.", null));
+																	return;
+																}
+																var220 = var197.openDataInputStream();
+																var5 = new byte[var196];
+																var220.readFully(var5, 0, var196);
+															}
+
+															var229 = true;
+															var220.close();
+															var201.close();
+															var229 = true;
+															String var11 = null;
+															VikaUtils.sendPhoto(ChatScreen.this.peerId, var5);
+															list = null;
+															VikaTouch.setDisplay(VikaTouch.canvas);
+														} catch (Exception e) {
+														}
+													} else if (arg0 == back) {
+														VikaTouch.setDisplay(VikaTouch.canvas);
+													} else if (arg0 == preview) {
+														int var194 = list.getSelectedIndex();
+														try {
+															VikaTouch.appInst.platformRequest((String)VikaUtils.filesVector.elementAt(var194));
+														} catch(Exception e) {
+														}
+														return;
+													} else if (arg0 == dirBack) {
+														list = VikaUtils.selectPhoto("main");
+
+														VikaTouch.setDisplay(list);
+														list.addCommand(back);
+														list.addCommand(List.SELECT_COMMAND);
+														list.addCommand(preview);
+														list.setCommandListener(this);
+														return;
+													}
+												}
+
+											});
+									} else {
+										VikaTouch.popup(new InfoPopup("не реализовано", null));
+									}
+								} else if (i == 1) {
+									VikaTouch.popup(new InfoPopup("не реализовано", null));
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					};
+					OptionItem[] oi = new OptionItem[2];
+					try {
+						oi[0] = new OptionItem(m, "из памяти", IconsManager.DEVICE, 0, 50);
+						oi[1] = new OptionItem(m, "из вк", IconsManager.ATTACHMENT, 1, 50);
+					} catch (Exception e) {
+					}
+					VikaTouch.popup(new ContextMenu(oi));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		};
+		OptionItem[] oi = new OptionItem[2];
+		try {
+			oi[0] = new OptionItem(m, "фотка", IconsManager.PHOTOS, 0, 50);
+			oi[1] = new OptionItem(m, "документ", IconsManager.DOCS, 1, 50);
+		} catch (Exception e) {
+		}
+		VikaTouch.popup(new ContextMenu(oi));
 	}
 
 	protected void down() {

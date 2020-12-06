@@ -10,6 +10,9 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 import javax.microedition.io.Connection;
 import javax.microedition.io.ConnectionNotFoundException;
@@ -22,11 +25,13 @@ import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.List;
 
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.popup.VikaNotification;
+import ru.nnproject.vikaui.utils.images.IconsManager;
 import tube42.lib.imagelib.ImageUtils;
-
+import vikamobilebase.HttpMultipartRequest;
 import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
 import vikatouch.caching.ImageStorage;
@@ -40,6 +45,8 @@ import vikatouch.utils.url.URLBuilder;
 import vikatouch.utils.url.URLDecoder;
 
 public final class VikaUtils {
+	private static Thread fileThread;
+
 	public static String parseShortTime(final long paramLong) {
 		final Calendar cal = Calendar.getInstance();
 
@@ -403,7 +410,7 @@ public final class VikaUtils {
 		try {
 			if (!Settings.https)
 				// url = replace(url, "https:", "http:");
-				// if (VikaBase.vkApi != "https://api.vk.com:443") {
+				// if (vkApi != "https://api.vk.com:443") {
 				url = replace(
 						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.xtrafrancyz.net/_/cs"),
 								"https://vk-api", "http://vk-api"), "https:\\/\\/vk-api", "http://vk-api"),
@@ -724,5 +731,133 @@ public final class VikaUtils {
 
 	public static int clamp(final int val, final int min, final int max) {
 		return Math.max(Math.min(val, max), min);
+	}
+
+	public static Vector filenamesVector = new Vector(1, 5);
+	public static Vector filesVector = new Vector(1, 5);
+
+	public static List selectPhoto(String var0) {
+		final List list = new List("Выбрать фото", 3);
+		if (true) {
+			filenamesVector.removeAllElements();
+			filesVector.removeAllElements();
+			if (var0 == "main") {
+				try {
+					var0 = System.getProperty("fileconn.dir.photos");
+
+					try {
+						final String v2 = System.getProperty("fileconn.dir.memorycard");
+
+						final String v3 = "file:///E:/";
+						if (v2 != null) {
+							filesVector.addElement(v2);
+							list.append("Карта памяти:", null);
+							if (v2.toLowerCase().indexOf("e:") < 0) {
+								filesVector.addElement(v3);
+								list.append("Диск E:", null);
+							}
+						} else {
+							filesVector.addElement(v3);
+							list.append("Диск E:", null);
+						}
+					} catch (Exception e) {
+
+					}
+				} catch (Exception e) {
+
+					try {
+						var0 = System.getProperty("fileconn.dir.memorycard");
+					} catch (Exception e2) {
+
+					}
+				}
+			}
+			final String url = var0;
+			if (fileThread != null) {
+				fileThread.interrupt();
+			}
+			fileThread = new Thread() {
+				public void run() {
+					try {
+						FileConnection var2 = (FileConnection) Connector.open(url, 1);
+						String var4;
+						Enumeration var3 = var2.list("*", true);
+						for (; var3.hasMoreElements() && this.isAlive(); filenamesVector.addElement(var4)) {
+
+							var4 = (String) var3.nextElement();
+							long var5;
+							if ((var2 = (FileConnection) Connector.open(url + var4, 1)).isDirectory()) {
+								var5 = var2.directorySize(false);
+								list.append(var4 + " - " + Integer.toString((int) (var5 / 1024L)) + "кб\n", null);
+								filesVector.addElement(url + var4);
+								var2.close();
+							} else {
+								var5 = var2.fileSize();
+								if (var4.endsWith("png") || var4.endsWith("tga") || var4.endsWith("jpg")
+										|| var4.endsWith("jpeg") || var4.endsWith("bmp") || var4.endsWith("gif")
+										|| var4.endsWith("tiff") || var4.endsWith("jfif")) {
+									list.append(var4 + " - " + Integer.toString((int) (var5 / 1024L)) + "кб\n",
+											IconsManager.ico[IconsManager.PHOTOS]);
+								} else {
+									list.append(var4 + " - " + Integer.toString((int) (var5 / 1024L)) + "кб\n",
+											IconsManager.ico[IconsManager.DOCS]);
+								}
+								filesVector.addElement(var2.getURL());
+							}
+							if (!this.isAlive()) {
+								break;
+							}
+						}
+
+						var2.close();
+					} catch (IOException var7) {
+					} catch (SecurityException var8) {
+
+					} catch (Exception var8) {
+					}
+				}
+			};
+			fileThread.start();
+
+		}
+		return list;
+	}
+
+	public static void sendPhoto(int peerId, byte[] var5) {
+		String var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
+				+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=5.120");
+
+		String aString163 = var11.substring(var11.indexOf("upload_url\":\"") + 13, var11.indexOf("\",\"user_id"));
+
+		aString163 = VikaUtils.replace(aString163, "\\/", "/");
+		Hashtable var202 = new Hashtable();
+
+		HttpMultipartRequest var200 = new HttpMultipartRequest("http://vikamobile.ru:80/uploaa.php?" + aString163,
+				var202, "upload_field", "bb2.jpg", "multipart/form-data", var5);
+
+		byte[] var218 = var200.send();
+
+		String var13;
+		String var217 = (var13 = new String(var218)).substring(0, var13.indexOf("[{"));
+
+		String var17 = var13.substring(var13.indexOf("[{"), var13.indexOf("}]") + 2);
+
+		String var175 = var13.substring(var13.indexOf("}]") + 2);
+
+		String var10000 = var17 = VikaUtils.download(VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + var17
+				+ "&server=" + var217 + "&hash=" + var175 + "&access_token=" + VikaTouch.accessToken + "&v=5.60");
+
+		var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
+
+		var175 = var17.substring(var17.indexOf("\"id") + 5, var17.indexOf("owner_id") - 2);
+
+		if (peerId < 2000000000L) {
+			VikaUtils.download(VikaTouch.API + "/method/messages.send?user_id=" + peerId + "&attachment=photo" + var217
+					+ "_" + var175 + "&access_token=" + VikaTouch.accessToken + "&v=5.60");
+		} else {
+			peerId -= 2000000000L;
+			VikaUtils.download(VikaTouch.API + "/method/messages.send?chat_id=" + peerId + "&attachment=photo" + var217
+					+ "_" + var175 + "&access_token=" + VikaTouch.accessToken + "&v=5.60");
+		}
 	}
 }

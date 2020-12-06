@@ -90,18 +90,20 @@ public class VikaNotification {
 						// d.vibrate(1000);
 						// Thread.sleep(100);
 						// d.vibrate(1000);
-					} else {
-						if (vikatouch.settings.Settings.notifmode == 2) {
-							Player notifplayer = Manager.createPlayer("http://vikamobile.ru:80/music/bb2.mp3");
-							notifplayer.realize();
-							try {
-								((VolumeControl) notifplayer.getControl("VolumeControl")).setLevel(100);
-							} catch (Exception e) {
-							}
-
-							notifplayer.start();
+					} else if (vikatouch.settings.Settings.notifmode == 2) {
+						Player notifplayer = Manager.createPlayer("http://vikamobile.ru:80/music/bb2.mp3");
+						notifplayer.realize();
+						try {
+							((VolumeControl) notifplayer.getControl("VolumeControl")).setLevel(100);
+						} catch (Exception e) {
 						}
-					}
+
+						notifplayer.start();
+					} else if (vikatouch.settings.Settings.notifmode == 3) {
+						Player notifplayer = Manager.createPlayer("device://tone");
+						notifplayer.realize();
+						notifplayer.start();
+					} 
 				} catch (Exception e) {
 				}
 			}
