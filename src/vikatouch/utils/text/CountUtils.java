@@ -29,6 +29,8 @@ public class CountUtils {
 		String x2;
 		if (a == 1) {
 			x2 = "";
+		} else if (a == 0) {
+			x2 = "s";
 		} else if (a < 5) {
 			x2 = "sfew";
 		} else {

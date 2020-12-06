@@ -38,7 +38,7 @@ import vikatouch.screens.MainScreen;
 import vikatouch.screens.NewsScreen;
 import vikatouch.screens.ReturnableListScreen;
 import vikatouch.screens.menu.DocsScreen;
-import vikatouch.screens.menu.FriendsScreen;
+import vikatouch.screens.menu.ChatMembersScreen;
 import vikatouch.screens.menu.GroupsScreen;
 import vikatouch.screens.menu.MenuScreen;
 import vikatouch.screens.menu.PhotosScreen;
@@ -184,7 +184,7 @@ public class VikaTouch {
 			DisplayUtils.current = DisplayUtils.CANVAS_GROUPSLIST;
 			MainScreen.lastMenu = DisplayUtils.CANVAS_GROUPSLIST;
 		}
-		if (s instanceof FriendsScreen) {
+		if (s instanceof ChatMembersScreen) {
 			DisplayUtils.current = DisplayUtils.CANVAS_FRIENDSLIST;
 			MainScreen.lastMenu = DisplayUtils.CANVAS_FRIENDSLIST;
 		}

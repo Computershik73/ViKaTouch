@@ -35,6 +35,9 @@ import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.items.chat.MsgItem;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
+import vikatouch.screens.menu.ChatMembersScreen;
+import vikatouch.screens.page.GroupPageScreen;
+import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.IntObject;
 import vikatouch.utils.VikaUtils;
@@ -217,7 +220,7 @@ public class ChatScreen extends MainScreen {
 
 						chatSettings = json.optJSONObject("chat_settings");
 						errst = 23;
-						this.title2 = CountUtils.countStrMembers(chatSettings.optInt("members_count"));
+						this.title2 = CountUtils.countStrMembers(members = chatSettings.optInt("members_count"));
 						errst = 24;
 					} catch (JSONException e) {
 						// this.title2 = e.toString();
@@ -264,6 +267,8 @@ public class ChatScreen extends MainScreen {
 	}
 
 	int inr = 0, outr = 0;
+
+	private int members;
 
 	private void messagesChat() {
 		String errst = "f";
@@ -574,6 +579,15 @@ public class ChatScreen extends MainScreen {
 				if (x < 50) {
 					stopUpdater();
 					VikaTouch.inst.cmdsInst.command(14, this);
+				} else if (x > DisplayUtils.width - 50) {
+					if(this.type == TYPE_USER) {
+						VikaTouch.setDisplay(new ProfilePageScreen(this.localId), 1);
+					} else if(this.type == TYPE_GROUP) {
+						VikaTouch.setDisplay(new GroupPageScreen(this.localId), 1);
+					} else if(this.type == TYPE_CHAT) {
+						String x2 = CountUtils.countStrMembers(this.members);
+						VikaTouch.setDisplay(new ChatMembersScreen(this.peerId, x2, this.members), 1);
+					}
 				}
 			} else {
 				msgClick(y, System.currentTimeMillis() - pressTime);
