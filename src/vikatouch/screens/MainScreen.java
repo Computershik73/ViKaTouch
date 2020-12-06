@@ -9,6 +9,7 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.screens.menu.MenuScreen;
+import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
 
 public abstract class MainScreen extends ScrollableCanvas {
@@ -67,7 +68,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 		topPanelH = DisplayUtils.compact ? 24 : 58;
 		bottomPanelH = DisplayUtils.compact ? 24 : 50;
 		int dw = DisplayUtils.width;
-		boolean showBottomPanel = !keysMode && VikaTouch.accessToken != null && (!DisplayUtils.compact || (this instanceof NewsScreen)
+		boolean showBottomPanel = !Settings.hideBottom && VikaTouch.accessToken != null && !DisplayUtils.compact && ((this instanceof NewsScreen)
 				|| (this instanceof DialogsScreen) || (this instanceof MenuScreen));
 		// fills
 		ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);

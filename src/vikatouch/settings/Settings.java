@@ -85,6 +85,8 @@ public class Settings {
 
 	public static byte storage;
 
+	public static boolean hideBottom = false;
+
 	// Не нуждаются сохранению (м.б передумаем)
 	public static boolean threaded;
 	public static long memoryClearCache = 500;
@@ -184,6 +186,8 @@ public class Settings {
 					dialogsLength = is.readInt();
 					// 2.8.10
 					notifmode = is.readInt();
+					// 2.8.12
+					hideBottom = is.readBoolean();
 
 				} catch (Exception e) {
 
@@ -241,6 +245,8 @@ public class Settings {
 				os.writeInt(dialogsLength);
 				// 2.8.10
 				os.writeInt(notifmode);
+				// 2.8.12
+				os.writeBoolean(hideBottom);
 
 				final byte[] b = baos.toByteArray();
 				rs.addRecord(b, 0, b.length);
@@ -284,6 +290,7 @@ public class Settings {
 		vibOnTouch = false;
 		dialogsRefreshRate = (byte) (isLiteOrSomething ? 0 : 2);
 		notifmode = 2;
+		hideBottom = false;
 
 		// язык соотвествующий настройкам устройства
 		try {

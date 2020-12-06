@@ -182,8 +182,11 @@ public class SettingsScreen extends MainScreen implements IMenu {
 				 */
 				// как известно, анимация давно сломанна, да и вообще в ней нет смысла т.к. при
 				// открытии экрана всё лагает.
+				
 
 				new OptionItem(this, TextLocal.inst.get("settings.language"), IconsManager.EDIT, 23, oneitemheight),
+				new SettingMenuItem(this, TextLocal.inst.get("settings.hidebottom"), IconsManager.DEVICE, 24,
+						oneitemheight, eOd, Settings.hideBottom ? 1 : 0, null, true),
 				new SettingMenuItem(this, TextLocal.inst.get("settings.vibontouch"), IconsManager.DEVICE, 19,
 						oneitemheight, eOd, Settings.vibOnTouch ? 1 : 0, null, true) };
 
@@ -324,6 +327,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case 22: {
 			Settings.notifmode = var;
+		}
+		case 24: {
+			Settings.hideBottom = var == 1;
 		}
 		}
 		initAllSettsList();

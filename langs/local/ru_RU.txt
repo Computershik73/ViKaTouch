@@ -164,6 +164,9 @@ msg.attach.attachment=Вложение
 msg.attach.attachments=Вложения
 msg.attach.video=Видеозапись
 msg.attach.wall=Запись на стене
+msg.attach.doc=Документ
+msg.attach.memory=С памяти
+msg.attach.album=Из ВК
 msg.keyboard=Нажмите ОК для ввода
 msg.entermsg=Введите сообщение...
 msg.typing=печатает...
@@ -274,6 +277,7 @@ settings.kemulator=KEmulator
 settings.notificationmode=Режим уведомлений
 settings.vibro=Вибрация
 settings.sound=Звук
+settings.hidebottom=Скрыть нижние кнопки
 
 back=Назад
 select=Выбрать
