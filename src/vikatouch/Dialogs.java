@@ -72,9 +72,9 @@ public class Dialogs extends TimerTask {
 						}
 						unreadC = (short) response.optInt("unread_count");
 						// itemsCount = (short) response.optInt("count");
-						response.dispose("response pre");
-						items.dispose("items pre");
-						item.dispose("item pre");
+						response.dispose();
+						items.dispose();
+						item.dispose();
 						if (VikaTouch.unreadCount != unreadC || unreadC > 0 || hasNew) {
 							VikaTouch.unreadCount = unreadC;
 							x = VikaUtils.download(new URLBuilder("messages.getConversations").addField("filter", "all")
@@ -90,7 +90,7 @@ public class Dialogs extends TimerTask {
 								dialogs[i] = new ConversationItem(item);
 								dialogs[i].parseJSON();
 								dialogs[i].disposeJson();
-								item.dispose("item for");
+								item.dispose();
 							}
 							if (sendNofs && hasNew && dialogs.length > 1 && dialogs[0] != null
 									&& !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId)) {
@@ -100,11 +100,11 @@ public class Dialogs extends TimerTask {
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,
 										VikaUtils.cut(dialogs[0].text, 40), VikaTouch.dialogsScr));
 							}
-							items.dispose("items");
+							items.dispose();
 							x = null;
 
 						}
-						response.dispose("response");
+						response.dispose();
 					} catch (JSONException e) {
 						e.printStackTrace();
 					} catch (Throwable e) {

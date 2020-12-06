@@ -2,7 +2,6 @@ package vikatouch.attachments;
 
 import org.json.me.JSONObject;
 
-import vikatouch.VikaTouch;
 import vikatouch.json.JSONBase;
 
 public abstract class Attachment extends JSONBase {

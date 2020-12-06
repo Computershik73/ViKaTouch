@@ -12,9 +12,6 @@ import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
-import vikatouch.items.LoadMoreButtonItem;
-import vikatouch.items.menu.DocItem;
-import vikatouch.items.menu.FriendItem;
 import vikatouch.items.music.PlaylistItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
@@ -26,11 +23,8 @@ public class PlaylistsScreen extends MainScreen {
 
 	private static String plStr;
 
-	private String loadingStr;
-
 	public PlaylistsScreen() {
 		super();
-		loadingStr = TextLocal.inst.get("title.loading");
 		plStr = TextLocal.inst.get("title.playlists");
 	}
 
@@ -43,7 +37,6 @@ public class PlaylistsScreen extends MainScreen {
 		this.title = title;
 		scrolled = 0;
 		uiItems = null;
-		final PlaylistsScreen thisC = this;
 		currId = id;
 		if (downloaderThread != null && downloaderThread.isAlive()) {
 			downloaderThread.interrupt();

@@ -1,7 +1,5 @@
 package vikatouch.screens.menu;
 
-import java.io.IOException;
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -25,16 +23,10 @@ import vikatouch.utils.url.URLBuilder;
 
 public class DocsScreen extends MainScreen implements INextLoadable {
 
-	private static String loadingStr;
-
-	private static String docsStr;
-
 	public DocsScreen() {
 		super();
 		isPreviewShown = false;
 		VikaTouch.loading = true;
-		loadingStr = TextLocal.inst.get("title.loading");
-		docsStr = TextLocal.inst.get("title.docs");
 	}
 
 	public static DocsScreen current;
@@ -62,10 +54,10 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 	public void loadDocs(final int from, final int id, final String name1, final String name2) {
 		this.whose = name1;
 		this.name2 = name2;
-		formattedTitle = docsStr;
+		formattedTitle = TextLocal.inst.get("title.docs");
 		scrolled = 0;
 		uiItems = null;
-		final DocsScreen thisC = current = this;
+		current = this;
 		final int count = loadDocsCount;
 		fromDoc = from;
 		currId = id;
@@ -96,7 +88,7 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 						}
 						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 						if (canLoadMore) {
-							uiItems[itemsCount] = new LoadMoreButtonItem(thisC);
+							uiItems[itemsCount] = new LoadMoreButtonItem(DocsScreen.this);
 							itemsCount++;
 						}
 						String name = name1;

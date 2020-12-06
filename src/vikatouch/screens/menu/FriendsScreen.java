@@ -13,7 +13,6 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.items.LoadMoreButtonItem;
 import vikatouch.items.menu.FriendItem;
-import vikatouch.items.menu.GroupItem;
 import vikatouch.json.INextLoadable;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
@@ -23,7 +22,7 @@ import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
 public class FriendsScreen extends MainScreen implements INextLoadable {
-
+/*
 	private static String loadingStr;
 
 	private static String membersStr;
@@ -40,6 +39,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 			membersStr = TextLocal.inst.get("title.members");
 		}
 	}
+	*/
 
 	public boolean isReady() {
 		return uiItems != null;
@@ -67,10 +67,9 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 	private String formattedTitle;
 
 	public void loadFriends(final int from, final int id, final String name1, final String name2) {
-		formattedTitle = peopleStr;
+		formattedTitle = TextLocal.inst.get("title.people");
 		scrolled = 0;
 		uiItems = null;
-		final FriendsScreen thisC = this;
 		fromF = from;
 		currId = id;
 
@@ -114,7 +113,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						}
 						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 						if (canLoadMore) {
-							uiItems[itemsCount] = new LoadMoreButtonItem(thisC);
+							uiItems[itemsCount] = new LoadMoreButtonItem(FriendsScreen.this);
 							itemsCount++;
 						}
 						if (keysMode) {

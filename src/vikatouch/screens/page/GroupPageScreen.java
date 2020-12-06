@@ -4,21 +4,17 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
-import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ConfirmBox;
-import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
-import vikatouch.items.menu.FriendItem;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.json.JSONBase;
 import vikatouch.locale.TextLocal;
@@ -26,7 +22,6 @@ import vikatouch.screens.MainScreen;
 import vikatouch.screens.NewsScreen;
 import vikatouch.screens.menu.DocsScreen;
 import vikatouch.screens.menu.FriendsScreen;
-import vikatouch.screens.menu.MenuScreen;
 import vikatouch.screens.menu.VideosScreen;
 import vikatouch.screens.music.MusicScreen;
 import vikatouch.utils.VikaUtils;
@@ -57,77 +52,19 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 	
 	// system
 	private boolean isInfoShown = false;
-
-	protected static String membersStr;
-
-	private static String groupsStr;
-
-	private static String loadingStr;
-
-	private static String emptydescStr;
-
-	protected static String linksStr;
-
-	public static String groupStr;
-
-	protected static String discussionsStr;
-
-	protected static String joinStr;
-
-	protected static String leaveStr;
-
-	protected static String contactsStr;
-
-	protected static String siteStr;
-
-	protected static String wallStr;
-
-	protected static String infoStr;
-
-	protected static String videosStr;
-
-	protected static String musicStr;
-
-	protected static String photosStr;
-
-	protected static String writeMessageStr;
-
-	protected static String cannotWriteStr;
-
-	protected static String docsStr;
-
-	protected static String noWebsiteStr;
 	
-	public static Thread downloaderThread;
+	private String descEmptyStr;
+	private String loadingStr;
+	
+	public Thread downloaderThread;
 	
 	public GroupPageScreen(int id)
 	{
-		if(groupStr == null)
-		{
-			emptydescStr = TextLocal.inst.get("group.descriptionempty");
-			loadingStr = TextLocal.inst.get("title2.loading");
-			linksStr = TextLocal.inst.get("menu.links");
-			discussionsStr = TextLocal.inst.get("menu.discussions");
-			leaveStr = TextLocal.inst.get("menu.grleave");
-			joinStr = TextLocal.inst.get("menu.grjoin");
-			contactsStr = TextLocal.inst.get("menu.contacts");
-			groupStr = TextLocal.inst.get("group");
-			siteStr = TextLocal.inst.get("menu.website");
-			photosStr = TextLocal.inst.get("menu.photos");
-			musicStr = TextLocal.inst.get("menu.music");
-			wallStr = TextLocal.inst.get("menu.wall");
-			cannotWriteStr = TextLocal.inst.get("menu.cannotwrite");
-			noWebsiteStr = TextLocal.inst.get("menu.nowebsite");
-			writeMessageStr = TextLocal.inst.get("menu.writemsg");
-			infoStr = TextLocal.inst.get("menu.info");
-			docsStr = TextLocal.inst.get("menu.documents");
-			videosStr = TextLocal.inst.get("menu.videos");
-			groupsStr = TextLocal.inst.get("group.s");
-			membersStr = TextLocal.inst.get("menu.members");
-		}
 		hasBackButton = true;
 		this.id = id;
 		load();
+		descEmptyStr = TextLocal.inst.get("group.descriptionempty");
+		loadingStr = TextLocal.inst.get("title2.loading");
 	}
 	
 	public void load()
@@ -135,7 +72,6 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 		if(downloaderThread != null && downloaderThread.isAlive())
 			downloaderThread.interrupt();
 		System.gc();
-		final GroupPageScreen thisC = this;
 		downloaderThread = new Thread()
 		{
 
@@ -175,20 +111,20 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 						itemsCount = 13;
 						int h = oneitemheight = (short) (DisplayUtils.compact?30:50);
 						uiItems = new OptionItem[13];
-						uiItems[0] = new OptionItem(thisC, membersStr + " ("+membersCount+")", IconsManager.GROUPS, 0, h);
-						uiItems[1] = new OptionItem(thisC, isMember?leaveStr:joinStr, 
+						uiItems[0] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.members") + " ("+membersCount+")", IconsManager.GROUPS, 0, h);
+						uiItems[1] = new OptionItem(GroupPageScreen.this, isMember?TextLocal.inst.get("menu.grleave"):TextLocal.inst.get("menu.grjoin"), 
 								isMember?IconsManager.CLOSE:IconsManager.ADD, 1, h);
-						uiItems[2] = new OptionItem(thisC, canMsg?writeMessageStr:cannotWriteStr, IconsManager.MSGS, 2, h);
-						uiItems[3] = new OptionItem(thisC, wallStr, IconsManager.NEWS, 3, h);
-						uiItems[4] = new OptionItem(thisC, infoStr, IconsManager.INFO, 4, h);
-						uiItems[5] = new OptionItem(thisC, photosStr + " ("+photos+")", IconsManager.PHOTOS, 5, h);
-						uiItems[6] = new OptionItem(thisC, musicStr + " ("+music+")", IconsManager.MUSIC, 6, h);
-						uiItems[7] = new OptionItem(thisC, videosStr + " ("+videos+")", IconsManager.VIDEOS, 7, h);
-						uiItems[8] = new OptionItem(thisC, docsStr + " ("+docs+")", IconsManager.DOCS, 8, h);
-						uiItems[9] = new OptionItem(thisC, discussionsStr + " ("+topics+")", IconsManager.COMMENTS, 9, h);
-						uiItems[10] = new OptionItem(thisC, (site==null||site.length()<5)?siteStr+": "+noWebsiteStr:siteStr+": "+site, IconsManager.LINK, 10, h);
-						uiItems[11] = new OptionItem(thisC, linksStr, IconsManager.LINK, 11, h);
-						uiItems[12] = new OptionItem(thisC, contactsStr, IconsManager.GROUPS, 11, h);
+						uiItems[2] = new OptionItem(GroupPageScreen.this, canMsg?TextLocal.inst.get("menu.writemsg"):TextLocal.inst.get("menu.cannotwrite"), IconsManager.MSGS, 2, h);
+						uiItems[3] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.wall"), IconsManager.NEWS, 3, h);
+						uiItems[4] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.info"), IconsManager.INFO, 4, h);
+						uiItems[5] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.photos") + " ("+photos+")", IconsManager.PHOTOS, 5, h);
+						uiItems[6] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.music") + " ("+music+")", IconsManager.MUSIC, 6, h);
+						uiItems[7] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.videos") + " ("+videos+")", IconsManager.VIDEOS, 7, h);
+						uiItems[8] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.documents") + " ("+docs+")", IconsManager.DOCS, 8, h);
+						uiItems[9] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.discussions") + " ("+topics+")", IconsManager.COMMENTS, 9, h);
+						uiItems[10] = new OptionItem(GroupPageScreen.this, (site==null||site.length()<5)?TextLocal.inst.get("menu.website")+": "+TextLocal.inst.get("menu.nowebsite"):TextLocal.inst.get("menu.website")+": "+site, IconsManager.LINK, 10, h);
+						uiItems[11] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.links"), IconsManager.LINK, 11, h);
+						uiItems[12] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.contacts"), IconsManager.GROUPS, 11, h);
 					}
 					catch (JSONException e)
 					{
@@ -251,7 +187,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 			if(description == null)
 			{
 				isInfoShown = false;
-				((OptionItem)uiItems[4]).text = emptydescStr;
+				((OptionItem)uiItems[4]).text = descEmptyStr;
 			}
 			Font df = Font.getFont(0, 0, 8);
 			g.setFont(df);
@@ -283,7 +219,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 	
 	public final void drawHUD(Graphics g)
 	{
-		drawHUD(g, link==null?groupStr:link);
+		drawHUD(g, link==null?TextLocal.inst.get("group"):link);
 	}
 	
 	public final void release(int x, int y)
@@ -324,7 +260,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 					fs.loadFriends(0, -id, name, name);
 					break;
 				case 1:
-					VikaTouch.popup(new ConfirmBox(isMember?leaveStr+"?":joinStr+"?",null,
+					VikaTouch.popup(new ConfirmBox(isMember?TextLocal.inst.get("menu.grleave")+"?":TextLocal.inst.get("menu.grjoin")+"?",null,
 
 					new Thread()
 					{

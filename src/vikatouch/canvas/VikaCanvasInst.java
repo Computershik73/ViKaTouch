@@ -7,7 +7,6 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.VikaCanvas;
-import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.popup.VikaNotice;
 import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.screen.VikaScreen;

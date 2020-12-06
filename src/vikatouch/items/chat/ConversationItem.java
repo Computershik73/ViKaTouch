@@ -1,13 +1,10 @@
 package vikatouch.items.chat;
 
-import java.io.IOException;
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONArray;
-import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.utils.ColorUtils;
@@ -15,15 +12,11 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
-import vikatouch.attachments.AudioAttachment;
-import vikatouch.attachments.PhotoAttachment;
 import vikatouch.items.JSONUIItem;
-import vikatouch.json.JSONBase;
 import vikatouch.locale.TextLocal;
 import vikatouch.settings.Settings;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
-import vikatouch.utils.error.ErrorCodes;
 
 public class ConversationItem extends JSONUIItem {
 	public String text;
@@ -164,7 +157,7 @@ public class ConversationItem extends JSONUIItem {
 					title = fixJSONString(chatSettings.optString("title"));
 					isGroup = chatSettings.optBoolean("is_group_channel");
 					avaurl = fixJSONString(chatSettings.getJSONObject("photo").optString("photo_50"));
-					chatSettings.dispose("chatsets");
+					chatSettings.dispose();
 				}
 			} catch (Throwable e) {
 				// System.out.println("conv " + peerId + ": " + e.toString());
@@ -179,9 +172,9 @@ public class ConversationItem extends JSONUIItem {
 			type = fixJSONString(peer.optString("type"));
 			id = peer.optInt("local_id");
 
-			peer.dispose("peer");
+			peer.dispose();
 
-			conv.dispose("conv");
+			conv.dispose();
 
 			if (type.equalsIgnoreCase("user") && Dialogs.profiles != null) {
 				for (int i = 0; i < Dialogs.profiles.length(); i++) {
@@ -288,7 +281,7 @@ public class ConversationItem extends JSONUIItem {
 			title = title.substring(0, 22) + "...";
 		}
 		type = null;
-		json.dispose("conv json");
+		json.dispose();
 		json = null;
 		System.gc();
 	}

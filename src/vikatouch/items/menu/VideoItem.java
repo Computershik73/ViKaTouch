@@ -1,19 +1,12 @@
 package vikatouch.items.menu;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-
 import javax.microedition.io.ConnectionNotFoundException;
-import javax.microedition.io.Connector;
-import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
-import ru.nnproject.vikatouch.VikaTouchApp;
 import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
@@ -26,7 +19,6 @@ import vikatouch.settings.Settings;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
-import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLDecoder;
 
 public class VideoItem extends JSONUIItem {

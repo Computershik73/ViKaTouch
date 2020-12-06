@@ -4,12 +4,10 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 import org.json.me.JSONArray;
-import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.popup.AutoContextMenu;
-import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
@@ -25,7 +23,6 @@ import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
 import vikatouch.attachments.VoiceAttachment;
 import vikatouch.attachments.WallAttachment;
-import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
@@ -34,7 +31,6 @@ import vikatouch.utils.IntObject;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.CountUtils;
 import vikatouch.utils.url.URLBuilder;
-import vikatouch.utils.url.URLDecoder;
 
 public class MsgItem extends ChatItem implements IMenu {
 	public MsgItem(JSONObject json) {
@@ -586,7 +582,7 @@ public class MsgItem extends ChatItem implements IMenu {
 					ChatScreen c = (ChatScreen) VikaTouch.canvas.currentScreen;
 					URLBuilder url = new URLBuilder("messages.markAsRead").addField("start_message_id", "" + mid)
 							.addField("peer_id", c.peerId);
-					String res = VikaUtils.download(url);
+					VikaUtils.download(url);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

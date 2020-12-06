@@ -13,7 +13,6 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
-import vikatouch.screens.menu.DocsScreen;
 import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.ResizeUtils;
@@ -22,10 +21,10 @@ import vikatouch.utils.error.ErrorCodes;
 
 public class FriendItem extends JSONUIItem {
 	private String name;
-	private String link;
+	//private String link;
 	private int id;
 	private Image ava = null;
-	private int lastSeen;
+	//private int lastSeen;
 	private boolean online;
 	private String city;
 	private int yrsOld;
@@ -41,14 +40,15 @@ public class FriendItem extends JSONUIItem {
 	public void parseJSON() {
 		try {
 			name = json.optString("first_name") + " " + json.optString("last_name");
-			link = json.optString("domain");
+			//link = json.optString("domain");
 			id = json.optInt("id");
+			/*
 			try {
 				lastSeen = json.getJSONObject("last_seen").optInt("time");
 			} catch (Exception e) {
 
 			}
-
+			 */
 			try {
 				city = json.getJSONObject("city").optString("title");
 			} catch (JSONException e) {

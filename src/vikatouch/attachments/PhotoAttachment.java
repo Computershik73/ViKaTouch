@@ -4,10 +4,6 @@ import java.io.IOException;
 
 import javax.microedition.lcdui.Image;
 
-import org.json.me.JSONArray;
-import org.json.me.JSONException;
-import org.json.me.JSONObject;
-
 import ru.nnproject.vikaui.popup.ImagePreview;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;

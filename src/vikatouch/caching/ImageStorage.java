@@ -1,11 +1,8 @@
  package vikatouch.caching;
 
-import java.io.*;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
-import javax.microedition.lcdui.*;
-import javax.microedition.rms.*;
+import javax.microedition.lcdui.Image;
 
 import vikatouch.VikaTouch;
 import vikatouch.settings.Settings;

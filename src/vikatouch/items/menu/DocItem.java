@@ -6,11 +6,9 @@ import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
-import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -19,7 +17,6 @@ import vikatouch.VikaTouch;
 import vikatouch.attachments.ISocialable;
 import vikatouch.attachments.PhotoSize;
 import vikatouch.items.JSONUIItem;
-import vikatouch.json.JSONBase;
 import vikatouch.screens.menu.DocsScreen;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
@@ -33,7 +30,7 @@ public class DocItem extends JSONUIItem implements ISocialable {
 	private int size;
 	private PhotoSize[] prevSizes;
 	private Image iconImg;
-	private int documentType;
+	//private int documentType;
 	private String ext;
 	private int type;
 	private String time;

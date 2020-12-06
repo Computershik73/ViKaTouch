@@ -1,13 +1,9 @@
 package vikatouch.screens.menu;
 
-import java.io.IOException;
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONArray;
-import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
@@ -15,7 +11,6 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.items.LoadMoreButtonItem;
-import vikatouch.items.menu.DocItem;
 import vikatouch.items.menu.GroupItem;
 import vikatouch.json.INextLoadable;
 import vikatouch.locale.TextLocal;
@@ -30,7 +25,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	public GroupsScreen() {
 		super();
 		VikaTouch.loading = true;
-		groupsStr = TextLocal.inst.get("title.groups");
+		//groupsStr = TextLocal.inst.get("title.groups");
 	}
 
 	public boolean isReady() {
@@ -53,7 +48,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	public int totalItems;
 	public boolean canLoadMore = true;
 
-	private String groupsStr;
+	//private String groupsStr;
 
 	protected String formattedTitle;
 
@@ -62,10 +57,9 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	private String name2;
 
 	public void loadGroups(final int from, final int id, final String name1, final String name2) {
-		formattedTitle = groupsStr;
+		formattedTitle = TextLocal.inst.get("title.groups");;
 		scrolled = 0;
 		uiItems = null;
-		final GroupsScreen thisC = this;
 		fromG = from;
 		currId = id;
 		whose = name1;
@@ -122,7 +116,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 					range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 					// err=String.valueOf(i)+" i3";
 					if (canLoadMore) {
-						uiItems[itemsCount] = new LoadMoreButtonItem(thisC);
+						uiItems[itemsCount] = new LoadMoreButtonItem(GroupsScreen.this);
 						itemsCount++;
 					}
 					err = "11";

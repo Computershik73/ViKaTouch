@@ -1,8 +1,6 @@
 package vikatouch.items.music;
 
-import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONObject;
 
@@ -14,9 +12,7 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
 import vikatouch.music.MusicPlayer;
-import vikatouch.screens.MainScreen;
 import vikatouch.screens.music.MusicScreen;
-import vikatouch.utils.VikaUtils;
 
 public class AudioTrackItem extends JSONUIItem implements UIItem {
 	public int id;

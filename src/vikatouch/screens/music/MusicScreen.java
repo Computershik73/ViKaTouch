@@ -8,7 +8,8 @@ import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
-import ru.nnproject.vikaui.menu.*;
+import ru.nnproject.vikaui.menu.EmptyMenu;
+import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
@@ -17,13 +18,11 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.AudioAttachment;
-import vikatouch.items.menu.FriendItem;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.items.music.AudioTrackItem;
-import vikatouch.items.music.PlaylistItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.music.MusicPlayer;
-import vikatouch.screens.*;
+import vikatouch.screens.MainScreen;
 import vikatouch.screens.menu.PlaylistsScreen;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
@@ -78,7 +77,6 @@ public class MusicScreen
 	{
 		scrolled = 0;
 		uiItems = null;
-		final MusicScreen thisC = this;
 		this.albumId = albumId;
 		ownerId = oid;
 		this.title = title;
@@ -112,7 +110,7 @@ public class MusicScreen
 						for(int i = 0; i < itemsCount; i++)
 						{
 							JSONObject item = items.getJSONObject(i);
-							uiItems[i] = new AudioTrackItem(item, thisC, i);
+							uiItems[i] = new AudioTrackItem(item, MusicScreen.this, i);
 							((AudioTrackItem) uiItems[i]).parseJSON();
 							Thread.sleep(15);
 							// должно не зависать

@@ -2,19 +2,18 @@ package vikatouch.screens.menu;
 
 import javax.microedition.lcdui.Graphics;
 
-import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
 
 public class PhotosScreen extends MainScreen {
-	private String photosStr;
+	private String title;
 
-	public PhotosScreen() {
-		photosStr = TextLocal.inst.get("title.photos");
+	public PhotosScreen(int owner, int album) {
+		title = TextLocal.inst.get("title.photos");
 	}
 
 	public void draw(Graphics g) {
-		drawHUD(g, photosStr);
+		drawHUD(g, title);
 	}
 
 }

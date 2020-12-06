@@ -14,7 +14,6 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
-import vikatouch.screens.menu.MenuScreen;
 import vikatouch.utils.text.TextEditor;
 
 public class LoginScreen extends VikaScreen {
@@ -35,7 +34,7 @@ public class LoginScreen extends VikaScreen {
 	// tapping cache
 	private int[] tapCoords;
 
-	private String titleLoginStr;
+	//private String titleLoginStr;
 	protected String passwordStr;
 	protected String loginStr;
 	private String warnStr;
@@ -56,7 +55,7 @@ public class LoginScreen extends VikaScreen {
 		 * e) { }
 		 */
 		pressed = false;
-		titleLoginStr = TextLocal.inst.get("title.login");
+		//titleLoginStr = TextLocal.inst.get("title.login");
 		loginStr = TextLocal.inst.get("login.login");
 		passwordStr = TextLocal.inst.get("login.password");
 		warnStr = TextLocal.inst.get("login.warn");

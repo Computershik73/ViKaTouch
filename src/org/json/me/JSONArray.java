@@ -883,27 +883,19 @@ public class JSONArray {
 		Object var2;
 		return (var2 = this.opt(var1)) instanceof JSONObject ? (JSONObject) var2 : null;
 	}
-
+		
 	/**
 	 * Clears all arrays
 	 */
 	public void dispose() {
-		dispose("null");
-	}
-		
-	/**
-	 * Clears all arrays
-	 * @param string 
-	 */
-	public void dispose(String string) {
 		if(myArrayList != null)
 		{
 			for(int i = 0; i < myArrayList.size(); i++)
 			{
 				if(myArrayList.elementAt(i) instanceof JSONObject)
-					((JSONObject)myArrayList.elementAt(i)).dispose(string);
+					((JSONObject)myArrayList.elementAt(i)).dispose();
 				if(myArrayList.elementAt(i) instanceof JSONArray)
-					((JSONArray)myArrayList.elementAt(i)).dispose(string);
+					((JSONArray)myArrayList.elementAt(i)).dispose();
 			}
 			myArrayList.removeAllElements();
 		}

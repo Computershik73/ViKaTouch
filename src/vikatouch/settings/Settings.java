@@ -306,6 +306,7 @@ public class Settings {
 			alerts = true;
 			videoResolution = "240";
 			proxy = true;
+			https = false;
 			// threaded = false;
 		}
 	}

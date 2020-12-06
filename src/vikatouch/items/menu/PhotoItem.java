@@ -1,17 +1,14 @@
 package vikatouch.items.menu;
 
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
-import org.json.me.JSONObject;
-
-import ru.nnproject.vikaui.menu.items.UIItem;
 import vikatouch.items.JSONUIItem;
 
 public class PhotoItem extends JSONUIItem {
+	/*
 	public int itemDrawWidth = 50;
-	private String iconUrl;
-	private Image iconImg;
+	//private String iconUrl;
+	//private Image iconImg;
 
 	public PhotoItem(JSONObject json, boolean dontLoadImage) {
 		super(json);
@@ -20,7 +17,7 @@ public class PhotoItem extends JSONUIItem {
 
 		}
 	}
-
+*/
 	public void paint(Graphics g, int y, int scrolled) {
 
 	}

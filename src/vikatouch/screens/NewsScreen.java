@@ -1,8 +1,6 @@
 package vikatouch.screens;
 
-import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
@@ -10,8 +8,6 @@ import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.InfoPopup;
-import ru.nnproject.vikaui.popup.VikaNotification;
-import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.WallAttachment;
@@ -57,7 +53,6 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 	public void loadPosts(final boolean fromLatest) {
 		if (fromLatest)
 			offset = 0;
-		final INextLoadable thisC = this;
 		new Thread() {
 			public void run() {
 				VikaTouch.loading = true;
@@ -100,7 +95,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 					int itemsCount = items.length();
 					uiItems = new PressableUIItem[itemsCount + 1];
 					step = 4;
-					uiItems[itemsCount] = new LoadMoreButtonItem(thisC);
+					uiItems[itemsCount] = new LoadMoreButtonItem(NewsScreen.this);
 					step = 5;
 					profiles = response.getJSONArray("profiles");
 					groups = response.getJSONArray("groups");

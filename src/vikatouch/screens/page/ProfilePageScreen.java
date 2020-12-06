@@ -121,7 +121,6 @@ public class ProfilePageScreen
 		if(downloaderThread != null && downloaderThread.isAlive())
 			downloaderThread.interrupt();
 		System.gc();
-		final ProfilePageScreen thisC = this;
 		downloaderThread = new Thread()
 		{
 
@@ -196,23 +195,23 @@ public class ProfilePageScreen
 						{
 							itemsCount = 2;
 							uiItems = new OptionItem[2];
-							uiItems[0] = new OptionItem(thisC, closedStr, IconsManager.INFO, 0, 50);
+							uiItems[0] = new OptionItem(ProfilePageScreen.this, closedStr, IconsManager.INFO, 0, 50);
 						}
 						else
 						{
 							itemsCount = 9;
 							uiItems = new OptionItem[9];
-							uiItems[0] = new OptionItem(thisC, canMsg?writeMessageStr:cannotWriteStr, IconsManager.MSGS, 0, h);
+							uiItems[0] = new OptionItem(ProfilePageScreen.this, canMsg?writeMessageStr:cannotWriteStr, IconsManager.MSGS, 0, h);
 							
-							uiItems[2] = new OptionItem(thisC, friendsStr + " ("+friends+")", IconsManager.FRIENDS, 2, h);
-							uiItems[3] = new OptionItem(thisC, wallStr, IconsManager.NEWS, 3, h);
-							uiItems[4] = new OptionItem(thisC, groupsStr+" ("+groups+")", IconsManager.GROUPS, 4, h);
-							uiItems[5] = new OptionItem(thisC, photosStr+" ("+photos+")", IconsManager.PHOTOS, 5, h);
-							uiItems[6] = new OptionItem(thisC, musicStr+" ("+music+")", IconsManager.MUSIC, 6, h);
-							uiItems[7] = new OptionItem(thisC, videosStr+" ("+videos+")", IconsManager.VIDEOS, 7, h);
-							uiItems[8] = new OptionItem(thisC, docsStr+" ("+docs+")", IconsManager.DOCS, 8, h);
+							uiItems[2] = new OptionItem(ProfilePageScreen.this, friendsStr + " ("+friends+")", IconsManager.FRIENDS, 2, h);
+							uiItems[3] = new OptionItem(ProfilePageScreen.this, wallStr, IconsManager.NEWS, 3, h);
+							uiItems[4] = new OptionItem(ProfilePageScreen.this, groupsStr+" ("+groups+")", IconsManager.GROUPS, 4, h);
+							uiItems[5] = new OptionItem(ProfilePageScreen.this, photosStr+" ("+photos+")", IconsManager.PHOTOS, 5, h);
+							uiItems[6] = new OptionItem(ProfilePageScreen.this, musicStr+" ("+music+")", IconsManager.MUSIC, 6, h);
+							uiItems[7] = new OptionItem(ProfilePageScreen.this, videosStr+" ("+videos+")", IconsManager.VIDEOS, 7, h);
+							uiItems[8] = new OptionItem(ProfilePageScreen.this, docsStr+" ("+docs+")", IconsManager.DOCS, 8, h);
 						}
-						uiItems[1] = new OptionItem(thisC, (new String[] {addStr,cancelStr,acceptStr,removeStr})[friendState],
+						uiItems[1] = new OptionItem(ProfilePageScreen.this, (new String[] {addStr,cancelStr,acceptStr,removeStr})[friendState],
 								(friendState==3||friendState==1)?IconsManager.CLOSE:IconsManager.ADD, 1, h);
 						try
 						{
@@ -280,7 +279,7 @@ public class ProfilePageScreen
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawString(name==null?loadingStr+"...":name, 74, 74, 0);
 		g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL));
-		g.drawString(status==null?"":status, 74, 98, 0);
+		g.drawString(status==null?visitStr:status, 74, 98, 0);
 		
 		ColorUtils.setcolor(g, -3);
 		g.drawRect(0, 140, DisplayUtils.width, 50);

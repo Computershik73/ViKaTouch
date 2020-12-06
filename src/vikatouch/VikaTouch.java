@@ -102,8 +102,8 @@ public class VikaTouch {
 
 			}
 			tokenRMS = RecordStore.openRecordStore(TOKEN_RMS, true);
-			String s = accessToken + ";" + userId + ";" + MenuScreen.name + " " + MenuScreen.lastname + ";"
-					+ MenuScreen.avaurl;
+			String s = accessToken + ";" + userId + ";"/* + MenuScreen.name + " " + MenuScreen.lastname + ";"
+					+ MenuScreen.avaurl*/;
 			tokenRMS.addRecord(s.getBytes("UTF-8"), 0, s.length());
 			tokenRMS.closeRecordStore();
 			// VikaTouch.sendLog("savetoken: "+accessToken);
@@ -122,17 +122,10 @@ public class VikaTouch {
 
 				// Вся эта хрень нужна для запуска в оффлайне
 				String s2 = s.substring(s.indexOf(";") + 1, s.length());
-				String s3 = s2.substring(s2.indexOf(";") + 1, s2.length());
-				MenuScreen.avaurl = s3.substring(s3.indexOf(";") + 1, s3.length());
-				MenuScreen.hasAva = true;
-				String name = s3.substring(0, s3.indexOf(";"));
-				MenuScreen.name = name.substring(0, name.indexOf(" "));
-				MenuScreen.lastname = name.substring(name.indexOf(" ") + 1, name.length());
 				userId = s2.substring(0, s2.indexOf(";"));
 				tokenRMS.closeRecordStore();
 				// VikaTouch.sendLog("gettoken: "+accessToken);
 				// оптимизация
-				MenuScreen.avaurl = null;
 				return true;
 			}
 			tokenRMS.closeRecordStore();
@@ -304,8 +297,8 @@ public class VikaTouch {
 	}
 	
 	public static void notify (String type, String title, String subtitle) {
-		String reply = "";
-		int ch;
+		//String reply = "";
+		//int ch;
 		SocketConnection socket = null;
 		OutputStream os = null;
 		//InputStream is = null;

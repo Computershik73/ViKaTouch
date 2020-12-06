@@ -1323,22 +1323,12 @@ public class JSONObject {
 	
 	/**
 	 * Clears all arrays
-	 * @param string 
 	 */
 	public void dispose() {
-		dispose("null");
-	}
-	
-	/**
-	 * Clears all arrays
-	 * @param string 
-	 */
-	public void dispose(String string) {
 		disposed = true;
 		if(myHashMap != null)
 		{
 			myHashMap.clear();
-			//DebugUtils.printStackTrace();
 		}
 		myHashMap = null;
 	}

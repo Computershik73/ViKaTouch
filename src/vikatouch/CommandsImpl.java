@@ -6,7 +6,6 @@ import javax.microedition.lcdui.Displayable;
 
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.VikaScreen;
-import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.AboutScreen;
 import vikatouch.screens.ChatScreen;
@@ -21,11 +20,8 @@ import vikatouch.screens.menu.MenuScreen;
 import vikatouch.screens.menu.PhotosScreen;
 import vikatouch.screens.menu.VideosScreen;
 import vikatouch.screens.music.MusicScreen;
-import vikatouch.screens.page.GroupPageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
-import vikatouch.utils.VikaUtils;
-import vikatouch.utils.url.URLBuilder;
 
 public class CommandsImpl
 	implements CommandListener

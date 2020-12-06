@@ -12,7 +12,6 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.items.LoadMoreButtonItem;
-import vikatouch.items.menu.GroupItem;
 import vikatouch.items.menu.VideoItem;
 import vikatouch.json.INextLoadable;
 import vikatouch.locale.TextLocal;
@@ -24,10 +23,7 @@ import vikatouch.utils.url.URLBuilder;
 
 public class VideosScreen extends MainScreen implements INextLoadable {
 
-	private String videosStr;
-
 	public VideosScreen() {
-		videosStr = TextLocal.inst.get("title.videos");
 		hasBackButton = true;
 	}
 
@@ -43,7 +39,6 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 	public void load(final int from, final int id, final String name1, final String name2) {
 		scrolled = 0;
 		uiItems = null;
-		final VideosScreen thisC = this;
 		final int count = Settings.simpleListsLength;
 		fromVid = from;
 		currId = id;
@@ -78,7 +73,7 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 						}
 						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 						if (canLoadMore) {
-							uiItems[itemsCount] = new LoadMoreButtonItem(thisC);
+							uiItems[itemsCount] = new LoadMoreButtonItem(VideosScreen.this);
 							itemsCount++;
 						}
 						VikaTouch.loading = true;

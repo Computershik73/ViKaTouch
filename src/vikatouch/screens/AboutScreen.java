@@ -1,16 +1,11 @@
 package vikatouch.screens;
 
-import java.util.Hashtable;
-import java.util.Vector;
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
-import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
-import vikatouch.CommandsImpl;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 
@@ -27,7 +22,7 @@ public class AboutScreen extends ScrollableCanvas {
 	private static String backStr;
 	private static String publisherStr;
 	private static String devsStr;
-	private static String teamStr;
+	//private static String teamStr;
 	private String testersStr;
 
 	public AboutScreen() {

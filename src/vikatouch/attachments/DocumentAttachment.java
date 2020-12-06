@@ -3,8 +3,6 @@ package vikatouch.attachments;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
-import org.json.me.JSONException;
-
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.ImagePreview;
@@ -21,9 +19,7 @@ public class DocumentAttachment extends Attachment implements IMenu {
 
 	public String name;
 	public String url;
-	private int docType;
 	public int size;
-	private String ext;
 	public String prevImgUrl;
 
 	public void parseJSON() {
@@ -31,8 +27,8 @@ public class DocumentAttachment extends Attachment implements IMenu {
 			name = json.optString("title");
 			url = fixJSONString(json.optString("url"));
 			size = json.optInt("size");
-			ext = json.optString("ext");
-			docType = json.optInt("type");
+			//ext = json.optString("ext");
+			//docType = json.optInt("type");
 
 			if (!json.isNull("preview")) {
 				PhotoSize[] prevSizes = PhotoSize
@@ -56,7 +52,7 @@ public class DocumentAttachment extends Attachment implements IMenu {
 			e.printStackTrace();
 			VikaTouch.error(e, ErrorCodes.DOCPARSE);
 		}
-
+		
 		System.gc();
 	}
 

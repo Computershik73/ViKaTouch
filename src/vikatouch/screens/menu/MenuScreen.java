@@ -1,6 +1,5 @@
 package vikatouch.screens.menu;
 
-import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -32,11 +31,12 @@ public class MenuScreen extends MainScreen implements IMenu {
 	public static boolean hasAva;
 	public static String lastname;
 	public static String status;
-	public static String avaurl;
+	//public static String avaurl;
 	/*
 	 * private static int[] itemscmd = {4, 5, 6, 7, 8, 9, -1};
 	 */
-	private int btnsLen = 8;
+	//private int btnsLen = 8;
+	/*
 	public String exitStr;
 	public String docsStr;
 	public String photosStr;
@@ -44,7 +44,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 	public String musicStr;
 	public String groupsStr;
 	public String friendsStr;
-	private String aboutStr;
+	*/
+	//private String aboutStr;
 	private int selectedBtn;
 
 	public MenuScreen() {
@@ -60,8 +61,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 		}
 		if (VikaTouch.userId != null) {
 			try {
-				if ((avaurl == null && hasAva && profileImg != null) || name == null || name.equals("null")
-						|| name == "" || avaurl == "" || !VikaTouch.offlineMode) {
+				String avaurl;
+				if (true) {
 					String var10 = VikaUtils.download(new URLBuilder("users.get").addField("user_ids", VikaTouch.userId)
 							.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
 					JSONObject profileobj = new JSONObject(var10).getJSONArray("response").getJSONObject(0);
@@ -88,6 +89,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 		} else {
 			VikaTouch.error(ErrorCodes.MENUNOUSERID, false);
 		}
+		/*
 		try {
 			friendsStr = TextLocal.inst.get("menu.friends");
 			exitStr = TextLocal.inst.get("menu.quit");
@@ -100,16 +102,16 @@ public class MenuScreen extends MainScreen implements IMenu {
 		} catch (Exception e) {
 			VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
 
-		}
+		}*/
 		int uiih = DisplayUtils.compact ? 30 : 50; // е72, ландшафт 240, СЕ портрет
 		uiItems = new OptionItem[7];
-		uiItems[0] = new OptionItem(this, friendsStr, IconsManager.FRIENDS, 4, uiih);
-		uiItems[1] = new OptionItem(this, groupsStr, IconsManager.GROUPS, 5, uiih);
-		uiItems[2] = new MusicMenuItem(this, musicStr, IconsManager.MUSIC, 6, uiih);
-		uiItems[3] = new OptionItem(this, videosStr, IconsManager.VIDEOS, 7, uiih);
-		uiItems[4] = new OptionItem(this, photosStr, IconsManager.CAMERA, 8, uiih);
-		uiItems[5] = new OptionItem(this, docsStr, IconsManager.DOCS, 9, uiih);
-		uiItems[6] = new OptionItem(this, exitStr, IconsManager.CLOSE, -1, uiih);
+		uiItems[0] = new OptionItem(this, TextLocal.inst.get("menu.friends"), IconsManager.FRIENDS, 4, uiih);
+		uiItems[1] = new OptionItem(this, TextLocal.inst.get("menu.groups"), IconsManager.GROUPS, 5, uiih);
+		uiItems[2] = new MusicMenuItem(this, TextLocal.inst.get("menu.music"), IconsManager.MUSIC, 6, uiih);
+		uiItems[3] = new OptionItem(this, TextLocal.inst.get("menu.videos"), IconsManager.VIDEOS, 7, uiih);
+		uiItems[4] = new OptionItem(this, TextLocal.inst.get("menu.photos"), IconsManager.CAMERA, 8, uiih);
+		uiItems[5] = new OptionItem(this, TextLocal.inst.get("menu.documents"), IconsManager.DOCS, 9, uiih);
+		uiItems[6] = new OptionItem(this, TextLocal.inst.get("menu.quit"), IconsManager.CLOSE, -1, uiih);
 
 		itemsCount = 7;
 		itemsh = 140 + uiih * itemsCount;
@@ -146,8 +148,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 		if (selectedBtn > 0)
 			uiItems[selectedBtn - 1].setSelected(false);
 		selectedBtn++;
-		if (selectedBtn >= btnsLen)
-			selectedBtn = btnsLen - 1;
+		if (selectedBtn >= 8)
+			selectedBtn = 8 - 1;
 		scrollToSelected();
 		if (selectedBtn > 0)
 			uiItems[selectedBtn - 1].setSelected(true);

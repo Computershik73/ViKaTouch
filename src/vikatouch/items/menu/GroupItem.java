@@ -5,14 +5,12 @@ import java.io.IOException;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
-import vikatouch.attachments.PhotoSize;
 import vikatouch.items.JSONUIItem;
 import vikatouch.screens.menu.GroupsScreen;
 import vikatouch.screens.page.GroupPageScreen;
@@ -24,7 +22,7 @@ import vikatouch.utils.error.ErrorCodes;
 public class GroupItem extends JSONUIItem {
 
 	private String name;
-	private String link;
+	//private String link;
 	private int id;
 	private Image ava = null;
 	private int members;
@@ -41,7 +39,7 @@ public class GroupItem extends JSONUIItem {
 	public void parseJSON() {
 		try {
 			name = json.optString("name");
-			link = json.optString("screen_name");
+			//link = json.optString("screen_name");
 			id = json.optInt("id");
 			isAdmin = json.optInt("is_admin") == 1;
 			members = json.optInt("members_count");

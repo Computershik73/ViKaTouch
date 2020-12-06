@@ -5,7 +5,6 @@ import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONObject;
 
-import ru.nnproject.vikaui.popup.ImagePreview;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.items.chat.MsgItem;

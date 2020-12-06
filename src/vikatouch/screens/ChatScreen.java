@@ -64,13 +64,13 @@ public class ChatScreen extends MainScreen {
 
 	private String enterMsgStr = "";
 	private String enterMsgStrSel = "";
-	private String typingStr = "";
-	private String typing2Str = "";
+	//private String typingStr = "";
+	//private String typing2Str = "";
 	private String refreshErrorStr = "";
 	private String sendingStr = "";
 	public static String[] kt;
 
-	private boolean scrolledDown = false;
+	//private boolean scrolledDown = false;
 	private int inputBoxH = 48;
 	private int inputedLinesCount = 0;
 	private int topPanelH = 56;
@@ -137,7 +137,7 @@ public class ChatScreen extends MainScreen {
 					} else {
 						url = url.addField("message_id", "" + msg.mid);
 					}
-					String res = VikaUtils.download(url);
+					/*String res = */VikaUtils.download(url);
 					msg.ChangeText(newText);
 				}
 			};
@@ -173,9 +173,9 @@ public class ChatScreen extends MainScreen {
 		errst = 3;
 		enterMsgStrSel = TextLocal.inst.get("msg.keyboard");
 		errst = 4;
-		typingStr = TextLocal.inst.get("msg.typing");
+		//typingStr = TextLocal.inst.get("msg.typing");
 		errst = 5;
-		typing2Str = TextLocal.inst.get("msg.typing2");
+		//typing2Str = TextLocal.inst.get("msg.typing2");
 		errst = 6;
 		refreshErrorStr = TextLocal.inst.get("title2.msgloadingfailed");
 		errst = 7;
@@ -310,7 +310,7 @@ public class ChatScreen extends MainScreen {
 			}
 		}
 		// VikaTouch.sendLog(""+items.length()+" msgs");
-		MsgItem last = null;
+		//MsgItem last = null;
 		for (int i = 0; i < items.length(); i++) {
 			try {
 				VikaCanvasInst.msgColor = 0xff00ff00;
@@ -344,7 +344,7 @@ public class ChatScreen extends MainScreen {
 				uiItems[uiItems.length - 1 - i - loadSpace] = m;
 				errst = "mui2" + String.valueOf(i);
 				if (i == 0) {
-					last = m;
+				//	last = m;
 				}
 				errst = "mui3" + String.valueOf(i);
 				itemsCount = (short) uiItems.length;
@@ -1146,9 +1146,8 @@ public class ChatScreen extends MainScreen {
 		reporter = new Thread() {
 			public void run() {
 				while (typer.isAlive()) {
-					URLBuilder url = new URLBuilder("messages.setActivity").addField("user_id", VikaTouch.userId)
-							.addField("peer_id", peerId).addField("type", "typing");
-					String res = VikaUtils.download(url);
+					/*String res = */VikaUtils.download(new URLBuilder("messages.setActivity").addField("user_id", VikaTouch.userId)
+							.addField("peer_id", peerId).addField("type", "typing"));
 					try {
 						Thread.sleep(5000);
 					} catch (InterruptedException e) {
