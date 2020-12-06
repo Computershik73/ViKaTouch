@@ -768,8 +768,8 @@ public class ChatScreen extends MainScreen {
 					};
 					OptionItem[] oi = new OptionItem[2];
 					try {
-						oi[0] = new OptionItem(m, "из памяти", IconsManager.DEVICE, 0, 50);
-						oi[1] = new OptionItem(m, "из вк", IconsManager.ATTACHMENT, 1, 50);
+						oi[0] = new OptionItem(m, TextLocal.inst.get("msg.attach.memory"), IconsManager.DEVICE, 0, 50);
+						oi[1] = new OptionItem(m, TextLocal.inst.get("msg.attach.album"), IconsManager.ATTACHMENT, 1, 50);
 					} catch (Exception e) {
 					}
 					VikaTouch.popup(new ContextMenu(oi));
@@ -781,8 +781,8 @@ public class ChatScreen extends MainScreen {
 		};
 		OptionItem[] oi = new OptionItem[2];
 		try {
-			oi[0] = new OptionItem(m, "фотка", IconsManager.PHOTOS, 0, 50);
-			oi[1] = new OptionItem(m, "документ", IconsManager.DOCS, 1, 50);
+			oi[0] = new OptionItem(m, TextLocal.inst.get("msg.attach.photo"), IconsManager.PHOTOS, 0, 50);
+			oi[1] = new OptionItem(m, TextLocal.inst.get("msg.attach.doc"), IconsManager.DOCS, 1, 50);
 		} catch (Exception e) {
 		}
 		VikaTouch.popup(new ContextMenu(oi));
