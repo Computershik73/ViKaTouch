@@ -394,7 +394,10 @@ public class VikaTouch {
 	}
 
 	private void refreshToken() throws IOException {
-		if(VikaTouch.mobilePlatform.equals("Nokia N73")) {
+		if(VikaTouch.mobilePlatform.equalsIgnoreCase("NokiaN73")) {
+			return;
+		}
+		if(VikaTouch.mobilePlatform.equalsIgnoreCase("Nokia N73")) {
 			return;
 		}
 		try {
