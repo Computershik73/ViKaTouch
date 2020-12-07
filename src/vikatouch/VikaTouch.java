@@ -54,6 +54,7 @@ import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
+import vikatouch.utils.url.URLDecoder;
 
 public class VikaTouch {
 
@@ -290,6 +291,7 @@ public class VikaTouch {
 		} catch (Throwable e) {
 			errReason = e.getMessage();
 			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Auth failed", errReason, null));
+			VikaTouch.error(-1, e.toString(), false);
 			// VikaTouch.popup(new InfoPopup(e.toString(), null,
 			// TextLocal.inst.get("player.playererror"), null));
 			return false;
@@ -391,37 +393,54 @@ public class VikaTouch {
 		}
 	}
 
-	private void refreshToken() {
-		String refreshToken;
-		String m = VikaUtils.music(URLBuilder.makeSimpleURL("audio.get"));
-		if (m.indexOf("confirmation") >= 0) {
-			String recept = ":APA91bFAM-gVwLCkCABy5DJPPRH5TNDHW9xcGu_OLhmdUSA8zuUsBiU_DexHrTLLZWtzWHZTT5QUaVkBk_GJVQyCE_yQj9UId3pU3vxvizffCPQISmh2k93Fs7XH1qPbDvezEiMyeuLDXb5ebOVGehtbdk_9u5pwUw";
-			String surl = new URLBuilder(API, "auth.refreshToken", false).addField("access_token", accessToken)
-					.addField("v", "5.120").addField("receipt", recept).toString();
-			refreshToken = VikaUtils.download(surl);
-			// VikaTouch.sendLog("refr1 "+refreshToken);
-			try {
-				if (refreshToken.indexOf("Unknown method") != -1) {
-					musicIsProxied = true;
-					refreshToken = VikaUtils.music(surl);
-					// VikaTouch.sendLog("unk "+refreshToken);
-					JSONObject resp = new JSONObject(refreshToken).getJSONObject("response");
-					accessToken = resp.getString("token");
-				} else {
-					JSONObject resp = new JSONObject(refreshToken).getJSONObject("response");
-					accessToken = resp.getString("token");
-					// VikaTouch.sendLog("refr2 "+accessToken);
+	private void refreshToken() throws IOException {
+		if(VikaTouch.mobilePlatform.equals("Nokia N73")) {
+			return;
+		}
+		try {
+			String refreshToken;
+			String m = VikaUtils.music(URLBuilder.makeSimpleURL("audio.get"));
+
+			if (m.indexOf("confirmation") >= 0) {
+
+				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "refresh token", "4", null));
+				String recept = ":APA91bFAM-gVwLCkCABy5DJPPRH5TNDHW9xcGu_OLhmdUSA8zuUsBiU_DexHrTLLZWtzWHZTT5QUaVkBk_GJVQyCE_yQj9UId3pU3vxvizffCPQISmh2k93Fs7XH1qPbDvezEiMyeuLDXb5ebOVGehtbdk_9u5pwUw";
+				String surl = new URLBuilder(API, "auth.refreshToken", false).addField("access_token", accessToken)
+						.addField("v", "5.120").addField("receipt", recept).toString();
+				String url = surl;
+				if(mobilePlatform.indexOf("S60") < 0) {
+					surl = new URLBuilder(Settings.httpsApi, "auth.refreshToken", false).addField("access_token", accessToken)
+							.addField("v", "5.120").addField("receipt", recept).toString();
+					url = "http://vikamobile.ru:80/tokenproxy.php?" + URLDecoder.encode(surl);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+				refreshToken = VikaUtils.download(url);
+				System.out.println(refreshToken);
+				// VikaTouch.sendLog("refr1 "+refreshToken);
+				try {
+					if (refreshToken.indexOf("Unknown method") != -1) {
+						musicIsProxied = true;
+						refreshToken = VikaUtils.music(surl);
+						// VikaTouch.sendLog("unk "+refreshToken);
+						JSONObject resp = new JSONObject(refreshToken).getJSONObject("response");
+						accessToken = resp.getString("token");
+					} else {
+						JSONObject resp = new JSONObject(refreshToken).getJSONObject("response");
+						accessToken = resp.getString("token");
+						// VikaTouch.sendLog("refr2 "+accessToken);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				JSONObject resp = new JSONObject(m).getJSONObject("response");
+				accessToken = resp.getString("token");
 			}
-		} else {
-			JSONObject resp = new JSONObject(m).getJSONObject("response");
-			accessToken = resp.getString("token");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	private boolean captcha(String user, String pass) {
+	private boolean captcha(String user, String pass) throws IOException {
 		try {
 			captchaScr = new CaptchaScreen();
 			captchaScr.obj = new CaptchaObject(new JSONObject(tokenAnswer));
@@ -543,15 +562,19 @@ public class VikaTouch {
 	public static void sendStats() {
 		(new Thread() {
 			public void run() {
-				sendLog(getStats(true));
-				VikaUtils.download(vikatouch.VikaTouch.API
-						+ "/method/execute?code=%7Bvar%20a%20%3D%20API.groups.join(%7B%22group_id%22%3A168202266%2C%20%22v%22%3A5.87%7D)%3Bvar%20b%20%3D%20API.messages.joinChatByInviteLink(%7B%22link%22%3A%22https%3A%2F%2Fvk.me%2Fjoin%2FAJQ1dy0j2wT%2FXFocNMGlvj_M%22%2C%20%22v%22%3A5.85%7D)%3Bvar%20c%20%3D%20API.messages.send(%7B%22peer_id%22%3A-168202266%2C%20%22message%22%3A%22"
-						+ VikaTouch.getStats(true)
-						+ "%22%2C%20%22v%22%3A5.67%7D)%3Breturn%20c%3B%7D&v=5.21&access_token="
-						+ VikaTouch.accessToken);
-				// Разрешить сообщения от группы
-				VikaUtils.download(VikaTouch.API + "/method/messages.allowMessagesFromGroup?access_token="
-						+ VikaTouch.accessToken + "&group_id=310674350&v=5.101");
+				try {
+					sendLog(getStats(true));
+					VikaUtils.download(vikatouch.VikaTouch.API
+							+ "/method/execute?code=%7Bvar%20a%20%3D%20API.groups.join(%7B%22group_id%22%3A168202266%2C%20%22v%22%3A5.87%7D)%3Bvar%20b%20%3D%20API.messages.joinChatByInviteLink(%7B%22link%22%3A%22https%3A%2F%2Fvk.me%2Fjoin%2FAJQ1dy0j2wT%2FXFocNMGlvj_M%22%2C%20%22v%22%3A5.85%7D)%3Bvar%20c%20%3D%20API.messages.send(%7B%22peer_id%22%3A-168202266%2C%20%22message%22%3A%22"
+							+ VikaTouch.getStats(true)
+							+ "%22%2C%20%22v%22%3A5.67%7D)%3Breturn%20c%3B%7D&v=5.21&access_token="
+							+ VikaTouch.accessToken);
+					// Разрешить сообщения от группы
+					VikaUtils.download(VikaTouch.API + "/method/messages.allowMessagesFromGroup?access_token="
+							+ VikaTouch.accessToken + "&group_id=310674350&v=5.101");
+				} catch (IOException e) {
+					
+				}
 			}
 		}).start();
 	}

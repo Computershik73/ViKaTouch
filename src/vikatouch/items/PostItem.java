@@ -1,5 +1,7 @@
 package vikatouch.items;
 
+import java.io.IOException;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -448,19 +450,25 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	public void like(final boolean val) {
 		new Thread() {
 			public void run() {
-				VikaTouch.loading = true;
-				URLBuilder url;
-				if (val) {
-					url = new URLBuilder("likes.add");
-				} else {
-					url = new URLBuilder("likes.delete");
+				try {
+					VikaTouch.loading = true;
+					URLBuilder url;
+					if (val) {
+						url = new URLBuilder("likes.add");
+					} else {
+						url = new URLBuilder("likes.delete");
+					}
+					url.addField("type", "post").addField("owner_id", ownerid).addField("item_id", id);
+					String res;
+					res = VikaUtils.download(url);
+				
+					if (res == null) {
+						VikaTouch.popup(new InfoPopup("Ошибка", null));
+					}
+					liked = val;
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				url.addField("type", "post").addField("owner_id", ownerid).addField("item_id", id);
-				String res = VikaUtils.download(url);
-				if (res == null) {
-					VikaTouch.popup(new InfoPopup("Ошибка", null));
-				}
-				liked = val;
 				VikaTouch.loading = false;
 			}
 		}.start();

@@ -1,5 +1,7 @@
 package vikatouch.screens.page;
 
+import java.io.IOException;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -331,15 +333,19 @@ public class ProfilePageScreen
 				{
 					public void run()
 					{
-						if(friendAdd)
-						{
-							VikaUtils.download(new URLBuilder("friends.add").addField("user_id", id));
+						try {
+							if(friendAdd)
+							{
+								VikaUtils.download(new URLBuilder("friends.add").addField("user_id", id));
+							}
+							else
+							{
+								VikaUtils.download(new URLBuilder("friends.delete").addField("user_id", id));
+							}
+							load();
+						} catch (IOException e) {
+							e.printStackTrace();
 						}
-						else
-						{
-							VikaUtils.download(new URLBuilder("friends.delete").addField("user_id", id));
-						}
-						load();
 					}
 				}
 				).start();

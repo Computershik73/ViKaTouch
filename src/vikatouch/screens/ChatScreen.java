@@ -2,6 +2,7 @@ package vikatouch.screens;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Random;
 
@@ -140,8 +141,13 @@ public class ChatScreen extends MainScreen {
 					} else {
 						url = url.addField("message_id", "" + msg.mid);
 					}
-					/*String res = */VikaUtils.download(url);
-					msg.ChangeText(newText);
+					/*String res = */
+					try {
+						VikaUtils.download(url);
+						msg.ChangeText(newText);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			};
 			typer.start();
@@ -165,7 +171,7 @@ public class ChatScreen extends MainScreen {
 		this.peerId = peerId;
 		parse();
 	}
-
+	
 	private void parse() {
 		int errst = 0;
 		scrollWithKeys = true;
@@ -195,7 +201,12 @@ public class ChatScreen extends MainScreen {
 			errst = 13;
 			(new Thread() {
 				public void run() {
-					messagesDialog();
+					try {
+						messagesDialog();
+					} catch (IOException e) {
+						e.printStackTrace();
+						ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
+					}
 				}
 			}).start();
 			errst = 14;
@@ -229,7 +240,12 @@ public class ChatScreen extends MainScreen {
 					errst = 25;
 					(new Thread() {
 						public void run() {
-							messagesChat();
+							try {
+								messagesChat();
+							} catch (IOException e) {
+								e.printStackTrace();
+								ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
+							}
 						}
 					}).start();
 					errst = 26;
@@ -256,7 +272,12 @@ public class ChatScreen extends MainScreen {
 
 					(new Thread() {
 						public void run() {
-							messagesDialog();
+							try {
+								messagesDialog();
+							} catch (IOException e) {
+								e.printStackTrace();
+								ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
+							}
 						}
 					}).start();
 				} catch (Throwable e) {
@@ -270,7 +291,7 @@ public class ChatScreen extends MainScreen {
 
 	private int members;
 
-	private void messagesChat() {
+	private void messagesChat() throws IOException {
 		String errst = "f";
 		// VikaTouch.sendLog("Messages in chat mode");
 
@@ -387,7 +408,7 @@ public class ChatScreen extends MainScreen {
 		// }
 	}
 
-	private void messagesDialog() {
+	private void messagesDialog() throws IOException {
 
 		VikaCanvasInst.msgColor = 0xffff0000;
 		// скачка сообщений
@@ -1162,8 +1183,12 @@ public class ChatScreen extends MainScreen {
 		reporter = new Thread() {
 			public void run() {
 				while (typer.isAlive()) {
-					/*String res = */VikaUtils.download(new URLBuilder("messages.setActivity").addField("user_id", VikaTouch.userId)
-							.addField("peer_id", peerId).addField("type", "typing"));
+					/*String res = */try {
+						VikaUtils.download(new URLBuilder("messages.setActivity").addField("user_id", VikaTouch.userId)
+								.addField("peer_id", peerId).addField("type", "typing"));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 					try {
 						Thread.sleep(5000);
 					} catch (InterruptedException e) {

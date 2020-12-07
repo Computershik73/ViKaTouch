@@ -228,6 +228,11 @@ public class LoginScreen extends VikaScreen {
 			}
 		} catch (Exception e) {
 		}
+
+		Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
+		g.setFont(f);
+		ColorUtils.setcolor(g, 0);
+		g.drawString("" + System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("java.vendor") + " " + System.getProperty("java.version") + " " + System.getProperty("microedition.platform"), 0, DisplayUtils.height - f.getHeight() - 2, 0);
 	}
 
 	public final void press(int x, int y) {

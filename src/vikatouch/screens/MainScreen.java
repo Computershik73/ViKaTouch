@@ -33,7 +33,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 
 	public void release(int x, int y) {
-		if (!(this instanceof ChatScreen)) {
+		if (!(this instanceof ChatScreen) && !(this instanceof SettingsScreen)) {
 			if (!dragging || !canScroll) {
 				int wyw = bbw(DisplayUtils.idispi);
 				if (y < topPanelH) {

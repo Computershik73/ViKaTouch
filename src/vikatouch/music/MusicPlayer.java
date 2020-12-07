@@ -695,11 +695,11 @@ public class MusicPlayer extends MainScreen
 		if (title != null && Settings.loadITunesCovers) {
 			String q = "http://vikamobile.ru:80/proxy.php?https://itunes.apple.com/search?term="
 					+ URLDecoder.encode(title + " " + (artist==null?"":artist)) + "&country=ru&limit=1";
-			String s = VikaUtils.download(q);
-			//VikaTouch.sendLog(s);
-			//VikaTouch.sendLog(q);
-			
 			try {
+				String s = VikaUtils.download(q);
+				//VikaTouch.sendLog(s);
+				//VikaTouch.sendLog(q);
+			
 				JSONObject res = new JSONObject(s);
 				if(res.optInt("resultsCount")==0)
 				{

@@ -150,7 +150,7 @@ public final class VikaUtils {
 		return parseShortTime(paramLong);
 	}
 
-	public static String music(final String url) {
+	public static String music(final String url) throws IOException {
 		if (VikaTouch.musicIsProxied) {
 			final String x = URLDecoder.encode(url);
 			return download("http://vikamobile.ru:80/tokenproxy.php?" + x);
@@ -159,107 +159,79 @@ public final class VikaUtils {
 		}
 	}
 
-	public static String download(URLBuilder url) {
+	public static String download(URLBuilder url) throws IOException {
 		return download(url.toString());
 	}
 
 	public static String downloadE(URLBuilder url) throws VikaNetworkError {
-		String res = download(url);
-		if (res == null) {
-			VikaTouch.offlineMode = true;
-			throw new VikaNetworkError();
+		try {
+			return download(url);
+		} catch (IOException e) {
+			throw new VikaNetworkError(e.toString());
 		}
-		return res;
 	}
 
-	public static String download(String var1) {
-		ByteArrayOutputStream var4 = null;
+	public static String download(String var1) throws IOException {
+		if(true)
+			return download_old(var1);
 		try {
-
+			ByteArrayOutputStream var4 = null;
 			var4 = new ByteArrayOutputStream();
 			HttpConnection var13 = null;
 			var13 = (HttpConnection) Connector.open(var1);
 			var13.setRequestMethod("GET");
 			var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
-
+	
 			InputStream var14 = var13.openInputStream();
 			//long var8 = var13.getLength();
 			byte[] var6 = new byte[16384];
 			//long var10 = 0L;
-
+	
 			int var7;
-
+	
 			while ((var7 = var14.read(var6)) != -1) {
 				//var10 += (long) var7;
 				var4.write(var6, 0, var7);
 				var4.flush();
 			}
-
+	
 			var14.close();
 			var13.close();
 			var4.close();
-
-		} catch (Exception e) {
-
+			String str = null;
+			str = new String(var4.toByteArray(), "UTF-8");
+			return str;
+		} catch (NullPointerException e) {
+			throw new IOException(e.toString());
 		}
-		String str = null;
-		try {
-			if (var4 != null)
-				str = new String(var4.toByteArray(), "UTF-8");
-			// null pointer головного мозга, ёб ваш торшер, Илья.
-		} catch (IOException e) {
-
-		}
-		return str;
 	}
 
-	public static String download_old(String url) {
-		int step = 0;
-		VikaCanvasInst.netColor = 0xffff0000;
+	public static String download_old(String url) throws IOException {
 		HttpConnection httpconn = null;
 		InputStream is = null;
 		InputStreamReader isr = null;
 		String result = null;
-		try {
-			step = 1;
 			Connection conn = Connector.open(url);
-			step = 2;
 			httpconn = (HttpConnection) conn;
 			httpconn.setRequestMethod("GET");
 			httpconn.setRequestProperty("User-Agent",
 					"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
-			step = 3;
-			is = httpconn.openInputStream();
-			step = 4;
-			VikaCanvasInst.netColor = 0xffff00ff;
-			isr = new InputStreamReader(is, "UTF-8");
-			VikaCanvasInst.netColor = 0xffff7f00;
-			step = 5;
+
 			StringBuffer sb = new StringBuffer();
 			char[] buffer;
 			int i;
+			System.out.println(url + " " + httpconn.getResponseCode());
 			if (httpconn.getResponseCode() != 200 && httpconn.getResponseCode() != 401) {
 				// System.out.println("not 200 and not 401");
 				if (httpconn.getHeaderField("Location") != null) {
 					String replacedURL = httpconn.getHeaderField("Location");
-					step = 6;
-					try {
-						isr.close();
-					} catch (IOException e) {
-					}
-					step = 7;
 					httpconn.close();
-					step = 8;
 					httpconn = (HttpConnection) Connector.open(replacedURL);
-					step = 9;
 					httpconn.setRequestMethod("GET");
 					httpconn.setRequestProperty("User-Agent",
 							"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
-					step = 10;
 					is = httpconn.openInputStream();
-					step = 11;
-					isr = new InputStreamReader(is, "UTF-16");
-					step = 12;
+					isr = new InputStreamReader(is, "UTF-8");
 					sb = new StringBuffer();
 					if (httpconn.getResponseCode() == 200 || httpconn.getResponseCode() == 401) {
 						buffer = new char[10000];
@@ -269,60 +241,24 @@ public final class VikaUtils {
 						}
 
 					}
-					step = 13;
 				}
 			} else {
+				is = httpconn.openInputStream();
+				isr = new InputStreamReader(is, "UTF-8");
+		
 				buffer = new char[10000];
-				step = 14;
 				while ((i = isr.read(buffer, 0, buffer.length)) != -1) {
-					VikaCanvasInst.netColor = 0xff00ff00;
 					sb.append(buffer, 0, i);
 
 				}
 				buffer = null;
-				step = 15;
 			}
 
-			result = sb.toString();
-			step = 16;
-			// result = replace(sb.toString(), "<br>", " ");
-		} catch (RuntimeException e) {
-			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
-					e.toString() + ", step " + step, null));
-		} catch (IOException e) {
-			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
-					e.toString() + ", step " + step, null));
-		} finally {
-			try {
-				VikaCanvasInst.netColor = 0xffffff00;
-				if (isr != null)
-					isr.close();
-				if (is != null)
-					is.close();
-			} catch (IOException e) {
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
-						e.toString() + ", disposing data", null));
-			} catch (RuntimeException e) {
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
-						e.toString() + ", disposing data", null));
-			}
-			try {
-				VikaCanvasInst.netColor = 0xff0000ff;
-				if (httpconn != null)
-					httpconn.close();
-				VikaCanvasInst.netColor = 0xff00ffff;
-			} catch (IOException e) {
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
-						e.toString() + ", disposing http", null));
-			} catch (RuntimeException e) {
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
-						e.toString() + ", disposing http", null));
-			} catch (Throwable eee) {
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, TextLocal.inst.get("error.net"),
-						eee.toString() + ", disposing http", null));
-			}
-		}
-		VikaCanvasInst.netColor = 0xff000000;
+		result = sb.toString();
+		if(isr != null)
+			isr.close();
+		if(is != null)
+			is.close();
 		return result;
 	}
 
@@ -815,7 +751,7 @@ public final class VikaUtils {
 		return list;
 	}
 
-	public static void sendPhoto(int peerId, byte[] var5, String text) {
+	public static void sendPhoto(int peerId, byte[] var5, String text) throws IOException {
 		String var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
 				+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=5.120");
 

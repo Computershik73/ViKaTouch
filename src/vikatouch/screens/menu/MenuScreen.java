@@ -62,30 +62,30 @@ public class MenuScreen extends MainScreen implements IMenu {
 		if (VikaTouch.userId != null) {
 			try {
 				String avaurl;
-				if (true) {
-					String var10 = VikaUtils.download(new URLBuilder("users.get").addField("user_ids", VikaTouch.userId)
-							.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
-					System.out.println(var10);
-					JSONObject profileobj = new JSONObject(var10).getJSONArray("response").getJSONObject(0);
-					name = profileobj.optString("first_name");
-					lastname = profileobj.optString("last_name");
-					status = profileobj.optString("status");
-					avaurl = JSONBase.fixJSONString(profileobj.optString("photo_50"));
-					hasAva = profileobj.optInt("has_photo") == 1;
-				}
+				String var10 = VikaUtils.download(new URLBuilder("users.get").addField("user_ids", VikaTouch.userId)
+						.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
+				System.out.println(var10);
+				JSONObject profileobj = new JSONObject(var10).getJSONArray("response").getJSONObject(0);
+				name = profileobj.optString("first_name");
+				lastname = profileobj.optString("last_name");
+				status = profileobj.optString("status");
+				avaurl = JSONBase.fixJSONString(profileobj.optString("photo_50"));
+				hasAva = profileobj.optInt("has_photo") == 1;
 
 				try {
 					if (!Settings.dontLoadAvas && hasAva && avaurl != null && avaurl != "" && avaurl != "null") {
 						profileImg = ResizeUtils.resizeava(VikaUtils.downloadImage(avaurl));
 					}
 				} catch (Throwable e) {
+					VikaTouch.error(ErrorCodes.MENUAVATAR, e.toString(), false);
 					e.printStackTrace();
 					VikaTouch.sendLog("Avatar error, url: " + avaurl);
 					hasAva = false;
 				}
 			} catch (Throwable a) {
-				VikaTouch.popup(new InfoPopup(a.toString(), null, TextLocal.inst.get("player.playererror"), null));
+				VikaTouch.error(ErrorCodes.MENUPROFILEINFO1, a.toString(), false);
 				VikaTouch.sendLog("Menu profile info: " + a.toString() + " uid:" + VikaTouch.userId);
+				a.printStackTrace();
 			}
 		} else {
 			VikaTouch.error(ErrorCodes.MENUNOUSERID, false);

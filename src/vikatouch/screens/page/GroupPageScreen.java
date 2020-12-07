@@ -1,5 +1,7 @@
 package vikatouch.screens.page;
 
+import java.io.IOException;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -266,16 +268,19 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 					{
 						public void run()
 						{
-							VikaTouch.loading = true;
-							if(isMember)
-							{
-								VikaUtils.download(new URLBuilder("groups.leave").addField("group_id", id));
+							try {
+								if(isMember)
+								{
+									VikaUtils.download(new URLBuilder("groups.leave").addField("group_id", id));
+								}
+								else
+								{
+									VikaUtils.download(new URLBuilder("groups.join").addField("group_id", id));
+								}
+								load();
+							} catch (IOException e) {
+								e.printStackTrace();
 							}
-							else
-							{
-								VikaUtils.download(new URLBuilder("groups.join").addField("group_id", id));
-							}
-							load();
 						}
 					}, null));
 					break;
