@@ -177,7 +177,10 @@ public class JSONObject {
         this();
         char c;
         String key;
-
+        if(x.next() == ' ') {
+            throw x.syntaxError("Empty string");
+        }
+        x.back();
         if (x.nextClean() != '{') {
             throw x.syntaxError("A JSONObject text must begin with '{'");
         }
