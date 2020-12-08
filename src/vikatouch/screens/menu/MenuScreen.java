@@ -59,10 +59,10 @@ public class MenuScreen extends MainScreen implements IMenu {
 
 			hasAva = true;
 		}
-		if (VikaTouch.userId != null) {
+		/*if (VikaTouch.userId != null) {*/
 			try {
 				String avaurl;
-				String var10 = VikaUtils.download(new URLBuilder("users.get").addField("user_ids", VikaTouch.userId)
+				String var10 = VikaUtils.download(new URLBuilder("users.get")/*.addField("user_ids", VikaTouch.userId)*/
 						.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
 				System.out.println(var10);
 				JSONObject profileobj = new JSONObject(var10).getJSONArray("response").getJSONObject(0);
@@ -87,9 +87,11 @@ public class MenuScreen extends MainScreen implements IMenu {
 				VikaTouch.sendLog("Menu profile info: " + a.toString() + " uid:" + VikaTouch.userId);
 				a.printStackTrace();
 			}
+			/*
 		} else {
 			VikaTouch.error(ErrorCodes.MENUNOUSERID, false);
 		}
+		*/
 		/*
 		try {
 			friendsStr = TextLocal.inst.get("menu.friends");

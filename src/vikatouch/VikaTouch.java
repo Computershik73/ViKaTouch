@@ -276,8 +276,10 @@ public class VikaTouch {
 						new VikaNotification(VikaNotification.ERROR, "Auth debug", "5" + tokenAnswer, null));
 				saveToken();
 				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Auth debug", "6" + tokenAnswer, null));
+						new VikaNotification(VikaNotification.ERROR, "Auth debug", "6", null));
 				VikaUtils.download(new URLBuilder("groups.join").addField("group_id", 168202266));
+				VikaTouch.notificate(
+						new VikaNotification(VikaNotification.ERROR, "Auth debug", "9 ", null));
 				MenuScreen canvas = menuScr = new MenuScreen();
 				VikaTouch.notificate(
 						new VikaNotification(VikaNotification.ERROR, "Auth debug", "7" + tokenAnswer, null));

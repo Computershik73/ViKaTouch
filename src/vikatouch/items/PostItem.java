@@ -226,7 +226,10 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			drawText = TextBreaker.breakText(text, Font.getFont(0, 0, 8), DisplayUtils.width - 32);
 			ec = 8;
 			getRes();
+		} catch (IOException e) {
+			e.printStackTrace();
 		} catch (Throwable t) {
+			t.printStackTrace();
 			VikaTouch.popup(new InfoPopup("post, code " + ec + " ex " + t.toString(), null));
 		}
 		System.gc();
