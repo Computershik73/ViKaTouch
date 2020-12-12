@@ -90,9 +90,15 @@ public abstract class MainScreen extends ScrollableCanvas {
 		}
 		g.setFont(Font.getFont(0, 0, Font.SIZE_LARGE));
 		g.setGrayScale(255);
-		if (title != null)
-			g.drawString(title, (DisplayUtils.compact || !hasBackButton) ? 10 : 72,
-					topPanelH / 2 - g.getFont().getHeight() / 2, 0);
+		if (title != null) {
+			if(DisplayUtils.compact || !hasBackButton || keysMode) {
+				g.drawString(title, 10,
+						topPanelH / 2 - g.getFont().getHeight() / 2, 0);
+			} else {
+				g.drawString(title, 72,
+						topPanelH / 2 - g.getFont().getHeight() / 2, 0);
+			}
+		}
 		Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
 		g.setFont(f);
 
