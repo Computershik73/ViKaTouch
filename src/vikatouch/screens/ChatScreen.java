@@ -205,6 +205,7 @@ public class ChatScreen extends MainScreen {
 						messagesDialog();
 					} catch (IOException e) {
 						e.printStackTrace();
+						VikaTouch.error(-2, "x1 "+ e.toString(), false);
 						ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
 					}
 				}
@@ -234,6 +235,7 @@ public class ChatScreen extends MainScreen {
 						this.title2 = CountUtils.countStrMembers(members = chatSettings.optInt("members_count"));
 						errst = 24;
 					} catch (JSONException e) {
+						VikaTouch.error(-2, errst + " x2 "+ e.toString(), false);
 						// this.title2 = e.toString();
 						this.title2 = "Ошибка JSON";
 					}
@@ -244,6 +246,7 @@ public class ChatScreen extends MainScreen {
 								messagesChat();
 							} catch (IOException e) {
 								e.printStackTrace();
+								VikaTouch.error(-2, "x7 "+ e.toString(), false);
 								ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
 							}
 						}
@@ -252,7 +255,7 @@ public class ChatScreen extends MainScreen {
 				} catch (Throwable e) {
 					this.title2 = TextLocal.inst.get("msg.failedtoload");
 					this.title2 = String.valueOf(errst);
-					VikaTouch.sendLog(e.getMessage());
+					VikaTouch.error(-2, errst + " "+ e.toString(), false);
 				}
 			} else {
 				this.localId = peerId;
@@ -267,7 +270,7 @@ public class ChatScreen extends MainScreen {
 								: TextLocal.inst.get("msg.offline");
 					} catch (JSONException e) {
 						this.title2 = "Ошибка JSON";
-						VikaTouch.sendLog(e.getMessage());
+						VikaTouch.error(-2, "x4 "+ e.toString(), false);
 					}
 
 					(new Thread() {
@@ -277,10 +280,12 @@ public class ChatScreen extends MainScreen {
 							} catch (IOException e) {
 								e.printStackTrace();
 								ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
+								VikaTouch.error(-2, "x5 "+ e.toString() + " " + e.getMessage(), false);
 							}
 						}
 					}).start();
 				} catch (Throwable e) {
+					VikaTouch.error(-2, "x6 "+ e.toString(), false);
 					this.title2 = TextLocal.inst.get("msg.failedtoload");
 				}
 			}
@@ -448,6 +453,7 @@ public class ChatScreen extends MainScreen {
 			} catch (Throwable e) {
 				this.title2 = TextLocal.inst.get("msg.failedtoload2");
 				e.printStackTrace();
+				VikaTouch.error(-2, "chat 6 "+ e.toString(), false);
 				// VikaTouch.sendLog(e.getMessage());
 			}
 		}

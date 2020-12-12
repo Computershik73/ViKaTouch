@@ -36,7 +36,7 @@ public final class URLDecoder {
 				sbuf.append((char) ch);
 			} else if (ch == 32) {
 				// sbuf.append("%20");
-				sbuf.append("+");
+				sbuf.append("%20");
 			} else if ((ch == 45) || (ch == 95) || (ch == 46) || (ch == 33) || (ch == 126) || (ch == 42) || (ch == 39)
 					|| (ch == 40) || (ch == 41) || (ch == 58) || (ch == 47)) {
 				sbuf.append((char) ch);

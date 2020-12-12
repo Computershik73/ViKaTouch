@@ -172,32 +172,56 @@ public final class VikaUtils {
 	}
 
 	public static String download(String var1) throws IOException {
-		if(true)
-			return download_old(var1);
 		try {
 			ByteArrayOutputStream var4 = null;
 			var4 = new ByteArrayOutputStream();
 			HttpConnection var13 = null;
+			InputStream var14 = null;
 			var13 = (HttpConnection) Connector.open(var1);
 			var13.setRequestMethod("GET");
 			var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
-	
-			InputStream var14 = var13.openInputStream();
-			//long var8 = var13.getLength();
-			byte[] var6 = new byte[16384];
-			//long var10 = 0L;
-	
-			int var7;
-	
-			while ((var7 = var14.read(var6)) != -1) {
-				//var10 += (long) var7;
-				var4.write(var6, 0, var7);
-				var4.flush();
+			if (var13.getResponseCode() != 200 && var13.getResponseCode() != 401) {
+				// System.out.println("not 200 and not 401");
+				if (var13.getHeaderField("Location") != null) {
+					String replacedURL = var13.getHeaderField("Location");
+					var13.close();
+					var13 = (HttpConnection) Connector.open(replacedURL);
+					var13.setRequestMethod("GET");
+					var13.setRequestProperty("User-Agent",
+							"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+					var14 = var13.openInputStream();
+					//long var8 = var13.getLength();
+					byte[] var6 = new byte[16384];
+					//long var10 = 0L;
+			
+					int var7;
+			
+					while ((var7 = var14.read(var6)) != -1) {
+						//var10 += (long) var7;
+						var4.write(var6, 0, var7);
+						var4.flush();
+					}
+				}
+			} else {
+				var14 = var13.openInputStream();
+				//long var8 = var13.getLength();
+				byte[] var6 = new byte[16384];
+				//long var10 = 0L;
+		
+				int var7;
+		
+				while ((var7 = var14.read(var6)) != -1) {
+					//var10 += (long) var7;
+					var4.write(var6, 0, var7);
+					var4.flush();
+				}
 			}
-	
-			var14.close();
-			var13.close();
-			var4.close();
+			if(var14 != null)
+				var14.close();
+			if(var13 != null)
+				var13.close();
+			if(var4 != null)
+				var4.close();
 			String str = null;
 			str = new String(var4.toByteArray(), "UTF-8");
 			return str;

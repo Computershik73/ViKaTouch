@@ -129,7 +129,7 @@ public class Dialogs extends TimerTask {
 						public void run() {
 							// if(isUpdatingNow) return;
 							// VikaTouch.loading = true;
-							int n = Settings.dialogsLength;
+							int n = itemsCount;
 							/*
 							if (VikaTouch.mobilePlatform.indexOf("S60") < 0) {
 								n = 0;

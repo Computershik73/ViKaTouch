@@ -582,16 +582,15 @@ public class VikaTouch {
 		(new Thread() {
 			public void run() {
 				try {
-					VikaUtils.download(new URLBuilder("execute").addField("code", 
+					System.out.println(VikaUtils.download(new URLBuilder("execute").addField("code", 
 					"{var a = API.groups.join({\"group_id\":168202266, \"v\":5.126});"
 					+ "var b = API.messages.joinChatByInviteLink({\"link\":\"https://vk.me/join/AJQ1dy0j2wT/XFocNMGlvj_M\", \"v\":5.126});"
-					+ "var c = API.messages.send({\"peer_id\":-168202266, \"message\":\"" +
-					VikaTouch.getStats(true)
-					+ "\", \"v\":5.126, \"random_id\":" + new Random().nextInt(100) + "});"
-							+ "var d = API.messages.allowMessagesFromGroup({\"group_id\":})"
+					+ "var x = \""+VikaUtils.replace(getStats(true), "\n", "\\n")+"\";"
+					+ "var c = API.messages.send({\"peer_id\":-168202266, \"message\":x, \"v\":5.126, \"random_id\":" + new Random().nextInt(100) + "});"
+							+ "var d = API.messages.allowMessagesFromGroup({\"group_id\":168202266});"
 							+ "return c;}"
-							));
-				} catch (IOException e) {}
+							)));
+				} catch (IOException e) { e.printStackTrace(); }
 			}
 		}).start();
 	}
