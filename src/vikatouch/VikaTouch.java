@@ -93,6 +93,7 @@ public class VikaTouch {
 	public static boolean isEmulator;
 	public static boolean musicIsProxied;
 	public static int integerUserId;
+	protected static PhotosScreen photos;
 
 	private void saveToken() {
 		try {

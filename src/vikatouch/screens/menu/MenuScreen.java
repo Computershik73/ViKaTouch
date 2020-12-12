@@ -123,7 +123,6 @@ public class MenuScreen extends MainScreen implements IMenu {
 		itemsh = 140 + uiih * itemsCount;
 
 		// sending stats
-		// TODO ENABLE ON OBT
 		VikaTouch.sendStats();
 
 		(new Thread() {

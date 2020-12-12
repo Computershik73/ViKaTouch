@@ -10,9 +10,16 @@ public class PhotosScreen extends MainScreen {
 
 	public PhotosScreen(int owner, int album) {
 		title = TextLocal.inst.get("title.photos");
+		hasBackButton = true;
 	}
 
 	public void draw(Graphics g) {
+		update(g);
+
+		g.translate(0, -g.getTranslateY());
+	}
+	
+	public final void drawHUD(Graphics g) {
 		drawHUD(g, title);
 	}
 

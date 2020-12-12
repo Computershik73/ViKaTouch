@@ -102,7 +102,7 @@ public class CommandsImpl
 						if(s instanceof MenuScreen)
 						{
 							GroupsScreen grScr = new GroupsScreen();
-							grScr.loadGroups(0, Integer.parseInt(VikaTouch.userId), null, null);
+							grScr.loadGroups(0, VikaTouch.integerUserId, null, null);
 							VikaTouch.setDisplay(grScr, 1);
 						}
 						break;
@@ -112,7 +112,7 @@ public class CommandsImpl
 						//Музыка
 						if(s instanceof MenuScreen)
 						{
-							MusicScreen.open(Integer.parseInt(VikaTouch.userId), null, null);
+							MusicScreen.open(VikaTouch.integerUserId, null, null);
 						}
 						break;
 					}
@@ -132,11 +132,11 @@ public class CommandsImpl
 						//Фотки
 						if(s instanceof MenuScreen)
 						{
-							VikaTouch.popup(new InfoPopup("Функционал фотографий ещё не реализован. Следите за обновлениями.",null,TextLocal.inst.get("title.photos"), TextLocal.inst.get("back")));
-							/*
-							if(VikaTouch.photosCanv == null)
-								VikaTouch.photosCanv = new PhotosScreen();
-							VikaTouch.setDisplay(VikaTouch.photosCanv);*/
+							//VikaTouch.popup(new InfoPopup("Функционал фотографий ещё не реализован. Следите за обновлениями.",null,TextLocal.inst.get("title.photos"), TextLocal.inst.get("back")));
+							
+							if(VikaTouch.photos == null)
+								VikaTouch.photos = new PhotosScreen(VikaTouch.integerUserId, 0);
+							VikaTouch.setDisplay(VikaTouch.photos, 1);
 						}
 						break;
 					}

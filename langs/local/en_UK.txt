@@ -128,6 +128,7 @@ title.membersw=%1 Members
 title.musicw=%2's Music
 title.playlistsw=%2's Playlists
 title.albumsw=%2's Albums
+title.photos=Photos
 
 friend.remove=Remove friend
 friend.add=Send friendship request

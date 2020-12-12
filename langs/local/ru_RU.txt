@@ -142,6 +142,7 @@ title.musicw=Музыка %1
 title.playlistsw=Плейлисты %1
 title.albumsw=Альбомы %1
 title.comments=Комментарии
+title.photos=Фотографии
 
 friend.remove=Удалить из друзей
 friend.add=Добавить в друзья
