@@ -1,4 +1,4 @@
-package vikatouch.screens.menu;
+package vikatouch.screens;
 
 import javax.microedition.lcdui.Graphics;
 
@@ -6,7 +6,6 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import tube42.lib.imagelib.ImageUtils;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
-import vikatouch.screens.MainScreen;
 
 public class PhotosScreen extends MainScreen {
 	private String title;
@@ -18,14 +17,14 @@ public class PhotosScreen extends MainScreen {
 
 	public void draw(Graphics g) {
 		int size = 72;
-		int count = 50;
+		int count = 17;
 		update(g);
 		int y = 0;
 		int z = 0; 
 		int x = 0;
 		boolean set = false;
 		for(x = 0; x < count; x++) {
-			if((x + 1 - (z*y)) * size < DisplayUtils.width) {
+			if((x + 1 - (z*y)) * size <= DisplayUtils.width) {
 				g.drawImage(ImageUtils.resize(VikaTouch.cameraImg, size, size, false, false), (x - (z*y)) * size, topPanelH + y * size, 0);
 			} else {
 				if(!set)
