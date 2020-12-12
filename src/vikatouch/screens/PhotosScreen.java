@@ -16,7 +16,7 @@ public class PhotosScreen extends MainScreen {
 	}
 
 	public void draw(Graphics g) {
-		int size = 72;
+		int size = adapt(DisplayUtils.width);
 		int count = 17;
 		update(g);
 		int y = 0;
@@ -38,6 +38,19 @@ public class PhotosScreen extends MainScreen {
 		g.translate(0, -g.getTranslateY());
 	}
 	
+	public static int adapt(int width) {
+		if(width == 360) {
+			return 72;
+		}
+		if(width == 640 || width == 320) {
+			return 64;
+		}
+		if(width == 240 || width == 480) {
+			return 48;
+		}
+		return 50;
+	}
+
 	public final void drawHUD(Graphics g) {
 		drawHUD(g, title);
 	}
