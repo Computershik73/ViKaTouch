@@ -20,14 +20,12 @@ import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
 
-import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import tube42.lib.imagelib.ImageUtils;
 import vikamobilebase.HttpMultipartRequest;
 import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
 import vikatouch.caching.ImageStorage;
-import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.page.GroupPageScreen;
