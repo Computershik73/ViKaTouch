@@ -85,6 +85,7 @@ public class ProfilePageScreen
 	
 	public ProfilePageScreen(int id)
 	{
+		visitStr = "";
 		if(onlineStr == null)
 		{
 			userStr = TextLocal.inst.get("user");

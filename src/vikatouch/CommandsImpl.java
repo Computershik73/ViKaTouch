@@ -20,6 +20,7 @@ import vikatouch.screens.menu.MenuScreen;
 import vikatouch.screens.menu.PhotosScreen;
 import vikatouch.screens.menu.VideosScreen;
 import vikatouch.screens.music.MusicScreen;
+import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
 
@@ -198,6 +199,12 @@ public class CommandsImpl
 						if(VikaTouch.about == null)
 							VikaTouch.about = new AboutScreen();
 						VikaTouch.setDisplay(VikaTouch.about, 1);
+						break;
+					}
+					case 16:
+					{
+						// Свой профиль
+						VikaTouch.setDisplay(new ProfilePageScreen(VikaTouch.integerUserId), 1);
 						break;
 					}
 					default:

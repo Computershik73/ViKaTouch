@@ -92,6 +92,7 @@ public class VikaTouch {
 	public static SettingsScreen setsScr;
 	public static boolean isEmulator;
 	public static boolean musicIsProxied;
+	public static int integerUserId;
 
 	private void saveToken() {
 		try {
@@ -269,6 +270,7 @@ public class VikaTouch {
 				JSONObject json = new JSONObject(tokenAnswer);
 				accessToken = json.getString("access_token");
 				userId = json.getString("user_id");
+				integerUserId = json.getInt("user_id");
 				VikaTouch.notificate(
 						new VikaNotification(VikaNotification.ERROR, "Auth debug", "4" + tokenAnswer, null));
 				refreshToken();
@@ -554,12 +556,24 @@ public class VikaTouch {
 			String m3g = System.getProperty("microedition.m3g.version");
 			if (m3g == null)
 				m3g = "-";
+			String osname = System.getProperty("os.name");
+			if (osname == null)
+				osname = "-";
+			String osver = System.getProperty("os.version");
+			if (osver == null)
+				osver = "-";
+			String jvendor = System.getProperty("java.vendor");
+			if (jvendor == null)
+				jvendor = "-";
+			String jver = System.getProperty("java.version");
+			if (jver == null)
+				jver = "-";
 			details = "\nDevice info: \nRAM:" + mem + "K, profiles:" + System.getProperty("microedition.profiles")
 					+ ", conf:" + System.getProperty("microedition.configuration") + " Emulator:"
-					+ EmulatorDetector.emulatorType + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
+					+ EmulatorDetector.emulatorType + " m3g:" + m3g + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
 					+ (Settings.https ? 1 : 0) + " proxy:" + (Settings.proxy ? 1 : 0) + " lang: " + Settings.language
 					+ " ll:" + Settings.simpleListsLength + " audio:" + Settings.audioMode + "AS:"
-					+ Settings.loadMusicViaHttp + "" + Settings.loadMusicWithKey + " m3g:" + m3g;
+					+ Settings.loadMusicViaHttp + "" + Settings.loadMusicWithKey ;
 		}
 		return main + details;
 	}

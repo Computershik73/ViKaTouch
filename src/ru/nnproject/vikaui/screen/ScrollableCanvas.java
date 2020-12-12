@@ -51,6 +51,9 @@ public abstract class ScrollableCanvas extends VikaScreen {
 
 	public ScrollableCanvas() {
 		super();
+		if(VikaTouch.isS40()) {
+			keysMode = true;
+		}
 	}
 
 	public abstract void draw(Graphics g);

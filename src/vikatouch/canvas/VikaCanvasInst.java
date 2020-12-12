@@ -70,6 +70,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			this.updateScreen(g);
 			rT = System.currentTimeMillis() - rT;
 		} catch (Throwable e) {
+			e.printStackTrace();
 			VikaTouch.sendLog("Paint failed. " + e.toString());
 			VikaTouch.error(e, ErrorCodes.VIKACANVASPAINT);
 		}
@@ -152,6 +153,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			VikaTouch.error(e, ErrorCodes.VIKACANVASPAINT);
 		}
 

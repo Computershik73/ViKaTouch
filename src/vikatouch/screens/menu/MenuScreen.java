@@ -50,6 +50,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 
 	public MenuScreen() {
 		super();
+		selectedBtn = 1;
 		profileImg = VikaTouch.cameraImg;
 		if (VikaTouch.DEMO_MODE) {
 			name = "Арман";
@@ -71,6 +72,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 				status = profileobj.optString("status");
 				avaurl = JSONBase.fixJSONString(profileobj.optString("photo_50"));
 				hasAva = profileobj.optInt("has_photo") == 1;
+				VikaTouch.integerUserId = profileobj.optInt("id");
+				VikaTouch.userId = "" + VikaTouch.integerUserId;
 
 				try {
 					if (!Settings.dontLoadAvas && hasAva && avaurl != null && avaurl != "" && avaurl != "null") {
@@ -137,29 +140,31 @@ public class MenuScreen extends MainScreen implements IMenu {
 	}
 
 	protected final void up() {
-		if (selectedBtn > 0)
-			uiItems[selectedBtn - 1].setSelected(false);
+		if (selectedBtn > 1)
+			uiItems[selectedBtn - 2].setSelected(false);
 		selectedBtn--;
 		if (selectedBtn < 0)
 			selectedBtn = 0;
 		scrollToSelected();
-		if (selectedBtn > 0)
-			uiItems[selectedBtn - 1].setSelected(true);
+		if (selectedBtn > 1)
+			uiItems[selectedBtn - 2].setSelected(true);
 	}
 
 	protected final void down() {
-		if (selectedBtn > 0)
-			uiItems[selectedBtn - 1].setSelected(false);
+		if (selectedBtn > 1)
+			uiItems[selectedBtn - 2].setSelected(false);
 		selectedBtn++;
-		if (selectedBtn >= 8)
-			selectedBtn = 8 - 1;
+		if (selectedBtn >= 9)
+			selectedBtn = 9 - 1;
 		scrollToSelected();
-		if (selectedBtn > 0)
-			uiItems[selectedBtn - 1].setSelected(true);
+		if (selectedBtn > 1)
+			uiItems[selectedBtn - 2].setSelected(true);
 	}
 
 	public void scrollToSelected() {
 		if (selectedBtn == 0)
+			return;
+		if (selectedBtn == 1)
 			return;
 		System.out.println("Y: " + getItemY(selectedBtn - 1));
 		scrolled = -(getItemY(selectedBtn - 1) - DisplayUtils.height / 2
@@ -171,8 +176,10 @@ public class MenuScreen extends MainScreen implements IMenu {
 		if (key == -5) {
 			if (selectedBtn == 0) {
 				VikaTouch.inst.cmdsInst.command(13, this);
+			} else if (selectedBtn == 1) {
+				VikaTouch.inst.cmdsInst.command(16, this);
 			} else {
-				uiItems[selectedBtn - 1].keyPressed(-5); // проверял хоть?
+				uiItems[selectedBtn - 2].keyPressed(-5); // проверял хоть?
 			}
 		} else
 			super.press(key);
@@ -207,6 +214,11 @@ public class MenuScreen extends MainScreen implements IMenu {
 			g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM));
 			ColorUtils.setcolor(g, ColorUtils.TEXT);
 			g.drawString(name + " " + lastname, 74, topPanelH + 12, 0);
+			if (selectedBtn == 1 && keysMode) {
+				ColorUtils.setcolor(g, 3);
+				g.drawRect(0, topPanelH+1, DisplayUtils.width-1, 72);
+				g.drawRect(1, topPanelH+2, DisplayUtils.width-3, 72);
+			}
 			// g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN,
 			// Font.SIZE_MEDIUM));
 			// g.drawString(status==null?"":status, 74, 98, 0);
@@ -522,7 +534,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 	public final void release(int x, int y) {
 		if (!dragging) {
 			try {
-				if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
+				if (y > topPanelH + 82 && y < DisplayUtils.height - bottomPanelH) {
 					int y1 = scrolled + topPanelH + 82;
 					for (int i = 0; i < itemsCount; i++) {
 						int y2 = y1 + uiItems[i].getDrawHeight();
@@ -532,6 +544,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 						}
 						y1 = y2;
 					}
+				} else if(y > topPanelH - scrolled && y < 140 - scrolled) {
+					VikaTouch.inst.cmdsInst.command(16, this);
 				}
 			} catch (RuntimeException e) {
 			}
