@@ -10,6 +10,7 @@ import org.json.me.JSONObject;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
+import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
@@ -256,7 +257,7 @@ public class ConversationItem extends JSONUIItem {
 			lastSenderId = msg.optInt("from_id");
 			msg.dispose();
 			if (("" + lastSenderId).equalsIgnoreCase(VikaTouch.userId)) {
-				nameauthora = "Вы";
+				nameauthora = TextLocal.inst.get("msg.you");
 			} else if (isGroup || type.equalsIgnoreCase("chat")) {
 				for (int i = 0; i < Dialogs.profiles.length(); i++) {
 					JSONObject profile = Dialogs.profiles.getJSONObject(i);
@@ -270,15 +271,13 @@ public class ConversationItem extends JSONUIItem {
 				text = nameauthora + ": " + text;
 			}
 
-			if (text.length() > 26) {
-				text = text.substring(0, 26) + "...";
-			}
+			text = TextBreaker.shortText(text, DisplayUtils.width - 80, Font.getFont(0, 0, 8));
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
-		if (title != null && title.length() > 22) {
-			title = title.substring(0, 22) + "...";
+		if (title != null) {
+			title = TextBreaker.shortText(title, DisplayUtils.width - 80, Font.getFont(0, 0, 8));
 		}
 		type = null;
 		json.dispose();
