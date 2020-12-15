@@ -5,8 +5,45 @@ import java.util.Vector;
 import javax.microedition.lcdui.Font;
 
 import ru.nnproject.vikaui.menu.items.UIItem;
+import vikatouch.utils.VikaUtils;
 
 public class TextBreaker {
+	
+
+
+	public static boolean willTextFit(String text, int width, Font font) {
+		return getMaxFitLength(text, width, font) == text.length();
+	}
+
+	public static boolean willTextFit(String text, int width) {
+		return getMaxFitLength(text, width) == text.length();
+	}
+
+	public static int getMaxFitLength(String text, int width) {
+		return getMaxFitLength(text, width, Font.getFont(0, 0, 8));
+	}
+
+	public static int getMaxFitLength(String text, int width, Font font) {
+		if(font.stringWidth(text) < width) {
+			System.out.println("already fits "+text + " " + width + " " + font.stringWidth(text));
+			return text.length();
+		}
+		for(int i = text.length(); i > 0; i--) {
+			if(font.stringWidth(text.substring(0,i)) < width) {
+				System.out.println("fits "+text + " " + width + " " + font.stringWidth(text));
+				return i;
+			}
+		}
+		return 4;
+	}
+	
+	public static String shortText(String text, int width, Font font) {
+		String s = VikaUtils.replace(text, "\n", " ");
+		if(!willTextFit(s, width, font)) {
+			s = s.substring(0, getMaxFitLength(text, width + (font.stringWidth("... ")), font)) + "...";
+		}
+		return s;
+	}
 
 	public static String[] breakText(final String text, boolean shortText, UIItem item, final boolean full,
 			final int width) {

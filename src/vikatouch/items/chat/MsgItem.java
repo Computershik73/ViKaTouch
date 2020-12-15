@@ -32,14 +32,14 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.CountUtils;
 import vikatouch.utils.url.URLBuilder;
 
-public class MsgItem extends ChatItem implements IMenu {
+public class MsgItem extends ChatItem implements IMenu, IMessage {
 	public MsgItem(JSONObject json) {
 		super(json);
 	}
 
-	public int mid;
+	private int mid;
 	private String[] drawText;
-	public String name = "";
+	private String name = "";
 	public boolean foreign;
 	public static int msgWidth = 300;
 	public static int margin = 10;
@@ -56,7 +56,7 @@ public class MsgItem extends ChatItem implements IMenu {
 	public String replyText;
 	private boolean attsReady;
 
-	public boolean isRead = true;
+	private boolean isRead = true;
 	public MsgItem[] forward;
 
 	public int forwardedX = -1;
@@ -164,7 +164,7 @@ public class MsgItem extends ChatItem implements IMenu {
 							String type = att.optString("type");
 							// VikaTouch.sendLog(type);
 							if (type.equals("photo")) {
-								replyText = "[Фотография]";
+								replyText = "[" + TextLocal.inst.get("msg.attach.photo") + "]";
 							} else if (type.equals("audio_message")) {
 								replyText = "[" + TextLocal.inst.get("msg.attach.voice") + "]";
 							} else if (type.equals("audio")) {
@@ -217,7 +217,7 @@ public class MsgItem extends ChatItem implements IMenu {
 							name = (String) ChatScreen.profileNames.get(new IntObject(fromId));
 						}
 						m.showName = true;
-						m.name = (m.foreign ? name : "Вы");
+						m.name = (m.foreign ? name : TextLocal.inst.get("msg.you"));
 						m.loadAtts();
 						forward[i] = m;
 					}
@@ -427,7 +427,7 @@ public class MsgItem extends ChatItem implements IMenu {
 			} catch (RuntimeException e) {
 			}
 		} catch (Throwable e) {
-			VikaTouch.sendLog(e.getMessage());
+			VikaTouch.sendLog(e.toString());
 		}
 	}
 
@@ -680,6 +680,30 @@ public class MsgItem extends ChatItem implements IMenu {
 
 	public void onMenuItemOption(int i) {
 
+	}
+
+	public int getMessageId() {
+		return mid;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public int getFromId() {
+		return fromid;
+	}
+
+	public void setName(String name, ChatScreen chatScreen) {
+		this.name = name;
+	}
+
+	public void setRead(boolean isRead, ChatScreen chatScreen) {
+		this.isRead = isRead;
+	}
+	
+	public boolean isRead() {
+		return this.isRead;
 	}
 
 }

@@ -13,6 +13,7 @@ import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.url.URLBuilder;
 
+//FIXME: переписать
 public class Dialogs extends TimerTask {
 
 	public static ConversationItem[] dialogs = new ConversationItem[0];

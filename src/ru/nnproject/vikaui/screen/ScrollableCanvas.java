@@ -239,6 +239,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			uiItems[currentItem].setSelected(false);
 		} catch (Throwable e) {
 
+			e.printStackTrace();
 			VikaTouch.sendLog("UPsetSelected " + e.getMessage());
 
 		}
@@ -250,6 +251,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 		try {
 			uiItems[currentItem].setSelected(true);
 		} catch (Throwable e) {
+			e.printStackTrace();
 			VikaTouch.sendLog("UPsetSelected2 " + e.getMessage());
 		}
 	}
@@ -259,6 +261,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			scrolled = -(getItemY(currentItem) - DisplayUtils.height / 2 + (uiItems[currentItem].getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
 		} catch (Throwable e) {
+			e.printStackTrace();
 			VikaTouch.sendLog("scrollToSelected " + e.getMessage());
 		}
 	}
@@ -295,9 +298,11 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				e.printStackTrace();
 			}
 			try {
+				
 				uiItems[i].setSelected(true);
 				currentItem = i;
 			} catch (RuntimeException e) {
+				System.out.println(i);
 				e.printStackTrace();
 			}
 		} catch (Throwable e) {
@@ -370,7 +375,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			System.out.println(scrlDbg);
 			scrollTargetActive = true;
 		} catch (Throwable e) {
-			VikaTouch.sendLog("keyscroll " + e.getMessage());
+			VikaTouch.sendLog("keyscroll " + e.toString());
+			e.printStackTrace();
 		}
 	}
 

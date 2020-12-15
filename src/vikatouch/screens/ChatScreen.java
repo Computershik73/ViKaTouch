@@ -33,6 +33,9 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaTouch;
 import vikatouch.canvas.VikaCanvasInst;
+import vikatouch.items.chat.IMessage;
+import vikatouch.items.chat.ActionItem;
+import vikatouch.items.chat.ChatItem;
 import vikatouch.items.chat.MsgItem;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
@@ -137,9 +140,9 @@ public class ChatScreen extends MainScreen {
 							.addField("message", newText).addField("keep_forward_messages", "1")
 							.addField("keep_snippets", "1").addField("dont_parse_links", "1");
 					if (c.type == TYPE_CHAT) {
-						url = url.addField("conversation_message_id", "" + msg.mid);
+						url = url.addField("conversation_message_id", "" + msg.getMessageId());
 					} else {
-						url = url.addField("message_id", "" + msg.mid);
+						url = url.addField("message_id", "" + msg.getMessageId());
 					}
 					/*String res = */
 					try {
@@ -296,6 +299,14 @@ public class ChatScreen extends MainScreen {
 
 	private int members;
 
+	private boolean hasPinnedMessage;
+
+	private String pinName;
+
+	private String pinText;
+
+	private int pinId;
+
 	private void messagesChat() throws IOException {
 		String errst = "f";
 		// VikaTouch.sendLog("Messages in chat mode");
@@ -346,49 +357,96 @@ public class ChatScreen extends MainScreen {
 			try {
 				VikaCanvasInst.msgColor = 0xff00ff00;
 				errst = "msg" + String.valueOf(i);
-				MsgItem m = new MsgItem(items.optJSONObject(i));
-				errst = "msgit" + String.valueOf(i);
-				m.parseJSON();
-				errst = "mparse" + String.valueOf(i);
-				int fromId = m.fromid;
-
-				String name = (fromId < 0 ? "g" : "") + "id" + fromId;
-
-				if (fromId > 0 && profileNames.containsKey(new IntObject(fromId))) {
-					name = (String) profileNames.get(new IntObject(fromId));
-					errst = "msgnm" + String.valueOf(i);
+				JSONObject j = items.optJSONObject(i);
+				if(j == null) {
+				} else if(j.optJSONObject("action") != null) {
+					ActionItem act = new ActionItem(j);
+					act.parseJSON();
+					uiItems[uiItems.length - 1 - i - loadSpace] = act;
+					itemsCount = (short) uiItems.length;
 				} else {
-					if (groupNames.containsKey(new IntObject(fromId))) {
-						name = (String) groupNames.get(new IntObject(fromId));
-						errst = "msgnm2_" + String.valueOf(i);
+					MsgItem m = new MsgItem(j);
+					errst = "msgit" + String.valueOf(i);
+					m.parseJSON();
+					errst = "mparse" + String.valueOf(i);
+					int fromId = m.fromid;
+	
+					String name = (fromId < 0 ? "g" : "") + "id" + fromId;
+	
+					if (fromId > 0 && profileNames.containsKey(new IntObject(fromId))) {
+						name = (String) profileNames.get(new IntObject(fromId));
+						errst = "msgnm" + String.valueOf(i);
+					} else {
+						if (groupNames.containsKey(new IntObject(fromId))) {
+							name = (String) groupNames.get(new IntObject(fromId));
+							errst = "msgnm2_" + String.valueOf(i);
+						}
 					}
+	
+					boolean chain = false;
+					if (i + 1 < items.length()) {
+						chain = fromId == items.getJSONObject(i + 1).optInt("from_id");
+					}
+					m.showName = !chain;
+	
+					m.setName(m.foreign ? name : "Вы", this);
+					errst = "mui" + String.valueOf(i);
+					uiItems[uiItems.length - 1 - i - loadSpace] = m;
+					errst = "mui2" + String.valueOf(i);
+					if (i == 0) {
+					//	last = m;
+					}
+					errst = "mui3" + String.valueOf(i);
+					itemsCount = (short) uiItems.length;
+					errst = "mui4" + String.valueOf(i);
 				}
-
-				boolean chain = false;
-				if (i + 1 < items.length()) {
-					chain = fromId == items.getJSONObject(i + 1).optInt("from_id");
-				}
-				m.showName = !chain;
-
-				m.name = (m.foreign ? name : "Вы");
-				errst = "mui" + String.valueOf(i);
-				uiItems[uiItems.length - 1 - i - loadSpace] = m;
-				errst = "mui2" + String.valueOf(i);
-				if (i == 0) {
-				//	last = m;
-				}
-				errst = "mui3" + String.valueOf(i);
-				itemsCount = (short) uiItems.length;
-				errst = "mui4" + String.valueOf(i);
 			} catch (Throwable e) {
 				/*
-				 * try { Thread.sleep(2000); } catch (InterruptedException e1) { // TODO
-				 * Auto-generated catch block e1.printStackTrace(); }
+				 * try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 				 */
 				// VikaTouch.sendLog(errst + e.getMessage());
 				this.title2 = errst + e.getMessage();
 				// TextLocal.inst.get("msg.failedtoload2");
 
+			}
+		}
+
+		items.dispose();
+		profiles.dispose();
+		response.dispose();
+		if(!DisplayUtils.compact) {
+			try {
+				x = VikaUtils.download(new URLBuilder("messages.getConversationsById").addField("peer_ids", peerId));
+				JSONObject j = new JSONObject(x)
+						.getJSONObject("response")
+						.getJSONArray("items")
+						.getJSONObject(0)
+						.getJSONObject("chat_settings")
+						.getJSONObject("pinned_message");
+				hasPinnedMessage = true;
+				pinText = j.optString("text");
+				pinId = j.getInt("id");
+				int fromid = j.getInt("from_id");
+				if(profileNames != null) {
+					pinName = (String) profileNames.get(new IntObject(fromid));
+				} else {
+					pinName = "id" + fromid;
+				}
+				if(pinText == null) {
+					if(j.getJSONArray("attachments").length() > 1) {
+						pinText = "Вложения";
+					} else if(j.getJSONArray("attachments").length() > 0) {
+						pinText = "Вложение";
+					} else {
+						pinText = "";
+					}
+				} else {
+					pinText = VikaUtils.replace(pinText, "\n", " ");
+					pinText = TextBreaker.shortText(pinText, DisplayUtils.width - 48, Font.getFont(0, 0, 8));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				hasPinnedMessage = false;
 			}
 		}
 		/*
@@ -399,9 +457,6 @@ public class ChatScreen extends MainScreen {
 		 * 0xff00ff00; errst="msgauto"; }
 		 */
 		x = null;
-		items.dispose();
-		profiles.dispose();
-		response.dispose();
 		errst = "msgdisp";
 		loadAtts();
 		errst = "loadat";
@@ -442,11 +497,11 @@ public class ChatScreen extends MainScreen {
 				}
 				m.showName = !chain;
 
-				m.name = (m.foreign ? title : "Вы");
+				m.setName(m.foreign ? title : "Вы", this);
 				uiItems[uiItems.length - 1 - i - loadSpace] = m;
 				if (Settings.autoMarkAsRead && i == 0) {
 					VikaCanvasInst.msgColor = 0xffff00ff;
-					VikaUtils.request(new URLBuilder("messages.markAsRead").addField("start_message_id", "" + m.mid)
+					VikaUtils.request(new URLBuilder("messages.markAsRead").addField("start_message_id", "" + m.getMessageId())
 							.addField("peer_id", peerId));
 					VikaCanvasInst.msgColor = 0xff00ff00;
 				}
@@ -513,13 +568,13 @@ public class ChatScreen extends MainScreen {
 			boolean r = false;
 			int rn = 0;
 			for (int i = uiItems.length - 1; i >= 0; i--) {
-				if (uiItems[i] != null) {
-					MsgItem mi = (MsgItem) uiItems[i];
-					if (mi.mid == l) {
+				if (uiItems[i] != null && uiItems[i] instanceof IMessage) {
+					IMessage mi = (IMessage) uiItems[i];
+					if (mi.getMessageId() == l) {
 						r = true;
 						rn = i;
 					}
-					mi.isRead = r;
+					mi.setRead(r,this);
 				}
 			}
 			return rn;
@@ -601,19 +656,26 @@ public class ChatScreen extends MainScreen {
 						VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
 					}
 				}
-			} else if (y < 50) {
+			} else if (y < topPanelH) {
 				// верхняя панель
-				if (x < 50) {
-					stopUpdater();
-					VikaTouch.inst.cmdsInst.command(14, this);
-				} else if (x > DisplayUtils.width - 50) {
-					if(this.type == TYPE_USER) {
-						VikaTouch.setDisplay(new ProfilePageScreen(this.localId), 1);
-					} else if(this.type == TYPE_GROUP) {
-						VikaTouch.setDisplay(new GroupPageScreen(this.localId), 1);
-					} else if(this.type == TYPE_CHAT) {
-						String x2 = CountUtils.countStrMembers(this.members);
-						VikaTouch.setDisplay(new ChatMembersScreen(this.peerId, x2, this.members), 1);
+				if(y < 56) {
+					if (x < 50) {
+						stopUpdater();
+						VikaTouch.inst.cmdsInst.command(14, this);
+					} else if (x > DisplayUtils.width - 50) {
+						if(this.type == TYPE_USER) {
+							VikaTouch.setDisplay(new ProfilePageScreen(this.localId), 1);
+						} else if(this.type == TYPE_GROUP) {
+							VikaTouch.setDisplay(new GroupPageScreen(this.localId), 1);
+						} else if(this.type == TYPE_CHAT) {
+							String x2 = CountUtils.countStrMembers(this.members);
+							VikaTouch.setDisplay(new ChatMembersScreen(this.peerId, x2, this.members), 1);
+						}
+					}
+				} else {
+					if(hasPinnedMessage && pinId != 0) {
+						this.currentItem = pinId;
+						scrollToSelected();
 					}
 				}
 			} else {
@@ -863,8 +925,10 @@ public class ChatScreen extends MainScreen {
 	public int getItemY(int n) {
 		int y = 0;
 		for (int i = 0; (i < uiItems.length && i < n); i++) {
-			y += uiItems[i].getDrawHeight();
-			y += msgYMargin;
+			if(uiItems[i] != null) {
+				y += uiItems[i].getDrawHeight();
+				y += msgYMargin;
+			}
 		}
 		return y + topPanelH;
 	}
@@ -972,7 +1036,7 @@ public class ChatScreen extends MainScreen {
 				if (updStop)
 					return;
 				VikaCanvasInst.updColor = 0xffff0000;
-				long mid = ((MsgItem) uiItems[uiItems.length - hasSpace - 1]).mid;
+				long mid = ((IMessage) uiItems[uiItems.length - hasSpace - 1]).getMessageId();
 
 				final String x = VikaUtils.download(new URLBuilder("messages.getHistory")
 						.addField("start_message_id", String.valueOf(mid)).addField("peer_id", peerId)
@@ -1064,38 +1128,45 @@ public class ChatScreen extends MainScreen {
 						}
 					}
 					VikaCanvasInst.updColor = 0xff0000ff;
-					MsgItem[] newMsgs = new MsgItem[newMsgCount];
+					ChatItem[] newMsgs = new ChatItem[newMsgCount];
 					for (int i = 0; i < newMsgCount; i++) {
 						if (updStop)
 							return;
 						VikaCanvasInst.updColor = 0xff0000ff;
-						MsgItem m = new MsgItem(items.getJSONObject(i));
-						m.parseJSON();
-						int fromId = m.fromid;
-						String name = "user" + fromId;
-
-						if (profileNames.containsKey(new IntObject(fromId))) {
-							name = (String) profileNames.get(new IntObject(fromId));
-						}
-
-						boolean chain = false;
-						if (i + 1 < newMsgCount) {
-							chain = fromId == items.getJSONObject(i + 1).optInt("from_id");
-						}
-						m.showName = !chain;
-						m.name = (m.foreign ? name : "Вы");
-						newMsgs[i] = m;
-						if (updStop)
-							return;
-						m.loadAtts();
-						try {
-							if (Settings.autoMarkAsRead) {
-								VikaCanvasInst.updColor = 0xff00ffff;
-								VikaUtils.download(new URLBuilder("messages.markAsRead")
-										.addField("start_message_id", "" + m.mid).addField("peer_id", peerId));
+						JSONObject j = items.getJSONObject(i);
+						if(j.optJSONObject("action") != null) {
+							ActionItem act = new ActionItem(j);
+							act.parseJSON();
+							newMsgs[i] = act;
+						} else {
+							MsgItem m = new MsgItem(j);
+							m.parseJSON();
+							int fromId = m.fromid;
+							String name = "user" + fromId;
+	
+							if (profileNames.containsKey(new IntObject(fromId))) {
+								name = (String) profileNames.get(new IntObject(fromId));
 							}
-						} catch (Throwable e) {
-
+	
+							boolean chain = false;
+							if (i + 1 < newMsgCount) {
+								chain = fromId == items.getJSONObject(i + 1).optInt("from_id");
+							}
+							m.showName = !chain;
+							m.setName(m.foreign ? name : TextLocal.inst.get("msg.you"), this);
+							newMsgs[i] = m;
+							if (updStop)
+								return;
+							m.loadAtts();
+							try {
+								if (Settings.autoMarkAsRead) {
+									VikaCanvasInst.updColor = 0xff00ffff;
+									VikaUtils.download(new URLBuilder("messages.markAsRead")
+											.addField("start_message_id", "" + m.getMessageId()).addField("peer_id", peerId));
+								}
+							} catch (Throwable e) {
+	
+							}
 						}
 					}
 					VikaCanvasInst.updColor = 0xffff00ff;
@@ -1103,7 +1174,7 @@ public class ChatScreen extends MainScreen {
 					for (int i = 0; i < newMsgCount; i++) {
 						if (updStop)
 							return;
-						MsgItem m = newMsgs[newMsgCount - i - 1];
+						ChatItem m = newMsgs[newMsgCount - i - 1];
 						uiItems[uiItems.length - hasSpace] = m;
 						hasSpace--;
 						VikaCanvasInst.updColor = 0xffff00ff;
@@ -1116,6 +1187,7 @@ public class ChatScreen extends MainScreen {
 			}
 			refreshOk = true;
 		} catch (JSONException e) {
+			e.printStackTrace();
 			// throw e;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -1366,6 +1438,25 @@ public class ChatScreen extends MainScreen {
 
 		g.drawImage(IconsManager.selIco[IconsManager.BACK], 16, 16, 0);
 		g.drawImage(IconsManager.selIco[IconsManager.INFO], DisplayUtils.width - 38, 16, 0);
+		if(hasPinnedMessage) {
+
+			Font font = Font.getFont(0, 0, Font.SIZE_SMALL);
+			g.setFont(font);
+			int dw = DisplayUtils.width;
+			int sty = 56;
+			int pinh = (int) (font.getHeight() * 2);
+			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
+			g.fillRect(0, sty, dw, pinh);
+			ColorUtils.setcolor(g, ColorUtils.TEXT);
+			g.drawString(pinText, 28, sty + font.getHeight(), 0);
+			ColorUtils.setcolor(g, ColorUtils.COLOR1);
+			g.drawString(pinName, 28, sty, 0);
+			//g.fillRect(6, sty + 2, 2, pinh - 4);
+			//ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
+			//g.fillRect(dw - 40, sty, 40, pinh);
+			g.drawImage(IconsManager.ico[IconsManager.PIN], 4, 56 + (font.getHeight()/4), 0);
+			topPanelH = 56 + pinh + 2;
+		}
 	}
 
 	private void drawKeysTips(Graphics g) {
