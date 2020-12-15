@@ -38,7 +38,7 @@ public class TextBreaker {
 	public static String shortText(String text, int width, Font font) {
 		String s = VikaUtils.replace(text, "\n", " ");
 		if(!willTextFit(s, width, font)) {
-			s = s.substring(0, getMaxFitLength(s, width + (font.stringWidth("... ")), font)) + "...";
+			s = s.substring(0, getMaxFitLength(s, width - (font.stringWidth("... ")), font)) + "...";
 		}
 		return s;
 	}

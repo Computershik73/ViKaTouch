@@ -272,14 +272,13 @@ public class ConversationItem extends JSONUIItem {
 			if (nameauthora != "") {
 				text = nameauthora + ": " + text;
 			}
-
-			text = TextBreaker.shortText(text, DisplayUtils.width - 80, Font.getFont(0, 0, 8));
+			text = TextBreaker.shortText(text, DisplayUtils.width - 100, Font.getFont(0, 0, 8));
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
 		if (title != null) {
-			title = TextBreaker.shortText(title, DisplayUtils.width - 80, Font.getFont(0, 0, 8));
+			title = TextBreaker.shortText(title, DisplayUtils.width - 120, Font.getFont(0, 0, 8));
 		}
 		type = null;
 		json.dispose();
