@@ -82,6 +82,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 
 			foreign = !("" + json.optInt("from_id")).equalsIgnoreCase(VikaTouch.userId);
 			mid = json.optInt("id");
+			
 			int h1 = Font.getFont(0, 0, 8).getHeight();
 			// 27864
 			String textt = "";
@@ -694,12 +695,12 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		return fromid;
 	}
 
-	public void setName(String name, ChatScreen chatScreen) {
-		this.name = name;
+	public void setName(String n) {
+		this.name = n;
 	}
 
-	public void setRead(boolean isRead, ChatScreen chatScreen) {
-		this.isRead = isRead;
+	public void setRead(boolean i) {
+		this.isRead = i;
 	}
 	
 	public boolean isRead() {

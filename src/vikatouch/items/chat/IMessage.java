@@ -1,7 +1,5 @@
 package vikatouch.items.chat;
 
-import vikatouch.screens.ChatScreen;
-
 public interface IMessage {
 
 	public int getMessageId();
@@ -10,9 +8,9 @@ public interface IMessage {
 
 	public String getText();
 	
-	public void setName(String name, ChatScreen chatScreen);
+	public void setName(String n);
 	
-	public void setRead(boolean isRead, ChatScreen chatScreen);
+	public void setRead(boolean i);
 	
 	public boolean isRead();
 

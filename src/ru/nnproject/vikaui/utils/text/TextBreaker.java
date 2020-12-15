@@ -25,12 +25,10 @@ public class TextBreaker {
 
 	public static int getMaxFitLength(String text, int width, Font font) {
 		if(font.stringWidth(text) < width) {
-			System.out.println("already fits "+text + " " + width + " " + font.stringWidth(text));
 			return text.length();
 		}
 		for(int i = text.length(); i > 0; i--) {
 			if(font.stringWidth(text.substring(0,i)) < width) {
-				System.out.println("fits "+text + " " + width + " " + font.stringWidth(text));
 				return i;
 			}
 		}
@@ -40,7 +38,7 @@ public class TextBreaker {
 	public static String shortText(String text, int width, Font font) {
 		String s = VikaUtils.replace(text, "\n", " ");
 		if(!willTextFit(s, width, font)) {
-			s = s.substring(0, getMaxFitLength(text, width + (font.stringWidth("... ")), font)) + "...";
+			s = s.substring(0, getMaxFitLength(s, width + (font.stringWidth("... ")), font)) + "...";
 		}
 		return s;
 	}

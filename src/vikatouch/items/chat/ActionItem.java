@@ -293,11 +293,11 @@ public class ActionItem extends ChatItem implements IMessage {
 		return fromid;
 	}
 
-	public void setName(String name, ChatScreen chatScreen) {
+	public void setName(String name) {
 		
 	}
 
-	public void setRead(boolean isRead, ChatScreen chatScreen) {
+	public void setRead(boolean isRead) {
 		this.isRead  = isRead;
 	}
 

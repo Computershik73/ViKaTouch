@@ -216,33 +216,35 @@ public class ConversationItem extends JSONUIItem {
 
 			String nameauthora = "";
 
-			if (text == "" || text == null || text.length() == 0 || text.length() == 1) {
+			if (text == "" || text == null || text.length() == 0) {
 				JSONArray attachments = msg.optJSONArray("attachments");
 				// if(lastmessage.attachments != null && lastmessage.attachments.length != 0 &&
 				// lastmessage.attachments[0] != null)
 				// {
 				try {
-					if (attachments.optJSONObject(0).optString("type").equals("photo")) {
-						text = TextLocal.inst.get("msg.attach.photo");
-					} else {
-						if (attachments.optJSONObject(0).optString("type").equals("audio")) {
-							text = TextLocal.inst.get("msg.attach.audio");
+					if(attachments.optJSONObject(0) != null) {
+						if (attachments.optJSONObject(0).optString("type").equals("photo")) {
+							text = TextLocal.inst.get("msg.attach.photo");
 						} else {
-							if (attachments.optJSONObject(0).optString("type").equals("video")) {
-								text = TextLocal.inst.get("msg.attach.video");
+							if (attachments.optJSONObject(0).optString("type").equals("audio")) {
+								text = TextLocal.inst.get("msg.attach.audio");
 							} else {
-								if (attachments.optJSONObject(0).optString("type").equals("wall")) {
-									text = TextLocal.inst.get("msg.attach.wall");
+								if (attachments.optJSONObject(0).optString("type").equals("video")) {
+									text = TextLocal.inst.get("msg.attach.video");
 								} else {
-
-									text = TextLocal.inst.get("msg.attach.attachment");
-
+									if (attachments.optJSONObject(0).optString("type").equals("wall")) {
+										text = TextLocal.inst.get("msg.attach.wall");
+									} else {
+	
+										text = TextLocal.inst.get("msg.attach.attachment");
+	
+									}
 								}
 							}
 						}
 					}
-
 				} catch (Throwable e) {
+					e.printStackTrace();
 					/*
 					 * if(lastmessage.attachments[0] instanceof PhotoAttachment) { text =
 					 * TextLocal.inst.get("msg.attach.photo"); } else if(lastmessage.attachments[0]

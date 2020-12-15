@@ -308,6 +308,7 @@ public class ChatScreen extends MainScreen {
 	private int pinId;
 
 	private void messagesChat() throws IOException {
+		try {
 		String errst = "f";
 		// VikaTouch.sendLog("Messages in chat mode");
 
@@ -318,14 +319,17 @@ public class ChatScreen extends MainScreen {
 
 		String x = VikaUtils.download(new URLBuilder("messages.getHistory").addField("peer_id", peerId)
 				.addField("extended", 1).addField("count", Settings.messagesPerLoad).addField("offset", 0));
+		
+		String x2 = VikaUtils.download(new URLBuilder("messages.getConversationMembers").addField("peer_id", peerId));
 		// VikaTouch.sendLog("Requesting history ok");
 		errst = "history";
 		VikaCanvasInst.msgColor = 0xffffff00;
 		JSONObject response = new JSONObject(x).optJSONObject("response");
+		JSONObject response2 = new JSONObject(x2).optJSONObject("response");
 		errst = "response";
-		JSONArray profiles = response.optJSONArray("profiles");
+		JSONArray profiles = response2.optJSONArray("profiles");
 		errst = "profiles";
-		JSONArray groups = response.optJSONArray("groups");
+		JSONArray groups = response2.optJSONArray("groups");
 		errst = "groups";
 		JSONArray items = response.optJSONArray("items");
 		errst = "items";
@@ -389,7 +393,7 @@ public class ChatScreen extends MainScreen {
 					}
 					m.showName = !chain;
 	
-					m.setName(m.foreign ? name : "Вы", this);
+					m.setName(m.foreign ? name : TextLocal.inst.get("msg.you"));
 					errst = "mui" + String.valueOf(i);
 					uiItems[uiItems.length - 1 - i - loadSpace] = m;
 					errst = "mui2" + String.valueOf(i);
@@ -401,6 +405,8 @@ public class ChatScreen extends MainScreen {
 					errst = "mui4" + String.valueOf(i);
 				}
 			} catch (Throwable e) {
+				System.out.println(errst);
+				e.printStackTrace();
 				/*
 				 * try { Thread.sleep(2000); } catch (InterruptedException e1) { e1.printStackTrace(); }
 				 */
@@ -417,8 +423,10 @@ public class ChatScreen extends MainScreen {
 		if(!DisplayUtils.compact) {
 			try {
 				x = VikaUtils.download(new URLBuilder("messages.getConversationsById").addField("peer_ids", peerId));
-				JSONObject j = new JSONObject(x)
-						.getJSONObject("response")
+				System.out.println(x);
+				JSONObject j1 = new JSONObject(x)
+						.getJSONObject("response");
+				JSONObject j = j1
 						.getJSONArray("items")
 						.getJSONObject(0)
 						.getJSONObject("chat_settings")
@@ -430,6 +438,9 @@ public class ChatScreen extends MainScreen {
 				if(profileNames != null) {
 					pinName = (String) profileNames.get(new IntObject(fromid));
 				} else {
+					pinName = "id" + fromid;
+				}
+				if(pinName == null) {
 					pinName = "id" + fromid;
 				}
 				if(pinText == null) {
@@ -444,7 +455,7 @@ public class ChatScreen extends MainScreen {
 					pinText = VikaUtils.replace(pinText, "\n", " ");
 					pinText = TextBreaker.shortText(pinText, DisplayUtils.width - 48, Font.getFont(0, 0, 8));
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
 				hasPinnedMessage = false;
 			}
@@ -456,6 +467,14 @@ public class ChatScreen extends MainScreen {
 		 * ""+last.mid).addField("peer_id", peerId)); VikaCanvasInst.msgColor =
 		 * 0xff00ff00; errst="msgauto"; }
 		 */
+		try {
+			if (Settings.autoMarkAsRead) {
+				VikaCanvasInst.updColor = 0xff00ffff;
+				VikaUtils.download(new URLBuilder("messages.markAsRead").addField("peer_id", peerId));
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		x = null;
 		errst = "msgdisp";
 		loadAtts();
@@ -466,6 +485,9 @@ public class ChatScreen extends MainScreen {
 		// {
 
 		// }
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void messagesDialog() throws IOException {
@@ -497,7 +519,7 @@ public class ChatScreen extends MainScreen {
 				}
 				m.showName = !chain;
 
-				m.setName(m.foreign ? title : "Вы", this);
+				m.setName(m.foreign ? title : TextLocal.inst.get("msg.you"));
 				uiItems[uiItems.length - 1 - i - loadSpace] = m;
 				if (Settings.autoMarkAsRead && i == 0) {
 					VikaCanvasInst.msgColor = 0xffff00ff;
@@ -506,8 +528,8 @@ public class ChatScreen extends MainScreen {
 					VikaCanvasInst.msgColor = 0xff00ff00;
 				}
 			} catch (Throwable e) {
-				this.title2 = TextLocal.inst.get("msg.failedtoload2");
 				e.printStackTrace();
+				this.title2 = TextLocal.inst.get("msg.failedtoload2");
 				VikaTouch.error(-2, "chat 6 "+ e.toString(), false);
 				// VikaTouch.sendLog(e.getMessage());
 			}
@@ -546,7 +568,7 @@ public class ChatScreen extends MainScreen {
 			scrollToSelected();
 			uiItems[currentItem].setSelected(true);
 		} catch (Throwable e) {
-
+			e.printStackTrace();
 		}
 
 		System.gc();
@@ -568,17 +590,18 @@ public class ChatScreen extends MainScreen {
 			boolean r = false;
 			int rn = 0;
 			for (int i = uiItems.length - 1; i >= 0; i--) {
-				if (uiItems[i] != null && uiItems[i] instanceof IMessage) {
+				if (uiItems[i] != null) {
 					IMessage mi = (IMessage) uiItems[i];
 					if (mi.getMessageId() == l) {
 						r = true;
 						rn = i;
 					}
-					mi.setRead(r,this);
+					mi.setRead(r);
 				}
 			}
 			return rn;
 		} catch (Throwable e) {
+			e.printStackTrace();
 			VikaTouch.sendLog("Marking: " + e.toString());
 			return 0;
 		}
@@ -601,6 +624,7 @@ public class ChatScreen extends MainScreen {
 			 * g.drawString("scr:"+scrolled+" i"+currentItem, 0,80,0);
 			 */
 		} catch (Throwable e) {
+			e.printStackTrace();
 			VikaTouch.sendLog(e.getMessage());
 		}
 	}
@@ -1037,7 +1061,6 @@ public class ChatScreen extends MainScreen {
 					return;
 				VikaCanvasInst.updColor = 0xffff0000;
 				long mid = ((IMessage) uiItems[uiItems.length - hasSpace - 1]).getMessageId();
-
 				final String x = VikaUtils.download(new URLBuilder("messages.getHistory")
 						.addField("start_message_id", String.valueOf(mid)).addField("peer_id", peerId)
 						.addField("count", 1).addField("offset", -1).addField("extended", 1));
@@ -1056,6 +1079,7 @@ public class ChatScreen extends MainScreen {
 								temp1 = res.getJSONArray("items");
 								temp2 = res.getJSONArray("conversations").getJSONObject(0);
 							} catch (Throwable e) {
+								e.printStackTrace();
 								refreshOk = false;
 								return;
 							}
@@ -1074,6 +1098,7 @@ public class ChatScreen extends MainScreen {
 					}
 					VikaCanvasInst.updColor = 0xffff7f00;
 				} catch (Throwable e) {
+					e.printStackTrace();
 					refreshOk = false;
 					return;
 				}
@@ -1125,6 +1150,7 @@ public class ChatScreen extends MainScreen {
 						} catch (JSONException e) {
 						} catch (NullPointerException e) {
 						} catch (Throwable e) {
+							e.printStackTrace();
 						}
 					}
 					VikaCanvasInst.updColor = 0xff0000ff;
@@ -1153,7 +1179,7 @@ public class ChatScreen extends MainScreen {
 								chain = fromId == items.getJSONObject(i + 1).optInt("from_id");
 							}
 							m.showName = !chain;
-							m.setName(m.foreign ? name : TextLocal.inst.get("msg.you"), this);
+							m.setName(m.foreign ? name : TextLocal.inst.get("msg.you"));
 							newMsgs[i] = m;
 							if (updStop)
 								return;
@@ -1161,11 +1187,12 @@ public class ChatScreen extends MainScreen {
 							try {
 								if (Settings.autoMarkAsRead) {
 									VikaCanvasInst.updColor = 0xff00ffff;
+									System.out.println(m.getMessageId());
 									VikaUtils.download(new URLBuilder("messages.markAsRead")
 											.addField("start_message_id", "" + m.getMessageId()).addField("peer_id", peerId));
 								}
 							} catch (Throwable e) {
-	
+								e.printStackTrace();
 							}
 						}
 					}

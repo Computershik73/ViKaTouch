@@ -76,7 +76,7 @@ public class Dialogs extends TimerTask {
 						response.dispose();
 						items.dispose();
 						item.dispose();
-						if (VikaTouch.unreadCount != unreadC || unreadC > 0 || hasNew) {
+						if (VikaTouch.unreadCount != unreadC || hasNew) {
 							VikaTouch.unreadCount = unreadC;
 							x = VikaUtils.download(new URLBuilder("messages.getConversations").addField("filter", "all")
 									.addField("extended", "1").addField("count", Settings.dialogsLength));
@@ -93,13 +93,13 @@ public class Dialogs extends TimerTask {
 								dialogs[i].disposeJson();
 								item.dispose();
 							}
-							if (sendNofs && hasNew && dialogs.length > 1 && dialogs[0] != null
+							if (sendNofs && dialogs.length > 1 && dialogs[0] != null
 									&& !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId)) {
 								if(VikaTouch.mobilePlatform.indexOf("S60") >= 0 && VikaTouch.mobilePlatform.indexOf("5.3") >= 0) {
 									VikaTouch.notify("type", dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40));
 								}
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,
-										VikaUtils.cut(dialogs[0].text, 40), VikaTouch.dialogsScr));
+										VikaUtils.cut(dialogs[0].lasttext, 40), VikaTouch.dialogsScr));
 							}
 							items.dispose();
 							x = null;
@@ -109,6 +109,7 @@ public class Dialogs extends TimerTask {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					} catch (Throwable e) {
+						e.printStackTrace();
 					}
 					if (async)
 						VikaTouch.loading = false;

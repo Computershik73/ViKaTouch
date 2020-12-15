@@ -81,6 +81,9 @@ public class GroupItem extends JSONUIItem {
 			g.fillRect(0, y, DisplayUtils.width, itemDrawHeight);
 		}
 		ColorUtils.setcolor(g, 0);
+		if (selected) {
+			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
+		}
 		if (name != null)
 			g.drawString(name, 73, y, 0);
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
