@@ -187,7 +187,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 					}
 				}
 				if (breakReplyText)
-					replyText = TextBreaker.breakText(replyText, false, null, true, msgWidth - h1 - h1)[0];
+					replyText = TextBreaker.shortText(replyText, msgWidth - h1 - h1, Font.getFont(0, 0, 8));
 
 				int fromId = reply.optInt("from_id");
 				if (fromId == Integer.parseInt(VikaTouch.userId)) {
