@@ -27,6 +27,7 @@ import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
 import vikatouch.settings.Settings;
+import vikatouch.updates.VikaUpdate.VEUtils;
 import vikatouch.utils.IntObject;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.CountUtils;
@@ -285,6 +286,32 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		}
 		return null;
 	}
+	
+	private static String[] split(String in, char t)
+	{
+		int l = count(in, t)+1;
+		String[] res = new String[l];
+		String[] c = VEUtils.singleSplit(in, t);
+		res[0] = c[0];
+		for(int i = 1; i < l-1; i++)
+		{
+			c = VEUtils.singleSplit(c[1], t);
+			res[i] = c[0];
+		}
+		res[l-1] = c[1];
+		return res;
+	}
+
+	private static int count(String in, char t) {
+		int r = 0;
+		char[] c = in.toCharArray();
+		for(int i = 0; i < c.length; i++) {
+			if(c[i] == t) {
+				r++;
+			}
+		}
+		return r;
+	}
 
 	public void paint(Graphics g, int y, int scrolled) {
 		try {
@@ -346,9 +373,44 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				g.drawString(time, textX - h1 + msgWidthInner - font.stringWidth(time), y + h1 / 2, 0);
 			}
 			ColorUtils.setcolor(g, ColorUtils.TEXT);
+			try {
 			for (int i = 0; i < linesC; i++) {
-				g.drawString(drawText[i] == null ? " " : drawText[i], textX, y + h1 / 2 + h1 * (i + (showName ? 1 : 0)),
-						0);
+				if(drawText[i] != null) {
+					String s1 = drawText[i];
+					if((s1.indexOf("[club") != -1 || s1.indexOf("[id") != -1) && s1.indexOf("|") != -1 && s1.indexOf("]") != -1) {
+						String[] arr1 = split(s1, '[');
+						int x = textX;
+						int yy = y + h1 / 2 + h1 * (i + (showName ? 1 : 0));
+						ColorUtils.setcolor(g, ColorUtils.TEXT);
+						if(arr1[0] != null) {
+							g.drawString(arr1[0], x, yy, 0);
+						x += font.stringWidth(arr1[0]);
+						for(int c = 1; c < arr1.length; c++) {
+							if(arr1[c] != null && arr1[c].indexOf('|') != -1)
+							{
+								String[] arr2 = VEUtils.split(arr1[c], 2, '|');
+								String[] arr3 = VEUtils.singleSplit(arr2[1], ']');
+								String ping = arr3[0];
+								String after = arr3[1];
+								g.setColor(0x2a5885);
+								g.drawString(ping, x, yy, 0);
+								x += font.stringWidth(ping);
+								if(after != null) {
+									ColorUtils.setcolor(g, ColorUtils.TEXT);
+									g.drawString(after, x, yy, 0);
+									x += font.stringWidth(after);
+								}
+							}
+						}
+						}
+					} else {
+						g.drawString(s1, textX, y + h1 / 2 + h1 * (i + (showName ? 1 : 0)), 0);
+					}
+				
+			}
+			}
+			} catch(Throwable t) {
+				t.printStackTrace();
 			}
 
 			if (hasReply) {
