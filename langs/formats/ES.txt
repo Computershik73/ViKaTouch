@@ -1,0 +1,44 @@
+#Spain
+#Authors: Jazminrocio, shinovon
+#YYYY.MM.DD
+format.version=2020.12.16
+
+format.time=HH:MM
+format.chatdate=DD S
+format.chatdatewyear=DD/O/YEAR
+format.shortdatenoyear=DD N
+format.shortdate=DD/O/YEAR
+format.date=DD/O/YEAR
+format.fulldate=DD/O/YEAR HH:MM
+
+date.today=hoy
+date.todayat=a las
+date.yesterday=ayer
+date.shortmonth.jan=enero
+date.shortmonth.feb=feb
+date.shortmonth.mar=mar
+date.shortmonth.apr=abr
+date.shortmonth.may=may
+date.shortmonth.jun=jun
+date.shortmonth.jul=jul
+date.shortmonth.aug=agosto
+date.shortmonth.sep=sep
+date.shortmonth.oct=oct
+date.shortmonth.nov=nov
+date.shortmonth.dec=dic
+date.month.jan=enero
+date.month.aug=febrero
+date.month.mar=marzo
+date.month.apr=abril
+date.month.may=mayo
+date.month.jun=junio
+date.month.jul=julio
+date.month.aug=agosto
+date.month.sep=septiembre
+date.month.oct=octubre
+date.month.nov=noviembre
+date.month.dec=diciembre
+
+date.minutesago=Hace minutos
+date.hoursago=Hace horas
+date.justnow=Justo ahora

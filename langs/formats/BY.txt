@@ -1,0 +1,44 @@
+#Belarus
+#Authors: Jazminrocio, shinovon
+#YYYY.MM.DD
+format.version=2020.12.16
+
+format.time=HH:MM
+format.chatdate=DD S
+format.chatdatewyear=DD.O.YEAR
+format.shortdatenoyear=DD N
+format.shortdate=DD.O.YEAR
+format.date=DD.O.YEAR
+format.fulldate=DD.O.YEAR HH:MM
+
+date.today=сёння
+date.todayat=у
+дата.учора=учора
+date.shortmonth.jan=сту
+date.shortmonth.feb=лют
+date.shortmonth.mar=сак
+date.shortmonth.apr=ска
+date.shortmonth.may=тра
+date.shortmonth.jun=чэр
+date.shortmonth.jul=ліп
+date.shortmonth.aug=жні
+date.shortmonth.sep=вер
+date.shortmonth.oct=кас
+date.shortmonth.nov=ліс
+date.shortmonth.dec=сне
+date.month.jan=студзень
+date.month.aug=люты
+date.month.mar=сакавік
+date.month.apr=красавік
+date.month.may=травень
+date.month.jun=чэрвень
+date.month.jul=ліпень
+date.month.aug=жнівень
+date.month.sep=верасень
+date.month.oct=кастрычнік
+date.month.nov=лістапад
+date.month.dec=снежань
+
+date.minutesago=Хвілін таму
+date.hoursago=Гадзіны таму
+date.justnow=Зараз

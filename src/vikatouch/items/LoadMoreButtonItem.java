@@ -8,10 +8,12 @@ import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.json.INextLoadable;
+import vikatouch.locale.TextLocal;
 
 public class LoadMoreButtonItem implements PressableUIItem {
 
 	public LoadMoreButtonItem(INextLoadable list) {
+		text = TextLocal.inst.get("loadmore");
 		l = list;
 		// precalcs
 		f = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
@@ -26,7 +28,7 @@ public class LoadMoreButtonItem implements PressableUIItem {
 
 	public boolean selected;
 
-	public static final String text = "Загрузить ещё...";
+	public static String text = "Загрузить ещё...";
 
 	public void paint(Graphics g, int y, int scrolled) {
 		if (ScrollableCanvas.keysMode && selected) {

@@ -908,7 +908,7 @@ public class VikaTouch {
 
 	private void disposeSplash() {
 		if (splash != null) {
-			splash.logo = null;
+			splash.disp();
 			splash = null;
 		}
 	}

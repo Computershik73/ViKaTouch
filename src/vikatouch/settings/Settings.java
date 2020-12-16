@@ -134,7 +134,13 @@ public class Settings {
 	 */
 	public static int notifmode = 0;
 
-	public static final String[] supportedLanguages = { "en_US", "en_UK", "ru_RU", "es_ES", "by_BY", "ua_UA" };
+	public static String region;
+
+	public static final String[] supportedLanguages = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ"};
+
+	public static final String[] langs =              {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"};
+
+	public static final String[] regions =            {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ"};
 
 	static {
 		loadDefaultSettings();
@@ -184,6 +190,7 @@ public class Settings {
 					notifmode = is.readInt();
 					// 2.8.12
 					hideBottom = is.readBoolean();
+					region = is.readUTF();
 
 				} catch (Exception e) {
 
@@ -192,6 +199,16 @@ public class Settings {
 				bais.close();
 			}
 			rs.closeRecordStore();
+		} catch (Exception e) {
+
+		}
+		System.out.println("lang set: " + language);
+		try {
+			if(isOldLang(language)) {
+				String x = language;
+				language = setLang(x);
+				region = setRegion(x);
+			}
 		} catch (Exception e) {
 
 		}
@@ -243,6 +260,7 @@ public class Settings {
 				os.writeInt(notifmode);
 				// 2.8.12
 				os.writeBoolean(hideBottom);
+				os.writeUTF(region);
 
 				final byte[] b = baos.toByteArray();
 				rs.addRecord(b, 0, b.length);
@@ -268,7 +286,7 @@ public class Settings {
 		messagesPerLoad = 30;
 		dialogsLength = 20;
 		videoResolution = Math.min(DisplayUtils.width, DisplayUtils.height) >= 360 ? "360" : "240";
-		language = "ru_RU";
+		language = "russian";
 		cacheImages = true;
 		dontLoadAvas = false;
 		sendLogs = true;
@@ -287,13 +305,12 @@ public class Settings {
 		dialogsRefreshRate = (byte) (isLiteOrSomething ? 0 : 2);
 		notifmode = 2;
 		hideBottom = false;
+		region = "RU";
 
 		// язык соотвествующий настройкам устройства
 		try {
-			final String lang = Settings.hasLanguage(System.getProperty("microedition.locale"));
-			if (lang != null) {
-				Settings.language = lang;
-			}
+			language = Settings.setLang(System.getProperty("microedition.locale"));
+			region = Settings.setRegion(System.getProperty("microedition.locale"));
 		} catch (Exception e) {
 
 		}
@@ -306,14 +323,31 @@ public class Settings {
 			// threaded = false;
 		}
 	}
-
-	public static String hasLanguage(String l) {
+	private static String setRegion(String l) {
 		for (int i = 0; i < supportedLanguages.length; i++) {
 			if (supportedLanguages[i].equalsIgnoreCase(VikaUtils.replace(l, "-", "_"))) {
-				return supportedLanguages[i];
+				return regions[i];
 			}
 		}
-		return "en_US";
+		return region;
+	}
+
+	private static String setLang(String l) {
+		for (int i = 0; i < supportedLanguages.length; i++) {
+			if (supportedLanguages[i].equalsIgnoreCase(VikaUtils.replace(l, "-", "_"))) {
+				return langs[i];
+			}
+		}
+		return language;
+	}
+
+	public static boolean isOldLang(String l) {
+		for (int i = 0; i < supportedLanguages.length; i++) {
+			if (supportedLanguages[i].equalsIgnoreCase(VikaUtils.replace(l, "-", "_"))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static void setEmulatorSettings() {

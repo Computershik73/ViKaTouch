@@ -1079,7 +1079,6 @@ public class ChatScreen extends MainScreen {
 								temp1 = res.getJSONArray("items");
 								temp2 = res.getJSONArray("conversations").getJSONObject(0);
 							} catch (Throwable e) {
-								e.printStackTrace();
 								refreshOk = false;
 								return;
 							}
@@ -1098,7 +1097,6 @@ public class ChatScreen extends MainScreen {
 					}
 					VikaCanvasInst.updColor = 0xffff7f00;
 				} catch (Throwable e) {
-					e.printStackTrace();
 					refreshOk = false;
 					return;
 				}

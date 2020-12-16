@@ -1,0 +1,44 @@
+#United States
+#Authors: shinovon
+#YYYY.MM.DD
+format.version=2020.12.16
+
+format.time=h:MM TT
+format.chatdate=S DD
+format.chatdatewyear=O/DD/YEAR
+format.shortdatenoyear=N DD
+format.shortdate=O/DD/YEAR
+format.date=O/DD/YEAR
+format.fulldate=O/DD/YEAR h:MM TT
+
+date.today=today
+date.todayat=today at
+date.yesterday=yesterday
+date.shortmonth.jan=jan
+date.shortmonth.feb=feb
+date.shortmonth.mar=mar
+date.shortmonth.apr=apr
+date.shortmonth.may=may
+date.shortmonth.jun=jun
+date.shortmonth.jul=jul
+date.shortmonth.aug=aug
+date.shortmonth.sep=sep
+date.shortmonth.oct=oct
+date.shortmonth.nov=nov
+date.shortmonth.dec=deс
+date.month.jan=january
+date.month.feb=february
+date.month.mar=march
+date.month.apr=april
+date.month.may=may
+date.month.jun=june
+date.month.jul=july
+date.month.aug=august
+date.month.sep=september
+date.month.oct=october
+date.month.nov=november
+date.month.dec=december
+
+date.minutesago=minutes ago
+date.hoursago=hours ago
+date.justnow=just now

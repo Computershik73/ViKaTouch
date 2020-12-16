@@ -7,6 +7,7 @@ import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
+import vikatouch.locale.TextLocal;
 
 public class ConfirmBox extends VikaNotice {
 
@@ -16,12 +17,16 @@ public class ConfirmBox extends VikaNotice {
 	private Runnable cancel;
 	private String customYes;
 	private String customNo;
+	private String okT;
+	private String cancT;
 
 	public ConfirmBox(String text, String subtext, Runnable onOk, Runnable onCancel) {
 		line1 = text;
 		line2 = subtext;
 		ok = onOk;
 		cancel = onCancel;
+		okT = TextLocal.inst.get("yes");
+		cancT = TextLocal.inst.get("cancel");
 	}
 
 	public ConfirmBox(String text, String subtext, Runnable onOk, Runnable onCancel, String customYes,
@@ -41,8 +46,7 @@ public class ConfirmBox extends VikaNotice {
 		int th = h1 * 6;
 		int y = DisplayUtils.height / 2 - th / 2;
 		int x = DisplayUtils.width / 2 - width / 2;
-		String okT = "Да";
-		String cancT = "Отмена";
+		
 		if (customYes != null)
 			okT = customYes;
 		if (customNo != null)

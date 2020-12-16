@@ -1,74 +1,14 @@
-#info:
-#English (United Kingdom)
+#English
 #authors: shinovon
 #
 #authors' vk:
 #vk.com/shinovon
 
-langinfo.name=English (UK)
+langinfo.name=English
 #YYYY.MM.DD
-langinfo.version=2020.09.11
+langinfo.version=2020.12.16
 
 langinfo.hints=1
-
-# LANG FORMAT
-#| - new line
-#
-#datetime format:
-# DATE
-#DD - day
-#S - short month
-#N - month
-#O - month (number)
-#YEAR - year
-# TIME
-#tt - low case am / pm
-#TT - high case AM / PM
-#h - hour in 12 hours format
-#H - hour
-#HH - hour with zero if less than 10
-#M - minute
-#MM - minute with zero if less than 10
-
-format.time=H:MM
-format.chatdate=DD S
-format.chatdatewyear=DD/O/YEAR
-format.shortdatenoyear=DD N
-format.shortdate=DD/O/YEAR
-format.date=DD N YEAR
-format.fulldate=DD/O/YEAR H:MM
-
-date.today=today
-date.todayat=today at
-date.yesterday=yesterday
-date.shortmonth.jan=jan
-date.shortmonth.feb=feb
-date.shortmonth.mar=mar
-date.shortmonth.apr=apr
-date.shortmonth.may=may
-date.shortmonth.jun=jun
-date.shortmonth.jul=jul
-date.shortmonth.aug=aug
-date.shortmonth.sep=sep
-date.shortmonth.oct=oct
-date.shortmonth.nov=nov
-date.shortmonth.dec=dev
-date.month.jan=january
-date.month.feb=february
-date.month.mar=march
-date.month.apr=april
-date.month.may=may
-date.month.jun=june
-date.month.jul=july
-date.month.aug=august
-date.month.sep=september
-date.month.oct=october
-date.month.nov=november
-date.month.dec=december
-
-date.minutesago=minutes ago
-date.hoursago=hours ago
-date.justnow=just now
 
 error.outofmem=App ran out of memory!
 error.errcode=Error Code
@@ -136,6 +76,9 @@ friend.accept=Accept friendship request
 friend.cancel=Request sent (cancel)
 
 subscribe=Follow
+
+music.all=All music
+
 
 msg=Message
 msg.attach.wall=Posting
@@ -263,10 +206,20 @@ settings.notificationmode=Notification mode
 settings.vibro=Vibration
 settings.sound=Sound
 settings.hidebottom=Hide bottom buttons
+settings.region=Region
 
 back=Back
 select=Select
 options=Options
+up=Up
+down=Down
+options=Opts.
+keyboard=Keyboard
+close=Close
+yes=Yes
+ok=OK.
+cancel=Cancel
+loadmore=Load more...
 
 splash.title.3=Preparing assets
 splash.title.4=Authentication

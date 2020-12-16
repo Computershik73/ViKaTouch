@@ -1,0 +1,282 @@
+#Український
+#автор: Phantom_Horror
+#
+#вк автора:
+
+#vk.com/phantom_horror
+
+langinfo.name=Українська (UA)
+#YYYY.MM.DD
+langinfo.version=2020.12.16
+
+langinfo.hints=15
+
+error.outofmem=Недостатньо пам'яті для роботи програми!
+error.errcode=Код помилки
+error=Помилка
+error.additionalinfo=Додаткова інформація
+error.description=Можливий опис
+error.contactdevs=Зверніться до розробника для отримання додаткової інформації.
+close=Закрити застосунок
+
+online=у мережі
+offline=не в мережі
+wasonlinedate=був у мережі
+wasonlinetime=був у мережі о
+
+menu.videos=Відео
+menu.music=Музика
+menu.photos=Фотографії
+menu.documents=Документи
+menu.friends=Друзі
+menu.cannotwrite=[не можна записати]
+menu.wall=Стіна
+menu.info=Інформація
+menu.grleave=Вийти з групи
+menu.grjoin=Вступити до групи
+menu.groups=Спільноти
+menu.quit=Вихід
+menu.members=Учасники
+menu.contacts=Контакти
+menu.website=Сайт
+menu.links=Посилання
+menu.writemsg=Написати повідомлення
+menu.nowebsite=немає
+menu.discussions=Обговорення
+menu.about=Про програму
+menu.loading=Завантаження...
+
+about.devs=Розробники
+about.vendor=Власник
+about.testers=Тестувальники
+
+group=Група
+group.s=Групи
+group.descriptionempty=[опис порожній]
+groups.join=Приєднатися до групи
+groups.leave=Покинути групу
+
+title.people=Люди
+title.chats=Повідомлення
+title.newsfeed=Новини
+title.docs=Документи
+title.docsw=Список документів
+title.photos=Фотографії
+title.videos=Відео
+title.videosw=Список відео
+title.loading=завантаження
+title.members=Учасники
+title.login=Вхід
+title.groups=Групи
+title.friends=Друзі
+title.music=Музика
+title.playlists=Списки відтворення
+title.album=Альбом
+title.albums=Альбоми
+title.settings=Налаштування
+title.friendsw=Друзі %1
+title.documentsw=Документи %1
+title.clubsw=Групи %1
+title.membersw=Члени %1
+title.musicw=Музика %1
+title.playlistsw=Списки відтворення %1
+title.albumsw=Альбоми %1
+title.comments=Коментарі
+
+
+likes.add=Поставити вподобання
+likes.delete=Видалити вподобання
+
+friend.remove=Видалити з друзів
+friend.add=Додати в друзі
+friend.accept=Прийняти запит
+friend.cancel=Запит надіслано (скасувати)
+
+subscribe=Підписатися
+
+music.all=Вся музика
+
+msg=Повідомлення
+msg.online=У мережі
+msg.offline=Не в мережі
+msg.attach.audio=Аудіозапис
+msg.attach.reply=Відповідь
+msg.attach.fwd=Переслане повідомлення
+msg.attach.attachments=Вкладення
+msg.attach.attachment=Вкладення
+msg.attach.memory=Прикріпити з телефону
+msg.attach.album=Прикріпити з альбому ВК
+msg.attach.video=Відеозапис
+msg.attach.photo=Прикріпити фото
+msg.attach.doc=Прикріпити документ
+msg.attach.voice=Голосове повідомлення
+msg.attach.wall=Запис на стіні
+msg.write=Написати
+msg.entermsg=Введіть повідомлення...
+msg.keyboard=Натисніть OK для введення
+msg.typing=друкує…
+msg.typing2=друкують...
+msg.sending=Надсилання повідомлення...
+msg.editing=Редагування
+msg.failedtoload=Не вдалося завантажити інформацію
+msg.failedtoload2=Не вдалося завантажити повідомлення
+msg.sendneterror=Повідомлення не надіслано через помилку мережі.
+msg.senderror=Помилка надсилання  повідомлення
+msg.send=Надіслати
+msg.attach=Прикріпити
+msg.stickers=Наліпки
+msg.you=Ви
+msg.links=Посилання
+msg.fwd=Переслати
+msg.delete=Видалити
+msg.edit=Редагувати
+msg.markasread=Прочитано
+msg.reply=Відповісти
+
+count.message=повідомлення
+count.messages=повідомлень
+count.messagesfew=повідомлення
+count.view=перегляд
+count.views=переглядів
+count.viewsfew=перегляди
+count.member=учасник
+count.members=учасників
+count.membersfew=учасники
+count.audio=аудіозапис
+count.audiosfew=аудіозаписи
+count.audios=аудіозаписів
+
+video=Відео
+video.addtosebe=Додати до себе
+
+title2.loading=Завантаження...
+title2.msgloadingfailed=Не вдалося оновити повідомлення!
+
+
+login.captcharequired=Потрібно ввести капчу!
+login.captcha=Капча
+login.login=Логін
+login.password=Пароль
+login.warn=Не введено логін чи пароль!
+login.failed=Не вдалося ввійти
+
+profile.closed=Це закритий профіль
+user=Користувач
+
+settings.system=Основні
+settings.appearance=Інтерфейс
+settings.media=Медіа
+settings.help=Довідка
+settings.auto=Автоматично
+settings.enabled=Увімкнено
+settings.disabled=Вимкнено
+settings.directhttps=Безпосередньо через https
+settings.proxy=Через проксі
+settings.connection=Під'єднання
+settings.sensor=Оптимізація сенсорного керування
+settings.norm=Нормальний
+settings.j2meloader=J2ME Loader
+settings.resistive=Резистивний тач
+settings.logout=Вийти з акаунту
+settings.reset=Налаштування за промовчанням
+settings.clearcache=Очистити кешовані зображення
+settings.transitionanimation=Анімація переходів
+settings.listslength=Кількість елементів у списках
+settings.dontloadavas=Не завантажувати аватарки
+settings.cacheimages=Кешувати картинки
+settings.historycount=Довжина історії чату
+settings.refreshrate=Частота оновлення чату (с.)
+settings.rytelemetry=Надсилання статистики використання
+settings.sendlogs=Надсилання логів та помилок
+settings.videoresolution=Роздільна здатність відео під час відтворення
+settings.rtsp=Метод відкриття посилань RTSP
+settings.rtspc.0=За промовчанням
+settings.rtspc.1=Виклик програвача [Symbian]
+settings.rtspc.2="Виконати vlc.exe <MRL>" [KEmulator]
+settings.loadmusicviahttp=Протокол завантаження медіа
+settings.dontloadmusicwithkey=Не використовувати ключ доступу
+settings.youtube=Відкриття YouTube через
+settings.audio=Метод відтворення аудіо
+settings.keepaudiocache=Зберігати кешовану музику
+settings.apiproxy=Проксі-сервер Api
+settings.authproxy=Проксі-сервер OAuth
+settings.language=Мова
+settings.audioc.0=Відтворити онлайн
+settings.audioc.1=Кешувати в ОЗП і відтворити
+settings.audioc.2=Кешувати у файл і відтворити
+settings.audioc.3=Кешувати у файл і відкрити
+settings.audioc.4=Кешувати та відтворити в системному програвачі [Symbian]
+settings.audioc.5=Відтворити онлайн у системному програвачі [Symbian]
+settings.audioc.6=Відтворити у VLC (KEmulator)
+settings.audioc.7=Завантажити файл через браузер
+settings.spabilities=Спеціальні можливості
+settings.debug=Налагодження
+settings.debugcrap=Інформація про налагодження на екрані
+settings.dontloadmusicwithkey=Не використовувати ключ доступу
+settings.itunescovers=Шукати обкладинки в iTunes
+settings.datafolder=Папка для зберігання даних
+settings.automarkasread=Позначати повідомлення як прочитані
+settings.dialogscount=Кількість діалогів
+settings.dialogsrefreshrate=Час оновлення діалогів (с.)
+settings.notificationmode=Повідомлення про режим
+settings.vibontouch=Вібрація після дотику
+
+back=Назад
+select=Вибрати
+options=Опції
+up=Нагору
+down=Вниз
+keyboard=Клавіатура
+close=Закрити
+yes=Так
+ok=Прийняти
+cancel=Скасувати
+loadmore=Загрузить ещё...
+
+splash.emnotsupported=Найімовірніше, ViKa Touch зараз запущена на непідтримуваному емуляторі. Ми рекомендуємо використовувати KEmulator, J2ME Loader, JBed або офіційні емулятори з пакетів для розробників - в інших можливі проблеми з відображенням, функціональністю та безпекою.
+splash.title.3=Підготовка ресурсів
+splash.title.4=Авторизація
+splash.title.5=Завантаження інформацію профілю
+splash.title.6=Завантажити діалоги
+splash.title.7=Готово.
+splash.tip=---- Випадкова підказка ----
+# splash.tip.0=Програма постійно вилітає через нестачу пам'яті? Спробуйте вимкнути завантаження аватарок у налаштуваннях і зменшити довжину списків.
+splash.tip.0=Якщо закрити програму кнопкою в меню, вона повідомить ВКонтакті, що ви від'єдналися.
+splash.tip.1=Якщо у списку документів натиснути на іконку документа-зображення, відкриється його попередній перегляд.
+splash.tip.2=Поблизу деяких налаштувань у квадратних дужках вказано платформу, для якої вони призначені; на інших вони не працюватимуть.
+splash.tip.3=Відео відкриватимуться та завантажуватимуться у тій роздільній здатності, яка вибрана в налаштуваннях.
+splash.tip.4=Метод відкриття відео підбирається автоматично залежно від платформи.
+splash.tip.5=Не відтворюється музика? Спробуйте вибрати в налаштуваннях інший метод, сумісний з вашою платформою. Їх у нас аж 8, щось-бо й спрацює.
+splash.tip.6=Будь-де в історії чату натисніть ліву софт-клавішу, щоб швидко перемістити фокус у поле введення.
+splash.tip.7=Між екранами новин, повідомлень та меню можна переміщуватися кнопками ліворуч/праворуч.
+splash.tip.8=Дані програми займають забагато місця? Спробуйте очистити кеш картинок у налаштуваннях.
+splash.tip.9=Ви можете завантажити фотографію в оригінальному розмірі, натиснувши кнопку завантаження в попередньому перегляді.
+splash.tip.10=Відкриту фотографію можна швидко закрити правою софт-клавішею.
+splash.tip.11=Ми підтримуємо відтворення мультимедіа в KEmulator 1.0.3 - встановіть VLC і виберіть його відкриття в налаштуваннях застосунку. Музика й відео відкриватимуться там онлайн. Якщо він, звичайно, захоче.
+splash.tip.12=Для J2ME Loader ми маємо персональну милицю - спроба адаптуватися під місцевий баг сенсора. Увімкніть її в налаштуваннях, якщо відчуваєте проблеми з натисканням кнопок меню.
+splash.tip.13=Якщо застосунок споживає забагато трафіку та/або забиває всю смугу пропускання, зменшіть частоту оновлення повідомлень.
+splash.tip.14=У нас можна відкрити посилання на повідомлення! Підтримується http/https, ftp, smb, rtsp, згадування й посилання на сторінки ВКонтакті. Для цього відкрийте опції повідомлення та виберіть посилання.
+
+busy=Завантаження...
+
+player.playlist=Список відтворення
+player.loop=Зациклити
+player.random=Випадковий порядок
+player.seek=Перемотування
+player.playagain=Грати спочатку
+player.download=Завантажити
+player.hideapp=Згорнути застосунок
+player.troubleshooting=Усунення проблем
+player.updatelinks=Оновити посилання
+player.forcedreboot=Примусово перезапустити
+player.rewindimpossible=Перемотування в онлайн-режимі недоступне через обмеження J2ME.
+player.accessfailed=Медіасервер закрив доступ до аудіофайлу. Спробуйте оновити посилання через меню усунення проблем або перезапустіть застосунок.
+player.playererror=Помилка програвача
+player.internalerror=Невідома внутрішня помилка (-2)
+player.cancel=Скасувати завантаження?
+
+wall.like=Подобається
+wall.unlike=Не подобається
+wall.links=Посилання…
+wall.repost=Поділитися
+wall.comments=Коментарі

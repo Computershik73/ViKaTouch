@@ -1,75 +1,15 @@
-#info:
 #español
-#автор: Илья Высоцкий, Jazminrocio
+#authors: Илья Высоцкий, Jazminrocio
 #
-#вк автора:
+#authors' vk:
 #vk.com/okabe2011
 #vk.com/jazminrocio
 
 langinfo.name=Español (ES)
 #YYYY.MM.DD
-langinfo.version=2020.10.7
+langinfo.version=2020.12.16
 
 langinfo.hints=2
-
-#LANG FORMAT
-#| - new line
-#
-#datetime format:
-# DATE
-#DD - day
-#S - short month
-#N - month
-#O - month (number)
-#YEAR - year
-# TIME
-#tt - low case am / pm
-#TT - high case AM / PM
-#h - hour in 12 hours format
-#H - hour
-#HH - hour with zero if less than 10
-#M - minute
-#MM - minute with zero if less than 10
-
-format.time=h:MM TT
-format.chatdate=S DD
-format.chatdatewyear=O/DD/YEAR
-format.shortdatenoyear=N DD
-format.shortdate=O/DD/YEAR
-format.date=O/DD/YEAR
-format.fulldate=O/DD/YEAR h:MM TT
-
-date.today=hoy
-date.todayat=a las
-date.yesterday=ayer
-date.shortmonth.jan=enero
-date.shortmonth.feb=feb.
-date.shortmonth.mar=marzo
-date.shortmonth.apr=abr.
-date.shortmonth.may=mayo
-date.shortmonth.jun=jun.
-date.shortmonth.jul=jul.
-date.shortmonth.aug=agosto
-date.shortmonth.sep=sept.
-date.shortmonth.oct=oct.
-date.shortmonth.nov=nov.
-date.shortmonth.dec=dic.
-date.month.jan=enero
-date.month.aug=febrero
-date.month.mar=marzo
-date.month.apr=abril
-date.month.may=mayo
-date.month.jun=Junio
-date.month.jul=julio
-date.month.aug=agosto
-date.month.sep=septiembre
-date.month.oct=octubre
-date.month.nov=noviembre
-date.month.dec=diciembre
-
-date.minutesago=Hace minutos
-date.hoursago=Hace horas
-date.justnow=Justo ahora
 
 error.outofmem=No hay suficiente memoria para que la aplicación funcione!
 error.errcode=Código de error
@@ -77,12 +17,14 @@ error=Error
 error.additionalinfo=Información adicional
 error.description=Posible descripción
 error.contactdevs=Póngase en contacto con el desarrollador para obtener más información.
+
 close=Cerrar aplicación
 
-online=En linea 
-offline=Desconectado 
-wasonlinedate=Estaba en línea 
-wasonlinetime=Estaba en línea a las 
+online=En linea
+offline=Desconectado
+
+wasonlinedate=Estaba en línea
+wasonlinetime=Estaba en línea a las
 
 menu.videos=Videos
 menu.music=Música
@@ -99,34 +41,38 @@ menu.quit=Salir
 menu.members=Participantes
 menu.contacts=Contactos
 menu.website=Sitio web
-menu.links=Links 
+menu.links=Enlaces
 menu.writemsg=Escribir un mensaje
 menu.nowebsite=Ninguno
 menu.discussions=Discusiones
 menu.about=Acerca de
 menu.loading=Cargando...
 
-about.devs=Desarrolladores 
-about.vendor=Dueño 
-about.testers=Comprobadores de la aplicación 
+about.devs=Desarrolladores
+about.vendor=Dueño
+about.testers=Comprobadores de la aplicación
 
 group=Grupo
 group.s=Grupos
-group.descriptionempty=[descripción vacía] 
-groups.join=Unirse al grupo 
-groups.leave=Dejar el grupo 
+group.descriptionempty=[descripción vacía]
+groups.join=Unirse al grupo
+groups.leave=Dejar el grupo
 
 title.people=Gente
 title.chats=Chats
 title.newsfeed=Noticias
 title.docs=Documentos
-title.photos=Sección aun no incluida 
-title.videos=Videos de Amigo 
-title.videosw=Lista de videos 
-title.loading=Cargando... 
+title.docsw=Lista de documentos
+title.photos=Fotos
+title.photosw=Lista de fotos
+title.videos=Videos
+title.videosw=Lista de videos
+title.loading=Cargando...
+title.member=Mienbro
 title.members=Miembros
 title.login=Iniciar sesión
-title.groups=Lista de Grupos
+title.groups=Grupos
+title.groupsw=Lista de Grupos
 title.friends=Amigos
 title.music=Música
 title.playlists=Listas de Reproducción
@@ -134,15 +80,21 @@ title.album=Álbum
 title.albums=Álbumes
 title.settings=Configuración
 title.friendsw=Amigos %1
-title.documentsw=Documentos %1 
+title.documentsw=Lista de documentos %1
 title.clubsw=Grupos %1
 title.membersw=Miembros %1
 title.musicw=Música %1
 title.playlistsw=Listas de reproducción %1
 title.albumsw=Álbumes %1
 
-likes.add=Dar me gusta 
-likes.delete=Eliminar me gusta 
+wall.like=Me gusta
+wall.unlike=No me gusta
+wall.links=Enlaces de la publicación
+wall.repost=Re-publicar
+wall.comments=Comentarios
+
+likes.add=Dar me gusta
+likes.delete=Eliminar me gusta
 
 friend.remove=Eliminar de amigos
 friend.add=Agregar como amigo
@@ -154,30 +106,32 @@ subscribe=Suscribirse
 music.all=Toda la música
 
 msg=Mensaje
-msg.attach.wall=Publicación
-msg.online=En linea 
-msg.offline=Desconectado 
+msg.online=En linea
+msg.offline=Desconectado
 msg.attach.audio=Grabación de Audio
 msg.attach.reply=Respuesta
-msg.attach.fwd=Mensaje Reenviado 
-msg.attach.attachments=Archivos Adjuntos 
-msg.attach.attachment=Archivos Adjuntos
-msg.attach.attachments=Attachments
-msg.attach.photo=Foto
+msg.attach.fwd=Mensaje Reenviado
+msg.attach.attachments=Archivos Adjuntos
+msg.attach.attachment=Archivo Adjunto
+msg.attach.memory=Adjuntar desde el celular
+msg.attach.album=Adjuntar desde album de VK
+msg.attach.photo=Adjuntar una foto
+msg.attach.doc=Adjuntar un documento
 msg.attach.video=Vídeo
-msg.attach.voice=Mensaje de voz 
-msg.write=Escribir 
-msg.entermsg=Escriba un mensaje...
-msg.keyboard=Presione OK para ingresar ... 
+msg.attach.wall=Archivo
+msg.attach.voice=Mensaje de voz
+msg.write=Escribir
+msg.entermsg=Ingrese mensaje
+msg.keyboard=Toque espacio para escribir
 msg.typing=Escribiendo...
-msg.typing2=Escribir...
+msg.typing2=Enviando...
 msg.sending=Enviar un mensaje...
-msg.sending=Enviando un mensaje ...
+msg.sending2=Enviando un mensaje ...
 msg.editing=Editando
 msg.failedtoload=No se pudo cargar la información
 msg.failedtoload2=No se pudieron cargar los mensajes
 msg.sendneterror=El mensaje no se envió debido a un error de red.
-msg.senderror=Error al enviar el mensaje 
+msg.senderror=Error al enviar el mensaje
 msg.send=Enviar
 msg.attach=Adjuntar
 msg.stickers=Stickers
@@ -187,11 +141,17 @@ msg.fwd=Adjuntar mensajes
 msg.delete=Eliminar
 msg.edit=Editar
 msg.markasread=Leer
-msg.reply=Responder 
+msg.reply=Responder
+
+messages.delete=Borrar mensaje
+messages.gethistory=Obtener historial
+messages.getbyid=Obtener por id
+messages.getconversationsbyId=Obtener conversación por id
+messages.getconversations=Obtener conversaciones
 
 count.message=Mensaje
 count.messages=Mensajes
-count.messagesfew=Mensajes
+count.messagesfew=Cantidad de mensajes
 count.ver=Ver
 count.views=Vistas
 count.viewsfew=Cantidad de vistas
@@ -199,14 +159,14 @@ count.member=Miembro
 count.members=Miembros
 count.membersfew=Miembro
 count.audio=Audio
-count.audiosfew=Grabaciones de audio 
+count.audiosfew=Grabaciones de audio
 count.audios=Audios
 
 video=Video
-video.addtosebe=Añadir video 
+video.addtosebe=Añadir video
 video.1view=Ver
 video.views=Vistas
-video.viewsfew=Visitas
+video.viewsfew=Cantidad de visitas
 
 title2.member=Miembro
 title2.members=Mienbros
@@ -223,12 +183,13 @@ login.failed=Fallo el inicio de sesión
 
 profile.closed=Este es un perfil cerrado
 user=Usuario
+users.get=Obtener usuarios
 
 settings.system=Básico
 settings.appearance=Interfaz
 settings.media=Medios
 settings.help=Ayuda
-settings.auto=Automatico 
+settings.auto=Automatico
 settings.enabled=Encendido
 settings.disabled=Desactivado
 settings.directhttps=Directamente por https
@@ -238,10 +199,10 @@ settings.sensor=Optimización del control táctil
 settings.norm=Normal
 settings.j2meloader=J2ME Loader
 settings.resistive=Ajuste resistivo
-settings.kemulator=Kemulator 
-settings.logout=Cerrar sesión 
-settings.reset=Configuración  predeterminada 
-settings.clearcache=Borrar imágenes en caché 
+settings.kemulator=Kemulator
+settings.logout=Cerrar sesión
+settings.reset=Configuración  predeterminada
+settings.clearcache=Borrar imágenes en caché
 settings.transitionanimation=Animación de transiciones
 settings.listslength=Número de elementos en las listas
 settings.dontloadavas=No cargar avatares
@@ -249,40 +210,46 @@ settings.cacheimages=Imágenes en caché
 settings.historycount=Cantidad de Historial
 settings.refreshrate=Frecuencia de actualización
 settings.rytelemetry=Envío de estadísticas de uso
-settings.sendlogs=Envío de registros y errores 
+settings.sendlogs=Envío de registros y errores
 settings.videoresolution=Tipo de Resolución del video
 settings.rtsp=Método para abrir enlaces RTSP
 settings.rtspc.0=Por defecto
 settings.rtspc.1=Abrir Reproductor nativo [Symbian]
 settings.rtspc.2=" vlc.exe <MRL>" [KEmulator]
-settings.loadmusicviahttp=Cargar música a través de HTTP 
-settings.dontloadmusicwithkey=No cargar música con cifrado 
+settings.loadmusicviahttp=Cargar música a través de HTTP
+settings.dontloadmusicwithkey=No cargar música con cifrado
 settings.youtube=Abrir YouTube a través de:
 settings.audio=Método de reproducción de audio
 settings.keepaudiocache=Guardar música en caché
 settings.apiproxy=Api Proxy
 settings.authproxy=OAuth Proxy
 settings.language=Idioma
-settings.audioc.0=Reproducir en línea 
-settings.audioc.1=Guardar caché en RAM y reproducir 
-settings.audioc.2=Guardar caché en el móvil y jugar 
-settings.audioc.3=Guardar caché en la memoria del teléfono y abrir 
-settings.audioc.4=Reproducir en el reproductor del sistema 
-settings.audioc.5=Reproductor Nativo en Linea (symbian) 
+settings.audioc.0=Reproducir en línea
+settings.audioc.1=Guardar caché en RAM y reproducir
+settings.audioc.2=Guardar caché en el móvil y jugar
+settings.audioc.3=Guardar caché en la memoria del teléfono y abrir
+settings.audioc.4=Reproducir en el reproductor del sistema
+settings.audioc.5=Reproductor Nativo en Linea
 settings.audioc.6=Reproducir en VLC (KEmulator)
 settings.audioc.7=Descargar por el navegador
 settings.spabilities=Accesibilidad
-settings.debug=Depuración 
-settings.debugcrap=Información de depuración en pantalla 
-settings.dontloadmusicwithkey=No cargar música con llave 
-settings.itunescovers=Buscar portadas en iTunes 
+settings.debug=Depuración
+settings.debugcrap=Información de depuración en pantalla
+settings.dontloadmusicwithkey=No cargar música con llave
+settings.itunescovers=Buscar portadas en iTunes
 settings.loadmusicviahttp=Protocolo
 settings.datafolder=Carpeta de almacenamiento
-settings.automarkasread=Marcar mensajes como leídos 
-settings.dialogscount=Numero de diálogos 
-settings.dialogsrefreshrate=Tiempo de actualizacion de dialogos 
-settings.vibontouch=Vibración al tacto 
+settings.automarkasread=Marcar mensajes como leídos
+settings.dialogscount=Numero de diálogos
+settings.dialogsrefreshrate=Tiempo de actualizacion de dialogos
+settings.notificationmode=Modo de  notificationes
+settings.vibontouch=Vibración al tacto
 settings.kemulator=KEmulator
+settings.notificationmode=Notification mode
+settings.vibro=Vibration
+settings.sound=Sound
+settings.hidebottom=Hide bottom buttons
+settings.region=Регион
 
 back=Atrás
 select=Seleccionar
@@ -291,9 +258,10 @@ up=Arriba
 down=Abajo
 keyboard=Teclado
 close=Cerrar
-yes=Si 
-ok=Aceptar 
-cancel=Cancelar 
+yes=Si
+ok=Aceptar
+cancel=Cancelar
+loadmore=Load more...
 
 splash.emnotsupported=Lo más probable es que ViKa Touch se esté ejecutando actualmente en un emulador no compatible. Recomendamos el uso de kemulator, J2ME Loader, JBed o emuladores oficiales de paquetes para desarrolladores; en otros, puede haber problemas de visualización, funcionalidad y seguridad.
 splash.title.3=Preparación de assets
@@ -319,20 +287,22 @@ splash.tip.12=para el cargador J2ME, tenemos una muleta personal: un intento de 
 splash.tip.13=Si la aplicación consume demasiado tráfico y / o obstruye todo el ancho de banda, reduzca la frecuencia de actualización de los mensajes.
 splash.tip.14=¡podemos abrir enlaces de mensajes! Soporta http / https, ftp, smb, rtsp, menciones y enlaces a páginas de Vkontakte. Para hacerlo, abra las opciones de mensaje y seleccione enlaces.
 
-busy=Cargando... 
+busy=Cargando...
 
-player.playlist=Lista de reproducción 
+player.playlist=Lista de reproducción
 player.loop=Reproducir en bucle
-player.random=Orden aleatorio 
+player.random=Orden aleatorio
 player.seek=Buscar
-player.playagain=Reproducir otra vez 
+player.playagain=Reproducir otra vez
 player.download=Descargar
-player.hideapp=Ocultar aplicación 
-player.troubleshooting=Solución de problemas 
-player.updatelinks=Actualizar enlaces 
-player.forcedreboot=Reinicio forzado 
+player.hideapp=Ocultar aplicación
+player.troubleshooting=Solución de problemas
+player.updatelinks=Actualizar enlaces
+player.forcedreboot=Reinicio forzado
 player.rewindimpossible=El rebobinado en línea no está disponible debido a las restricciones de J2ME.
 player.accessfailed=El servidor de medios ha denegado el acceso al archivo de audio. Intente actualizar los enlaces a través del menú de resolución de problemas o reinicie la aplicación.
 player.playererror=Error del reproductor
-player.internalerror=Error interno  desconocido (-2) 
-player.cancel=¿Cancelar descarga? 
+player.internalerror=Error interno  desconocido (-2)
+player.cancel=¿Cancelar descarga?
+
+audio.getplaylists=Obtener listas de reproducción

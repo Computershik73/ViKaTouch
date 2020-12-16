@@ -1,7 +1,6 @@
-#info:
 #русский
 #оригинальный язык
-#авторы shinovon, Feodor0090
+#авторы: shinovon, Feodor0090
 #
 #вк авторов:
 #vk.com/shinovon
@@ -9,68 +8,9 @@
 
 langinfo.name=Русский
 #YYYY.MM.DD
-langinfo.version=2020.10.2
+langinfo.version=2020.12.16
 
 langinfo.hints=15
-
-# LANG FORMAT
-#| - new line
-#
-#datetime format:
-# DATE
-#DD - day
-#S - short month
-#N - month
-#O - month (number)
-#YEAR - year
-# TIME
-#tt - low case am / pm
-#TT - high case AM / PM
-#h - hour in 12 hours format
-#H - hour
-#HH - hour with zero if less than 10
-#M - minute
-#MM - minute with zero if less than 10
-
-format.time=H:MM
-format.chatdate=DD S
-format.chatdatewyear=DD S YEAR
-format.shortdatenoyear=DD N
-format.shortdate=DD N YEAR
-format.date=DD N YEAR г.
-format.fulldate=DD N YEAR г. в H:MM
-
-date.today=сегодня
-date.todayat=сегодня в
-date.yesterday=вчера
-date.shortmonth.jan=янв
-date.shortmonth.feb=фев
-date.shortmonth.mar=мар
-date.shortmonth.apr=апр
-date.shortmonth.may=мая
-date.shortmonth.jun=июн
-date.shortmonth.jul=июл
-date.shortmonth.aug=авг
-date.shortmonth.sep=сен
-date.shortmonth.oct=окт
-date.shortmonth.nov=ноя
-date.shortmonth.dec=дек
-date.month.jan=января
-date.month.feb=февраля
-date.month.mar=марта
-date.month.apr=апреля
-date.month.may=мая
-date.month.jun=июня
-date.month.jul=июля
-date.month.aug=августа
-date.month.sep=сентября
-date.month.oct=октября
-date.month.nov=ноября
-date.month.dec=декабря
-
-date.minutesago=минут назад
-date.hoursago=часов назад
-date.justnow=только что
 
 error.outofmem=Не хватает памяти для работы приложения!
 error.errcode=Код ошибки
@@ -279,6 +219,7 @@ settings.notificationmode=Режим уведомлений
 settings.vibro=Вибрация
 settings.sound=Звук
 settings.hidebottom=Скрыть нижние кнопки
+settings.region=Регион
 
 back=Назад
 select=Выбрать
@@ -287,6 +228,10 @@ down=Вниз
 options=Опции
 keyboard=Клавиатура
 close=Закрыть
+yes=Да
+ok=ОК
+cancel=Отменить
+loadmore=Загрузить ещё...
 
 splash.emnotsupported=Скорее всего, ViKa Touch сейчас запущена на неподдерживаемом эмуляторе. Мы рекомендуем использовать KEmulator, J2ME Loader, JBed либо официальные эмуляторы из пакетов для разработчиков - на других возможны проблемы с отображением, функционалом и безопасностью.
 splash.title.3=Подготовка ассетов

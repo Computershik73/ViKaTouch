@@ -16,15 +16,15 @@ import vikatouch.screens.MainScreen;
 public class SplashScreen
 	extends MainScreen 
 {
-	public Image logo;
-	public String header;
+	private Image logo;
+	private String header;
 	
 	public static int currState = 0; // до 7
 	
-	public int[] statesProgress = new int[] { 
+	private final int[] statesProgress = new int[] { 
 		0, 5, 10, 20, 40, 60, 80, 100
 	};
-	public String[] statesNames = new String[]
+	private String[] statesNames = new String[]
 	{ 
 		"Starting application",
 		"Loading settings",
@@ -35,9 +35,9 @@ public class SplashScreen
 		"Pre-loading conversations",
 		"Ready."
 	};
-	public String tipStr = "Tip";
-	public String[] tip;
-	public int tipL;
+	private String tipStr = "Tip";
+	private String[] tip;
+	private int tipL;
 
 	public SplashScreen()
 	{
@@ -105,16 +105,20 @@ public class SplashScreen
 	
 	public void setText()
 	{
-		for(int i=3;i<=7;i++)
-		{
-			statesNames[i] = TextLocal.inst.get("splash.title."+i);
+		try {
+			for(int i=3;i<=7;i++)
+			{
+				statesNames[i] = TextLocal.inst.get("splash.title."+i);
+			}
+			tipStr = TextLocal.inst.get("splash.tip");
+			int tipsC = Integer.parseInt(TextLocal.inst.get("langinfo.hints"));
+			Random r = new Random();
+			int i = r.nextInt(tipsC);
+			tip = TextBreaker.breakText(TextLocal.inst.get("splash.tip."+i), Font.getFont(0, 0, Font.SIZE_SMALL), DisplayUtils.width-40);
+			tipL = tip.length;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		tipStr = TextLocal.inst.get("splash.tip");
-		int tipsC = Integer.parseInt(TextLocal.inst.get("langinfo.hints"));
-		Random r = new Random();
-		int i = r.nextInt(tipsC);
-		tip = TextBreaker.breakText(TextLocal.inst.get("splash.tip."+i), Font.getFont(0, 0, Font.SIZE_SMALL), DisplayUtils.width-40);
-		tipL = tip.length;
 	}
 	
 	
@@ -125,6 +129,11 @@ public class SplashScreen
 	public final void release(int x, int y)
 	{
 		
+	}
+
+	public void disp() {
+		logo = null;
+		statesNames = null;
 	}
 
 }

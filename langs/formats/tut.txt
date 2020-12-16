@@ -1,0 +1,16 @@
+#| - new line
+#datetime format:
+# DATE
+#DD - day
+#S - short month
+#N - month
+#O - month (number)
+#YEAR - year
+# TIME
+#tt - low case am / pm
+#TT - high case AM / PM
+#h - hour in 12 hours format
+#H - hour
+#HH - hour with zero if less than 10
+#M - minute
+#MM - minute with zero if less than 10

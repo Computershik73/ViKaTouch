@@ -1,0 +1,44 @@
+#Russia
+#Authors: shinovon
+#YYYY.MM.DD
+format.version=2020.12.16
+
+format.time=HH:MM
+format.chatdate=DD S
+format.chatdatewyear=DD.O.YEAR
+format.shortdatenoyear=DD N
+format.shortdate=DD.O.YEAR
+format.date=YEAR ж. DD N
+format.fulldate=HH:MM, YEAR ж. DD N
+
+date.today=бүгін
+date.todayat=бүгін сағат
+date.yesterday=кеше
+date.shortmonth.jan=қаң
+date.shortmonth.feb=ақп
+date.shortmonth.mar=нау
+date.shortmonth.apr=сәу
+date.shortmonth.may=мам
+date.shortmonth.jun=мау
+date.shortmonth.jul=шіл
+date.shortmonth.aug=там
+date.shortmonth.sep=қыр
+date.shortmonth.oct=қаз
+date.shortmonth.nov=қар
+date.shortmonth.dec=жел
+date.month.jan=қаңтар
+date.month.feb=ақпан
+date.month.mar=наурыз
+date.month.apr=сәуір
+date.month.may=мамыр
+date.month.jun=маусым
+date.month.jul=шілде
+date.month.aug=тамыз
+date.month.sep=қыркүйек
+date.month.oct=қазан
+date.month.nov=қараша
+date.month.dec=желтоқсан
+
+date.minutesago=минут бұрын
+date.hoursago=сағат бұрын
+date.justnow=дәл қазір

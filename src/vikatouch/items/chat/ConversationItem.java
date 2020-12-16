@@ -278,7 +278,7 @@ public class ConversationItem extends JSONUIItem {
 		}
 
 		if (title != null) {
-			title = TextBreaker.shortText(title, DisplayUtils.width - 120, Font.getFont(0, 0, 8));
+			title = TextBreaker.shortText(title, DisplayUtils.width - 150, Font.getFont(0, 0, 8));
 		}
 		type = null;
 		json.dispose();

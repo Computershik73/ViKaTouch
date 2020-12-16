@@ -1,0 +1,44 @@
+#Ukraine
+#Authors: Jazminrocio, shinovon
+#YYYY.MM.DD
+format.version=2020.12.16
+
+format.time=H:MM
+format.chatdate=DD S
+format.chatdatewyear=DD.O.YEAR
+format.shortdatenoyear=DD N
+format.shortdate=DD.O.YEAR
+format.date=DD N YEAR 
+format.fulldate=DD N YEAR H:MM
+
+date.today=сьогодні
+date.todayat=о
+date.yesterday=вчора
+date.shortmonth.jan=січ
+date.shortmonth.feb=лют
+date.shortmonth.mar=бер
+date.shortmonth.apr=квіт
+date.shortmonth.may=трав
+date.shortmonth.jun=чер
+date.shortmonth.jul=лип
+date.shortmonth.aug=сер
+date.shortmonth.sep=вер
+date.shortmonth.oct=жов
+date.shortmonth.nov=лис
+date.shortmonth.dec=груд
+date.month.jan=січня
+date.month.aug=лютого
+date.month.mar=березня
+date.month.apr=квітня
+date.month.may=травня
+date.month.jun=червня
+date.month.jul=липня
+date.month.aug=серпня
+date.month.sep=вересня
+date.month.oct=жовтня
+date.month.nov=листопада
+date.month.dec=грудня
+
+date.minutesago=хвилин тому
+date.hoursago=годин тому
+date.justnow=щойно

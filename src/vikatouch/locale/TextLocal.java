@@ -3,6 +3,7 @@ package vikatouch.locale;
 import java.io.*;
 import java.util.Hashtable;
 
+import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
@@ -21,59 +22,60 @@ public class TextLocal {
 
 	private TextLocal() {
 		hashtable = new Hashtable();
-		loadLanguage(Settings.language);
+		loadLanguage(Settings.language, Settings.region);
 	}
 
-	public void loadLanguage(LangObject lang) {
-		loadLanguage(lang.shortName);
-	}
-
-	public void loadLanguage(String lang) {
-		System.out.println(lang);
+	public void loadLanguage(String lang, String region) {
 		try {
-			char[] chars = new char[16000];
-			InputStream stream = this.getClass().getResourceAsStream("/local/" + lang + ".txt");
-			InputStreamReader isr = new InputStreamReader(stream, "UTF-8");
-			isr.read(chars);
-			isr.close();
-			String x = "";
-			boolean iscomment = false;
-			for (int i = 0; i < chars.length; i++) {
-				final char c = chars[i];
-
-				if (c == 0) {
-					break;
-				}
-
-				if (c == '#') {
-					iscomment = true;
-				}
-
-				if (c == '\n') {
-					if (!iscomment && x != null && x.length() > 2) {
-						int splitLoc = x.indexOf("=");
-						int len = x.length();
-						String key = x.substring(0, splitLoc);
-						String val = VikaUtils.replace(VikaUtils.replace(x.substring(splitLoc + 1, len), "\r", ""), "|",
-								"\n");
-						hashtable.put(key, val);
-						// System.out.println(key + "=" + val);
-						// System.out.println();
-					}
-					iscomment = false;
-					x = "";
-				} else {
-					x += String.valueOf(c);
-				}
-			}
-			x = null;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			VikaTouch.error(e, ErrorCodes.LANGLOAD);
+			load("/langs/" + lang + ".txt");
+			load("/formats/" + region + ".txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 			VikaTouch.error(e, ErrorCodes.LANGLOAD);
 		}
+	}
+
+	private void load(String string) throws IOException {
+
+		char[] chars = new char[16000];
+		InputStream stream = this.getClass().getResourceAsStream(string);
+		InputStreamReader isr = new InputStreamReader(stream, "UTF-8");
+		isr.read(chars);
+		isr.close();
+		String x = "";
+		boolean iscomment = false;
+		for (int i = 0; i < chars.length; i++) {
+			final char c = chars[i];
+
+			if (c == 0) {
+				break;
+			}
+
+			if (c == '#') {
+				iscomment = true;
+			}
+
+			if (c == '\n') {
+				if (!iscomment && x != null && x.length() > 2) {
+					int splitLoc = x.indexOf("=");
+					int len = x.length();
+					String key = x.substring(0, splitLoc);
+					if(key.indexOf("splash.") != -1 && DisplayUtils.compact) {
+						
+					} else {
+						String val = VikaUtils.replace(VikaUtils.replace(x.substring(splitLoc + 1, len), "\r", ""), "|", "\n");
+						hashtable.put(key, val);
+					}
+					// System.out.println(key + "=" + val);
+					// System.out.println();
+				}
+				iscomment = false;
+				x = "";
+			} else {
+				x += String.valueOf(c);
+			}
+		}
+		x = null;
 	}
 
 	public String get(String key) {
