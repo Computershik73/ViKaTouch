@@ -65,9 +65,6 @@ public class Dialogs extends TimerTask {
 							hasNew = dialogs[0] == null
 									|| !VikaUtils.cut(item.getJSONObject("last_message").optString("text"), 7)
 											.equalsIgnoreCase(VikaUtils.cut(dialogs[0].lasttext, 7));
-							if (hasNew) {
-								avasLoaded = false;
-							}
 
 						} catch (Exception e) {
 						}
@@ -77,6 +74,7 @@ public class Dialogs extends TimerTask {
 						items.dispose();
 						item.dispose();
 						if (VikaTouch.unreadCount != unreadC || hasNew) {
+							avasLoaded = false;
 							VikaTouch.unreadCount = unreadC;
 							x = VikaUtils.download(new URLBuilder("messages.getConversations").addField("filter", "all")
 									.addField("extended", "1").addField("count", Settings.dialogsLength));
