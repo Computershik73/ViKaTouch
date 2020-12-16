@@ -1,10 +1,7 @@
 package ru.nnproject.vikaui.utils;
 
-import javax.microedition.lcdui.Font;
-
 import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
-import vikatouch.utils.VikaUtils;
 
 public class DisplayUtils
 {

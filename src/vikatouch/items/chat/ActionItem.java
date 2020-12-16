@@ -9,14 +9,7 @@ import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
-import vikatouch.attachments.Attachment;
-import vikatouch.attachments.DocumentAttachment;
-import vikatouch.attachments.PhotoAttachment;
-import vikatouch.attachments.StickerAttachment;
-import vikatouch.attachments.VideoAttachment;
-import vikatouch.attachments.WallAttachment;
 import vikatouch.screens.ChatScreen;
-import vikatouch.settings.Settings;
 import vikatouch.utils.IntObject;
 import vikatouch.utils.VikaUtils;
 
