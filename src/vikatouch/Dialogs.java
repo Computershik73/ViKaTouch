@@ -93,7 +93,7 @@ public class Dialogs extends TimerTask {
 							}
 							if (sendNofs && dialogs.length > 1 && dialogs[0] != null
 									&& !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId)) {
-								if(VikaTouch.mobilePlatform.indexOf("S60") >= 0 && VikaTouch.mobilePlatform.indexOf("5.3") >= 0) {
+								if(VikaTouch.mobilePlatform.indexOf("S60") >= 0 && (VikaTouch.mobilePlatform.indexOf("5.3") >= 0 || VikaTouch.mobilePlatform.indexOf("5.4") >= 0 || VikaTouch.mobilePlatform.indexOf("5.5") >= 0)) {
 									VikaTouch.notify("type", dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40));
 								}
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,
