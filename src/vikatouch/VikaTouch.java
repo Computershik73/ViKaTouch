@@ -294,9 +294,10 @@ public class VikaTouch {
 				return true;
 			}
 		} catch (Throwable e) {
-			errReason = e.getMessage();
-			VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Auth failed", errReason, null));
+			errReason = e.toString();
+			//VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Auth failed", errReason, null));
 			VikaTouch.error(-1, e.toString(), false);
+			e.printStackTrace();
 			// VikaTouch.popup(new InfoPopup(e.toString(), null,
 			// TextLocal.inst.get("player.playererror"), null));
 			return false;
@@ -643,7 +644,7 @@ public class VikaTouch {
 	}
 
 	public static void error(int i, String s, boolean fatal) {
-		inst.errReason = "errcode" + i;
+		inst.errReason = "errcode " + i + "\n" + s;
 
 		if (Settings.sendLogs) {
 			sendLog("Error Report", "errcode: " + i + ", message: " + s + (fatal ? ", fatal" : ""));

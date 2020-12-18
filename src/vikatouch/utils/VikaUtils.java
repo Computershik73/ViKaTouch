@@ -36,6 +36,7 @@ import vikatouch.utils.url.URLDecoder;
 
 public final class VikaUtils {
 	private static Thread fileThread;
+	private static Object downloadLock = new Object();
 
 	public static String parseShortTime(final long paramLong) {
 		final Calendar cal = Calendar.getInstance();
@@ -168,8 +169,18 @@ public final class VikaUtils {
 			throw new VikaNetworkError(e.toString());
 		}
 	}
+	
+	public static String download(String url) throws IOException {
+		if(VikaTouch.isS40()) {
+			synchronized(downloadLock) {
+				return download0(url);
+			}
+		} else {
+			return download0(url);
+		}
+	}
 
-	public static String download(String var1) throws IOException {
+	private static String download0(String var1) throws IOException {
 		try {
 			ByteArrayOutputStream var4 = null;
 			var4 = new ByteArrayOutputStream();
@@ -177,7 +188,7 @@ public final class VikaUtils {
 			InputStream var14 = null;
 			var13 = (HttpConnection) Connector.open(var1);
 			var13.setRequestMethod("GET");
-			var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+			var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
 			if (var13.getResponseCode() != 200 && var13.getResponseCode() != 401) {
 				// System.out.println("not 200 and not 401");
 				if (var13.getHeaderField("Location") != null) {
@@ -186,7 +197,7 @@ public final class VikaUtils {
 					var13 = (HttpConnection) Connector.open(replacedURL);
 					var13.setRequestMethod("GET");
 					var13.setRequestProperty("User-Agent",
-							"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+							"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
 					var14 = var13.openInputStream();
 					//long var8 = var13.getLength();
 					byte[] var6 = new byte[16384];
@@ -355,8 +366,18 @@ public final class VikaUtils {
 		}
 		return ImageUtils.resize(image, width, height, false, false);
 	}
-
+	
 	public static Image downloadImage(String url) throws IOException {
+		if(VikaTouch.isS40()) {
+			synchronized(downloadLock) {
+				return downloadImage0(url);
+			}
+		} else {
+			return downloadImage0(url);
+		}
+	}
+
+	private static Image downloadImage0(String url) throws IOException {
 		try {
 			if (!Settings.https)
 				// url = replace(url, "https:", "http:");
@@ -408,7 +429,7 @@ public final class VikaUtils {
 				HttpConnection var2 = (HttpConnection) con;
 				var2.setRequestMethod("GET");
 				var2.setRequestProperty("User-Agent",
-						"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+						"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
 				int respcode = var2.getResponseCode();
 				if (respcode != 200 && respcode != 401) {
 					if (var2.getHeaderField("Location") != null) {

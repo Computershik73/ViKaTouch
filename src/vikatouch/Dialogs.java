@@ -11,6 +11,7 @@ import vikatouch.items.chat.ConversationItem;
 import vikatouch.screens.ChatScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
+import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.url.URLBuilder;
 
 //FIXME: переписать
@@ -130,7 +131,10 @@ public class Dialogs extends TimerTask {
 							// if(isUpdatingNow) return;
 							// VikaTouch.loading = true;
 							int n = itemsCount;
-							if (VikaTouch.mobilePlatform.indexOf("S60") < 0) {
+							if (VikaTouch.mobilePlatform.indexOf("S60") < 0 && !(EmulatorDetector.emulatorType == EmulatorDetector.EM_J2L || 
+									EmulatorDetector.emulatorType == EmulatorDetector.EM_KEM_OR_J2L ||
+									EmulatorDetector.emulatorType == EmulatorDetector.EM_KEMMOD || EmulatorDetector.emulatorType == EmulatorDetector.EM_KEM
+									)) {
 								avasLoaded = true;
 								return;
 							}

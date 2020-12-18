@@ -9,6 +9,7 @@ import javax.microedition.lcdui.Image;
 import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.popup.VikaNotice;
 import ru.nnproject.vikaui.popup.VikaNotification;
+import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;

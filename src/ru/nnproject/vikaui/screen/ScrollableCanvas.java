@@ -38,8 +38,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	protected short scrollPrev;
 	protected short timer;
 
-	public String scrlDbg = "";
-
 	/*
 	 * Целевая координата, к которой будет лерпаться прокрутка.
 	 */
@@ -48,6 +46,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	 * Если false, лерпаться не будет.
 	 */
 	public boolean scrollTargetActive;
+	private boolean dragged;
 
 	public ScrollableCanvas() {
 		super();
@@ -59,12 +58,41 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	public abstract void draw(Graphics g);
 
 	public final void drag(int x, int y) {
+		keysMode = false;
+		if (DisplayUtils.canvas.isSensorModeJ2MELoader()) {
+			if (!dragging) {
+				lastx = startx;
+				lasty = starty;
+			}
+			final int deltaX = lastx - x;
+			final int deltaY = lasty - y;
+			final int ndeltaX = Math.abs(deltaX);
+			final int ndeltaY = Math.abs(deltaY);
+			if (ndeltaY > 4 || ndeltaX > 2) {
+				if (canScroll) {
+					if (ndeltaY > ndeltaX) {
+						scroll = (short) ((double) -deltaY * scrollSpeed);
+						scrollPrev += scroll;
+						scrollingTimer += Math.abs(scroll) / 14;
+						if (Math.abs(scroll / 3) > Math.abs(driftSpeed))
+							driftSpeed = (short) (scroll / 3);
+					} else {
+						scrollHorizontally(deltaX);
+					}
+				}
+				dragging = true;
+			}
+			lastx = x;
+			lasty = y;
+			timer = 0;
+		} else {
 		try {
-			keysMode = false;
 			if (!dragging) {
 				if (poorScrolling()) {
+					lastx = startx;
 					lasty = y;
 				} else {
+					lastx = startx;
 					lasty = starty;
 				}
 			}
@@ -89,10 +117,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				if (ndeltaY > 0 || ndeltaX > 0) {
 					dragging = true;
 				}
-			} else if (DisplayUtils.canvas.isSensorModeJ2MELoader()) {
-				if (ndeltaY > 4 || ndeltaX > 4) {
-					dragging = true;
-				}
 			} else {
 				if (ndeltaY > 2 || ndeltaX > 2) {
 					dragging = true;
@@ -106,6 +130,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			timer = 0;
 		} catch (Throwable e) {
 			VikaTouch.sendLog("drag " + e.getMessage());
+		}
 		}
 	}
 
@@ -130,6 +155,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	}
 
 	public void release(int x, int y) {
+		dragged = false;
 		try {
 			VikaCanvas.debugString = "released " + x + " " + y;
 			if (!poorScrolling() && timer < 7) {
@@ -327,8 +353,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height * 3 / 4;
 			int br = 0;
 			int sc = 0;
-			scrlDbg = "dir" + dir + " " + topItemY + " " + thisItemY + " " + downItemY + " " + down2ItemY + " d" + delta
-					+ " scry" + scrY;
+			//scrlDbg = "dir" + dir + " " + topItemY + " " + thisItemY + " " + downItemY + " " + down2ItemY + " d" + delta
+			//		+ " scry" + scrY;
 			if (dir > 0) {
 				// up
 				if (scrY - thisItemY < 0) {
@@ -371,8 +397,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				}
 			}
 			scrollTarget = VikaUtils.clamp(scrolled - st, -itemsh, 0);
-			scrlDbg += " st" + st + "br" + br + "s" + sc;
-			System.out.println(scrlDbg);
+			//scrlDbg += " st" + st + "br" + br + "s" + sc;
+			//System.out.println(scrlDbg);
 			scrollTargetActive = true;
 		} catch (Throwable e) {
 			VikaTouch.sendLog("keyscroll " + e.toString());
