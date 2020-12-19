@@ -364,7 +364,7 @@ public final class VikaUtils {
 		if (height == -1) {
 			height = width * origHeight / origWidth;
 		}
-		return ImageUtils.resize(image, width, height, false, false);
+		return ImageUtils.resize(image, width, height, !Settings.fastImageScaling, !Settings.fastImageScaling);
 	}
 	
 	public static Image downloadImage(String url) throws IOException {

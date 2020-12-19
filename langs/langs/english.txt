@@ -207,6 +207,11 @@ settings.vibro=Vibration
 settings.sound=Sound
 settings.hidebottom=Hide bottom buttons
 settings.region=Region
+settings.doublebuffer=Double bufferization
+settings.drawpriority=Maximum render priority
+settings.imagescaling=Image scaling quality
+settings.fast=Fast
+settings.filtered=Smooth
 
 back=Back
 select=Select

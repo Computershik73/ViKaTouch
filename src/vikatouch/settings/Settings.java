@@ -143,6 +143,8 @@ public class Settings {
 	
 	public static boolean drawMaxPriority = false;
 
+	public static boolean fastImageScaling;
+
 	public static final String[] supportedLanguages = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ"};
 
 	public static final String[] langs =              {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"};
@@ -202,6 +204,7 @@ public class Settings {
 					fpsLimit = is.readShort();
 					doubleBufferization = is.readBoolean();
 					drawMaxPriority = is.readBoolean();
+					fastImageScaling = is.readBoolean();
 				} catch (Exception e) {
 
 				}
@@ -277,6 +280,7 @@ public class Settings {
 				os.writeShort(fpsLimit);
 				os.writeBoolean(doubleBufferization);
 				os.writeBoolean(drawMaxPriority);
+				os.writeBoolean(fastImageScaling);
 
 				final byte[] b = baos.toByteArray();
 				rs.addRecord(b, 0, b.length);

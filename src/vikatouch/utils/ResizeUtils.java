@@ -3,6 +3,7 @@ package vikatouch.utils;
 import javax.microedition.lcdui.Image;
 
 import tube42.lib.imagelib.ImageUtils;
+import vikatouch.settings.Settings;
 
 public class ResizeUtils {
 
@@ -21,7 +22,7 @@ public class ResizeUtils {
 		 */
 		need = 50;
 		if (h != need) {
-			return ImageUtils.resize(img, need, need, false, false);
+			return ImageUtils.resize(img, need, need, !Settings.fastImageScaling, !Settings.fastImageScaling);
 			// return VikaUtils.resize(img, need, -1);
 		}
 		return img;
@@ -42,7 +43,7 @@ public class ResizeUtils {
 		 */
 		need = 50;
 		if (h != need) {
-			return ImageUtils.resize(img, need, need, false, false);
+			return ImageUtils.resize(img, need, need, !Settings.fastImageScaling, !Settings.fastImageScaling);
 			// return VikaUtils.resize(img, need, -1);
 		}
 		return img;
@@ -57,7 +58,7 @@ public class ResizeUtils {
 		 */
 		if (h != need) {
 			short needh = getHeight(w, h, need);
-			return ImageUtils.resize(img, need, needh, false, false);
+			return ImageUtils.resize(img, need, needh, !Settings.fastImageScaling, !Settings.fastImageScaling);
 			// return VikaUtils.resize(img, need, -1);
 		}
 		return img;
@@ -84,7 +85,7 @@ public class ResizeUtils {
 		need = 50;
 		if (h != need) {
 			short needh = getHeight(w, h, need);
-			return ImageUtils.resize(img, need, needh, false, false);
+			return ImageUtils.resize(img, need, needh, !Settings.fastImageScaling, !Settings.fastImageScaling);
 			// return VikaUtils.resize(img, need, -1);
 		}
 		return img;

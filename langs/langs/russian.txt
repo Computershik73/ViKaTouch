@@ -220,6 +220,11 @@ settings.vibro=Вибрация
 settings.sound=Звук
 settings.hidebottom=Скрыть нижние кнопки
 settings.region=Регион
+settings.doublebuffer=Двойная буферизация
+settings.drawpriority=Максимальный приоритет рендера
+settings.imagescaling=Качество масштаба изображений
+settings.fast=Быстрая
+settings.filtered=Плавная
 
 back=Назад
 select=Выбрать

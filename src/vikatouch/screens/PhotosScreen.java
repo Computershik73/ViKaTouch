@@ -6,6 +6,7 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import tube42.lib.imagelib.ImageUtils;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
+import vikatouch.settings.Settings;
 
 public class PhotosScreen extends MainScreen {
 	private String title;
@@ -25,13 +26,13 @@ public class PhotosScreen extends MainScreen {
 		boolean set = false;
 		for(x = 0; x < count; x++) {
 			if((x + 1 - (z*y)) * size <= DisplayUtils.width) {
-				g.drawImage(ImageUtils.resize(VikaTouch.cameraImg, size, size, false, false), (x - (z*y)) * size, topPanelH + y * size, 0);
+				g.drawImage(ImageUtils.resize(VikaTouch.cameraImg, size, size, !Settings.fastImageScaling, !Settings.fastImageScaling), (x - (z*y)) * size, topPanelH + y * size, 0);
 			} else {
 				if(!set)
 					z = x;
 				set = true;
 				y++;
-				g.drawImage(ImageUtils.resize(VikaTouch.cameraImg, size, size, false, false), (x - (z*y)) * size, topPanelH + y * size, 0);
+				g.drawImage(ImageUtils.resize(VikaTouch.cameraImg, size, size, !Settings.fastImageScaling, !Settings.fastImageScaling), (x - (z*y)) * size, topPanelH + y * size, 0);
 			}
 		}
 		itemsh = topPanelH + y * size;

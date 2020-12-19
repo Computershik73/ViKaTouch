@@ -136,6 +136,10 @@ public class SettingsScreen extends MainScreen implements IMenu {
 						oneitemheight, 
 						eOd, Settings.drawMaxPriority ? 1 : 0, null),
 
+				new SettingMenuItem(this, TextLocal.inst.get("settings.imagescaling"), IconsManager.PHOTOS, 63,
+						oneitemheight, 
+						new String[] { TextLocal.inst.get("settings.fast"), TextLocal.inst.get("settings.filtered") }, Settings.fastImageScaling ? 0 : 1, null),
+
 		};
 		msgList = new PressableUIItem[] { backItem,
 				new SettingMenuItem(this, TextLocal.inst.get("settings.historycount"), IconsManager.MSGS, 6,
@@ -357,6 +361,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case 62: {
 			Settings.drawMaxPriority = var == 1;
+		}
+		case 63: {
+			Settings.fastImageScaling = var == 0;
 		}
 		}
 		initAllSettsList();

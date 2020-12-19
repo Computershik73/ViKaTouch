@@ -220,6 +220,12 @@ settings.dialogscount=Кількість діалогів
 settings.dialogsrefreshrate=Час оновлення діалогів (с.)
 settings.notificationmode=Повідомлення про режим
 settings.vibontouch=Вібрація після дотику
+settings.region=Регіон
+settings.doublebuffer=Подвійна буферизація
+settings.drawpriority=Максимальний пріоритет рендеру
+settings.imagescaling=Якість масштабу зображень
+settings.fast=Швидка
+settings.filtered=Плавне
 
 back=Назад
 select=Вибрати
@@ -231,7 +237,7 @@ close=Закрити
 yes=Так
 ok=Прийняти
 cancel=Скасувати
-loadmore=Загрузить ещё...
+loadmore=Завантажити ще...
 
 splash.emnotsupported=Найімовірніше, ViKa Touch зараз запущена на непідтримуваному емуляторі. Ми рекомендуємо використовувати KEmulator, J2ME Loader, JBed або офіційні емулятори з пакетів для розробників - в інших можливі проблеми з відображенням, функціональністю та безпекою.
 splash.title.3=Підготовка ресурсів
