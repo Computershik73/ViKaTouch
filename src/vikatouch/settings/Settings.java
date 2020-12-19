@@ -135,6 +135,13 @@ public class Settings {
 	public static int notifmode = 0;
 
 	public static String region;
+	
+	// 100/60/30/15
+	public static int fpsLimit = 60;
+
+	public static boolean doubleBufferization = false;
+	
+	public static boolean drawMaxPriority = false;
 
 	public static final String[] supportedLanguages = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ"};
 
@@ -191,7 +198,10 @@ public class Settings {
 					// 2.8.12
 					hideBottom = is.readBoolean();
 					region = is.readUTF();
-
+					// 2.8.13
+					fpsLimit = is.readShort();
+					doubleBufferization = is.readBoolean();
+					drawMaxPriority = is.readBoolean();
 				} catch (Exception e) {
 
 				}
@@ -202,7 +212,6 @@ public class Settings {
 		} catch (Exception e) {
 
 		}
-		System.out.println("lang set: " + language);
 		try {
 			if(isOldLang(language)) {
 				String x = language;
@@ -211,6 +220,9 @@ public class Settings {
 			}
 		} catch (Exception e) {
 
+		}
+		if(fpsLimit <= 0) {
+			fpsLimit = 60;
 		}
 	}
 
@@ -261,6 +273,10 @@ public class Settings {
 				// 2.8.12
 				os.writeBoolean(hideBottom);
 				os.writeUTF(region);
+				// 2.8.13
+				os.writeShort(fpsLimit);
+				os.writeBoolean(doubleBufferization);
+				os.writeBoolean(drawMaxPriority);
 
 				final byte[] b = baos.toByteArray();
 				rs.addRecord(b, 0, b.length);

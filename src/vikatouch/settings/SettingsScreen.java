@@ -17,10 +17,11 @@ import vikatouch.screens.MainScreen;
 
 public class SettingsScreen extends MainScreen implements IMenu {
 
-	int[] countVals = new int[] { 10, 20, 30, 50, 80, 100 };
-	int countValDef = 1;
-	int[] refreshVals = new int[] { 0, 2, 5, 8, 10, 15 };
-	int refreshValDef = 3;
+	static int[] countVals = new int[] { 10, 20, 30, 50, 80, 100 };
+	static int countValDef = 1;
+	static int[] refreshVals = new int[] { 0, 2, 5, 8, 10, 15 };
+	static int refreshValDef = 3;
+	static int[] fpsVals = new int[] { 100, 60, 30, 15};
 	private static String titleStr;
 
 	private PressableUIItem[] menuList;
@@ -61,6 +62,10 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			rr = refreshValDef;
 			Settings.messagesPerLoad = refreshVals[rr];
 		}
+		if (rr == -1) {
+			rr = refreshValDef;
+			Settings.messagesPerLoad = refreshVals[rr];
+		}
 		// сообщения за раз
 		int mc = -1;
 		for (int i = 0; i < countVals.length; i++) {
@@ -91,6 +96,12 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			j0 = countValDef;
 			Settings.dialogsLength = countVals[j0];
 		}
+
+		int fc = -1;
+		for (int i = 0; i < fpsVals.length; i++) {
+			if (fpsVals[i] == Settings.fpsLimit)
+				fc = i;
+		}
 		menuList = new PressableUIItem[] {
 				new OptionItem(this, TextLocal.inst.get("settings.system"), IconsManager.DEVICE, -100, oneitemheight),
 				new OptionItem(this, TextLocal.inst.get("settings.appearance"), IconsManager.MENU, -101, oneitemheight),
@@ -116,6 +127,14 @@ public class SettingsScreen extends MainScreen implements IMenu {
 				// oneitemheight, eOd, Settings.cacheImages?1:0, null, true),
 				new SettingMenuItem(this, TextLocal.inst.get("settings.listslength"), IconsManager.MENU, 5,
 						oneitemheight, countVals, j, null),
+
+				new SettingMenuItem(this, TextLocal.inst.get("FPS"), IconsManager.DEVICE, 60,
+						oneitemheight, fpsVals, fc, null),
+				new SettingMenuItem(this, TextLocal.inst.get("settings.doublebuffer"), IconsManager.DEVICE, 61,
+						oneitemheight, eOd, Settings.doubleBufferization ? 1 : 0, null),
+				new SettingMenuItem(this, TextLocal.inst.get("settings.drawpriority"), IconsManager.DEVICE, 62,
+						oneitemheight, 
+						eOd, Settings.drawMaxPriority ? 1 : 0, null),
 
 		};
 		msgList = new PressableUIItem[] { backItem,
@@ -329,6 +348,15 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case 24: {
 			Settings.hideBottom = var == 1;
+		}
+		case 60: {
+			Settings.fpsLimit = fpsVals[var];
+		}
+		case 61: {
+			Settings.doubleBufferization = var == 1;
+		}
+		case 62: {
+			Settings.drawMaxPriority = var == 1;
 		}
 		}
 		initAllSettsList();

@@ -201,7 +201,7 @@ public class VikaTouch {
 		}
 		//canvas.slide = direction;
 		canvas.currentScreen = s;
-		canvas.paint();
+		canvas.draw();
 		DisplayUtils.checkdisplay();
 		// loading = true;
 	}
@@ -775,10 +775,17 @@ public class VikaTouch {
 
 	public void start() {
 		DisplayUtils.checkdisplay();
+		Settings.loadDefaultSettings();
+		EmulatorDetector.checkForEmulator(mobilePlatform);
+		Settings.loadSettings();
 		canvas = new VikaCanvasInst();
 		setDisplay(canvas);
 		mainThread = new Thread(appInst);
-		mainThread.setPriority(Thread.MAX_PRIORITY);
+		if(Settings.drawMaxPriority) {
+			mainThread.setPriority(Thread.NORM_PRIORITY);
+		} else {
+			mainThread.setPriority(Thread.MAX_PRIORITY);
+		}
 		mainThread.start();
 		uiThread = new UIThread(canvas);
 		uiThread.start();
@@ -792,9 +799,6 @@ public class VikaTouch {
 
 		SplashScreen.currState = 1;
 
-		Settings.loadDefaultSettings();
-		EmulatorDetector.checkForEmulator(mobilePlatform);
-		Settings.loadSettings();
 
 		SplashScreen.currState = 2;
 

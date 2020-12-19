@@ -9,7 +9,6 @@ import javax.microedition.lcdui.Image;
 import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.popup.VikaNotice;
 import ru.nnproject.vikaui.popup.VikaNotification;
-import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -41,6 +40,8 @@ public class VikaCanvasInst extends VikaCanvas {
 	public static String timingsStr;
 
 	public long lastInputTime = 0;
+	private Image image;
+	private Graphics buffer;
 	public static final long uiSleepTimeout = 8000;
 
 	public VikaCanvasInst() {
@@ -63,9 +64,42 @@ public class VikaCanvasInst extends VikaCanvas {
 		}
 		//slide = 0.0d;
 		busyStr = "Busy...";
+		if(dontBuffer()) {
+			if (!isDoubleBuffered()) {
+				System.out.println("db!");
+				image = Image.createImage(getWidth(), getHeight());
+			    buffer = image.getGraphics();
+			}
+		}
+		 
 	}
 
-	public void paint(Graphics g) {
+	public void draw() {
+		if(dontBuffer()) {
+			repaint();
+			return;
+		}
+		Graphics g = getGraphics();
+		if(buffer != null) {
+			g = buffer;
+		}
+		draw0(g);
+		if(buffer == null) {
+			flushGraphics();
+		} else {
+			repaint();
+		}
+	}
+	
+	private boolean dontBuffer() {
+		return !Settings.doubleBufferization;
+	}
+
+	public int getFPSLimit() {
+		return Settings.fpsLimit;
+	}
+	
+	private void draw0(Graphics g) {
 		long rT = System.currentTimeMillis();
 		try {
 			this.updateScreen(g);
@@ -108,6 +142,17 @@ public class VikaCanvasInst extends VikaCanvas {
 			g.setColor(updColor);
 			g.fillRect(DisplayUtils.width - 4, 0, 4, 4);
 		}
+	}
+
+	public void paint(Graphics g) {
+		if(dontBuffer()) {
+			draw0(g);
+			return;
+		}
+		if (!isDoubleBuffered() && buffer != null) {
+			g.drawImage(image, 0, 0, 0);
+		}
+		super.paint(g);
 	}
 
 	public void updateScreen(Graphics g) {
@@ -297,14 +342,6 @@ public class VikaCanvasInst extends VikaCanvas {
 			currentScreen.release(i);
 		}
 	}
-
-	public void paint() {
-		if (!VikaTouch.appInst.isPaused || currentAlert != null) {
-			repaint();
-			// serviceRepaints();
-		}
-	}
-
 	public void tick() {
 		if (Display.getDisplay(VikaTouch.appInst).getCurrent() instanceof VikaCanvasInst) {
 			if (VikaTouch.loading && !(DisplayUtils.width < 240)) {
@@ -312,12 +349,12 @@ public class VikaCanvasInst extends VikaCanvas {
 				/*
 				 * if(Settings.animateTransition) { oldScreen = null; slide = 0; }
 				 */
-			} else
-				paint();
+			}
 			/*
 			 * if(Settings.animateTransition) { double sliden = Math.abs(slide); if(sliden >
 			 * 0) { slide *= 0.78; if(sliden < 0.015) { oldScreen = null; slide = 0; } } }
 			 */
+			draw();
 		}
 	}
 
@@ -335,6 +372,10 @@ public class VikaCanvasInst extends VikaCanvas {
 
 	public boolean poorScrolling() {
 		return Settings.sensorMode == Settings.SENSOR_KEMULATOR;
+	}
+
+	protected boolean drawMaxPriority() {
+		return Settings.drawMaxPriority;
 	}
 
 }

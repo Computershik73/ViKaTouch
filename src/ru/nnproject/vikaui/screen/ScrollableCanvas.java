@@ -2,7 +2,6 @@ package ru.nnproject.vikaui.screen;
 
 import javax.microedition.lcdui.Graphics;
 
-import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
@@ -46,13 +45,13 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	 * Если false, лерпаться не будет.
 	 */
 	public boolean scrollTargetActive;
-	private boolean dragged;
 
 	public ScrollableCanvas() {
 		super();
 		if(VikaTouch.isS40()) {
 			keysMode = true;
 		}
+		repaint();
 	}
 
 	public abstract void draw(Graphics g);
@@ -138,7 +137,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 
 	public void press(int x, int y) {
 		timer = 0;
-		VikaCanvas.debugString = "pressed " + x + " " + y;
 		scrollingTimer = 0;
 		drift = 0;
 		driftSpeed = 0;
@@ -155,9 +153,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	}
 
 	public void release(int x, int y) {
-		dragged = false;
+		//dragged = false;
 		try {
-			VikaCanvas.debugString = "released " + x + " " + y;
 			if (!poorScrolling() && timer < 7) {
 				if (scrollPrev != 0)
 					drag(x, y);
@@ -193,9 +190,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				uiItems[currentItem].keyPressed(key);
 			}
 			repaint();
-
-			VikaCanvas.debugString = "" + key + " " + DisplayUtils.canvas.getKeyName(key) + " " + currentItem + " "
-					+ itemsCount + " " + uiItems[currentItem].isSelected();
 		} catch (Throwable e) {
 			// VikaTouch.sendLog("press "+ e.getMessage());
 		}
@@ -351,14 +345,14 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			} catch (RuntimeException e1) {
 			}
 			int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height * 3 / 4;
-			int br = 0;
-			int sc = 0;
+			//int br = 0;
+			//int sc = 0;
 			//scrlDbg = "dir" + dir + " " + topItemY + " " + thisItemY + " " + downItemY + " " + down2ItemY + " d" + delta
 			//		+ " scry" + scrY;
 			if (dir > 0) {
 				// up
 				if (scrY - thisItemY < 0) {
-					sc = 1;
+					//sc = 1;
 					selectCentered();
 					thisItemY = getItemY(currentItem);
 					topItemY = getItemY(currentItem - 1);
@@ -370,15 +364,15 @@ public abstract class ScrollableCanvas extends VikaScreen {
 
 				st = -delta;
 				if (scrY - thisItemY > delta) {
-					br = 1;
+					//br = 1;
 				} else if (scrY - topItemY > delta) {
-					br = 2;
+					//br = 2;
 					select(currentItem - 1);
 				} else if (thisItemY < 10) {
-					br = 7;
+					//br = 7;
 					select(0);
 				} else {
-					br = 3;
+					//br = 3;
 					st = topItemY - scrY + 1;
 					select(currentItem - 1);
 				}
@@ -386,12 +380,12 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				// down
 				st = delta;
 				if (down2ItemY - scrY > delta && downItemY - scrY <= delta) {
-					br = 5;
+					//br = 5;
 					select(currentItem + 1);
 				} else if (downItemY - scrY > delta) {
-					br = 4;
+					//br = 4;
 				} else {
-					br = 6;
+					//br = 6;
 					st = (down2ItemY - scrY - 1);
 					select(currentItem + 1);
 				}

@@ -1306,7 +1306,6 @@ public class ChatScreen extends MainScreen {
 
 	private void msgClick(int tapY, long tapTime) {
 		tapY -= topPanelH;
-		VikaCanvasInst.debugString = "hold " + tapTime;
 		if (uiItems == null)
 			return;
 		int y = 0;

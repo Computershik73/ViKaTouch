@@ -33,7 +33,7 @@ public abstract class VikaScreen {
 
 	protected void repaint() {
 		if (DisplayUtils.canvas != null) {
-			DisplayUtils.canvas.paint();
+			DisplayUtils.canvas.draw();
 		}
 	}
 }

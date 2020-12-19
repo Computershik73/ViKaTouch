@@ -7,7 +7,11 @@ public class UIThread extends Thread {
 	public UIThread(VikaCanvas canvas) {
 		super();
 		this.canvas = canvas;
-		this.setPriority(Thread.NORM_PRIORITY);
+		if(canvas.drawMaxPriority()) {
+			this.setPriority(Thread.MAX_PRIORITY);
+		} else {
+			this.setPriority(Thread.NORM_PRIORITY);
+		}
 	}
 
 	public void run() {
@@ -19,7 +23,7 @@ public class UIThread extends Thread {
 			}
 			// Thread.yield();
 			try {
-				Thread.sleep(10);
+				Thread.sleep(1000 / canvas.getFPSLimit());
 			} catch (InterruptedException e) {
 				// VikaTouch.sendLog("UI thread exit");
 				return;
