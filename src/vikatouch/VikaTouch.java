@@ -862,10 +862,17 @@ public class VikaTouch {
 				}
 
 			} else {
-				OAUTH = Settings.proxyOAuth;
-				API = Settings.proxyApi;
-				Settings.proxy = true;
-				Settings.https = false;
+				if(EmulatorDetector.isEmulator && EmulatorDetector.supportsHttps) {
+					OAUTH = "https://oauth.vk.com:443";
+					API = "https://api.vk.com:443";
+					Settings.https = true;
+					Settings.proxy = false;
+				} else {
+					OAUTH = Settings.proxyOAuth;
+					API = Settings.proxyApi;
+					Settings.proxy = true;
+					Settings.https = false;
+				}
 			}
 		} else {
 			// API = Settings.https?"https://api.vk.com:443":Settings.proxyApi;

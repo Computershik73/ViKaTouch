@@ -1,7 +1,7 @@
 #Spain
 #Authors: Jazminrocio, shinovon
 #YYYY.MM.DD
-format.version=2020.12.16
+format.version=2020.12.19
 
 format.time=HH:MM
 format.chatdate=DD S

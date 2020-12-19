@@ -7,6 +7,7 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
+import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.error.ErrorCodes;
 
 public class TextLocal {
@@ -60,7 +61,7 @@ public class TextLocal {
 					int splitLoc = x.indexOf("=");
 					int len = x.length();
 					String key = x.substring(0, splitLoc);
-					if(key.indexOf("splash.") != -1 && DisplayUtils.compact) {
+					if(key.indexOf("splash.") != -1 && DisplayUtils.compact && !EmulatorDetector.isEmulator) {
 						
 					} else {
 						String val = VikaUtils.replace(VikaUtils.replace(x.substring(splitLoc + 1, len), "\r", ""), "|", "\n");

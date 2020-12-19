@@ -269,7 +269,7 @@ public class CommandsImpl
 		{
 			if(s instanceof SettingsScreen)
 			{
-			//	Settings.saveSettings();
+				
 			}
 			if(s instanceof MainScreen)
 			{

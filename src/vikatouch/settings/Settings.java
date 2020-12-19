@@ -372,6 +372,12 @@ public class Settings {
 
 	public static void setEmulatorSettings() {
 		if (EmulatorDetector.isEmulator) {
+			if (EmulatorDetector.emulatorType == EmulatorDetector.EM_J2L) {
+				Settings.sensorMode = Settings.SENSOR_J2MELOADER;
+				Settings.proxy = false;
+				Settings.https = true;
+			}
+			
 			if (EmulatorDetector.emulatorType == EmulatorDetector.EM_KEM_OR_J2L) {
 				Settings.sensorMode = Settings.SENSOR_J2MELOADER;
 			}

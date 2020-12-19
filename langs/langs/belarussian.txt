@@ -4,9 +4,9 @@
 #вк автора:
 #vk.com/jazminrocio
 
-langinfo.name=Беларуская (BY)
+langinfo.name=Беларуская
 #YYYY.MM.DD
-langinfo.version=2020.12.16
+langinfo.version=2020.12.19
 
 langinfo.hints=2
 

@@ -8,7 +8,7 @@
 
 langinfo.name=Русский
 #YYYY.MM.DD
-langinfo.version=2020.12.16
+langinfo.version=2020.12.19
 
 langinfo.hints=15
 

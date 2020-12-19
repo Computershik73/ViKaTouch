@@ -5,9 +5,12 @@ import vikatouch.settings.Settings;
 public class EmulatorDetector {
 	public static int emulatorType;
 	public static boolean isEmulator;
-	public static boolean emulatorNotSupported = false;
+	public static boolean emulatorNotSupported;
+	public static boolean supportsHttps;
 
 	public static final int EM_KEM = 1;
+
+	public static final int EM_JBED = 18;
 
 	public static final int EM_KEM_OR_J2L = 17;
 
@@ -34,83 +37,107 @@ public class EmulatorDetector {
 	public static final int EM_NOT_EMULATOR = 0;
 
 	public static void checkForEmulator(String platform) {
-		if (platform.indexOf("03.xx") >= 0) {
-			isEmulator = true;
-			emulatorType = EM_S40_5_SDK;
-		} else if (platform.equalsIgnoreCase("NOKIA_SERIES60")) {
-			isEmulator = true;
-			emulatorType = EM_KEM;
-		} else if (platform.equalsIgnoreCase("NOKIA_SERIES40")) {
-			isEmulator = true;
-			emulatorType = EM_KEM;
-		} else if (platform.equalsIgnoreCase("MicroEmulator-2.0")) {
-			isEmulator = true;
-			emulatorType = EM_MICROEMULATOR_V2;
-			emulatorNotSupported = true;
-		} else if (platform.equalsIgnoreCase("MicroEmulator")) {
-			isEmulator = true;
-			emulatorType = EM_MICROEMULATOR;
-			emulatorNotSupported = true;
-		} else if (platform.endsWith("/KEmulatorMod")) {
-			isEmulator = true;
-			emulatorType = EM_KEMMOD;
-		} else if (platform.indexOf("Emulator") >= 0) {
-			isEmulator = true;
-			emulatorType = EM_UNDEFINED;
-		} else if (platform.equalsIgnoreCase("j2me")) {
-			isEmulator = true;
-			emulatorType = EM_UNDEFINED;
-		} else if (platform.indexOf(" ") >= 0) {
-			isEmulator = true;
-			emulatorType = EM_KEM_OR_J2L;
-			// кем так не палится. Вроде.
-		} else {
-			isEmulator = false;
-			emulatorType = EM_NOT_EMULATOR;
+		String osname = System.getProperty("os.name");
+		String jvendor = System.getProperty("java.vendor");
+		detect: {
+			if(osname != null) {
+				if(osname.indexOf("nux") != -1 || osname.startsWith("Windows")) {
+					emulatorType = EM_PC;
+					isEmulator = true;
+				}
+			}
+			if(jvendor.equalsIgnoreCase("The Android Project")) {
+				isEmulator = true;
+				emulatorType = EM_J2L;
+				supportsHttps = true;
+			} else if (platform.endsWith("/KEmulatorMod")) {
+				isEmulator = true;
+				emulatorType = EM_KEMMOD;
+				supportsHttps = true;
+			} else if (platform.indexOf("03.xx") >= 0) {
+				isEmulator = true;
+				emulatorType = EM_S40_5_SDK;
+			} else if (platform.equalsIgnoreCase("Nokia 6233")) {
+				supportsHttps = true;
+				isEmulator = true;
+				emulatorType = EM_J2L;
+			} if (platform.equalsIgnoreCase("NOKIA_SERIES60")) {
+				isEmulator = true;
+				emulatorType = EM_KEM;
+				emulatorNotSupported = true;
+			} else if (platform.equalsIgnoreCase("NOKIA_SERIES40")) {
+				isEmulator = true;
+				emulatorType = EM_KEM;
+				emulatorNotSupported = true;
+			} else if (platform.equalsIgnoreCase("MicroEmulator-2.0")) {
+				isEmulator = true;
+				emulatorType = EM_MICROEMULATOR_V2;
+				supportsHttps = true;
+			} else if(platform.indexOf("Jbed-FastBCC") != -1) {
+				isEmulator = true;
+				emulatorType = EM_JBED;
+			} else if (platform.equalsIgnoreCase("MicroEmulator")) {
+				isEmulator = true;
+				emulatorType = EM_MICROEMULATOR;
+				emulatorNotSupported = true;
+			} else if(!isEmulator) {
+				if (platform.indexOf("Emulator") >= 0) {
+					isEmulator = true;
+					emulatorType = EM_UNDEFINED;
+				} else if (platform.equalsIgnoreCase("j2me")) {
+					isEmulator = true;
+					emulatorType = EM_UNDEFINED;
+				} else if (platform.indexOf(" ") >= 0) {
+					isEmulator = true;
+					emulatorType = EM_KEM_OR_J2L;
+				} else {
+					isEmulator = false;
+					emulatorType = EM_NOT_EMULATOR;
+				}
+			}
 		}
 		Settings.setEmulatorSettings();
 	}
 
 	public static boolean isCompatible(int i) {
 		switch (i) {
-		case 0:
+		case EM_NOT_EMULATOR:
 			return true;
 
-		case -1:
+		case EM_UNDEFINED:
 			return false;
 
-		case 1:
-			// TODO return false;
-			return true;
-
-		case 4:
-			return true;
-
-		case 5:
-			return true;
-
-		case 6:
-			return true;
-
-		case 7:
+		case EM_KEM:
 			return false;
 
-		case 8:
-			return false;
-
-		case 9:
-			return false;
-
-		case 10:
-			return false;
-
-		case 11:
+		case EM_SDK:
 			return true;
 
-		case 16:
+		case EM_S40_5_SDK:
 			return true;
 
-		case 17:
+		case EM_S40_6_SDK:
+			return true;
+
+		case EM_EPOC_COMPATIBLE:
+			return false;
+
+		case EM_MICROEMULATOR:
+			return false;
+
+		case EM_MICROEMULATOR_V2:
+			return false;
+
+		case EM_PC:
+			return false;
+
+		case EM_KEMMOD:
+			return true;
+
+		case EM_J2L:
+			return true;
+
+		case EM_KEM_OR_J2L:
 			return true;
 		}
 		return false;
