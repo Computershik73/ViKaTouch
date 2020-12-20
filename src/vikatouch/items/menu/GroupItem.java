@@ -69,6 +69,8 @@ public class GroupItem extends JSONUIItem {
 		try {
 			if (!Settings.dontLoadAvas)
 				ava = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(fixJSONString(json.optString("photo_50"))));
+		} catch (InterruptedException e) {
+			return;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

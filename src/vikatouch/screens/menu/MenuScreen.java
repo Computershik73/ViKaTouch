@@ -30,21 +30,17 @@ public class MenuScreen extends MainScreen implements IMenu {
 	public static boolean hasAva;
 	public static String lastname;
 	public static String status;
-	//public static String avaurl;
+	// public static String avaurl;
 	/*
 	 * private static int[] itemscmd = {4, 5, 6, 7, 8, 9, -1};
 	 */
-	//private int btnsLen = 8;
+	// private int btnsLen = 8;
 	/*
-	public String exitStr;
-	public String docsStr;
-	public String photosStr;
-	public String videosStr;
-	public String musicStr;
-	public String groupsStr;
-	public String friendsStr;
-	*/
-	//private String aboutStr;
+	 * public String exitStr; public String docsStr; public String photosStr; public
+	 * String videosStr; public String musicStr; public String groupsStr; public
+	 * String friendsStr;
+	 */
+	// private String aboutStr;
 	private int selectedBtn;
 
 	public MenuScreen() {
@@ -59,55 +55,53 @@ public class MenuScreen extends MainScreen implements IMenu {
 
 			hasAva = true;
 		}
-		/*if (VikaTouch.userId != null) {*/
-			try {
-				String avaurl;
-				String var10 = VikaUtils.download(new URLBuilder("users.get")/*.addField("user_ids", VikaTouch.userId)*/
-						.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
-				System.out.println(var10);
-				JSONObject profileobj = new JSONObject(var10).getJSONArray("response").getJSONObject(0);
-				name = profileobj.optString("first_name");
-				lastname = profileobj.optString("last_name");
-				status = profileobj.optString("status");
-				avaurl = JSONBase.fixJSONString(profileobj.optString("photo_50"));
-				hasAva = profileobj.optInt("has_photo") == 1;
-				VikaTouch.integerUserId = profileobj.optInt("id");
-				VikaTouch.userId = "" + VikaTouch.integerUserId;
-
-				try {
-					if (!Settings.dontLoadAvas && hasAva && avaurl != null && avaurl != "" && avaurl != "null") {
-						profileImg = ResizeUtils.resizeava(VikaUtils.downloadImage(avaurl));
-					}
-				} catch (Throwable e) {
-					VikaTouch.error(ErrorCodes.MENUAVATAR, e.toString(), false);
-					e.printStackTrace();
-					VikaTouch.sendLog("Avatar error, url: " + avaurl);
-					hasAva = false;
-				}
-			} catch (Throwable a) {
-				VikaTouch.error(ErrorCodes.MENUPROFILEINFO1, a.toString(), false);
-				VikaTouch.sendLog("Menu profile info: " + a.toString() + " uid:" + VikaTouch.userId);
-				a.printStackTrace();
-			}
-			/*
-		} else {
-			VikaTouch.error(ErrorCodes.MENUNOUSERID, false);
-		}
-		*/
-		/*
+		/* if (VikaTouch.userId != null) { */
 		try {
-			friendsStr = TextLocal.inst.get("menu.friends");
-			exitStr = TextLocal.inst.get("menu.quit");
-			groupsStr = TextLocal.inst.get("menu.groups");
-			musicStr = TextLocal.inst.get("menu.music");
-			docsStr = TextLocal.inst.get("menu.documents");
-			photosStr = TextLocal.inst.get("menu.photos");
-			videosStr = TextLocal.inst.get("menu.videos");
-			aboutStr = TextLocal.inst.get("menu.about");
-		} catch (Exception e) {
-			VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
+			String avaurl;
+			String var10 = VikaUtils.download(new URLBuilder("users.get")/* .addField("user_ids", VikaTouch.userId) */
+					.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
+			System.out.println(var10);
+			JSONObject profileobj = new JSONObject(var10).getJSONArray("response").getJSONObject(0);
+			name = profileobj.optString("first_name");
+			lastname = profileobj.optString("last_name");
+			status = profileobj.optString("status");
+			avaurl = JSONBase.fixJSONString(profileobj.optString("photo_50"));
+			hasAva = profileobj.optInt("has_photo") == 1;
+			VikaTouch.integerUserId = profileobj.optInt("id");
+			VikaTouch.userId = "" + VikaTouch.integerUserId;
 
-		}*/
+			try {
+				if (!Settings.dontLoadAvas && hasAva && avaurl != null && avaurl != "" && avaurl != "null") {
+					profileImg = ResizeUtils.resizeava(VikaUtils.downloadImage(avaurl));
+				}
+			} catch (Throwable e) {
+				VikaTouch.error(ErrorCodes.MENUAVATAR, e.toString(), false);
+				e.printStackTrace();
+				VikaTouch.sendLog("Avatar error, url: " + avaurl);
+				hasAva = false;
+			}
+		} catch (Throwable a) {
+			VikaTouch.error(ErrorCodes.MENUPROFILEINFO1, a.toString(), false);
+			VikaTouch.sendLog("Menu profile info: " + a.toString() + " uid:" + VikaTouch.userId);
+			a.printStackTrace();
+		}
+		/*
+		 * } else { VikaTouch.error(ErrorCodes.MENUNOUSERID, false); }
+		 */
+		/*
+		 * try { friendsStr = TextLocal.inst.get("menu.friends"); exitStr =
+		 * TextLocal.inst.get("menu.quit"); groupsStr =
+		 * TextLocal.inst.get("menu.groups"); musicStr =
+		 * TextLocal.inst.get("menu.music"); docsStr =
+		 * TextLocal.inst.get("menu.documents"); photosStr =
+		 * TextLocal.inst.get("menu.photos"); videosStr =
+		 * TextLocal.inst.get("menu.videos"); aboutStr =
+		 * TextLocal.inst.get("menu.about"); } catch (Exception e) { VikaTouch.popup(new
+		 * InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"),
+		 * null));
+		 * 
+		 * }
+		 */
 		int uiih = DisplayUtils.compact ? 30 : 50; // е72, ландшафт 240, СЕ портрет
 		uiItems = new OptionItem[7];
 		uiItems[0] = new OptionItem(this, TextLocal.inst.get("menu.friends"), IconsManager.FRIENDS, 4, uiih);
@@ -129,6 +123,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
+					return;
 				}
 				VikaUpdate vu = VikaUpdate.check();
 				if (vu != null)
@@ -214,8 +209,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 			g.drawString(name + " " + lastname, 74, topPanelH + 12, 0);
 			if (selectedBtn == 1 && keysMode) {
 				ColorUtils.setcolor(g, 3);
-				g.drawRect(0, topPanelH+1, DisplayUtils.width-1, 72);
-				g.drawRect(1, topPanelH+2, DisplayUtils.width-3, 72);
+				g.drawRect(0, topPanelH + 1, DisplayUtils.width - 1, 72);
+				g.drawRect(1, topPanelH + 2, DisplayUtils.width - 3, 72);
 			}
 			// g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN,
 			// Font.SIZE_MEDIUM));
@@ -542,7 +537,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 						}
 						y1 = y2;
 					}
-				} else if(y > topPanelH - scrolled && y < 140 - scrolled) {
+				} else if (y > topPanelH - scrolled && y < 140 - scrolled) {
 					VikaTouch.inst.cmdsInst.command(16, this);
 				}
 			} catch (RuntimeException e) {

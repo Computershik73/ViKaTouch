@@ -87,7 +87,7 @@ public class DialogsScreen extends MainScreen {
 		for (int i = 0; (i < Dialogs.dialogs.length && i < currentItem); i++) {
 			itemy += Dialogs.dialogs[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
 		}
-		if(Dialogs.dialogs[currentItem] != null) {
+		if (Dialogs.dialogs[currentItem] != null) {
 			scrolled = -(itemy - DisplayUtils.height / 2 + (Dialogs.dialogs[currentItem].getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
 		}

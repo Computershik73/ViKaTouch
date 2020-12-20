@@ -173,6 +173,8 @@ public class PhotoAttachment extends ImageAttachment implements ISocialable {
 	public Image getFullImage() {
 		try {
 			return VikaUtils.downloadImage(getFullImageUrl());
+		} catch (InterruptedException e) {
+			return null;
 		} catch (IOException e) {
 			return null;
 		}

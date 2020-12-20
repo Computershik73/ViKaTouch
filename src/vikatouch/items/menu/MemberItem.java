@@ -88,6 +88,7 @@ public class MemberItem extends JSONUIItem {
 		try {
 			if (!Settings.dontLoadAvas)
 				ava = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(avaurl));
+		} catch (InterruptedException e) {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -78,7 +78,7 @@ public class PlaylistsScreen extends MainScreen {
 					}
 					VikaTouch.loading = false;
 				} catch (InterruptedException e) {
-					// ...
+					return;
 				} catch (Throwable e) {
 					VikaTouch.error(e, ErrorCodes.PLAYLISTSLOAD);
 				}

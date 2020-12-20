@@ -68,8 +68,8 @@ public abstract class MainScreen extends ScrollableCanvas {
 		topPanelH = DisplayUtils.compact ? 24 : 58;
 		bottomPanelH = DisplayUtils.compact ? 24 : 50;
 		int dw = DisplayUtils.width;
-		boolean showBottomPanel = !Settings.hideBottom && VikaTouch.accessToken != null && !DisplayUtils.compact && ((this instanceof NewsScreen)
-				|| (this instanceof DialogsScreen) || (this instanceof MenuScreen));
+		boolean showBottomPanel = !Settings.hideBottom && VikaTouch.accessToken != null && !DisplayUtils.compact
+				&& ((this instanceof NewsScreen) || (this instanceof DialogsScreen) || (this instanceof MenuScreen));
 		// fills
 		ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 		g.fillRect(0, 0, dw, topPanelH);
@@ -91,12 +91,10 @@ public abstract class MainScreen extends ScrollableCanvas {
 		g.setFont(Font.getFont(0, 0, Font.SIZE_LARGE));
 		g.setGrayScale(255);
 		if (title != null) {
-			if(DisplayUtils.compact || !hasBackButton || keysMode) {
-				g.drawString(title, 10,
-						topPanelH / 2 - g.getFont().getHeight() / 2, 0);
+			if (DisplayUtils.compact || !hasBackButton || keysMode) {
+				g.drawString(title, 10, topPanelH / 2 - g.getFont().getHeight() / 2, 0);
 			} else {
-				g.drawString(title, 72,
-						topPanelH / 2 - g.getFont().getHeight() / 2, 0);
+				g.drawString(title, 72, topPanelH / 2 - g.getFont().getHeight() / 2, 0);
 			}
 		}
 		Font f = Font.getFont(0, 0, Font.SIZE_SMALL);

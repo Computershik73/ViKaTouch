@@ -98,7 +98,7 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 
 					VikaTouch.loading = false;
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					return;
 				} catch (Exception e) {
 					e.printStackTrace();
 					VikaTouch.error(e, ErrorCodes.VIDEOSLOAD);

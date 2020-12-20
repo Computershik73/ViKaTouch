@@ -26,6 +26,8 @@ public class CaptchaObject extends JSONBase {
 	public Image getImage() {
 		try {
 			return VikaUtils.downloadImage(captchaimg);
+		} catch (InterruptedException e) {
+			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

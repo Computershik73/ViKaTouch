@@ -22,24 +22,21 @@ import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
 public class FriendsScreen extends MainScreen implements INextLoadable {
-/*
-	private static String loadingStr;
-
-	private static String membersStr;
-
-	private static String friendsStr;
-
-	private static String peopleStr;
-
-	public FriendsScreen() {
-		if (loadingStr == null) {
-			loadingStr = TextLocal.inst.get("title.loading");
-			peopleStr = TextLocal.inst.get("title.people");
-			friendsStr = TextLocal.inst.get("title.friends");
-			membersStr = TextLocal.inst.get("title.members");
-		}
-	}
-	*/
+	/*
+	 * private static String loadingStr;
+	 * 
+	 * private static String membersStr;
+	 * 
+	 * private static String friendsStr;
+	 * 
+	 * private static String peopleStr;
+	 * 
+	 * public FriendsScreen() { if (loadingStr == null) { loadingStr =
+	 * TextLocal.inst.get("title.loading"); peopleStr =
+	 * TextLocal.inst.get("title.people"); friendsStr =
+	 * TextLocal.inst.get("title.friends"); membersStr =
+	 * TextLocal.inst.get("title.members"); } }
+	 */
 
 	public boolean isReady() {
 		return uiItems != null;
@@ -161,6 +158,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 				} catch (InterruptedException e) {
+					return;
 				} catch (Exception e) {
 					e.printStackTrace();
 					VikaTouch.error(e, ErrorCodes.FRIENDSLOAD);

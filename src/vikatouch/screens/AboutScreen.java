@@ -22,7 +22,7 @@ public class AboutScreen extends ScrollableCanvas {
 	private static String backStr;
 	private static String publisherStr;
 	private static String devsStr;
-	//private static String teamStr;
+	// private static String teamStr;
 	private String testersStr;
 
 	public AboutScreen() {

@@ -51,7 +51,7 @@ public class VoiceRecorder extends MainScreen {
 	public void drawHUD(Graphics g) {
 	}
 
-	public void startRecord() {
+	public void startRecord() throws InterruptedException {
 		try {
 			String var1 = VikaUtils.downloadE(new URLBuilder("docs.getUploadServer").addField("type", "audio_message"));
 			uploadUrl = var1.substring(var1.indexOf("upload_url") + 13, var1.length() - 3);
@@ -76,7 +76,7 @@ public class VoiceRecorder extends MainScreen {
 		}
 	}
 
-	public void sendRecord() {
+	public void sendRecord() throws InterruptedException {
 		try {
 			rec.commit();
 

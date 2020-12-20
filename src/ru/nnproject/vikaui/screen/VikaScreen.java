@@ -36,4 +36,8 @@ public abstract class VikaScreen {
 			DisplayUtils.canvas.draw();
 		}
 	}
+	
+	public void onLeave() {
+		
+	}
 }

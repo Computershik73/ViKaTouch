@@ -25,7 +25,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	public GroupsScreen() {
 		super();
 		VikaTouch.loading = true;
-		//groupsStr = TextLocal.inst.get("title.groups");
+		// groupsStr = TextLocal.inst.get("title.groups");
 	}
 
 	public boolean isReady() {
@@ -48,7 +48,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	public int totalItems;
 	public boolean canLoadMore = true;
 
-	//private String groupsStr;
+	// private String groupsStr;
 
 	protected String formattedTitle;
 
@@ -57,7 +57,8 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	private String name2;
 
 	public void loadGroups(final int from, final int id, final String name1, final String name2) {
-		formattedTitle = TextLocal.inst.get("title.groups");;
+		formattedTitle = TextLocal.inst.get("title.groups");
+		;
 		scrolled = 0;
 		uiItems = null;
 		fromG = from;
@@ -154,8 +155,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 					VikaTouch.sendLog(err + " null " + e.getMessage());
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					VikaTouch.sendLog(err + " inter " + e.getMessage());
-					e.printStackTrace();
+					return;
 				} catch (Throwable e) {
 					e.printStackTrace();
 					VikaTouch.sendLog(err + " th " + e.getMessage());

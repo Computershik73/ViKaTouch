@@ -105,6 +105,8 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 					}
 
 					VikaTouch.loading = false;
+				} catch (InterruptedException e) {
+					return;
 				} catch (Exception e) {
 					e.printStackTrace();
 					VikaTouch.error(e, ErrorCodes.DOCUMENTSLOAD);

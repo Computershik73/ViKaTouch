@@ -86,6 +86,8 @@ public class FriendItem extends JSONUIItem {
 		try {
 			if (!Settings.dontLoadAvas)
 				ava = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(fixJSONString(json.optString("photo_50"))));
+		} catch (InterruptedException e) {
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

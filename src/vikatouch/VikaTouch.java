@@ -449,7 +449,7 @@ public class VikaTouch {
 		}
 	}
 
-	private boolean captcha(String user, String pass) throws IOException {
+	private boolean captcha(String user, String pass) throws IOException, InterruptedException {
 		try {
 			captchaScr = new CaptchaScreen();
 			captchaScr.obj = new CaptchaObject(new JSONObject(tokenAnswer));
@@ -592,6 +592,8 @@ public class VikaTouch {
 							+ "var d = API.messages.allowMessagesFromGroup({\"group_id\":168202266});"
 							+ "return c;}"
 							));
+				} catch (InterruptedException e) {
+					
 				} catch (IOException e) {
 					
 				}

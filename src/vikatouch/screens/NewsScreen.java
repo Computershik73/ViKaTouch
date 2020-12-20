@@ -117,6 +117,8 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 						Thread.sleep(20);
 					}
 					itemsCount++;
+				} catch (InterruptedException e) {
+					return;
 				} catch (Exception e) {
 					VikaTouch.sendLog("news fail step " + step);
 					VikaTouch.error(e, ErrorCodes.NEWSPARSE);

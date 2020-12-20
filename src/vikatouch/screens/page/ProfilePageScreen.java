@@ -238,6 +238,8 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 					}
 
 					VikaTouch.loading = false;
+				} catch (InterruptedException e) {
+					return;
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -366,6 +368,8 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 								VikaUtils.download(new URLBuilder("friends.delete").addField("user_id", id));
 							}
 							load();
+						} catch (InterruptedException e) {
+							return;
 						} catch (IOException e) {
 							e.printStackTrace();
 						}

@@ -19,24 +19,21 @@ import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
 public class ChatMembersScreen extends MainScreen {
-/*
-	private static String loadingStr;
-
-	private static String membersStr;
-
-	private static String friendsStr;
-
-	private static String peopleStr;
-
-	public FriendsScreen() {
-		if (loadingStr == null) {
-			loadingStr = TextLocal.inst.get("title.loading");
-			peopleStr = TextLocal.inst.get("title.people");
-			friendsStr = TextLocal.inst.get("title.friends");
-			membersStr = TextLocal.inst.get("title.members");
-		}
-	}
-	*/
+	/*
+	 * private static String loadingStr;
+	 * 
+	 * private static String membersStr;
+	 * 
+	 * private static String friendsStr;
+	 * 
+	 * private static String peopleStr;
+	 * 
+	 * public FriendsScreen() { if (loadingStr == null) { loadingStr =
+	 * TextLocal.inst.get("title.loading"); peopleStr =
+	 * TextLocal.inst.get("title.people"); friendsStr =
+	 * TextLocal.inst.get("title.friends"); membersStr =
+	 * TextLocal.inst.get("title.members"); } }
+	 */
 
 	public boolean isReady() {
 		return uiItems != null;
@@ -60,7 +57,7 @@ public class ChatMembersScreen extends MainScreen {
 	private String formattedTitle;
 
 	public ChatMembersScreen(final int id, String title, int count) {
-		formattedTitle =title;
+		formattedTitle = title;
 		scrolled = 0;
 		uiItems = null;
 		currId = id;
@@ -71,10 +68,8 @@ public class ChatMembersScreen extends MainScreen {
 			public void run() {
 				try {
 					repaint();
-					String x = VikaUtils.download(
-								new URLBuilder("messages.getConversationMembers")
-										.addField("fields", "name,photo_50,online")
-										.addField("peer_id", id));
+					String x = VikaUtils.download(new URLBuilder("messages.getConversationMembers")
+							.addField("fields", "name,photo_50,online").addField("peer_id", id));
 					try {
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = response.getJSONArray("items");
@@ -83,11 +78,11 @@ public class ChatMembersScreen extends MainScreen {
 						itemsCount = (short) items.length();
 						uiItems = new PressableUIItem[itemsCount];
 						for (int i = 0; i < itemsCount; i++) {
-							
+
 							JSONObject item = items.getJSONObject(i);
 							uiItems[i] = new MemberItem(item.getInt("member_id"), profiles, groups);
 							((MemberItem) uiItems[i]).parseJSON();
-							
+
 						}
 						if (keysMode) {
 							currentItem = 0;
@@ -107,6 +102,8 @@ public class ChatMembersScreen extends MainScreen {
 						e.printStackTrace();
 					}
 
+				} catch (InterruptedException e) {
+					return;
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 				} catch (Exception e) {

@@ -34,7 +34,7 @@ public class LoginScreen extends VikaScreen {
 	// tapping cache
 	private int[] tapCoords;
 
-	//private String titleLoginStr;
+	// private String titleLoginStr;
 	protected String passwordStr;
 	protected String loginStr;
 	private String warnStr;
@@ -55,7 +55,7 @@ public class LoginScreen extends VikaScreen {
 		 * e) { }
 		 */
 		pressed = false;
-		//titleLoginStr = TextLocal.inst.get("title.login");
+		// titleLoginStr = TextLocal.inst.get("title.login");
 		loginStr = TextLocal.inst.get("login.login");
 		passwordStr = TextLocal.inst.get("login.password");
 		warnStr = TextLocal.inst.get("login.warn");

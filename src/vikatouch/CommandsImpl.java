@@ -219,8 +219,7 @@ public class CommandsImpl
 	{
 		try
 		{
-			if(s instanceof MainScreen)
-				((MainScreen) s).onLeave();
+			s.onLeave();
 		}
 		catch (Exception e)
 		{ }

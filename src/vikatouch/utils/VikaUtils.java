@@ -5,6 +5,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
@@ -149,7 +151,7 @@ public final class VikaUtils {
 		return parseShortTime(paramLong);
 	}
 
-	public static String music(final String url) throws IOException {
+	public static String music(final String url) throws IOException, InterruptedException {
 		if (VikaTouch.musicIsProxied) {
 			final String x = URLDecoder.encode(url);
 			return download("http://vikamobile.ru:80/tokenproxy.php?" + x);
@@ -158,11 +160,11 @@ public final class VikaUtils {
 		}
 	}
 
-	public static String download(URLBuilder url) throws IOException {
+	public static String download(URLBuilder url) throws IOException, InterruptedException {
 		return download(url.toString());
 	}
 
-	public static String downloadE(URLBuilder url) throws VikaNetworkError {
+	public static String downloadE(URLBuilder url) throws VikaNetworkError, InterruptedException  {
 		try {
 			return download(url);
 		} catch (IOException e) {
@@ -170,7 +172,7 @@ public final class VikaUtils {
 		}
 	}
 	
-	public static String download(String url) throws IOException {
+	public static String download(String url) throws IOException, InterruptedException  {
 		if(VikaTouch.isS40()) {
 			synchronized(downloadLock) {
 				return download0(url);
@@ -180,7 +182,7 @@ public final class VikaUtils {
 		}
 	}
 
-	private static String download0(String var1) throws IOException {
+	private static String download0(String var1) throws IOException, InterruptedException  {
 		try {
 			ByteArrayOutputStream var4 = null;
 			var4 = new ByteArrayOutputStream();
@@ -367,7 +369,7 @@ public final class VikaUtils {
 		return ImageUtils.resize(image, width, height, !Settings.fastImageScaling, !Settings.fastImageScaling);
 	}
 	
-	public static Image downloadImage(String url) throws IOException {
+	public static Image downloadImage(String url) throws IOException, InterruptedException {
 		if(VikaTouch.isS40()) {
 			synchronized(downloadLock) {
 				return downloadImage0(url);
@@ -377,7 +379,7 @@ public final class VikaUtils {
 		}
 	}
 
-	private static Image downloadImage0(String url) throws IOException {
+	private static Image downloadImage0(String url) throws IOException, InterruptedException {
 		try {
 			if (!Settings.https)
 				// url = replace(url, "https:", "http:");
@@ -794,7 +796,7 @@ public final class VikaUtils {
 		return list;
 	}
 
-	public static void sendPhoto(int peerId, byte[] var5, String text) throws IOException {
+	public static void sendPhoto(int peerId, byte[] var5, String text) throws IOException, InterruptedException {
 		String var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
 				+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=5.120");
 
@@ -803,8 +805,8 @@ public final class VikaUtils {
 		aString163 = VikaUtils.replace(aString163, "\\/", "/");
 		Hashtable var202 = new Hashtable();
 
-		HttpMultipartRequest var200 = new HttpMultipartRequest("http://vikamobile.ru:80/uploaa.php?" + aString163,
-				var202, "upload_field", "bb2.jpg", "multipart/form-data", var5);
+		HttpMultipartRequest var200 = new HttpMultipartRequest(aString163,
+				var202, "photo", "bb2.jpg", "multipart/form-data", var5);
 
 		byte[] var218 = var200.send();
 
@@ -816,7 +818,7 @@ public final class VikaUtils {
 		String var175 = var13.substring(var13.indexOf("}]") + 2);
 
 		String var10000 = var17 = VikaUtils.download(VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + var17
-				+ "&server=" + var217 + "&hash=" + var175 + "&access_token=" + VikaTouch.accessToken + "&v=5.60");
+				+ "&server=" + var217 + "&hash=" + var175 + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
 
 		var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
 
@@ -851,4 +853,90 @@ public final class VikaUtils {
 		}
 		VikaUtils.download(url);
 	}
+
+	public static byte[] photoData;
+	
+	 private static String uploadPhoto(String var0, String var1) throws Exception {
+	      var0 = var0 + "&" + var1 + "=";
+	      String var2 = "[{\":!}]";
+
+	      for(int var3 = 0; var3 < var2.length(); ++var3) {
+	         char var4 = var2.charAt(var3);
+	         String var5 = Integer.toHexString(var4);
+	         if(var5.length() < 2) {
+	            var5 = "0" + var5;
+	         }
+
+	         int var6 = var0.indexOf(63) + 1;
+	         var0 = var0.substring(0, var6) + replace(var0.substring(var6), "" + var4, "%" + var5);
+	      }
+
+	      HttpConnection var24 = null;
+	      InputStream var25 = null;
+	      String var26 = "\r\n";
+	      String var7 = "7d73991305de";
+	      String var8 = "--" + var7;
+	      String var9 = var26 + var8 + var26 + "Content-Disposition: form-data; name=\"" + var1 + "\"; filename=\"img.png\"" + var26 + "Content-Type: image/png" + var26 + var26;
+	      String var10 = var26 + var8 + "--" + var26;
+	      byte[] var11 = var9.getBytes("utf-8");
+	      byte[] var12 = var10.getBytes("utf-8");
+	      byte[] var13 = new byte[photoData.length + var11.length + var12.length];
+	      System.arraycopy(var11, 0, var13, 0, var11.length);
+	      System.arraycopy(photoData, 0, var13, var11.length, photoData.length);
+	      System.arraycopy(var12, 0, var13, var11.length + photoData.length, var12.length);
+	      photoData = null;
+
+	      byte[] var23;
+	      try {
+	         var24 = (HttpConnection)Connector.open(var0);
+	         var24.setRequestMethod("POST");
+	         var24.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + var7);
+	         var24.setRequestProperty("Content-Length", "" + var13.length);
+	         OutputStream var14 = var24.openOutputStream();
+	         var14.write(var13);
+	         var14.close();
+	         int var15 = var24.getResponseCode();
+	         if(var15 != 200) {
+	            throw new Exception();
+	         }
+
+	         var25 = var24.openInputStream();
+	         byte[] var16 = new byte[1024];
+	         ByteArrayOutputStream var17 = new ByteArrayOutputStream();
+	         int var18 = 1;
+
+	         while(var18 > 0) {
+	            var18 = var25.read(var16);
+	            if(var18 > 0) {
+	               var17.write(var16, 0, var18);
+	            }
+	         }
+
+	         var23 = var17.toByteArray();
+	      } catch (Exception var22) {
+	         var23 = null;
+	      }
+
+	      try {
+	         var25.close();
+	      } catch (Exception var21) {
+	         ;
+	      }
+
+	      try {
+	         var24.close();
+	      } catch (Exception var20) {
+	         ;
+	      }
+
+	      var13 = var23;
+	      String var27 = null;
+
+	      try {
+	         var27 = new String(var13, "utf-8");
+	      } catch (UnsupportedEncodingException var19) {
+	         var19.printStackTrace();
+	      }
+	      return var27;
+	   }
 }

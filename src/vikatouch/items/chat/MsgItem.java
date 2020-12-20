@@ -404,6 +404,9 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 						}
 						}
 					} else {
+						if(s1.equalsIgnoreCase("@all") || s1.startsWith("@all") || s1.equalsIgnoreCase("@online")) {
+							g.setColor(0x2a5885);
+						}
 						g.drawString(s1, textX, y + h1 / 2 + h1 * (i + (showName ? 1 : 0)), 0);
 					}
 				

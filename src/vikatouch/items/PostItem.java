@@ -469,6 +469,8 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 						VikaTouch.popup(new InfoPopup("Ошибка", null));
 					}
 					liked = val;
+				} catch (InterruptedException ex) {
+					return;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

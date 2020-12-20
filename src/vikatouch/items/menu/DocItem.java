@@ -259,6 +259,8 @@ public class DocItem extends JSONUIItem implements ISocialable {
 						DocsScreen.current.previewX = (DisplayUtils.width - w) / 2;
 						DocsScreen.current.previewY = (DisplayUtils.height - h) / 2;
 						DocsScreen.current.previewImage = VikaUtils.resize(img, w, h);
+					} catch (InterruptedException e) {
+						return;
 					} catch (Exception e) {
 						DocsScreen.current.isPreviewShown = false;
 						VikaTouch.error(e, ErrorCodes.DOCPREVIEWLOAD);
