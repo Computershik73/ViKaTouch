@@ -313,7 +313,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 
 	public void onMenuItemPress(int i) {
 
-		if (id == VikaTouch.integerUserId) {
+		if (id == VikaTouch.integerUserId || uiItems.length == 7) {
 			switch (i) {
 			case 0:
 				FriendsScreen fs = new FriendsScreen();
