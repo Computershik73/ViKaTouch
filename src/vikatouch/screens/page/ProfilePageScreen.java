@@ -312,44 +312,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 	}
 
 	public void onMenuItemPress(int i) {
-
-		if (id == VikaTouch.integerUserId || uiItems.length == 7) {
-			switch (i) {
-			case 0:
-				FriendsScreen fs = new FriendsScreen();
-				VikaTouch.setDisplay(fs, 1);
-				fs.loadFriends(0, id, wname, name2);
-				break;
-			case 1:
-				NewsScreen newsScr = new NewsScreen();
-				newsScr.newsSource = id;
-				newsScr.titleStr = name;
-				VikaTouch.setDisplay(newsScr, 1);
-				newsScr.loadPosts();
-				break;
-			case 2:
-				GroupsScreen gs = new GroupsScreen();
-				VikaTouch.setDisplay(gs, 1);
-				gs.loadGroups(0, id, wname, name2);
-				break;
-			case 4:
-				MusicScreen.open(id, wname, name2);
-				break;
-			case 5:
-				VideosScreen vs = new VideosScreen();
-				VikaTouch.setDisplay(vs, 1);
-				vs.load(0, id, wname, name2);
-				break;
-			case 6:
-				if (docs > 0) {
-					DocsScreen dc = new DocsScreen();
-					VikaTouch.setDisplay(dc, 1);
-					dc.loadDocs(0, id, wname, name2);
-				}
-				break;
-			}
-		} else {
-			switch (i) {
+		switch (i) {
 			case 0:
 				if (closed) {
 				} // юзается как алерт, ничего не делаем.
@@ -408,9 +371,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 					dc.loadDocs(0, id, wname, name2);
 				}
 				break;
-			}
 		}
-
 	}
 
 	public void drawHUD(Graphics g) {
