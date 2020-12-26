@@ -24,7 +24,7 @@ public class UIThread extends Thread {
 			// Thread.yield();
 			try {
 				Thread.sleep(1000 / canvas.getFPSLimit());
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				// VikaTouch.sendLog("UI thread exit");
 				return;
 			}

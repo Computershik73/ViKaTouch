@@ -31,6 +31,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
+import vikatouch.VikaFileManager;
 import vikatouch.VikaTouch;
 import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.items.chat.IMessage;
@@ -788,120 +789,19 @@ public class ChatScreen extends MainScreen {
 					}
 
 					IMenu m = new EmptyMenu() {
-						private List list;
 
 						public void onMenuItemPress(int i) {
 							try {
 								if (i == 0) {
 									if (fotka) {
-										try {
-											if (System.getProperty("kemulator.filemanagerapi.version") != null) {
-												AbstractFileManager fm = FileManagerAPI.getInstance("Открыть файл",
-														FileManagerAPI.NATIVE);
-												fm.setFilterExtensions(new String[] { ".jpg", ".jpeg", ".png" },
-														"Любое изображение");
-												if (fm.openFile()) {
-													FileConnection fc = fm.getFileConnection();
-													DataInputStream in = fc.openDataInputStream();
-													int len = (int) fc.fileSize();
-													byte[] var5 = new byte[len];
-													in.readFully(var5, 0, len);
-													VikaUtils.sendPhoto(ChatScreen.this.peerId, var5,
-															ChatScreen.this.inputText);
-													ChatScreen.this.inputText = "";
-													return;
-												} else {
-													return;
-												}
-											}
-										} catch (Throwable e) {
-											e.printStackTrace();
-										}
-										list = VikaUtils.selectPhoto("main");
-										VikaTouch.setDisplay(list);
-										final Command back = new Command("Назад", 2, 0);
-										final Command dirBack = new Command("Назад", 2, 0);
-										final Command preview = new Command("Предпросмотр", 8, 1);
-										list.addCommand(back);
-										list.addCommand(List.SELECT_COMMAND);
-										list.addCommand(preview);
-										list.setCommandListener(new CommandListener() {
-
-											public void commandAction(Command arg0, Displayable arg1) {
-												if (arg0 == List.SELECT_COMMAND) {
-													int var194 = list.getSelectedIndex();
-													int var196;
-													byte[] var5 = null;
-													ByteArrayOutputStream var201 = new ByteArrayOutputStream();
-
-													try {
-														FileConnection var197 = (FileConnection) Connector.open(
-																String.valueOf(VikaUtils.filesVector.elementAt(var194)),
-																1);
-														// заходить в папку
-														if (var197.isDirectory()) {
-															list = VikaUtils.selectPhoto(var197.getURL());
-															VikaTouch.setDisplay(list);
-															list.addCommand(dirBack);
-															list.addCommand(List.SELECT_COMMAND);
-															list.addCommand(preview);
-															list.setCommandListener(this);
-															return;
-														}
-														DataInputStream var220 = null;
-														if (!var197.exists()) {
-															list.append("File " + var197.getName() + " doesn't exist!",
-																	(Image) null);
-														} else {
-															var196 = (int) var197.fileSize();
-															if (var196 > 600 * 1024) {
-																// файл весит больше 600 кб
-																VikaTouch.popup(new InfoPopup(
-																		"Фото весит более 600кб, и не может быть отправлено.",
-																		null));
-																return;
-															}
-															var220 = var197.openDataInputStream();
-															var5 = new byte[var196];
-															var220.readFully(var5, 0, var196);
-														}
-														var220.close();
-														var201.close();
-														VikaUtils.sendPhoto(ChatScreen.this.peerId, var5,
-																ChatScreen.this.inputText);
-														ChatScreen.this.inputText = "";
-														list = null;
-														VikaTouch.setDisplay(VikaTouch.canvas);
-													} catch (Exception e) {
-													}
-												} else if (arg0 == back) {
-													VikaTouch.setDisplay(VikaTouch.canvas);
-												} else if (arg0 == preview) {
-													int var194 = list.getSelectedIndex();
-													try {
-														VikaTouch.appInst.platformRequest(
-																(String) VikaUtils.filesVector.elementAt(var194));
-													} catch (Exception e) {
-													}
-													return;
-												} else if (arg0 == dirBack) {
-													list = VikaUtils.selectPhoto("main");
-
-													VikaTouch.setDisplay(list);
-													list.addCommand(back);
-													list.addCommand(List.SELECT_COMMAND);
-													list.addCommand(preview);
-													list.setCommandListener(this);
-													return;
-												}
-											}
-
-										});
+										VikaFileManager.chatPhoto(ChatScreen.this);
 									} else {
 										VikaTouch.popup(new InfoPopup("не реализовано", null));
 									}
 								} else if (i == 1) {
 									VikaTouch.popup(new InfoPopup("не реализовано", null));
+								} else if(i == 2) {
+									VikaTouch.setDisplay(new CameraScreen(ChatScreen.this), 1);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -909,10 +809,15 @@ public class ChatScreen extends MainScreen {
 						}
 					};
 					OptionItem[] oi = new OptionItem[2];
+					if(fotka) {
+						oi = new OptionItem[3];
+					}
 					try {
 						oi[0] = new OptionItem(m, TextLocal.inst.get("msg.attach.memory"), IconsManager.DEVICE, 0, 50);
-						oi[1] = new OptionItem(m, TextLocal.inst.get("msg.attach.album"), IconsManager.ATTACHMENT, 1,
-								50);
+						oi[1] = new OptionItem(m, TextLocal.inst.get("msg.attach.album"), IconsManager.ATTACHMENT, 1, 50);
+						if(fotka) {
+							oi[2] = new OptionItem(m, TextLocal.inst.get("msg.attach.camera"), IconsManager.CAMERA, 2, 50);
+						}
 					} catch (Exception e) {
 					}
 					VikaTouch.popup(new ContextMenu(oi));

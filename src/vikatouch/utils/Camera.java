@@ -63,6 +63,7 @@ public final class Camera {
 		} catch (SecurityException localSecurityException) {
 			arrayOfByte = null;
 		} catch (Throwable localThrowable) {
+			localThrowable.printStackTrace();
 			arrayOfByte = videoControl.getSnapshot(null);
 		}
 		return arrayOfByte;

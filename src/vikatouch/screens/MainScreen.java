@@ -26,10 +26,11 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 
 	protected void scrollHorizontally(int deltaX) {
-		/*
-		 * if(deltaX < -7) { VikaTouch.inst.cmdsInst.commandAction(10, this); }
-		 * if(deltaX > 7) { VikaTouch.inst.cmdsInst.commandAction(11, this); }
-		 */
+		if (deltaX < -7) {
+			VikaTouch.inst.cmdsInst.command(10, this);
+		} else if (deltaX > 7) {
+			VikaTouch.inst.cmdsInst.command(11, this);
+		}
 	}
 
 	public void release(int x, int y) {

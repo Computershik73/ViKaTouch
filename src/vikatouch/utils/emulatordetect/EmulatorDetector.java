@@ -46,7 +46,7 @@ public class EmulatorDetector {
 					isEmulator = true;
 				}
 			}
-			if(jvendor.equalsIgnoreCase("The Android Project")) {
+			if(jvendor != null && jvendor.equalsIgnoreCase("The Android Project")) {
 				isEmulator = true;
 				emulatorType = EM_J2L;
 				supportsHttps = true;

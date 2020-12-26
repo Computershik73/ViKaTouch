@@ -145,6 +145,8 @@ public class Settings {
 
 	public static boolean fastImageScaling;
 
+	public static boolean oldlcduiFm;
+
 	public static final String[] supportedLanguages = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ"};
 
 	public static final String[] langs =              {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"};

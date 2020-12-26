@@ -40,6 +40,10 @@ public final class VikaTouchApp extends MIDlet implements Runnable {
 	}
 
 	public void run() {
-		VikaTouch.inst.threadRun();
+		try {
+			VikaTouch.inst.threadRun();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -594,7 +594,7 @@ public class VikaTouch {
 							));
 				} catch (InterruptedException e) {
 					
-				} catch (IOException e) {
+				} catch (Exception e) {
 					
 				}
 			}
@@ -776,22 +776,38 @@ public class VikaTouch {
 	}
 
 	public void start() {
+		int code = 0;
+		try {
 		DisplayUtils.checkdisplay();
+		code = 1;
 		Settings.loadDefaultSettings();
+		code = 2;
 		EmulatorDetector.checkForEmulator(mobilePlatform);
+		code = 3;
 		Settings.loadSettings();
+		code = 4;
 		canvas = new VikaCanvasInst();
+		code = 5;
 		setDisplay(canvas);
+		code = 6;
 		mainThread = new Thread(appInst);
+		code = 7;
 		if(Settings.drawMaxPriority) {
 			mainThread.setPriority(Thread.NORM_PRIORITY);
 		} else {
 			mainThread.setPriority(Thread.MAX_PRIORITY);
 		}
+		code = 8;
 		mainThread.start();
+		code = 9;
 		uiThread = new UIThread(canvas);
+		code = 10;
 		uiThread.start();
+		code = 11;
 		DisplayUtils.checkdisplay();
+		} catch (NullPointerException e) {
+			throw new NullPointerException(""+ code);
+		}
 	}
 
 	public void threadRun() {

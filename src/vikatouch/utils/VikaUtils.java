@@ -22,6 +22,8 @@ import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
 
+import org.json.me.JSONObject;
+
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import tube42.lib.imagelib.ImageUtils;
 import vikamobilebase.HttpMultipartRequest;
@@ -800,6 +802,8 @@ public final class VikaUtils {
 		String var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
 				+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=5.120");
 
+		System.out.println(var11);
+
 		String aString163 = var11.substring(var11.indexOf("upload_url\":\"") + 13, var11.indexOf("\",\"user_id"));
 
 		aString163 = VikaUtils.replace(aString163, "\\/", "/");
@@ -810,16 +814,22 @@ public final class VikaUtils {
 
 		byte[] var218 = var200.send();
 
+		System.out.println(new String(var218));
+
 		String var13;
-		String var217 = (var13 = new String(var218)).substring(0, var13.indexOf("[{"));
+		JSONObject json = new JSONObject(new String(var218));
+		String photo = json.getString("photo");
+		String server = "" + json.getInt("server");
+		String hash =  json.getString("hash");
+		String var217;
 
-		String var17 = var13.substring(var13.indexOf("[{"), var13.indexOf("}]") + 2);
+		String var17;
 
-		String var175 = var13.substring(var13.indexOf("}]") + 2);
+		String var175;
 
-		String var10000 = var17 = VikaUtils.download(VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + var17
-				+ "&server=" + var217 + "&hash=" + var175 + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
-
+		String var10000 = var17 = VikaUtils.download(VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo)
+				+ "&server=" + server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
+		System.out.println(var10000);
 		var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
 
 		var175 = var17.substring(var17.indexOf("\"id") + 5, var17.indexOf("owner_id") - 2);
