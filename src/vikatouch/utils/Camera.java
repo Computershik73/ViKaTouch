@@ -41,6 +41,7 @@ public final class Camera {
 		videoControl.setVisible(true);
 		player.prefetch();
 		player.start();
+		VikaTouch.sendLog("camera show start " + videoControl.toString() + " source: " + videoControl.getSourceWidth()+"x" + videoControl.getSourceHeight() + " display: " + videoControl.getDisplayWidth()+"x"+videoControl.getDisplayHeight());
 	}
 
 	public static void stop() throws MediaException {

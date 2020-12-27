@@ -206,9 +206,11 @@ public class FileManagerScreen extends ScrollableCanvas {
 		boolean hasgallery = true;
 		boolean hascard = true;
 		boolean hasc = true;
+		boolean hasroot = true;
 		String gallery = System.getProperty("fileconn.dir.photos");
 		String memcard = System.getProperty("fileconn.dir.memorycard");
 		String c = "file:///c:/";
+		String root = "file:///";
 		if(memcard == null || memcard.length() == 0) {
 			hascard = false;
 		}
@@ -223,6 +225,9 @@ public class FileManagerScreen extends ScrollableCanvas {
 			len++;
 		}
 		if(hasgallery) {
+			len++;
+		}
+		if(hasroot) {
 			len++;
 		}
 		uiItems = new PressableUIItem[len];
@@ -241,6 +246,11 @@ public class FileManagerScreen extends ScrollableCanvas {
 			if(hasgallery) {
 				uiItems[i] = new FolderItem(this, gallery, "Gallery");
 				hasgallery = false;
+				continue;
+			}
+			if(hasroot) {
+				uiItems[i] = new FolderItem(this, root, "Root folder");
+				hasroot = false;
 				continue;
 			}
 		}

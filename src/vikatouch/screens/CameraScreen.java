@@ -11,6 +11,7 @@ import javax.microedition.media.MediaException;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
+import tube42.lib.imagelib.ImageUtils;
 import vikatouch.VikaTouch;
 import vikatouch.utils.Camera;
 import vikatouch.utils.VikaUtils;
@@ -23,8 +24,10 @@ public class CameraScreen extends VikaScreen {
 	private Image img;
 	private ChatScreen chat;
 	private String error;
+	private short lwidth;
 
 	public CameraScreen(ChatScreen chatScreen) {
+		lwidth = DisplayUtils.width;
 		this.chat = chatScreen;
 		try {
 			Camera.init(VikaTouch.canvas);
@@ -37,6 +40,20 @@ public class CameraScreen extends VikaScreen {
 	}
 
 	public void draw(Graphics g) {
+		DisplayUtils.checkdisplay();
+		if(DisplayUtils.width != lwidth && !failed && !takenPhoto && !takePhotoFailed) {
+			onLeave();
+			try {
+				Camera.init(VikaTouch.canvas);
+				Camera.show(DisplayUtils.width, DisplayUtils.height, 50);
+			} catch (Exception e) {
+				failed = true;
+				error = VikaUtils.replace(VikaUtils.replace(e.toString(), "Exception", ""), "javax.microedition.media.", "");
+				e.printStackTrace();
+			}
+		}
+		lwidth = DisplayUtils.width;
+		
 		g.setColor(0);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
 		g.setColor(0x505050);
@@ -83,6 +100,12 @@ public class CameraScreen extends VikaScreen {
 	}
 
 	private void send() {
+
+		try {
+			Camera.stop();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		final int l = chat.peerId;
 		VikaTouch.loading = true;
 		VikaTouch.setDisplay(chat, 1);
@@ -131,17 +154,18 @@ public class CameraScreen extends VikaScreen {
 			error = e.toString();
 			e.printStackTrace();
 		}
-		if ((arrayOfByte != null) && (arrayOfByte.length > 0)) {
-			VikaUtils.photoData = arrayOfByte;
-			takenPhoto = true;
-			img = Image.createImage(VikaUtils.photoData, 0, arrayOfByte.length);
-		} else {
-			takePhotoFailed = true;
-		}
+
 		try {
 			Camera.stop();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		if ((arrayOfByte != null) && (arrayOfByte.length > 0)) {
+			VikaUtils.photoData = arrayOfByte;
+			takenPhoto = true;
+			img = ImageUtils.resize(Image.createImage(VikaUtils.photoData, 0, arrayOfByte.length), DisplayUtils.width, DisplayUtils.height, false, false);
+		} else {
+			takePhotoFailed = true;
 		}
 	}
 
