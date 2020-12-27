@@ -821,19 +821,18 @@ public final class VikaUtils {
 		String var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
 				+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=5.120");
 
-		System.out.println(var11);
-
 		String aString163 = var11.substring(var11.indexOf("upload_url\":\"") + 13, var11.indexOf("\",\"user_id"));
 
 		aString163 = VikaUtils.replace(aString163, "\\/", "/");
+
+		if(!Settings.https)
+			aString163 = VikaUtils.replace(aString163, "https:", "http:");
 		Hashtable var202 = new Hashtable();
 
 		HttpMultipartRequest var200 = new HttpMultipartRequest(aString163,
 				var202, "photo", "bb2.jpg", "multipart/form-data", var5);
 
 		byte[] var218 = var200.send();
-
-		System.out.println(new String(var218));
 
 		JSONObject json = new JSONObject(new String(var218));
 		String photo = json.getString("photo");
@@ -847,7 +846,6 @@ public final class VikaUtils {
 
 		String var10000 = var17 = VikaUtils.download(VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo)
 				+ "&server=" + server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
-		System.out.println(var10000);
 		var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
 
 		var175 = var17.substring(var17.indexOf("\"id") + 5, var17.indexOf("owner_id") - 2);
@@ -880,6 +878,69 @@ public final class VikaUtils {
 			}
 		}
 		VikaUtils.download(url);
+	}
+	
+	public static void sendCameraPhoto(int peerId) throws Exception {
+		String var11;
+		try {
+			var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
+					+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=5.120");
+		} catch (Exception e) {
+			throw new Exception("a " + e.toString());
+		}
+		String aString163 = var11.substring(var11.indexOf("upload_url\":\"") + 13, var11.indexOf("\",\"user_id"));
+
+		aString163 = VikaUtils.replace(aString163, "\\/", "/");
+		if(!Settings.https)
+			aString163 = VikaUtils.replace(aString163, "https:", "http:");
+
+		JSONObject json;
+		try {
+			json = new JSONObject(new String(uploadPhoto(aString163, "photo")));
+		} catch (Exception e) {
+			throw new Exception(e.toString() + " c " + aString163);
+		}
+		String photo = json.getString("photo");
+		String server = "" + json.getInt("server");
+		String hash =  json.getString("hash");
+
+		String var17;
+
+		String var10000;
+
+		try {
+			var10000 = var17 = VikaUtils.download(VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo)
+					+ "&server=" + server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
+		} catch (Exception e) {
+			throw new Exception("d " + e.toString());
+		}
+		String ownerid = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
+
+		String photoid = var17.substring(var17.indexOf("\"id") + 5, var17.indexOf("owner_id") - 2);
+		URLBuilder url;
+		if (peerId < 2000000000L) {
+			url = new URLBuilder("messages.send")
+			.addField("user_id", peerId)
+			.addField("random_id", new Random().nextInt(100))
+			.addField("attachment", "photo" + ownerid + "_" + photoid);
+		} else if(peerId < 0l) {
+			peerId = -peerId;
+			url = new URLBuilder("messages.send")
+			.addField("group_id", peerId)
+			.addField("random_id", new Random().nextInt(100))
+			.addField("attachment", "photo" + ownerid + "_" + photoid);
+		} else {
+			peerId -= 2000000000L;
+			url = new URLBuilder("messages.send")
+			.addField("chat_id", peerId)
+			.addField("random_id", new Random().nextInt(100))
+			.addField("attachment", "photo" + ownerid + "_" + photoid);
+		}
+		try {
+			VikaUtils.download(url);
+		} catch (Exception e) {
+			throw new Exception("x " + e.toString());
+		}
 	}
 
 	public static byte[] photoData;
@@ -943,6 +1004,7 @@ public final class VikaUtils {
 	         var23 = var17.toByteArray();
 	      } catch (Exception var22) {
 	         var23 = null;
+	    	  throw new Exception("ud " + var22.toString());
 	      }
 
 	      try {

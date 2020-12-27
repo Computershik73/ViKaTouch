@@ -49,7 +49,8 @@ public class CameraScreen extends VikaScreen {
 			g.drawString("Access fail. "+error, 0, 0, 0);
 		}
 		if (takenPhoto) {
-			g.drawImage(img, 0, 0, 0);
+			if(img != null)
+				g.drawImage(img, 0, 0, 0);
 			/*if(keysMode) {
 				g.drawString("Send", DisplayUtils.width - (g.getFont().stringWidth("Send") + 2), DisplayUtils.height - (g.getFont().getHeight() + 2), 0);
 			} else{*/
@@ -82,24 +83,34 @@ public class CameraScreen extends VikaScreen {
 	}
 
 	private void send() {
-		try {
-			VikaUtils.sendPhoto(chat.peerId, VikaUtils.photoData, chat.inputText);
-			chat.inputText = "";
-			VikaUtils.photoData = null;
-			VikaTouch.setDisplay(chat, 1);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		final int l = chat.peerId;
+		VikaTouch.loading = true;
+		VikaTouch.setDisplay(chat, 1);
+		img= null;
+		new Thread() {
+			public void run() {
+				VikaTouch.loading = true;
+				try {
+					VikaTouch.loading = true;
+					VikaUtils.sendCameraPhoto(l);
+					VikaTouch.loading = false;
+				} catch (Throwable e) {
+					VikaTouch.sendLog("camerasend: " +e.toString());
+				}
+				VikaTouch.loading = false;
+			}
+		}.start();
 	}
 
 	public void release(int x, int y) {
 		if (x > DisplayUtils.width / 2 - 25 && x < DisplayUtils.width / 2 + 25 && y > DisplayUtils.height - 50
 				&& !failed && !takenPhoto && !takePhotoFailed) {
 			takePhoto();
+			return;
 		}
-		if(y > DisplayUtils.height - 50 && x > DisplayUtils.width / - 50 && takenPhoto && !takePhotoFailed) {
+		if(y > DisplayUtils.height - 50 && x > DisplayUtils.width - 50 && takenPhoto && !takePhotoFailed) {
 			send();
+			return;
 		}
 		if (x < 50 && y > DisplayUtils.height - 50) {
 			try {

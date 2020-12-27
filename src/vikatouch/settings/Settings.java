@@ -315,13 +315,13 @@ public class Settings {
 		if(nightTheme) {
 			try {
 				IconsManager.ac = ImageFxUtils.transformARGB(IconsManager.ac, 0, -255, -255, -255);
-			} catch (NullPointerException e) {
+			} catch (Exception e) {
 				
 			}
 		} else {
 			try {
 				IconsManager.ac = Image.createImage("/ava.png");
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -329,6 +329,7 @@ public class Settings {
 	}
 
 	public static void loadDefaultSettings() {
+		nightTheme = false;
 		setted = false;
 		animateTransition = false;
 		proxy = false;

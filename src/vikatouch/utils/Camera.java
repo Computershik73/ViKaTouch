@@ -6,6 +6,8 @@ import javax.microedition.media.MediaException;
 import javax.microedition.media.Player;
 import javax.microedition.media.control.VideoControl;
 
+import vikatouch.VikaTouch;
+
 public final class Camera {
 	private static Player player;
 	private static VideoControl videoControl;
@@ -13,8 +15,16 @@ public final class Camera {
 	public static void init(Canvas paramCanvas) throws IOException, MediaException {
 		if (player == null) {
 			try {
-				player = Manager.createPlayer("capture://image");
-			} catch (Exception localException) {
+				try {
+					if(VikaTouch.mobilePlatform.indexOf("S60") != -1 ) {
+						player = Manager.createPlayer("capture://video");
+					} else {
+						player = Manager.createPlayer("capture://image");
+					}
+				} catch (Exception e) {
+					player = Manager.createPlayer("capture://image");
+				}
+			} catch (Exception e) {
 				player = Manager.createPlayer("capture://video");
 			}
 			player.realize();
@@ -59,7 +69,7 @@ public final class Camera {
 		byte[] arrayOfByte = null;
 		try {
 			arrayOfByte = videoControl
-					.getSnapshot("width=" + width + "&height=" + height);
+					.getSnapshot(/*"width=" + width + "&height=" + height*/null);
 		} catch (SecurityException localSecurityException) {
 			arrayOfByte = null;
 		} catch (Throwable localThrowable) {
