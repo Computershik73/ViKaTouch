@@ -50,7 +50,10 @@ public class CameraScreen extends VikaScreen {
 		}
 		if (takenPhoto) {
 			g.drawImage(img, 0, 0, 0);
-			g.drawString("Send", DisplayUtils.width - (g.getFont().stringWidth("Send") + 2), DisplayUtils.height - (g.getFont().getHeight() + 2), 0);
+			/*if(keysMode) {
+				g.drawString("Send", DisplayUtils.width - (g.getFont().stringWidth("Send") + 2), DisplayUtils.height - (g.getFont().getHeight() + 2), 0);
+			} else{*/
+			g.drawImage(IconsManager.ico[IconsManager.REPOST], DisplayUtils.width - 25, DisplayUtils.height - 38, 0);
 		}
 		if (takePhotoFailed) {
 			g.drawString("Fail. "+error, 0, 0, 0);
@@ -94,6 +97,9 @@ public class CameraScreen extends VikaScreen {
 		if (x > DisplayUtils.width / 2 - 25 && x < DisplayUtils.width / 2 + 25 && y > DisplayUtils.height - 50
 				&& !failed && !takenPhoto && !takePhotoFailed) {
 			takePhoto();
+		}
+		if(y > DisplayUtils.height - 50 && x > DisplayUtils.width / - 50 && takenPhoto && !takePhotoFailed) {
+			send();
 		}
 		if (x < 50 && y > DisplayUtils.height - 50) {
 			try {

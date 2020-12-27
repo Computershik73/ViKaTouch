@@ -87,7 +87,7 @@ public class Settings {
 
 	public static boolean hideBottom = false;
 	
-	public static boolean nightTheme = true;
+	public static boolean nightTheme = false;
 
 	// Не нуждаются сохранению (м.б передумаем)
 	public static boolean threaded;
