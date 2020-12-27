@@ -62,8 +62,6 @@ public class CameraScreen extends VikaScreen {
 				} else {
 					butx= (DisplayUtils.width - 38);
 					buty=(DisplayUtils.height-24)/2;
-					backX=(DisplayUtils.width - 38);
-					backY=DisplayUtils.height-38;
 				}
 			} catch (Exception e) {
 				failed = true;
@@ -86,7 +84,7 @@ public class CameraScreen extends VikaScreen {
 			g.drawImage(IconsManager.ico[IconsManager.CAMERA], butx, buty , 0);
 		}
 		
-		g.drawImage(IconsManager.ico[IconsManager.BACK], backX, backY, 0);
+		g.drawImage(IconsManager.ico[IconsManager.BACK], 0, DisplayUtils.height - 38, 0);
 		if (failed) {
 			g.drawString("Access fail. "+error, 0, 0, 0);
 		}
@@ -151,7 +149,7 @@ public class CameraScreen extends VikaScreen {
 	}
 
 	public void release(int x, int y) {
-		if (x > butx - 25 && x < butx + 75 && y > buty - 50 && y< buty+50
+		if (x > DisplayUtils.width / 2 - 25 && x < DisplayUtils.width / 2 + 25 && y > DisplayUtils.height - 50
 				&& !failed && !takenPhoto && !takePhotoFailed) {
 			takePhoto();
 			return;
@@ -160,7 +158,7 @@ public class CameraScreen extends VikaScreen {
 			send();
 			return;
 		}
-		if ((x < backX && y > backY - 50 && backX<100) ||  (x > backX &&  y > backY - 50 && backY>DisplayUtils.height - 50)) {
+		if (x < 50 && y > DisplayUtils.height - 50) {
 			try {
 				Camera.stop();
 			} catch (MediaException e) {
