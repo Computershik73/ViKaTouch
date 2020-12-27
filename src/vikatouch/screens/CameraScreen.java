@@ -25,10 +25,19 @@ public class CameraScreen extends VikaScreen {
 	private ChatScreen chat;
 	private String error;
 	private short lwidth;
+	int butx;
+	int buty;
+	int backX;
+	int backY;
 
 	public CameraScreen(ChatScreen chatScreen) {
 		lwidth = DisplayUtils.width;
 		this.chat = chatScreen;
+		butx=(DisplayUtils.width - 24) / 2;
+		buty=DisplayUtils.height - 38;
+		backX=0;
+		backY=DisplayUtils.height - 38;
+		//buty=360 - 38;
 		try {
 			Camera.init(VikaTouch.canvas);
 			Camera.show(DisplayUtils.width, DisplayUtils.height, 50);
@@ -41,26 +50,40 @@ public class CameraScreen extends VikaScreen {
 
 	public void draw(Graphics g) {
 		DisplayUtils.checkdisplay();
+		
 		if(DisplayUtils.width != lwidth && !failed && !takenPhoto && !takePhotoFailed) {
 			onLeave();
 			try {
 				Camera.init(VikaTouch.canvas);
-				Camera.show(DisplayUtils.width, DisplayUtils.height, 50);
+				Camera.show(DisplayUtils.width-50, DisplayUtils.height, 50);
+				if (vikatouch.utils.Camera.videoControl.getSourceWidth()<vikatouch.utils.Camera.videoControl.getSourceHeight()) {
+					butx=(DisplayUtils.width - 24) / 2;
+					buty=DisplayUtils.height - 38;
+				} else {
+					butx= (DisplayUtils.width - 38);
+					buty=(DisplayUtils.height-24)/2;
+				}
 			} catch (Exception e) {
 				failed = true;
 				error = VikaUtils.replace(VikaUtils.replace(e.toString(), "Exception", ""), "javax.microedition.media.", "");
 				e.printStackTrace();
 			}
+			lwidth = DisplayUtils.width;
 		}
-		lwidth = DisplayUtils.width;
 		
 		g.setColor(0);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
 		g.setColor(0x505050);
 		g.setFont(Font.getFont(0, 0, 8));
 		if (!takenPhoto && !takePhotoFailed) {
-			g.drawImage(IconsManager.ico[IconsManager.CAMERA], (DisplayUtils.width - 24) / 2, DisplayUtils.height - 38, 0);
+			//if (vikatouch.utils.Camera.videoControl.getSourceWidth()<vikatouch.utils.Camera.videoControl.getSourceHeight()) {
+			//g.drawImage(IconsManager.ico[IconsManager.CAMERA], (DisplayUtils.width - 24) / 2, DisplayUtils.height - 38, 0);
+			//} else {
+			//	g.drawImage(IconsManager.ico[IconsManager.CAMERA], (DisplayUtils.width - 38), (DisplayUtils.height-24)/2 , 0);
+			//}
+			g.drawImage(IconsManager.ico[IconsManager.CAMERA], butx, buty , 0);
 		}
+		
 		g.drawImage(IconsManager.ico[IconsManager.BACK], 0, DisplayUtils.height - 38, 0);
 		if (failed) {
 			g.drawString("Access fail. "+error, 0, 0, 0);

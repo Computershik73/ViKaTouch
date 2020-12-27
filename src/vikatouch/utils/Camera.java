@@ -10,7 +10,7 @@ import vikatouch.VikaTouch;
 
 public final class Camera {
 	private static Player player;
-	private static VideoControl videoControl;
+	public static VideoControl videoControl;
 
 	public static void init(Canvas paramCanvas) throws IOException, MediaException {
 		if (player == null) {
@@ -36,7 +36,7 @@ public final class Camera {
 	}
 
 	public static void show(int width, int height, int i) throws MediaException {
-		videoControl.setDisplaySize(width, height - i);
+		videoControl.setDisplaySize(width-i, height - i);
 		videoControl.setDisplayLocation((width - videoControl.getDisplayWidth()) / 2, 0);
 		videoControl.setVisible(true);
 		player.prefetch();
