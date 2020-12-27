@@ -118,6 +118,7 @@ msg.edit=Edit
 msg.markasread=Read
 msg.reply=Reply
 msg.write=Write
+msg.attach.camera=Camera
 
 count.message=message
 count.messages=messages
@@ -212,6 +213,7 @@ settings.drawpriority=Maximum render priority
 settings.imagescaling=Image scaling quality
 settings.fast=Fast
 settings.filtered=Smooth
+settings.night=Night theme
 
 back=Back
 select=Select

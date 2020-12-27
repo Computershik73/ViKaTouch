@@ -68,7 +68,7 @@ public class ConfirmBox extends VikaNotice {
 			g.drawString(line1, DisplayUtils.width / 2 - f.stringWidth(line1) / 2, y + h1 / 2, 0);
 		if (line2 != null)
 			g.drawString(line2, DisplayUtils.width / 2 - f.stringWidth(line2) / 2, y + h1 + h1 / 2, 0);
-		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
+		ColorUtils.setcolor(g, ColorUtils.BUTTONTEXT);
 		g.drawString(okT, ((x + 20) + (DisplayUtils.width / 2 - 20)) / 2 - f.stringWidth(okT) / 2, y + h1 * 3 + h1 / 2,
 				0);
 		g.drawString(cancT, ((DisplayUtils.width / 2 + 20) + (DisplayUtils.width / 2 + 20 + (width / 2 - 40))) / 2

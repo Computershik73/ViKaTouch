@@ -978,6 +978,9 @@ public class ChatScreen extends MainScreen {
 			while (more) {
 				if (updStop)
 					return;
+				if(VikaTouch.canvas.currentScreen != this) {
+					return;
+				}
 				VikaCanvasInst.updColor = 0xffff0000;
 				long mid = ((IMessage) uiItems[uiItems.length - hasSpace - 1]).getMessageId();
 				final String x = VikaUtils.download(new URLBuilder("messages.getHistory")
@@ -1365,7 +1368,7 @@ public class ChatScreen extends MainScreen {
 
 		Font font1 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
 		g.setFont(font1);
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawString(title, 64, 10, 0);
 
 		Font font2 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);

@@ -203,7 +203,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 			}
 			Font df = Font.getFont(0, 0, 8);
 			g.setFont(df);
-			ColorUtils.setcolor(g, 0);
+			ColorUtils.setcolor(g, ColorUtils.TEXT);
 			y += 16;
 			for (int i = 0; i < description.length; i++) {
 				if (description[i] != null) {

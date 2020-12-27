@@ -97,7 +97,7 @@ public class DialogsScreen extends MainScreen {
 		if (Dialogs.dialogs == null) {
 			return;
 		}
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, 8));
 		itemsh = Dialogs.itemsCount * 63;
 		double multiplier = (double) DisplayUtils.height / 640.0;

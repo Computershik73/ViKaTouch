@@ -4,10 +4,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
+import javax.microedition.lcdui.Image;
 import javax.microedition.rms.RecordStore;
 
 import ru.nnproject.vikaui.utils.DisplayUtils;
+import ru.nnproject.vikaui.utils.images.IconsManager;
+import tube42.lib.imagelib.ImageFxUtils;
 import vikatouch.VikaTouch;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
@@ -82,6 +86,8 @@ public class Settings {
 	public static byte storage;
 
 	public static boolean hideBottom = false;
+	
+	public static boolean nightTheme = true;
 
 	// Не нуждаются сохранению (м.б передумаем)
 	public static boolean threaded;
@@ -207,6 +213,10 @@ public class Settings {
 					doubleBufferization = is.readBoolean();
 					drawMaxPriority = is.readBoolean();
 					fastImageScaling = is.readBoolean();
+					//2.8.14
+					//тут должна быть настройка с старым фм, но я передумал.
+					//2.8.15
+					nightTheme = is.readBoolean();
 				} catch (Exception e) {
 
 				}
@@ -229,6 +239,8 @@ public class Settings {
 		if(fpsLimit <= 0) {
 			fpsLimit = 60;
 		}
+
+		switchLightTheme();
 	}
 
 	public static void saveSettings() {
@@ -283,6 +295,10 @@ public class Settings {
 				os.writeBoolean(doubleBufferization);
 				os.writeBoolean(drawMaxPriority);
 				os.writeBoolean(fastImageScaling);
+				//2.8.14
+				//тут должна быть настройка с старым фм, но я передумал.
+				//2.8.15
+				os.writeBoolean(nightTheme);
 
 				final byte[] b = baos.toByteArray();
 				rs.addRecord(b, 0, b.length);
@@ -291,6 +307,23 @@ public class Settings {
 				rs.closeRecordStore();
 			} catch (Exception e) {
 				VikaTouch.error(e, ErrorCodes.SETSSAVE);
+			}
+		}
+	}
+	
+	public static void switchLightTheme() {
+		if(nightTheme) {
+			try {
+				IconsManager.ac = ImageFxUtils.transformARGB(IconsManager.ac, 0, -255, -255, -255);
+			} catch (NullPointerException e) {
+				
+			}
+		} else {
+			try {
+				IconsManager.ac = Image.createImage("/ava.png");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
@@ -324,7 +357,7 @@ public class Settings {
 		autoMarkAsRead = true;
 		fullscreen = true;
 		vibOnTouch = false;
-		dialogsRefreshRate = (byte) (isLiteOrSomething ? 0 : 2);
+		dialogsRefreshRate = (byte) (isLiteOrSomething ? 2 : 0);
 		notifmode = 2;
 		hideBottom = false;
 		region = "RU";

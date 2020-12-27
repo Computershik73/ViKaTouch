@@ -42,7 +42,7 @@ public class AboutScreen extends ScrollableCanvas {
 
 	public void draw(Graphics g) {
 		update(g);
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 
 		g.setFont(Font.getFont(0, Font.STYLE_BOLD, Font.SIZE_LARGE));
 
@@ -87,7 +87,7 @@ public class AboutScreen extends ScrollableCanvas {
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, DisplayUtils.height - 25, 640, 25);
 
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawString(backStr, 0, DisplayUtils.height - 24, 0);
 
 	}

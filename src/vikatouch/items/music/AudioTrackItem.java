@@ -73,7 +73,7 @@ public class AudioTrackItem extends JSONUIItem implements UIItem {
 		if (y + scrolled + itemDrawHeight < -50)
 			return;
 		// g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
-		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && selected) ? ColorUtils.BUTTONCOLOR : 0);
+		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && selected) ? ColorUtils.BUTTONCOLOR : ColorUtils.TEXT);
 		if (name != null)
 			g.drawString(name, 48, y, 0);
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);

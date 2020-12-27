@@ -98,7 +98,7 @@ public class FriendItem extends JSONUIItem {
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 			g.fillRect(0, y, DisplayUtils.width, itemDrawHeight);
 		}
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		if (selected) {
 			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		}

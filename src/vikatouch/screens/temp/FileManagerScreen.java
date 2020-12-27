@@ -13,6 +13,7 @@ import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
+import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
@@ -32,11 +33,11 @@ public class FileManagerScreen extends ScrollableCanvas {
 	private String sep;
 	private boolean root;
 	private FileConnection fileconn;
-	private int openCount;
 
 	public FileManagerScreen(ChatScreen chat) {
 		this.chat = chat;
 		load();
+		currentItem = 0;
 	}
 	
 	public void load() {
@@ -52,11 +53,13 @@ public class FileManagerScreen extends ScrollableCanvas {
 			if(x < 36) {
 				back();
 			} else if(x > DisplayUtils.width - 36) {
-				if(uiItems[currentItem] != null)
-					uiItems[currentItem].keyPressed(-7);
-			} else if(x > (DisplayUtils.width - 36) / 2) {
-				if(uiItems[currentItem] != null)
-					uiItems[currentItem].keyPressed(-5);
+				if(selectedItem != null && selectedItem.isImage()) {
+					selectedItem.keyPressed(-6);
+				}
+			} else if(x > (DisplayUtils.width - 36) / 2 && x < (DisplayUtils.width - 36) / 2 + 18) {
+				if(selectedItem != null && selectedItem.isImage()) {
+					send(selectedItem);
+				}
 			}
 		}
 		try {
@@ -79,10 +82,10 @@ public class FileManagerScreen extends ScrollableCanvas {
 	
 	public void press(int key) {
 		if(key == -6) {
-			back();
-		} else if(key == -7) {
 			if(uiItems[currentItem] != null)
-				uiItems[currentItem].keyPressed(-7);
+				uiItems[currentItem].keyPressed(-6);
+		} else if(key == -7) {
+			back();
 		} else if(key == -5) {
 			if(uiItems[currentItem] != null)
 				uiItems[currentItem].keyPressed(-5);
@@ -113,40 +116,46 @@ public class FileManagerScreen extends ScrollableCanvas {
 
 	public void draw(Graphics g) {
 		itemsh = itemsCount * (DisplayUtils.compact ? 24 : 50);
-		g.setColor(-1);
+		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
 		update(g);
-		g.setColor(0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, 8));
 		int y = 24;
-		for(int i = 0; i < itemsCount; i++) {
-			if(uiItems[i] != null) {
-				uiItems[i].paint(g, y, scrolled);
-				y += uiItems[i].getDrawHeight();
+		try {
+			for(int i = 0; i < itemsCount; i++) {
+				if(uiItems[i] != null) {
+					uiItems[i].paint(g, y, scrolled);
+					y += uiItems[i].getDrawHeight();
+				}
 			}
+		} catch (Exception e) {
+			
 		}
 		g.translate(0, -g.getTranslateY());
-		g.setColor(-1);
+		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, 0, DisplayUtils.width, 24);
-		g.setColor(0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawString(folder, 2, 0, 0);
-		//g.drawString("Connector.open count: " + openCount, 2, 240, 0);
 		if(keysMode) {
-			g.setColor(-1);
+			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 			g.fillRect(0, DisplayUtils.height - 24, DisplayUtils.width, 24);
 			g.setColor(0x505050);
-			g.drawString(TextLocal.inst.get("back"), 2, DisplayUtils.height - 18, 0);
+			g.drawString(TextLocal.inst.get("back"), DisplayUtils.width - 2 - g.getFont().stringWidth(TextLocal.inst.get("back")), DisplayUtils.height - 18, 0);
 			if(uiItems[currentItem] != null && ((FileManagerItem) uiItems[currentItem]).isImage()) {
 				g.drawString(TextLocal.inst.get("msg.send"), (DisplayUtils.width - g.getFont().stringWidth(TextLocal.inst.get("msg.send"))) / 2, DisplayUtils.height - 18, 0);
-				g.drawString(TextLocal.inst.get("count.view"), DisplayUtils.width - 2 - g.getFont().stringWidth(TextLocal.inst.get("count.view")), DisplayUtils.height - 18, 0);
+				g.drawString(TextLocal.inst.get("count.view"), 2, DisplayUtils.height - 18, 0);
 			} else if(uiItems[currentItem] != null && ((FileManagerItem) uiItems[currentItem]).isDirectory()) {
-				g.drawString(TextLocal.inst.get("select"), DisplayUtils.width - 2 - g.getFont().stringWidth(TextLocal.inst.get("select")), DisplayUtils.height - 18, 0);
+				g.drawString(TextLocal.inst.get("select"), 0, DisplayUtils.height - 18, 0);
 			}
 		} else {
-			g.setColor(-1);
+			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 			g.fillRect(0, DisplayUtils.height - 24, DisplayUtils.width, 24);
-			g.drawImage(IconsManager.ico[IconsManager.BACK], 2, DisplayUtils.height - 24, 0);
+			g.drawImage(IconsManager.selIco[IconsManager.BACK], 2, DisplayUtils.height - 24, 0);
 			if(selectedItem != null && selectedItem.isImage()) {
+				g.drawImage(IconsManager.selIco[IconsManager.APPLY], (DisplayUtils.width / 2) - 12, DisplayUtils.height - 24, 0);
+				g.drawImage(IconsManager.selIco[IconsManager.PHOTOS], DisplayUtils.width - 26, DisplayUtils.height - 24, 0);
+			} else {
 				g.drawImage(IconsManager.ico[IconsManager.APPLY], (DisplayUtils.width / 2) - 12, DisplayUtils.height - 24, 0);
 				g.drawImage(IconsManager.ico[IconsManager.PHOTOS], DisplayUtils.width - 26, DisplayUtils.height - 24, 0);
 			}
@@ -168,12 +177,9 @@ public class FileManagerScreen extends ScrollableCanvas {
 		if(!path.startsWith("file://")) {
 			path = "file://" + path;
 		}
+		FileConnection fileconn;
 		try {
-			if(fileconn == null) {
-				fileconn = (FileConnection) Connector.open(path);
-				openCount++;
-			} else
-				fileconn.setFileConnection(path);
+			fileconn = (FileConnection) Connector.open(path);
 			DataInputStream dis;
 			dis = fileconn.openDataInputStream();
 			byte[] bytes = new byte[(int) fileconn.fileSize()];
@@ -186,10 +192,14 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	public void selected(FileManagerItem fileManagerItem) {
+		if(selectedItem != null)
+			selectedItem.setSelected(false);
 		selectedItem = fileManagerItem;
+		selectedItem.setSelected(true);
 	}
 
 	public void root() {
+		selectedItem = null;
 		root = true;
 		folder = "main";
 		sep = System.getProperty("file.separator");
@@ -216,6 +226,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 			len++;
 		}
 		uiItems = new PressableUIItem[len];
+		currentItem = 0;
 		for(int i = 0; i < len; i++) {
 			if(hasc) {
 				uiItems[i] = new FolderItem(this, c, "C:");
@@ -240,6 +251,9 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	public void openFolder(String path) {
+		selectedItem = null;
+		uiItems = new PressableUIItem[30];
+		currentItem = 0;
 		boolean createNew = false;
 		root = false;
 		if(path.startsWith("file://"))
@@ -251,18 +265,12 @@ public class FileManagerScreen extends ScrollableCanvas {
 			createNew = true;
 		String parent = null;
 		try {
-			String z = fileconn.getPath().replace('\\', '/');
-			String y = //z.substring(z.lastIndexOf('/'))
-					z;
-			int x = y.lastIndexOf('/');
-			if(x == -1)
-				x = 0;
-			parent = fileconn.getPath().substring(x)+"/"+VikaUtils.replace(path, folder, "");
+			parent = VikaUtils.replace(path, folder, "");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if(folder.indexOf(path) != -1) {
-			parent = "";
+			parent = "../";
 			createNew = false;
 		}
 		folder = path;
@@ -274,7 +282,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 				if(fileconn == null || createNew || parent == null) {
 					System.out.println(path);
 					fileconn = (FileConnection) Connector.open("file://" + path);
-					openCount++;
 				} else {
 					neww = false;
 					System.out.println("not new "+parent);
@@ -283,41 +290,27 @@ public class FileManagerScreen extends ScrollableCanvas {
 			} catch (IllegalArgumentException e) {
 				System.out.println(path);
 				fileconn = (FileConnection) Connector.open("file://" + path);
-				openCount++;
 			}
-
-			Enumeration var3 = fileconn.list();
+			Enumeration var3 = fileconn.list("*", true);
 			int i = 0;
-			uiItems = new PressableUIItem[25];
 			for (; var3.hasMoreElements(); i++) {
 				String var4 = (String) var3.nextElement();
 				long var5;
-				if(i == 0) {
-					String y = path.substring(0,path.lastIndexOf('/'));
-					/*if(!neww) {
-						y = y.substring(0,y.lastIndexOf('/'));
-					}*/
-					System.out.println("y "+y);
-					int x = y.lastIndexOf('/')+1;
-					fileconn.setFileConnection(path.substring(x)+var4);
-				} else
-					if(var4.startsWith("/"))
-						fileconn.setFileConnection(var4.substring(1));
-					else
-						fileconn.setFileConnection(var4);
+				FileConnection fc = null;
 				if(var4.endsWith("/")) {
 					uiItems[i] = new FolderItem(this, path + var4, var4.substring(0, var4.length() - 1));
-				} else /* if(s40) {
+				} else if(s40) {
 					uiItems[i] = new FileItem(this, path + var4, var4, 0);
-				} else */if (fileconn.isDirectory()) {
+				} else if ((fc = (FileConnection) Connector.open("file://" + path + var4)).isDirectory()) {
 					uiItems[i] = new FolderItem(this, path + var4, var4.substring(0, var4.length() - 1));
 				} else {
-					var5 = fileconn.fileSize();
+					var5 = fc.fileSize();
 					uiItems[i] = new FileItem(this, path + var4, var4, (int)var5);
 				}
+				if(fc != null) {
+					fc.close();
+				}
 			}
-
-			fileconn.setFileConnection("");
 			itemsCount = (short) i;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -48,15 +48,15 @@ public class SplashScreen extends MainScreen {
 		if (dh >= 360) {
 			try {
 				g.drawImage(logo, hdw - 128, sy, 0);
-				g.setColor(0, 0, 0);
+				ColorUtils.setcolor(g, ColorUtils.TEXT);
 				g.drawString(header, hdw - f.stringWidth(header) / 2, sy + 260, 0);
 				ColorUtils.setcolor(g, ColorUtils.COLOR1);
 				g.fillRect(40, sy + 260 + f.getHeight() + 4, dw - 80, 16);
-				g.setGrayScale(255);
+				ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 				g.fillRect(42, sy + 260 + f.getHeight() + 4 + 2, dw - 84, 12);
 				ColorUtils.setcolor(g, ColorUtils.COLOR1);
 				g.fillRect(43, sy + 260 + f.getHeight() + 4 + 3, (dw - 86) * statesProgress[currState] / 100, 10);
-				g.setColor(0, 0, 0);
+				ColorUtils.setcolor(g, ColorUtils.TEXT);
 				g.drawString(statesNames[currState], hdw, sy + 260 + f.getHeight() + 4 + 20,
 						Graphics.TOP | Graphics.HCENTER);
 

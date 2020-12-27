@@ -111,7 +111,7 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 	}
 
 	public void draw(Graphics g) {
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, 8));
 		itemsh = itemsCount * 52;
 		try {

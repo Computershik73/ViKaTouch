@@ -22,6 +22,7 @@ public class CameraScreen extends VikaScreen {
 	private boolean takePhotoFailed;
 	private Image img;
 	private ChatScreen chat;
+	private String error;
 
 	public CameraScreen(ChatScreen chatScreen) {
 		this.chat = chatScreen;
@@ -30,6 +31,7 @@ public class CameraScreen extends VikaScreen {
 			Camera.show(DisplayUtils.width, DisplayUtils.height, 50);
 		} catch (Exception e) {
 			failed = true;
+			error = VikaUtils.replace(VikaUtils.replace(e.toString(), "Exception", ""), "javax.microedition.media.", "");
 			e.printStackTrace();
 		}
 	}
@@ -44,14 +46,14 @@ public class CameraScreen extends VikaScreen {
 		}
 		g.drawImage(IconsManager.ico[IconsManager.BACK], 0, DisplayUtils.height - 38, 0);
 		if (failed) {
-			g.drawString("Access fail.-", 0, 0, 0);
+			g.drawString("Access fail. "+error, 0, 0, 0);
 		}
 		if (takenPhoto) {
 			g.drawImage(img, 0, 0, 0);
 			g.drawString("Send", DisplayUtils.width - (g.getFont().stringWidth("Send") + 2), DisplayUtils.height - (g.getFont().getHeight() + 2), 0);
 		}
 		if (takePhotoFailed) {
-			g.drawString("Fail.", 0, 0, 0);
+			g.drawString("Fail. "+error, 0, 0, 0);
 		}
 	}
 
@@ -79,16 +81,13 @@ public class CameraScreen extends VikaScreen {
 	private void send() {
 		try {
 			VikaUtils.sendPhoto(chat.peerId, VikaUtils.photoData, chat.inputText);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+			chat.inputText = "";
+			VikaUtils.photoData = null;
+			VikaTouch.setDisplay(chat, 1);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		chat.inputText = "";
-		VikaUtils.photoData = null;
-		VikaTouch.setDisplay(chat, 1);
 	}
 
 	public void release(int x, int y) {
@@ -112,7 +111,7 @@ public class CameraScreen extends VikaScreen {
 		try {
 			arrayOfByte = Camera.takeSnapshot(DisplayUtils.width, DisplayUtils.height);
 		} catch (Throwable e) {
-
+			error = e.toString();
 			e.printStackTrace();
 		}
 		if ((arrayOfByte != null) && (arrayOfByte.length > 0)) {

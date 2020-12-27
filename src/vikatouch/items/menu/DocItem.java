@@ -153,7 +153,7 @@ public class DocItem extends JSONUIItem implements ISocialable {
 
 		if (time == null)
 			time = getTime();
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		if (name != null)
 			g.drawString(name, 73, y, 0);
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);

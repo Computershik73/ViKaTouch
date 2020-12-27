@@ -46,7 +46,7 @@ public abstract class FileManagerItem implements PressableUIItem {
 
 	public void paint(Graphics g, int y, int scrolled) {
 		g.setFont(Font.getFont(0, 0, 8));
-		g.setColor(0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawString(displayString, 36, y + 1, 0);
 		g.drawString(getSizeString() ,DisplayUtils.width - 2 - g.getFont().stringWidth(getSizeString()), y+2, 0);
 		g.drawImage(IconsManager.ico[getIcon()], 2, y + (drawHeight / 2 - 12), 0);
@@ -95,7 +95,7 @@ public abstract class FileManagerItem implements PressableUIItem {
 		if(key == -5) {
 			if(isImage())
 				fms.send(this);
-		} else if(key == -7) {
+		} else if(key == -6) {
 			if(isImage())
 				preview();
 		}

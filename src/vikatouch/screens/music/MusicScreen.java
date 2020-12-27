@@ -143,7 +143,7 @@ public class MusicScreen extends MainScreen {
 	}
 
 	public void draw(Graphics g) {
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, 8));
 		try {
 			update(g);

@@ -372,7 +372,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				}
 				g.drawString(time, textX - h1 + msgWidthInner - font.stringWidth(time), y + h1 / 2, 0);
 			}
-			ColorUtils.setcolor(g, ColorUtils.TEXT);
+			ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
 			try {
 			for (int i = 0; i < linesC; i++) {
 				if(drawText[i] != null) {
@@ -381,7 +381,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 						String[] arr1 = split(s1, '[');
 						int x = textX;
 						int yy = y + h1 / 2 + h1 * (i + (showName ? 1 : 0));
-						ColorUtils.setcolor(g, ColorUtils.TEXT);
+						ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
 						if(arr1[0] != null) {
 							g.drawString(arr1[0], x, yy, 0);
 						x += font.stringWidth(arr1[0]);
@@ -396,7 +396,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 								g.drawString(ping, x, yy, 0);
 								x += font.stringWidth(ping);
 								if(after != null) {
-									ColorUtils.setcolor(g, ColorUtils.TEXT);
+									ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
 									g.drawString(after, x, yy, 0);
 									x += font.stringWidth(after);
 								}

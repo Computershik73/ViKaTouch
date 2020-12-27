@@ -78,7 +78,7 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
-		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && s) ? ColorUtils.BUTTONCOLOR : 0);
+		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && s) ? ColorUtils.BUTTONCOLOR : ColorUtils.TEXT);
 		g.setFont((ScrollableCanvas.keysMode && s) ? sf : f);
 		int x = drawX + 48;
 		if (icon == -1)
@@ -106,16 +106,20 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 
 	public void keyPressed(int key) {
 		if (key == KEY_OK) {
-			OptionItem[] po = new OptionItem[opts.length];
-			for (int i = 0; i < opts.length; i++) {
-				if (noyes) {
-					po[i] = new OptionItem(this, opts[i], (i == 0) ? IconsManager.CLOSE : IconsManager.APPLY, i, 40);
-				} else {
-					po[i] = new OptionItem(this, opts[i],
-							(currentOption == i) ? IconsManager.APPLY : IconsManager.SETTINGS, i, 40);
+			if(noyes) {
+				ss.settingSet(optN, currentOption == 0 ? 1 : 0);
+			} else {
+				OptionItem[] po = new OptionItem[opts.length];
+				for (int i = 0; i < opts.length; i++) {
+					if (noyes) {
+						po[i] = new OptionItem(this, opts[i], (i == 0) ? IconsManager.CLOSE : IconsManager.APPLY, i, 40);
+					} else {
+						po[i] = new OptionItem(this, opts[i],
+								(currentOption == i) ? IconsManager.APPLY : IconsManager.SETTINGS, i, 40);
+					}
 				}
+				VikaTouch.popup(new AutoContextMenu(po));
 			}
-			VikaTouch.popup(new AutoContextMenu(po));
 		} else if (help != null && key == KEY_FUNC) {
 			VikaTouch.popup(new InfoPopup(help, null, TextLocal.inst.get("settings.help"), null));
 		}

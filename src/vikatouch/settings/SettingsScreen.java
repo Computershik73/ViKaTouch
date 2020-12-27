@@ -9,6 +9,7 @@ import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.items.menu.OnOffItem;
 import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.AboutScreen;
@@ -210,7 +211,8 @@ public class SettingsScreen extends MainScreen implements IMenu {
 				new SettingMenuItem(this, TextLocal.inst.get("settings.hidebottom"), IconsManager.DEVICE, 24,
 						oneitemheight, eOd, Settings.hideBottom ? 1 : 0, null, true),
 				new SettingMenuItem(this, TextLocal.inst.get("settings.vibontouch"), IconsManager.DEVICE, 19,
-						oneitemheight, eOd, Settings.vibOnTouch ? 1 : 0, null, true) };
+						oneitemheight, eOd, Settings.vibOnTouch ? 1 : 0, null, true),
+				new OnOffItem(this, TextLocal.inst.get("settings.night"), IconsManager.SETTINGS, 99, oneitemheight, Settings.nightTheme) };
 
 	}
 
@@ -401,6 +403,11 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case -105: {
 			switchList(msgList);
+			break;
+		}
+		case 99: {
+			Settings.nightTheme = !Settings.nightTheme;
+			Settings.switchLightTheme();
 			break;
 		}
 		case -1: {

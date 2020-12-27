@@ -129,6 +129,7 @@ msg.edit=Редактировать
 msg.markasread=Прочитано
 msg.reply=Ответить
 msg.write=Написать
+msg.attach.camera=Камера
 
 count.message=сообщение
 count.messages=сообщений
@@ -225,6 +226,7 @@ settings.drawpriority=Максимальный приоритет рендера
 settings.imagescaling=Качество масштаба изображений
 settings.fast=Быстрая
 settings.filtered=Плавная
+settings.night=Ночная тема
 
 back=Назад
 select=Выбрать

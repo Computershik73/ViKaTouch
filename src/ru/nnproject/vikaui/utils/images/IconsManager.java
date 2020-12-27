@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.microedition.lcdui.*;
 
+import vikatouch.settings.Settings;
+
 public class IconsManager {
 	
 	public static Image[] ico;
@@ -28,6 +30,7 @@ public class IconsManager {
 		acs = Image.createImage("/avas.png");
 		logoImg = Image.createImage("/vikahead.png");
 		backImg = Image.createImage("/back.png");
+		Settings.switchLightTheme();
 	}
 	
 	public static Image ac;

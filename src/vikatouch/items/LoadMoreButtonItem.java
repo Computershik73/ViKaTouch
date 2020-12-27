@@ -35,7 +35,7 @@ public class LoadMoreButtonItem implements PressableUIItem {
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 			g.fillRect(0, y, DisplayUtils.width, 40);
 		}
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(f);
 		g.drawString(text, DisplayUtils.width / 2 - (w / 2), y + (20 - (h / 2)), 0);
 	}

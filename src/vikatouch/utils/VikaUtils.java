@@ -185,11 +185,11 @@ public final class VikaUtils {
 	}
 
 	private static String download0(String var1) throws IOException, InterruptedException  {
+		ByteArrayOutputStream var4 = null;
+		HttpConnection var13 = null;
+		InputStream var14 = null;
 		try {
-			ByteArrayOutputStream var4 = null;
 			var4 = new ByteArrayOutputStream();
-			HttpConnection var13 = null;
-			InputStream var14 = null;
 			var13 = (HttpConnection) Connector.open(var1);
 			var13.setRequestMethod("GET");
 			var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
@@ -229,17 +229,18 @@ public final class VikaUtils {
 					var4.flush();
 				}
 			}
+			String str = null;
+			str = new String(var4.toByteArray(), "UTF-8");
+			return str;
+		} catch (NullPointerException e) {
+			throw new IOException(e.toString());
+		} finally {
 			if(var14 != null)
 				var14.close();
 			if(var13 != null)
 				var13.close();
 			if(var4 != null)
 				var4.close();
-			String str = null;
-			str = new String(var4.toByteArray(), "UTF-8");
-			return str;
-		} catch (NullPointerException e) {
-			throw new IOException(e.toString());
 		}
 	}
 
@@ -439,19 +440,28 @@ public final class VikaUtils {
 					if (var2.getHeaderField("Location") != null) {
 						url = var2.getHeaderField("Location");
 					} else {
-
+						con.close();
 						throw new IOException("" + respcode);
 					}
 				}
 
-				var2.close();
+				con.close();
 			} else if (con instanceof FileConnection) {
 				caching = false;
 				con.close();
+				DataInputStream dis = null;
+				FileConnection fcon = null;
+				try {
+					fcon = (FileConnection) Connector.open(url);
+					dis = fcon.openDataInputStream();
 
-				DataInputStream dis = ((FileConnection) Connector.open(url)).openDataInputStream();
-
-				return Image.createImage(dis);
+					return Image.createImage(dis);
+				} finally {
+						if(fcon != null)
+							fcon.close();
+						if(dis != null)
+							dis.close();
+					}
 
 				/*
 				 * try { int length = (int) fileconn.fileSize(); byte[] imgBytes = new
@@ -472,13 +482,22 @@ public final class VikaUtils {
 				 */
 			}
 			con.close();
-			DataInputStream cin = ((ContentConnection) Connector.open(url)).openDataInputStream();
-
-			Image image = Image.createImage(cin);
-			if (image != null && caching) {
-				ImageStorage.save(filename, image);
+			ContentConnection ccon = null;
+			DataInputStream cin = null;
+			try {
+				ccon = (ContentConnection) Connector.open(url);
+				cin = (ccon).openDataInputStream();
+				Image image = Image.createImage(cin);
+				if (image != null && caching) {
+					ImageStorage.save(filename, image);
+				}
+				return image;
+			} finally {
+				if(ccon != null)
+					ccon.close();
+				if(cin != null)
+					cin.close();
 			}
-			return image;
 		} catch (Throwable e) {
 			return VikaTouch.cameraImg;
 		}
@@ -816,7 +835,6 @@ public final class VikaUtils {
 
 		System.out.println(new String(var218));
 
-		String var13;
 		JSONObject json = new JSONObject(new String(var218));
 		String photo = json.getString("photo");
 		String server = "" + json.getInt("server");

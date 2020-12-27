@@ -20,7 +20,7 @@ public class FolderItem extends FileManagerItem {
 	}
 
 	public void keyPressed(int key) {
-		if(key == -5 || key == -7) {
+		if(key == -5 || key == -6) {
 			fms.openFolder(this.path);
 		}
 	}

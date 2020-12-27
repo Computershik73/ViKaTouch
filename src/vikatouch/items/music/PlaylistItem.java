@@ -58,7 +58,7 @@ public class PlaylistItem extends JSONUIItem {
 			g.drawImage(iconImg, 1, y + 1, 0);
 		}
 
-		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && selected) ? ColorUtils.BUTTONCOLOR : 0);
+		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && selected) ? ColorUtils.BUTTONCOLOR : ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, Font.SIZE_MEDIUM));
 		if (name != null)
 			g.drawString(name, 102, y + 12, 0);

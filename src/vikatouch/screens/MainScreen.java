@@ -70,11 +70,11 @@ public abstract class MainScreen extends ScrollableCanvas {
 		bottomPanelH = DisplayUtils.compact ? 24 : 50;
 		int dw = DisplayUtils.width;
 		boolean showBottomPanel = !Settings.hideBottom && VikaTouch.accessToken != null && !DisplayUtils.compact
-				&& ((this instanceof NewsScreen) || (this instanceof DialogsScreen) || (this instanceof MenuScreen));
+				&& (!(this instanceof SettingsScreen));
 		// fills
-		ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+		ColorUtils.setcolor(g, ColorUtils.TITLEPANELCOLOR);
 		g.fillRect(0, 0, dw, topPanelH);
-		ColorUtils.setcolor(g, -3);
+		ColorUtils.setcolor(g, ColorUtils.BOTTOMPANELCOLOR);
 		if (showBottomPanel)
 			g.fillRect(0, DisplayUtils.height - bottomPanelH, dw, bottomPanelH);
 
@@ -108,7 +108,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 					dw / 6 - 12, bpiy, 0);
 			g.drawImage(((this instanceof DialogsScreen) ? IconsManager.selIco : IconsManager.ico)[IconsManager.MSGS],
 					dw / 2 - 12, bpiy, 0);
-			g.drawImage(((this instanceof MenuScreen) ? IconsManager.selIco : IconsManager.ico)[IconsManager.MENU],
+			g.drawImage(((this instanceof MenuScreen || !(this instanceof DialogsScreen || this instanceof NewsScreen || this instanceof SettingsScreen)) ? IconsManager.selIco : IconsManager.ico)[IconsManager.MENU],
 					dw - dw / 6 - 12, bpiy, 0);
 
 			// unread count

@@ -261,7 +261,7 @@ public class VikaCanvasInst extends VikaCanvas {
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawString(busyStr, DisplayUtils.width / 2, DisplayUtils.height - 80, Graphics.TOP | Graphics.HCENTER);
 
-		if (frame != null) {
+		if (frame != null && !Settings.nightTheme) {
 			g.drawImage(frame, DisplayUtils.width / 2, DisplayUtils.height - 128, Graphics.TOP | Graphics.HCENTER);
 		}
 	}
@@ -344,7 +344,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 	public void tick() {
 		if (Display.getDisplay(VikaTouch.appInst).getCurrent() instanceof VikaCanvasInst) {
-			if (VikaTouch.loading && !(DisplayUtils.width < 240)) {
+			if (VikaTouch.loading && !(DisplayUtils.width < 240) && !Settings.nightTheme) {
 				updategif();
 				/*
 				 * if(Settings.animateTransition) { oldScreen = null; slide = 0; }

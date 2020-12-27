@@ -66,7 +66,7 @@ public class InfoPopup extends VikaNotice {
 				g.drawString(lines[i], DisplayUtils.width / 2 - f.stringWidth(lines[i]) / 2, y + hp + h1 / 2 + h1 * i,
 						0);
 		}
-		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
+		ColorUtils.setcolor(g, ColorUtils.BUTTONTEXT);
 		g.drawString(button, DisplayUtils.width / 2 - f.stringWidth(button) / 2,
 				y + hp + h1 * (linesCount + 1) + h1 / 2, 0); // кнопка
 	}

@@ -85,7 +85,7 @@ public class ConversationItem extends JSONUIItem {
 
 	public void paint(Graphics g, int y, int scrolled) {
 		Font font = Font.getFont(0, 0, 8);
-		ColorUtils.setcolor(g, 0);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 
 		if (selected) {
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
