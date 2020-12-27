@@ -1,5 +1,7 @@
 package vikatouch.utils;
 import java.io.IOException;
+
+import javax.microedition.amms.control.camera.FocusControl;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.media.Manager;
 import javax.microedition.media.MediaException;
@@ -11,6 +13,7 @@ import vikatouch.VikaTouch;
 public final class Camera {
 	private static Player player;
 	public static VideoControl videoControl;
+	private static FocusControl focusControl;
 
 	public static void init(Canvas paramCanvas) throws IOException, MediaException {
 		if (player == null) {
@@ -33,10 +36,28 @@ public final class Camera {
 			videoControl = (VideoControl) player.getControl("VideoControl");
 			videoControl.initDisplayMode(1, paramCanvas);
 		}
+		try {
+			if(Class.forName("javax.microedition.amms.control.camera.FocusControl") != null) {
+				focusControl = (FocusControl)player.getControl("javax.microedition.amms.control.camera.FocusControl");
+				/*if(focusControl.isMacroSupported()) {
+					focusControl.setMacro(true);
+				}*/
+				if(focusControl.isAutoFocusSupported()) {
+					focusControl.setFocus(FocusControl.AUTO);
+				}
+			}
+		} catch (Throwable e) {
+		}
+	}
+	
+	public static void autofocus() throws MediaException {
+		if(focusControl != null && focusControl.isAutoFocusSupported()) {
+			focusControl.setFocus(FocusControl.AUTO);
+		}
 	}
 
 	public static void show(int width, int height, int i) throws MediaException {
-		videoControl.setDisplaySize(width-i, height - i);
+		videoControl.setDisplaySize(width, height - i);
 		videoControl.setDisplayLocation((width - videoControl.getDisplayWidth()) / 2, 0);
 		videoControl.setVisible(true);
 		player.prefetch();

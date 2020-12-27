@@ -6,6 +6,7 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
 import javax.microedition.media.MediaException;
 
 import ru.nnproject.vikaui.screen.VikaScreen;
@@ -25,27 +26,35 @@ public class CameraScreen extends VikaScreen {
 	private ChatScreen chat;
 	private String error;
 	private short lwidth;
-	int butx;
-	int buty;
-	int backX;
-	int backY;
+	private boolean symbianPortrait;
+	private Image back;
+	private Image cam;
 
 	public CameraScreen(ChatScreen chatScreen) {
 		lwidth = DisplayUtils.width;
 		this.chat = chatScreen;
-		butx=(DisplayUtils.width - 24) / 2;
-		buty=DisplayUtils.height - 38;
-		backX=0;
-		backY=DisplayUtils.height - 38;
-		//buty=360 - 38;
+		if(DisplayUtils.width == 360) {
+			back = IconsManager.ico[IconsManager.BACK];
+			back = Image.createImage(back, 0, 0, back.getWidth(), back.getHeight(), Sprite.TRANS_ROT270);
+			cam = IconsManager.ico[IconsManager.CAMERA];
+			cam = Image.createImage(cam, 0, 0, cam.getWidth(), cam.getHeight(), Sprite.TRANS_ROT270);
+			symbianPortrait = true;
+		}
 		try {
 			Camera.init(VikaTouch.canvas);
-			Camera.show(DisplayUtils.width, DisplayUtils.height, 50);
-		} catch (Exception e) {
+			int x = 0;
+			int y = 50;
+			if(DisplayUtils.width == 640) {
+				x = 50;
+				y = 0;
+			}
+			Camera.show(DisplayUtils.width-x, DisplayUtils.height, y);
+		} catch (Throwable e) {
 			failed = true;
 			error = VikaUtils.replace(VikaUtils.replace(e.toString(), "Exception", ""), "javax.microedition.media.", "");
 			e.printStackTrace();
 		}
+		repaint();
 	}
 
 	public void draw(Graphics g) {
@@ -55,15 +64,14 @@ public class CameraScreen extends VikaScreen {
 			onLeave();
 			try {
 				Camera.init(VikaTouch.canvas);
-				Camera.show(DisplayUtils.width-50, DisplayUtils.height, 50);
-				if (vikatouch.utils.Camera.videoControl.getSourceWidth()<vikatouch.utils.Camera.videoControl.getSourceHeight()) {
-					butx=(DisplayUtils.width - 24) / 2;
-					buty=DisplayUtils.height - 38;
-				} else {
-					butx= (DisplayUtils.width - 38);
-					buty=(DisplayUtils.height-24)/2;
+				int x = 0;
+				int y = 50;
+				if(DisplayUtils.width == 640) {
+					x = 50;
+					y = 0;
 				}
-			} catch (Exception e) {
+				Camera.show(DisplayUtils.width-x, DisplayUtils.height, y);
+			} catch (Throwable e) {
 				failed = true;
 				error = VikaUtils.replace(VikaUtils.replace(e.toString(), "Exception", ""), "javax.microedition.media.", "");
 				e.printStackTrace();
@@ -79,12 +87,17 @@ public class CameraScreen extends VikaScreen {
 			//if (vikatouch.utils.Camera.videoControl.getSourceWidth()<vikatouch.utils.Camera.videoControl.getSourceHeight()) {
 			//g.drawImage(IconsManager.ico[IconsManager.CAMERA], (DisplayUtils.width - 24) / 2, DisplayUtils.height - 38, 0);
 			//} else {
-			//	g.drawImage(IconsManager.ico[IconsManager.CAMERA], (DisplayUtils.width - 38), (DisplayUtils.height-24)/2 , 0);
+			if(DisplayUtils.width == 640) {
+				g.drawImage(back != null ? back : IconsManager.ico[IconsManager.BACK], (DisplayUtils.width - 38), DisplayUtils.height - 38, 0);
+				g.drawImage(cam != null ? cam : IconsManager.ico[IconsManager.CAMERA], (DisplayUtils.width - 38), (DisplayUtils.height-24)/2, 0);
+			} else if(DisplayUtils.width == 240 || DisplayUtils.width == 320 || DisplayUtils.width == 360) {
+				g.drawImage(IconsManager.ico[IconsManager.BACK], 0, DisplayUtils.height - 38, 0);
+				g.drawImage(IconsManager.ico[IconsManager.CAMERA], (DisplayUtils.width - 38)/2, (DisplayUtils.height-38) , 0);
+			} 
 			//}
-			g.drawImage(IconsManager.ico[IconsManager.CAMERA], butx, buty , 0);
+			//g.drawImage(IconsManager.ico[IconsManager.CAMERA], butx, buty , 0);
 		}
 		
-		g.drawImage(IconsManager.ico[IconsManager.BACK], 0, DisplayUtils.height - 38, 0);
 		if (failed) {
 			g.drawString("Access fail. "+error, 0, 0, 0);
 		}
@@ -95,6 +108,7 @@ public class CameraScreen extends VikaScreen {
 				g.drawString("Send", DisplayUtils.width - (g.getFont().stringWidth("Send") + 2), DisplayUtils.height - (g.getFont().getHeight() + 2), 0);
 			} else{*/
 			g.drawImage(IconsManager.ico[IconsManager.REPOST], DisplayUtils.width - 25, DisplayUtils.height - 38, 0);
+			g.drawImage(IconsManager.ico[IconsManager.BACK], 0, DisplayUtils.height - 38, 0);
 		}
 		if (takePhotoFailed) {
 			g.drawString("Fail. "+error, 0, 0, 0);
@@ -149,16 +163,40 @@ public class CameraScreen extends VikaScreen {
 	}
 
 	public void release(int x, int y) {
-		if (x > DisplayUtils.width / 2 - 25 && x < DisplayUtils.width / 2 + 25 && y > DisplayUtils.height - 50
+
+		if(DisplayUtils.width == 640) {
+			if (x > DisplayUtils.width - 50 && y > ((DisplayUtils.height - 24) / 2 - 12) && y < ((DisplayUtils.height - 24) / 2 + 36)
+					&& !failed && !takenPhoto && !takePhotoFailed) {
+				takePhoto();
+				return;
+			}
+		} else if (x > DisplayUtils.width / 2 - 25 && x < DisplayUtils.width / 2 + 25 && y > DisplayUtils.height - 50
 				&& !failed && !takenPhoto && !takePhotoFailed) {
 			takePhoto();
 			return;
 		}
-		if(y > DisplayUtils.height - 50 && x > DisplayUtils.width - 50 && takenPhoto && !takePhotoFailed) {
-			send();
-			return;
+		if(y > DisplayUtils.height - 50 && x > DisplayUtils.width - 50) {
+			if(takenPhoto && !takePhotoFailed) {
+				send();
+				return;
+			} else if(!failed && !takenPhoto && !takePhotoFailed) {
+				try {
+					Camera.stop();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				VikaTouch.setDisplay(chat, 1);
+			}
 		}
-		if (x < 50 && y > DisplayUtils.height - 50) {
+		if(!failed && !takenPhoto && !takePhotoFailed && x < DisplayUtils.width - 50 && y < DisplayUtils.height - 50 && x > 50 && y > 50) { 
+			try {
+				Camera.autofocus();
+			} catch (MediaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (DisplayUtils.width != 640 && x < 50 && y > DisplayUtils.height - 50) {
 			try {
 				Camera.stop();
 			} catch (MediaException e) {
