@@ -12,7 +12,6 @@ import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
-import ru.nnproject.vikaui.utils.images.GifDecoder;
 import vikatouch.VikaTouch;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.temp.SplashScreen;
@@ -23,8 +22,6 @@ public class VikaCanvasInst extends VikaCanvas {
 	public VikaScreen currentScreen;
 	public VikaScreen lastTempScreen;
 	public boolean showCaptcha;
-	private Image frame;
-	private GifDecoder d;
 	public VikaNotice currentAlert;
 	public String currentInfo;
 	public long currentInfoStartTime;
@@ -49,22 +46,9 @@ public class VikaCanvasInst extends VikaCanvas {
 		this.setFullScreenMode(true);
 
 		DisplayUtils.canvas = this;
-
-		if(!(getWidth() < 240)) {
-			try {
-				InputStream in = this.getClass().getResourceAsStream("/loading.gif");
-				d = new GifDecoder();
-				int err = d.read(in);
-				if (err == 0) {
-					frame = d.getImage();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		//slide = 0.0d;
 		busyStr = "Busy...";
-		if(dontBuffer()) {
+		if(!dontBuffer()) {
 			if (!isDoubleBuffered()) {
 				System.out.println("db!");
 				image = Image.createImage(getWidth(), getHeight());
@@ -260,22 +244,6 @@ public class VikaCanvasInst extends VikaCanvas {
 	private void drawLoading(Graphics g) {
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawString(busyStr, DisplayUtils.width / 2, DisplayUtils.height - 80, Graphics.TOP | Graphics.HCENTER);
-
-		if (frame != null && !Settings.nightTheme) {
-			g.drawImage(frame, DisplayUtils.width / 2, DisplayUtils.height - 128, Graphics.TOP | Graphics.HCENTER);
-		}
-	}
-
-	public void updategif() {
-		int n = d.getFrameCount();
-		for (int i = 0; i < n; i++) {
-			frame = d.getFrame(i);
-			repaint();
-			try {
-				Thread.sleep(40);
-			} catch (Exception e) {
-			}
-		}
 	}
 
 	public void pointerPressed(int x, int y) {
@@ -344,12 +312,6 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 	public void tick() {
 		if (Display.getDisplay(VikaTouch.appInst).getCurrent() instanceof VikaCanvasInst) {
-			if (VikaTouch.loading && !(DisplayUtils.width < 240) && !Settings.nightTheme) {
-				updategif();
-				/*
-				 * if(Settings.animateTransition) { oldScreen = null; slide = 0; }
-				 */
-			}
 			/*
 			 * if(Settings.animateTransition) { double sliden = Math.abs(slide); if(sliden >
 			 * 0) { slide *= 0.78; if(sliden < 0.015) { oldScreen = null; slide = 0; } } }

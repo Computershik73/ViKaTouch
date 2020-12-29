@@ -107,7 +107,8 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	public void keyPressed(int key) {
 		if (key == KEY_OK) {
 			if(noyes) {
-				ss.settingSet(optN, currentOption == 0 ? 1 : 0);
+				currentOption = currentOption == 0 ? 1 : 0;
+				ss.settingSet(optN, currentOption);
 			} else {
 				OptionItem[] po = new OptionItem[opts.length];
 				for (int i = 0; i < opts.length; i++) {

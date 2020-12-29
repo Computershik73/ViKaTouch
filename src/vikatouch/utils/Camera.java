@@ -1,6 +1,8 @@
 package vikatouch.utils;
+
 import java.io.IOException;
 
+import javax.microedition.amms.control.camera.FlashControl;
 import javax.microedition.amms.control.camera.FocusControl;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.media.Manager;
@@ -13,22 +15,27 @@ import vikatouch.VikaTouch;
 public final class Camera {
 	private static Player player;
 	public static VideoControl videoControl;
-	private static FocusControl focusControl;
+	private static Object focusControl;
+	private static Object flashControl;
 
-	public static void init(Canvas paramCanvas) throws IOException, MediaException {
+	public static void init(Canvas paramCanvas, boolean selfieOn) throws IOException, MediaException {
 		if (player == null) {
-			try {
+			if (selfieOn) {
+				player = Manager.createPlayer("capture://devcam1");
+			} else {
 				try {
-					if(VikaTouch.mobilePlatform.indexOf("S60") != -1 ) {
-						player = Manager.createPlayer("capture://video");
-					} else {
+					try {
+						if (VikaTouch.mobilePlatform.indexOf("S60") != -1) {
+							player = Manager.createPlayer("capture://video");
+						} else {
+							player = Manager.createPlayer("capture://image");
+						}
+					} catch (Exception e) {
 						player = Manager.createPlayer("capture://image");
 					}
 				} catch (Exception e) {
-					player = Manager.createPlayer("capture://image");
+					player = Manager.createPlayer("capture://video");
 				}
-			} catch (Exception e) {
-				player = Manager.createPlayer("capture://video");
 			}
 			player.realize();
 		}
@@ -37,22 +44,47 @@ public final class Camera {
 			videoControl.initDisplayMode(1, paramCanvas);
 		}
 		try {
-			if(Class.forName("javax.microedition.amms.control.camera.FocusControl") != null) {
-				focusControl = (FocusControl)player.getControl("javax.microedition.amms.control.camera.FocusControl");
-				/*if(focusControl.isMacroSupported()) {
-					focusControl.setMacro(true);
-				}*/
-				if(focusControl.isAutoFocusSupported()) {
-					focusControl.setFocus(FocusControl.AUTO);
+			if (Class.forName("javax.microedition.amms.control.camera.FocusControl") != null) {
+				focusControl = (FocusControl) player.getControl("javax.microedition.amms.control.camera.FocusControl");
+				/*
+				 * if(((FocusControl)focusControl).isMacroSupported()) {
+				 * ((FocusControl)focusControl).setMacro(true); }
+				 */
+				if (((FocusControl) focusControl).isAutoFocusSupported()) {
+					((FocusControl) focusControl).setFocus(FocusControl.AUTO);
 				}
 			}
 		} catch (Throwable e) {
+			VikaTouch.sendLog("focuscontrol " + e.toString()+" " +focusControl);
+		}
+
+		try {
+			if (Class.forName("javax.microedition.amms.control.camera.FlashControl") != null) {
+				flashControl = (FlashControl) player.getControl("javax.microedition.amms.control.camera.FlashControl");
+				
+
+				((FlashControl) flashControl).setMode(FlashControl.AUTO);
+			}
+		} catch (Throwable e) {
+			VikaTouch.sendLog("flashcontrol " + e.toString()+" " +flashControl);
 		}
 	}
-	
+
+	public static void macrooff() throws MediaException {
+		if (focusControl != null && ((FocusControl) focusControl).isMacroSupported()) {
+			((FocusControl) focusControl).setMacro(false);
+		}
+	}
+
+	public static void macroon() throws MediaException {
+		if (focusControl != null && ((FocusControl) focusControl).isMacroSupported()) {
+			((FocusControl) focusControl).setMacro(true);
+		}
+	}
+
 	public static void autofocus() throws MediaException {
-		if(focusControl != null && focusControl.isAutoFocusSupported()) {
-			focusControl.setFocus(FocusControl.AUTO);
+		if (focusControl != null && ((FocusControl) focusControl).isAutoFocusSupported()) {
+			((FocusControl) focusControl).setFocus(FocusControl.AUTO);
 		}
 	}
 
@@ -62,7 +94,6 @@ public final class Camera {
 		videoControl.setVisible(true);
 		player.prefetch();
 		player.start();
-		VikaTouch.sendLog("camera show start " + videoControl.toString() + " source: " + videoControl.getSourceWidth()+"x" + videoControl.getSourceHeight() + " display: " + videoControl.getDisplayWidth()+"x"+videoControl.getDisplayHeight());
 	}
 
 	public static void stop() throws MediaException {
@@ -90,8 +121,7 @@ public final class Camera {
 	public static byte[] takeSnapshot(int width, int height) throws MediaException {
 		byte[] arrayOfByte = null;
 		try {
-			arrayOfByte = videoControl
-					.getSnapshot(/*"width=" + width + "&height=" + height*/null);
+			arrayOfByte = videoControl.getSnapshot(/* "width=" + width + "&height=" + height */null);
 		} catch (SecurityException localSecurityException) {
 			arrayOfByte = null;
 		} catch (Throwable localThrowable) {
@@ -99,5 +129,18 @@ public final class Camera {
 			arrayOfByte = videoControl.getSnapshot(null);
 		}
 		return arrayOfByte;
+	}
+
+	public static boolean setFlash(boolean flashOn) throws Exception {
+		if (flashControl == null) {
+			return false;
+		}
+		if (flashOn) {
+			((FlashControl) flashControl).setMode(FlashControl.FORCE);
+			return true;
+		} else {
+			((FlashControl) flashControl).setMode(FlashControl.OFF);
+			return false;
+		}
 	}
 }

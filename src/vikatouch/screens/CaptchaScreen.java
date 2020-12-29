@@ -28,6 +28,7 @@ public class CaptchaScreen extends VikaScreen {
 		captchaRequiredStr = TextLocal.inst.get("login.captcharequired");
 		captchaStr = TextLocal.inst.get("login.captcha");
 		switcher = false;
+		input = "";
 	}
 
 	public void draw(Graphics g) {
@@ -53,21 +54,20 @@ public class CaptchaScreen extends VikaScreen {
 		g.drawImage(image, x, 24, 0);
 	}
 
-	public final void press(short x, short y) {
+	public final void press(int x, int y) {
 		if (y > 100 && y < 140 && x < 240) {
 			if (thread != null)
 				thread.interrupt();
 			thread = new Thread() {
 				public void run() {
-					input = TextEditor.inputString(captchaStr, "", 32, false);
-					interrupt();
+					input = TextEditor.inputString(captchaStr, input, 32, false);
 				}
 			};
 			thread.start();
 		}
 	}
 
-	public final void release(short x, short y) {
+	public final void release(int x, int y) {
 		if (x > this.x && y > 150 && y < 186 && x < this.x + this.w) {
 			finished = true;
 			VikaTouch.canvas.showCaptcha = false;
@@ -78,16 +78,16 @@ public class CaptchaScreen extends VikaScreen {
 		if (key == -1 || key == -2) {
 			switcher = !switcher;
 		} else if (key == -5) {
-			if (!switcher) {
-				if (thread != null)
-					thread.interrupt();
-				thread = new Thread() {
-					public void run() {
-						input = TextEditor.inputString(captchaStr, "", 32, false);
-						interrupt();
-					}
-				};
-				thread.start();
+			if (!switcher) {if (thread != null)
+				thread.interrupt();
+			thread = new Thread() {
+				public void run() {
+					input = TextEditor.inputString(captchaStr, input, 32, false);
+					interrupt();
+				}
+			};
+			thread.setPriority(Thread.MAX_PRIORITY);
+			thread.start();
 			} else {
 				finished = true;
 				VikaTouch.canvas.showCaptcha = false;

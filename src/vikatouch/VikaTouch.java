@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
 
+import javax.microedition.amms.control.camera.FlashControl;
+import javax.microedition.amms.control.camera.FocusControl;
 import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.SocketConnection;
@@ -13,6 +15,9 @@ import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Image;
+import javax.microedition.media.Control;
+import javax.microedition.media.Manager;
+import javax.microedition.media.Player;
 import javax.microedition.rms.RecordStore;
 
 import org.json.me.JSONException;
@@ -421,6 +426,7 @@ public class VikaTouch {
 					surl = new URLBuilder(Settings.httpsApi, "auth.refreshToken", false).addField("access_token", accessToken)
 							.addField("v", "5.120").addField("receipt", recept).toString();
 					url = "http://vikamobile.ru:80/tokenproxy.php?" + URLDecoder.encode(surl);
+					musicIsProxied = true;
 				}
 				refreshToken = VikaUtils.download(url);
 				System.out.println(refreshToken);
@@ -572,12 +578,111 @@ public class VikaTouch {
 				jver = "-";
 			details = "\nDevice info: \nRAM:" + mem + "K, profiles:" + System.getProperty("microedition.profiles")
 					+ ", conf:" + System.getProperty("microedition.configuration") + " Emulator:"
-					+ EmulatorDetector.emulatorType + " m3g:" + m3g + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
+					+ EmulatorDetector.emulatorType + " m3g:" + m3g + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + "\namera tests:\n" + testCamera() + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
 					+ (Settings.https ? 1 : 0) + " proxy:" + (Settings.proxy ? 1 : 0) + " lang: " + Settings.language
 					+ " ll:" + Settings.simpleListsLength + " audio:" + Settings.audioMode + "AS:"
 					+ Settings.loadMusicViaHttp + "" + Settings.loadMusicWithKey ;
 		}
 		return main + details;
+	}
+
+	private static String testCamera() {
+		String x = "";
+		String exceptions = "";
+		boolean capvideo = false;
+		boolean capimage = false;
+		boolean frontcamsupported = false;
+		boolean focuscontrol = false;
+		boolean macrosupport = false;
+		boolean autofocussupport = false;
+		boolean flashcontrol = false;
+		boolean flashready = false;
+		String supportedflashmodes = "";
+		String controls = "";
+		int currfocus = -1;
+		Player campl = null;
+		try {
+			campl = Manager.createPlayer("capture://video");
+			capvideo = true;
+		} catch (Exception e) {
+			exceptions += e.toString() + ";";
+			capvideo = false;
+		}
+		
+		try {
+			campl = Manager.createPlayer("capture://image");
+			capimage = true;
+		} catch (Exception e) {
+			exceptions += e.toString() + ";";
+			capimage = false;
+		}
+		
+		try {
+			if(campl != null) {
+				campl.realize();
+				try {
+					Control[] c = campl.getControls();
+					for(int i = 0; i < c.length; i++) {
+						controls += c[i].toString() + ";";
+					}
+				} catch (Exception e) {
+					exceptions += e.toString() + ";";
+				}
+				try {
+					Object c = campl.getControl("javax.microedition.amms.control.camera.FlashControl");
+					flashcontrol = c != null;
+					int[] ic = ((FlashControl) c).getSupportedModes();
+					for(int i = 0; i < ic.length; i++) {
+						supportedflashmodes += ic[i]+";";
+					}
+					supportedflashmodes += "cur:" + ((FlashControl) c).getMode();
+					flashready = ((FlashControl) c).isFlashReady();
+				} catch (Throwable e) {
+					exceptions += e.toString() + ";";
+				}
+				try {
+					Object c = campl.getControl("javax.microedition.amms.control.camera.FocusControl");
+					focuscontrol = c != null;
+					autofocussupport = ((FocusControl) c).isAutoFocusSupported();
+					macrosupport = ((FocusControl) c).isMacroSupported();
+					currfocus = ((FocusControl) c).getFocus();
+					((FocusControl) c).setFocus(FocusControl.AUTO);
+				} catch (Throwable e) {
+					exceptions += e.toString() + ";";
+				}
+				campl.deallocate();
+				campl.close();
+			}
+		} catch (Throwable e) {
+			exceptions += e.toString() + ";";
+			capimage = false;
+		}
+		
+		try {
+			Manager.createPlayer("capture://devcam1");
+			frontcamsupported = true;
+		} catch (Exception e) {
+			exceptions += e.toString() + ";";
+			frontcamsupported = false;
+		}
+		x += "exceptions: " + exceptions + "\n";
+		x += "Controls: " + controls + "\n";
+		x += "Capture:\n";
+		x += "supports.video.capture: " + System.getProperty("supports.video.capture")+", ";
+		x += "supports.photo.capture: " + System.getProperty("supports.photo.capture")+"\n";
+		x += "capvideo: " + capvideo+", ";
+		x += "capimage: " + capimage+", ";
+		x += "front devcam1: " + frontcamsupported+"\n";
+		x += "FlashControl\n";
+		x += "control: " + flashcontrol + ", ";
+		x += "modes: " + supportedflashmodes + ", ";
+		x += "ready: " + flashready + "\n";
+		x += "FocusControl\n";
+		x += "control: " + focuscontrol + ", ";
+		x += "autofocus: " + autofocussupport + ", ";
+		x += "macro: " + macrosupport + ", ";
+		x += "getfocus: " + currfocus + ".";
+		return x;
 	}
 
 	public static void sendStats() {
