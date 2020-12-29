@@ -44,27 +44,21 @@ public final class Camera {
 			videoControl.initDisplayMode(1, paramCanvas);
 		}
 		try {
-			if (Class.forName("javax.microedition.amms.control.camera.FocusControl") != null) {
-				focusControl = (FocusControl) player.getControl("javax.microedition.amms.control.camera.FocusControl");
+			focusControl = (FocusControl) player.getControl("javax.microedition.amms.control.camera.FocusControl");
 				/*
 				 * if(((FocusControl)focusControl).isMacroSupported()) {
 				 * ((FocusControl)focusControl).setMacro(true); }
 				 */
-				if (((FocusControl) focusControl).isAutoFocusSupported()) {
-					((FocusControl) focusControl).setFocus(FocusControl.AUTO);
-				}
+			if (((FocusControl) focusControl).isAutoFocusSupported()) {
+				((FocusControl) focusControl).setFocus(FocusControl.AUTO);
 			}
 		} catch (Throwable e) {
 			VikaTouch.sendLog("focuscontrol " + e.toString()+" " +focusControl);
 		}
 
 		try {
-			if (Class.forName("javax.microedition.amms.control.camera.FlashControl") != null) {
-				flashControl = (FlashControl) player.getControl("javax.microedition.amms.control.camera.FlashControl");
-				
-
-				((FlashControl) flashControl).setMode(FlashControl.AUTO);
-			}
+			flashControl = (FlashControl) player.getControl("javax.microedition.amms.control.camera.FlashControl");
+			((FlashControl) flashControl).setMode(FlashControl.AUTO);
 		} catch (Throwable e) {
 			VikaTouch.sendLog("flashcontrol " + e.toString()+" " +flashControl);
 		}
