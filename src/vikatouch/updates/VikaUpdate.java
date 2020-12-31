@@ -5,6 +5,7 @@ import javax.microedition.io.ConnectionNotFoundException;
 import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import vikatouch.VikaTouch;
+import vikatouch.locale.TextLocal;
 import vikatouch.utils.VikaUtils;
 
 public class VikaUpdate {
@@ -60,7 +61,7 @@ public class VikaUpdate {
 						} catch (ConnectionNotFoundException e) {
 						}
 					}
-				}, null));
+				}, null, TextLocal.inst.get("ok"), TextLocal.inst.get("cancel")));
 			}
 		}));
 	}

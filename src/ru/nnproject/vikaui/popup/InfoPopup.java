@@ -3,11 +3,11 @@ package ru.nnproject.vikaui.popup;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
+import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
-import vikatouch.VikaTouch;
 
 public class InfoPopup extends VikaNotice {
 	private String[] lines;
@@ -74,7 +74,7 @@ public class InfoPopup extends VikaNotice {
 	public void press(int key) {
 		if (!(key == PressableUIItem.KEY_OK || key == PressableUIItem.KEY_FUNC))
 			return;
-		VikaTouch.canvas.currentAlert = null;
+		VikaCanvas.currentAlert = null;
 		if (ok != null)
 			new Thread(ok).start();
 	}

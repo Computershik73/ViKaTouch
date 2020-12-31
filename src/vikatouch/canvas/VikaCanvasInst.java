@@ -1,18 +1,15 @@
 package vikatouch.canvas;
 
-import java.io.InputStream;
-
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.VikaCanvas;
-import ru.nnproject.vikaui.popup.VikaNotice;
-import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
+import vikatouch.items.VikaNotification;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.temp.SplashScreen;
 import vikatouch.settings.Settings;
@@ -22,7 +19,6 @@ public class VikaCanvasInst extends VikaCanvas {
 	public VikaScreen currentScreen;
 	public VikaScreen lastTempScreen;
 	public boolean showCaptcha;
-	public VikaNotice currentAlert;
 	public String currentInfo;
 	public long currentInfoStartTime;
 	public VikaNotification currentNof;

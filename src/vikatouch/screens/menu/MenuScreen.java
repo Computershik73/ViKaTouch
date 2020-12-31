@@ -7,11 +7,11 @@ import javax.microedition.lcdui.Image;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
-import vikatouch.items.menu.OptionItem;
 import vikatouch.items.music.MusicMenuItem;
 import vikatouch.json.JSONBase;
 import vikatouch.locale.TextLocal;
@@ -577,7 +577,6 @@ public class MenuScreen extends MainScreen implements IMenu {
 	}
 
 	public void onMenuItemOption(int i) {
-		// TODO Auto-generated method stub
 
 	}
 

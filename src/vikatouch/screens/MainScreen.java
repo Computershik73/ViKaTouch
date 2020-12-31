@@ -6,6 +6,7 @@ import javax.microedition.lcdui.Graphics;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
+import ru.nnproject.vikaui.utils.MathUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.screens.menu.MenuScreen;
@@ -62,6 +63,103 @@ public abstract class MainScreen extends ScrollableCanvas {
 		}
 
 		super.release(x, y);
+	}
+	
+	protected final void keysScroll(int dir) {
+		try {
+			int delta = DisplayUtils.height / 3;
+			int st = 0;
+			int thisItemY = getItemY(currentItem);
+			int topItemY = getItemY(currentItem - 1);
+			int downItemY = thisItemY + 50;
+			int down2ItemY = downItemY + 50;
+			try {
+				downItemY = thisItemY + uiItems[currentItem].getDrawHeight();
+				down2ItemY = downItemY + 50;
+				down2ItemY = downItemY + uiItems[currentItem + 1].getDrawHeight();
+			} catch (RuntimeException e1) {
+			}
+			int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height * 3 / 4;
+			//int br = 0;
+			//int sc = 0;
+			//scrlDbg = "dir" + dir + " " + topItemY + " " + thisItemY + " " + downItemY + " " + down2ItemY + " d" + delta
+			//		+ " scry" + scrY;
+			if (dir > 0) {
+				// up
+				if (scrY - thisItemY < 0) {
+					//sc = 1;
+					selectCentered();
+					thisItemY = getItemY(currentItem);
+					topItemY = getItemY(currentItem - 1);
+					try {
+						downItemY = thisItemY + uiItems[currentItem].getDrawHeight();
+					} catch (RuntimeException e1) {
+					}
+				}
+
+				st = -delta;
+				if (scrY - thisItemY > delta) {
+					//br = 1;
+				} else if (scrY - topItemY > delta) {
+					//br = 2;
+					select(currentItem - 1);
+				} else if (thisItemY < 10) {
+					//br = 7;
+					select(0);
+				} else {
+					//br = 3;
+					st = topItemY - scrY + 1;
+					select(currentItem - 1);
+				}
+			} else {
+				// down
+				st = delta;
+				if (down2ItemY - scrY > delta && downItemY - scrY <= delta) {
+					//br = 5;
+					select(currentItem + 1);
+				} else if (downItemY - scrY > delta) {
+					//br = 4;
+				} else {
+					//br = 6;
+					st = (down2ItemY - scrY - 1);
+					select(currentItem + 1);
+				}
+			}
+			scrollTarget = MathUtils.clamp(scrolled - st, -itemsh, 0);
+			//scrlDbg += " st" + st + "br" + br + "s" + sc;
+			//System.out.println(scrlDbg);
+			scrollTargetActive = true;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void selectCentered() {
+		try {
+			System.out.println("select center");
+			int y = MainScreen.topPanelH;
+			int ye = y;
+			int s = -scrolled + DisplayUtils.height / 2;
+			for (int i = 0; (i < uiItems.length); i++) {
+				ye = y + uiItems[i].getDrawHeight();
+				if (y <= s && ye > s) {
+					select(i);
+					return;
+				}
+				y = ye;
+			}
+		} catch (Throwable e) {
+			VikaTouch.sendLog("selectCentered " + e.getMessage());
+		}
+	}
+	
+	public void scrollToSelected() {
+		try {
+			scrolled = -(getItemY(currentItem) - DisplayUtils.height / 2 + (uiItems[currentItem].getDrawHeight() / 2)
+					+ MainScreen.topPanelH);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	protected void drawHUD(Graphics g, String title) {

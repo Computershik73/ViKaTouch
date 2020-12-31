@@ -1,10 +1,9 @@
-package vikatouch.items.menu;
+package ru.nnproject.vikaui.menu.items;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 import ru.nnproject.vikaui.menu.IMenu;
-import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;

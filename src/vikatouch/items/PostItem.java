@@ -9,6 +9,7 @@ import javax.microedition.lcdui.Image;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
@@ -22,7 +23,6 @@ import vikatouch.attachments.ISocialable;
 import vikatouch.attachments.PhotoAttachment;
 import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
-import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.NewsScreen;
 import vikatouch.settings.Settings;
@@ -480,22 +480,18 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	}
 
 	public void send() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void repost() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public boolean commentsAliveable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void openComments() {
-		// TODO Auto-generated method stub
 
 	}
 

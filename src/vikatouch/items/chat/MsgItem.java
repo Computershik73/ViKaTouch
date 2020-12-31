@@ -7,6 +7,7 @@ import org.json.me.JSONArray;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
@@ -23,7 +24,6 @@ import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
 import vikatouch.attachments.VoiceAttachment;
 import vikatouch.attachments.WallAttachment;
-import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
 import vikatouch.settings.Settings;

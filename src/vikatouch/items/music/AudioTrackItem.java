@@ -1,10 +1,12 @@
 package vikatouch.items.music;
 
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.media.Manager;
 
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.items.UIItem;
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -98,22 +100,41 @@ public class AudioTrackItem extends JSONUIItem implements UIItem {
 
 	public void keyPressed(int key) {
 		if (key == KEY_OK) {
-			if (MusicPlayer.inst == null) {
-				// System.out.println("Calling player");
-				MusicPlayer.launch(playlist, indexInPL);
-			} else if (MusicPlayer.inst.playlist == playlist) {
-				if (MusicPlayer.inst.current == indexInPL) {
-					restorePlayerScreen();
-				} else {
-					MusicPlayer.inst.current = indexInPL;
-					restorePlayerScreen();
-					MusicPlayer.inst.loadTrack();
-				}
-			} else {
-				MusicPlayer.inst.destroy();
-				MusicPlayer.launch(playlist, indexInPL);
+			String[] x = Manager.getSupportedContentTypes((String)null);
+			String x2 = "";
+			for(int i = 0; i < x.length; i++) {
+				x2 += x +(i == x.length-1 ? "" : " ");
 			}
+			if(x2.indexOf("audio/mpeg") == -1) {
+				VikaTouch.popup(new InfoPopup("Внимание!\nВаше устройство не поддерживает mp3", new Runnable() {
+
+					public void run() {
+						ok();
+					}}));
+				return;
+			}
+			ok();
 		}
+	}
+
+	private void ok() {
+
+		if (MusicPlayer.inst == null) {
+			// System.out.println("Calling player");
+			MusicPlayer.launch(playlist, indexInPL);
+		} else if (MusicPlayer.inst.playlist == playlist) {
+			if (MusicPlayer.inst.current == indexInPL) {
+				restorePlayerScreen();
+			} else {
+				MusicPlayer.inst.current = indexInPL;
+				restorePlayerScreen();
+				MusicPlayer.inst.loadTrack();
+			}
+		} else {
+			MusicPlayer.inst.destroy();
+			MusicPlayer.launch(playlist, indexInPL);
+		}
+		
 	}
 
 	public void restorePlayerScreen() {

@@ -110,4 +110,16 @@ public class AboutScreen extends ScrollableCanvas {
 
 	}
 
+	public void scrollToSelected() {
+		
+	}
+
+	public void selectCentered() {
+		
+	}
+
+	protected void keysScroll(int dir) {
+		
+	}
+
 }

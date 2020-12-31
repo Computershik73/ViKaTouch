@@ -3,8 +3,8 @@ package vikatouch.items.music;
 import javax.microedition.lcdui.Graphics;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.images.IconsManager;
-import vikatouch.items.menu.OptionItem;
 import vikatouch.music.MusicPlayer;
 
 // а-ля по канонам ООП

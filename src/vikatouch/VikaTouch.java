@@ -25,14 +25,15 @@ import org.json.me.JSONObject;
 
 import ru.nnproject.vikatouch.VikaTouchApp;
 import ru.nnproject.vikaui.UIThread;
+import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.popup.VikaNotice;
-import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.caching.ImageStorage;
 import vikatouch.canvas.VikaCanvasInst;
+import vikatouch.items.VikaNotification;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.AboutScreen;
 import vikatouch.screens.CaptchaScreen;
@@ -238,11 +239,7 @@ public class VikaTouch {
 					.addField("scope",
 							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
 					.addField("2fa_supported", 1).addField("force_sms", 1));
-			VikaTouch.notificate(
-					new VikaNotification(VikaNotification.ERROR, "Auth debug", "1" + tokenAnswer, null));
 			if (tokenAnswer == null && !Settings.proxy) {
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Direct oauth failed",
-						"Connecting via proxy.", null));
 				Settings.proxy = true;
 				Settings.https = false;
 				OAUTH = Settings.proxyOAuth;
@@ -253,8 +250,6 @@ public class VikaTouch {
 								"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
 						.addField("2fa_supported", 1).addField("force_sms", 1));
 			}
-			VikaTouch.notificate(
-					new VikaNotification(VikaNotification.ERROR, "Auth debug", "2" + tokenAnswer, null));
 			if (tokenAnswer == null) {
 				errReason = "Network error!";
 				return false;
@@ -269,38 +264,23 @@ public class VikaTouch {
 					return code(user, pass, tokenAnswer);
 				}
 				errReason = tokenAnswer;
-				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Auth debug", "3" + tokenAnswer, null));
 				return false;
 			} else {
 				JSONObject json = new JSONObject(tokenAnswer);
 				accessToken = json.getString("access_token");
 				userId = json.getString("user_id");
 				integerUserId = json.getInt("user_id");
-				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Auth debug", "4" + tokenAnswer, null));
 				refreshToken();
-				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Auth debug", "5" + tokenAnswer, null));
 				saveToken();
-				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Auth debug", "6", null));
 				VikaUtils.download(new URLBuilder("groups.join").addField("group_id", 168202266));
-				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Auth debug", "9 ", null));
 				MenuScreen canvas = menuScr = new MenuScreen();
-				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Auth debug", "7" + tokenAnswer, null));
 				setDisplay(canvas, 1);
 
 				Dialogs.refreshDialogsList(true, false);
-				VikaTouch.notificate(
-						new VikaNotification(VikaNotification.ERROR, "Auth debug", "8" + tokenAnswer, null));
 				return true;
 			}
 		} catch (Throwable e) {
 			errReason = e.toString();
-			//VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "Auth failed", errReason, null));
 			VikaTouch.error(-1, e.toString(), false);
 			e.printStackTrace();
 			// VikaTouch.popup(new InfoPopup(e.toString(), null,
@@ -417,7 +397,6 @@ public class VikaTouch {
 
 			if (m.indexOf("confirmation") >= 0) {
 
-				VikaTouch.notificate(new VikaNotification(VikaNotification.ERROR, "refresh token", "4", null));
 				String recept = ":APA91bFAM-gVwLCkCABy5DJPPRH5TNDHW9xcGu_OLhmdUSA8zuUsBiU_DexHrTLLZWtzWHZTT5QUaVkBk_GJVQyCE_yQj9UId3pU3vxvizffCPQISmh2k93Fs7XH1qPbDvezEiMyeuLDXb5ebOVGehtbdk_9u5pwUw";
 				String surl = new URLBuilder(API, "auth.refreshToken", false).addField("access_token", accessToken)
 						.addField("v", "5.120").addField("receipt", recept).toString();
@@ -511,7 +490,6 @@ public class VikaTouch {
 				}
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -564,6 +542,9 @@ public class VikaTouch {
 			String m3g = System.getProperty("microedition.m3g.version");
 			if (m3g == null)
 				m3g = "-";
+			String hostname = System.getProperty("microedition.hostname");
+			if (hostname == null)
+				hostname = "-";
 			String osname = System.getProperty("os.name");
 			if (osname == null)
 				osname = "-";
@@ -578,7 +559,7 @@ public class VikaTouch {
 				jver = "-";
 			details = "\nDevice info: \nRAM:" + mem + "K, profiles:" + System.getProperty("microedition.profiles")
 					+ ", conf:" + System.getProperty("microedition.configuration") + " Emulator:"
-					+ EmulatorDetector.emulatorType + " m3g:" + m3g + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + "\namera tests:\n" + testCamera() + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
+					+ EmulatorDetector.emulatorType + " m3g:" + m3g + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + " hostname: " + hostname + "\nCamera tests:\n" + testCamera() + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
 					+ (Settings.https ? 1 : 0) + " proxy:" + (Settings.proxy ? 1 : 0) + " lang: " + Settings.language
 					+ " ll:" + Settings.simpleListsLength + " audio:" + Settings.audioMode + "AS:"
 					+ Settings.loadMusicViaHttp + "" + Settings.loadMusicWithKey ;
@@ -785,7 +766,7 @@ public class VikaTouch {
 		}
 		if (e instanceof OutOfMemoryError) {
 			canvas.currentScreen = null;
-			canvas.currentAlert = null;
+			VikaCanvas.currentAlert = null;
 			canvas.lastTempScreen = null;
 			System.gc();
 			String s = TextLocal.inst.get("error.outofmem") + "\n\n" + TextLocal.inst.get("error.additionalinfo")
@@ -838,7 +819,7 @@ public class VikaTouch {
 		}
 		if (e instanceof OutOfMemoryError) {
 			canvas.currentScreen = null;
-			canvas.currentAlert = null;
+			VikaCanvas.currentAlert = null;
 			canvas.lastTempScreen = null;
 			newsScr = null;
 			System.gc();
@@ -942,6 +923,7 @@ public class VikaTouch {
 		ImageStorage.init();
 		try {
 			IconsManager.Load();
+			Settings.switchLightTheme();
 		} catch (Exception e) {
 			error(e, ErrorCodes.ICONSLOAD);
 			e.printStackTrace();
@@ -1053,13 +1035,17 @@ public class VikaTouch {
 	}
 
 	public static void popup(VikaNotice popup) {
-		canvas.currentAlert = popup;
+		VikaCanvas.currentAlert = popup;
 		canvas.repaint();
 	}
 
 	public static void notificate(VikaNotification n) {
-		canvas.currentNof = n;
-		VikaNotification.vib();
+		if(Settings.notifmode == 4) {
+			setDisplay(new Alert("", n.title + "\n" + n.text, null, AlertType.ALARM));
+		} else {
+			canvas.currentNof = n;
+			VikaNotification.vib();
+		}
 	}
 
 	public static void callSystemPlayer(String file) {

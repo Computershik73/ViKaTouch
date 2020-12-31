@@ -6,10 +6,8 @@ import java.util.Enumeration;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
@@ -30,7 +28,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 	private ChatScreen chat;
 	private FileManagerItem selectedItem;
 	private String folder;
-	private String sep;
 	private boolean root;
 	private FileConnection fileconn;
 
@@ -202,7 +199,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 		selectedItem = null;
 		root = true;
 		folder = "main";
-		sep = System.getProperty("file.separator");
 		boolean hasgallery = true;
 		boolean hascard = true;
 		boolean hasc = true;
@@ -220,7 +216,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 		if(memcard.indexOf("e:") == -1) {
 			hasdiske = true;
 		}
-		if(gallery == null || gallery.length() == 0) {
+		if(gallery == null || gallery.length() == 0 || gallery.equalsIgnoreCase(memcard)) {
 			hasgallery = false;
 		}
 		int len = 0;
@@ -248,7 +244,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 				continue;
 			}
 			if(hasdiske) {
-				uiItems[i] = new FolderItem(this, gallery, "E:");
+				uiItems[i] = new FolderItem(this, e, "E:");
 				hasdiske = false;
 				continue;
 			}
@@ -301,13 +297,11 @@ public class FileManagerScreen extends ScrollableCanvas {
 		System.out.println("set "+path+ " parent:" + parent+".");
 		boolean s40 = VikaTouch.isS40() && !EmulatorDetector.isEmulator;
 		try {
-			boolean neww = true;
 			try {
 				if(fileconn == null || createNew || parent == null) {
 					System.out.println(path);
 					fileconn = (FileConnection) Connector.open("file://" + path);
 				} else {
-					neww = false;
 					System.out.println("not new "+parent);
 					fileconn.setFileConnection(parent);
 				}
@@ -337,10 +331,23 @@ public class FileManagerScreen extends ScrollableCanvas {
 			}
 			itemsCount = (short) i;
 		} catch (Exception e) {
+			uiItems[0] = new FolderItem(this, path, e.toString());
 			e.printStackTrace();
 		}
 		if(keysMode && uiItems[0] != null)
 			uiItems[0].setSelected(true);
+	}
+
+	public void scrollToSelected() {
+		
+	}
+
+	public void selectCentered() {
+		
+	}
+
+	protected void keysScroll(int dir) {
+		
 	}
 
 }

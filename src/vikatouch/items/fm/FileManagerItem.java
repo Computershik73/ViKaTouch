@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.file.FileConnection;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 

@@ -3,6 +3,7 @@ package vikatouch.settings;
 import javax.microedition.lcdui.Graphics;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.ConfirmBox;
@@ -10,7 +11,6 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.items.menu.OnOffItem;
-import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.AboutScreen;
 import vikatouch.screens.LoginScreen;
@@ -51,7 +51,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		String[] eOd = new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") };
 		String[] dialogsRR = new String[] { eOd[0], "5", "10", "20", "30" };
 		String[] notifModes = new String[] { TextLocal.inst.get("settings.disabled"),
-				TextLocal.inst.get("settings.vibro"), TextLocal.inst.get("settings.sound") };
+				TextLocal.inst.get("settings.vibro"), TextLocal.inst.get("settings.sound"), TextLocal.inst.get("settings.tone"), TextLocal.inst.get("settings.alert") };
 
 		// частота обновления
 		int rr = -1;
@@ -422,7 +422,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 						}
 						VikaTouch.setDisplay(new LoginScreen(), -1);
 					}
-				}, null));
+				}, null, TextLocal.inst.get("ok"), TextLocal.inst.get("cancel")));
 			} else {
 
 			}
@@ -437,7 +437,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 					Settings.loadDefaultSettings();
 					Settings.setted = true;
 				}
-			}, null));
+			}, null, TextLocal.inst.get("ok"), TextLocal.inst.get("cancel")));
 			break;
 		}
 		case 21: {
@@ -468,21 +468,23 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case 50: {
 			OptionItem[] it = new OptionItem[6];
-			it[2] = new OptionItem(this, "Россия (RU)", IconsManager.EDIT, 31, oneitemheight);
-			it[0] = new OptionItem(this, "United States (US)", IconsManager.EDIT, 32, oneitemheight);
-			it[1] = new OptionItem(this, "United Kingdom (UK)", IconsManager.EDIT, 33, oneitemheight);
-			it[3] = new OptionItem(this, "España (ES)", IconsManager.EDIT, 34, oneitemheight);
-			it[4] = new OptionItem(this, "Україна (UA)", IconsManager.EDIT, 35, oneitemheight);
-			it[5] = new OptionItem(this, "Беларусь (BY)", IconsManager.EDIT, 36, oneitemheight);
+			it[2] = new OptionItem(this, "Россия (RU)", IconsManager.EDIT, 32, oneitemheight);
+			it[0] = new OptionItem(this, "United States (US)", IconsManager.EDIT, 33, oneitemheight);
+			it[1] = new OptionItem(this, "United Kingdom (UK)", IconsManager.EDIT, 34, oneitemheight);
+			it[3] = new OptionItem(this, "España (ES)", IconsManager.EDIT, 35, oneitemheight);
+			it[4] = new OptionItem(this, "Україна (UA)", IconsManager.EDIT, 36, oneitemheight);
+			it[5] = new OptionItem(this, "Беларусь (BY)", IconsManager.EDIT, 37, oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
 			break;
 		}
 		case 22: {
-			OptionItem[] it = new OptionItem[3];
-			it[0] = new OptionItem(this, TextLocal.inst.get("settings.disabled"), IconsManager.EDIT, 1, oneitemheight);
+			OptionItem[] it = new OptionItem[4];
+			it[0] = new OptionItem(this, TextLocal.inst.get("settings.disabled"), IconsManager.EDIT, 0, oneitemheight);
 			it[1] = new OptionItem(this, TextLocal.inst.get("settings.vibro"), IconsManager.EDIT, 1,
 					oneitemheight);
 			it[2] = new OptionItem(this, TextLocal.inst.get("settings.sound"), IconsManager.EDIT, 2,
+					oneitemheight);
+			it[3] = new OptionItem(this, TextLocal.inst.get("settings.alert"), IconsManager.EDIT, 4,
 					oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
 			break;
@@ -510,9 +512,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			// Settings.saveSettings();
 			//VikaTouch.popup(new InfoPopup("Settings will be applied after restart", null, "", "OK"));
 		}
-		if(i >= 31 && i <= 39) {
+		if(i >= 32 && i <= 40) {
 
-			int j = i - 31;
+			int j = i - 32;
 			final String[] res = new String[] { "RU", "US", "UK", "ES", "UA", "BY"};
 			Settings.setted = true;
 			Settings.region = res[j];

@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import javax.microedition.lcdui.*;
 
-import vikatouch.settings.Settings;
-
 public class IconsManager {
 	
 	public static Image[] ico;
@@ -14,23 +12,33 @@ public class IconsManager {
 	public static void Load()
 			throws IOException
 	{
-		Image sheet = Image.createImage("/icons.png");
-		int c /*count*/ = sheet.getWidth() / 24;
-		ico = new Image[c];
-		selIco = new Image[c];
-		//sheet = Image.createImage(sheet);
-		for(int i = 0; i < c; i++)
-		{
-			ico[i] = Image.createImage(sheet, i*24, 0, 24, 24, 0);
-			//ico[i] = ImageUtils.crop(sheet, i*24, 0, i*24+24, 24);
-			selIco[i] = Image.createImage(sheet, i*24, 24, 24, 24, 0);
+		String string = "init";
+		try {
+			string = "icons.png";
+			Image sheet = Image.createImage("/icons.png");
+			int c /*count*/ = sheet.getWidth() / 24;
+			ico = new Image[c];
+			selIco = new Image[c];
+			//sheet = Image.createImage(sheet);
+			string = "crop";
+			for(int i = 0; i < c; i++)
+			{
+				ico[i] = Image.createImage(sheet, i*24, 0, 24, 24, 0);
+				//ico[i] = ImageUtils.crop(sheet, i*24, 0, i*24+24, 24);
+				selIco[i] = Image.createImage(sheet, i*24, 24, 24, 24, 0);
+			}
+			string = "ava.png";
+			ac = Image.createImage("/ava.png");
+			string = "avas.png";
+			acs = Image.createImage("/avas.png");
+			string = "vikahead.png";
+			logoImg = Image.createImage("/vikahead.png");
+			string = "back.png";
+			backImg = Image.createImage("/back.png");
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new IOException(string);
 		}
-		
-		ac = Image.createImage("/ava.png");
-		acs = Image.createImage("/avas.png");
-		logoImg = Image.createImage("/vikahead.png");
-		backImg = Image.createImage("/back.png");
-		Settings.switchLightTheme();
 	}
 	
 	public static Image ac;

@@ -15,6 +15,7 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
+import vikatouch.locale.TextLocal;
 import vikatouch.settings.Settings;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
@@ -112,7 +113,7 @@ public class VideoItem extends JSONUIItem {
 										e.printStackTrace();
 									}
 								}
-							}, null));
+							}, null, TextLocal.inst.get("ok"), TextLocal.inst.get("cancel")));
 			}
 			if (key == KEY_OK) {
 				if (EmulatorDetector.isEmulator) {
@@ -127,7 +128,7 @@ public class VideoItem extends JSONUIItem {
 									public void run() {
 										playOnline();
 									}
-								}, null));
+								}, null, TextLocal.inst.get("ok"), TextLocal.inst.get("cancel")));
 					} else {
 						VikaTouch.popup(new InfoPopup("Файл видео недоступен.", null));
 					}
@@ -139,7 +140,7 @@ public class VideoItem extends JSONUIItem {
 					public void run() {
 						playExternal();
 					}
-				}, null));
+				}, null, TextLocal.inst.get("ok"), TextLocal.inst.get("cancel")));
 			}
 		}
 	}

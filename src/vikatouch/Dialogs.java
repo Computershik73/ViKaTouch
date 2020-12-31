@@ -6,7 +6,7 @@ import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
-import ru.nnproject.vikaui.popup.VikaNotification;
+import vikatouch.items.VikaNotification;
 import vikatouch.items.chat.ConversationItem;
 import vikatouch.screens.ChatScreen;
 import vikatouch.settings.Settings;

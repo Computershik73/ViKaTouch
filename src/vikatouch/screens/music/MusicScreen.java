@@ -10,6 +10,7 @@ import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.EmptyMenu;
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
@@ -18,7 +19,6 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.AudioAttachment;
-import vikatouch.items.menu.OptionItem;
 import vikatouch.items.music.AudioTrackItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.music.MusicPlayer;

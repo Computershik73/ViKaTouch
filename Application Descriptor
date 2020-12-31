@@ -13,6 +13,6 @@ FlipInsensitive: True
 MIDlet-1: Vika Touch,/vika256.png,ru.nnproject.vikatouch.VikaTouchApp
 VikaTouch-Edition: openbeta
 Progressive_Download: enabled
-MIDlet-Permissions: javax.microedition.io.Connector.http,javax.microedition.io.Connector.file.write,javax.microedition.io.Connector.file.read
+MIDlet-Permissions: javax.microedition.io.Connector.http
 MIDlet-Vendor: nnproject
 MicroEdition-Profile: MIDP-2.0

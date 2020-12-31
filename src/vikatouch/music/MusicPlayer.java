@@ -24,16 +24,16 @@ import javax.microedition.media.control.VolumeControl;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.ConfirmBox;
 import ru.nnproject.vikaui.popup.InfoPopup;
-import ru.nnproject.vikaui.popup.VikaNotification;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.VoiceAttachment;
-import vikatouch.items.menu.OptionItem;
+import vikatouch.items.VikaNotification;
 import vikatouch.items.music.AudioTrackItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
@@ -148,9 +148,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private")
 					: System.getProperty("fileconn.dir.music"));
 			if (tpath == null)
+				tpath = System.getProperty("fileconn.dir.photos");
+			if (tpath == null)
 				tpath = "file:///C:/";
 			final String path = tpath + "vikaMusicCache.mp3";
-
+			System.out.println(path);
 			if ((Settings.audioMode == Settings.AUDIO_PLAYONLINE) || (this.voice != null)) {
 				loader = new Thread() {
 					public void run() {
@@ -210,9 +212,12 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						try {
 
 							FileConnection trackFile = (FileConnection) Connector.open(path);
-
-							if (trackFile.exists()) {
-								trackFile.delete();
+							try {
+								if (trackFile.exists()) {
+									trackFile.delete();
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
 							}
 							trackFile.create();
 							output = trackFile.openOutputStream();
@@ -280,8 +285,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 									player.addPlayerListener(inst);
 								} catch (Exception e) {
 									stop = false;
-									VikaTouch.popup(new InfoPopup("Player creating error", null)); // TODO errcodes
 									e.printStackTrace();
+									VikaTouch.popup(new InfoPopup("Player creating error", null)); // TODO errcodes
 									return;
 								}
 								time = "100%";
@@ -289,8 +294,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 									player.realize();
 								} catch (MediaException e) {
 									stop = false;
-									VikaTouch.popup(new InfoPopup("Player realizing error", null));
 									e.printStackTrace();
+									VikaTouch.popup(new InfoPopup("Player realizing error", null));
 									return;
 								}
 								try {
@@ -435,7 +440,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							stop = true;
 						}
 					}
-				}, null));
+				}, null, TextLocal.inst.get("ok"), TextLocal.inst.get("cancel")));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1148,13 +1153,15 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				if (Settings.audioMode == Settings.AUDIO_LOADANDPLAY) {
 					try {
 						closePlayer();
-					} catch (Exception e2) {
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 					try {
 						player = Manager.createPlayer(System.getProperty("fileconn.dir.music") + "vikaMusicCache.mp3");
 						player.addPlayerListener(inst);
 						player.realize();
 					} catch (Exception e) {
+						e.printStackTrace();
 						VikaTouch.popup(new InfoPopup("Player creating error", null));
 						return;
 					}
@@ -1162,6 +1169,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						player.start();
 						((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
 					} catch (MediaException e) {
+						e.printStackTrace();
 						VikaTouch.popup(new InfoPopup("Player running error", null));
 						return;
 					}
@@ -1170,6 +1178,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						player.setMediaTime(1);
 						player.start();
 					} catch (MediaException e) {
+						e.printStackTrace();
 					}
 				}
 			} else {

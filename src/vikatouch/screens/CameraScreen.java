@@ -2,12 +2,10 @@ package vikatouch.screens;
 
 import java.io.IOException;
 
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
-import javax.microedition.media.Manager;
 import javax.microedition.media.MediaException;
 
 import ru.nnproject.vikaui.screen.VikaScreen;
@@ -46,7 +44,6 @@ public class CameraScreen extends VikaScreen {
 			flashnot = Image.createImage("/flashoff.png");
 			flashyes = Image.createImage("/flash.png");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		flash = flashnot;

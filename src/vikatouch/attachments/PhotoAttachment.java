@@ -121,7 +121,6 @@ public class PhotoAttachment extends ImageAttachment implements ISocialable {
 	}
 
 	public Image getImage(int height) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -166,7 +165,6 @@ public class PhotoAttachment extends ImageAttachment implements ISocialable {
 	}
 
 	public Image getPreviewImage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

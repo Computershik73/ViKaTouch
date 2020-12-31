@@ -28,13 +28,23 @@ public class ColorUtils
 	public static final int TITLEPANELCOLOR = -99;
 	public static final int MSGTEXT = -50;
 	
+	public static boolean isNight() {
+		try {
+			Class.forName("vikatouch.settings.Settings");
+			return Settings.nightTheme;
+		} catch (Throwable e) {
+			
+		}
+		return false;
+	}
+	
 	public static void setcolor(final Graphics g, final int i)
 	{
 		switch(i)
 		{
 			case 0:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(225);
 				else
 					g.setColor(0);
@@ -42,7 +52,7 @@ public class ColorUtils
 			}
 			case MYMSG:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(24);
 				else
 					g.setColor(198, 218, 246);
@@ -50,7 +60,7 @@ public class ColorUtils
 			}
 			case FOREIGNMSG:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(44);
 				else
 					g.setColor(236, 238, 240);
@@ -68,7 +78,7 @@ public class ColorUtils
 			}
 			case TITLEPANELCOLOR:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(12);
 				else
 					g.setColor(buttoncolor[0], buttoncolor[1], buttoncolor[2]);
@@ -76,7 +86,7 @@ public class ColorUtils
 			}
 			case BUTTONCOLOR:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(30);
 				else
 					g.setColor(buttoncolor[0], buttoncolor[1], buttoncolor[2]);
@@ -89,7 +99,7 @@ public class ColorUtils
 			}
 			case TEXT:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(225);
 				else
 					g.setColor(0);
@@ -112,7 +122,7 @@ public class ColorUtils
 			}
 			case MSGTEXT:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(180);
 				else
 					g.setGrayScale(0);
@@ -125,7 +135,7 @@ public class ColorUtils
 			}
 			case BACKGROUND:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setColor(0);
 				else
 					g.setGrayScale(255);
@@ -138,7 +148,7 @@ public class ColorUtils
 			}
 			case TEXTBOX_OUTLINE:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(35);
 				else
 					g.setGrayScale(238);
@@ -146,7 +156,7 @@ public class ColorUtils
 			}
 			case BOTTOMPANELCOLOR:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(30);
 				else
 					g.setGrayScale(249);
@@ -154,7 +164,7 @@ public class ColorUtils
 			}
 			case -4:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(9);
 				else
 					g.setColor(0xCFD6DE);
@@ -162,7 +172,7 @@ public class ColorUtils
 			}
 			case -5:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(3);
 				else
 					g.setGrayScale(231);
@@ -170,7 +180,7 @@ public class ColorUtils
 			}
 			case -6:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(2);
 				else
 					g.setGrayScale(243);
@@ -178,7 +188,7 @@ public class ColorUtils
 			}
 			case -7:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(17);
 				else
 					g.setGrayScale(234);
@@ -186,7 +196,7 @@ public class ColorUtils
 			}
 			case -8:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(2);
 				else
 					g.setGrayScale(237);
@@ -194,7 +204,7 @@ public class ColorUtils
 			}
 			case -9:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(19);
 				else
 					g.setGrayScale(247);
@@ -202,7 +212,7 @@ public class ColorUtils
 			}
 			case -10:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(32);
 				else
 					g.setGrayScale(222);
@@ -210,7 +220,7 @@ public class ColorUtils
 			}
 			case -11:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(25);
 				else
 					g.setGrayScale(229);
@@ -218,7 +228,7 @@ public class ColorUtils
 			}
 			case -12:
 			{
-				if(Settings.nightTheme)
+				if(isNight())
 					g.setGrayScale(15);
 				else
 					g.setGrayScale(241);

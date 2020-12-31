@@ -2,9 +2,9 @@ package ru.nnproject.vikaui.popup;
 
 import javax.microedition.lcdui.Graphics;
 
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
-import vikatouch.items.menu.OptionItem;
 
 public class AutoContextMenu extends ContextMenu {
 

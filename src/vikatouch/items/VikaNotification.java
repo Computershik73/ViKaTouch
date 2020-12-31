@@ -1,4 +1,4 @@
-package ru.nnproject.vikaui.popup;
+package vikatouch.items;
 
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
@@ -13,6 +13,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.settings.Settings;
 
 public class VikaNotification {
 
@@ -78,10 +79,13 @@ public class VikaNotification {
 	}
 
 	public static void vib() {
+		if(Settings.notifmode == 0) {
+			return;
+		}
 		new Thread() {
 			public void run() {
 				try {
-					if (vikatouch.settings.Settings.notifmode == 1) {
+					if (Settings.notifmode == 1) {
 						Display d = Display.getDisplay(VikaTouch.appInst);
 						d.vibrate(1000);
 
@@ -89,7 +93,7 @@ public class VikaNotification {
 						// d.vibrate(1000);
 						// Thread.sleep(100);
 						// d.vibrate(1000);
-					} else if (vikatouch.settings.Settings.notifmode == 2) {
+					} else if (Settings.notifmode == 2) {
 						Player notifplayer = Manager.createPlayer("http://vikamobile.ru:80/music/bb2.mp3");
 						notifplayer.realize();
 						try {
@@ -98,7 +102,7 @@ public class VikaNotification {
 						}
 
 						notifplayer.start();
-					} else if (vikatouch.settings.Settings.notifmode == 3) {
+					} else if (Settings.notifmode == 3) {
 						Player notifplayer = Manager.createPlayer("device://tone");
 						notifplayer.realize();
 						notifplayer.start();

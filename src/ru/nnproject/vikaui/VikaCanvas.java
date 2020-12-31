@@ -2,9 +2,12 @@ package ru.nnproject.vikaui;
 
 import javax.microedition.lcdui.game.GameCanvas;
 
+import ru.nnproject.vikaui.popup.VikaNotice;
 import ru.nnproject.vikaui.screen.VikaScreen;
 
 public abstract class VikaCanvas extends GameCanvas {
+	
+	public static VikaNotice currentAlert;
 
 	protected VikaCanvas() {
 		super(false);

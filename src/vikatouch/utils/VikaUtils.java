@@ -719,14 +719,6 @@ public final class VikaUtils {
 		return true;
 	}
 
-	public static int lerp(final int start, final int target, final int mul, final int div) {
-		return start + ((target - start) * mul / div);
-	}
-
-	public static int clamp(final int val, final int min, final int max) {
-		return Math.max(Math.min(val, max), min);
-	}
-
 	public static Vector filenamesVector = new Vector(1, 5);
 	public static Vector filesVector = new Vector(1, 5);
 

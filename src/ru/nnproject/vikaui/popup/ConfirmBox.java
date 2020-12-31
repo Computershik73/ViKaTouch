@@ -3,11 +3,10 @@ package ru.nnproject.vikaui.popup;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
+import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
-import vikatouch.VikaTouch;
-import vikatouch.locale.TextLocal;
 
 public class ConfirmBox extends VikaNotice {
 
@@ -19,15 +18,6 @@ public class ConfirmBox extends VikaNotice {
 	private String customNo;
 	private String okT;
 	private String cancT;
-
-	public ConfirmBox(String text, String subtext, Runnable onOk, Runnable onCancel) {
-		line1 = text;
-		line2 = subtext;
-		ok = onOk;
-		cancel = onCancel;
-		okT = TextLocal.inst.get("yes");
-		cancT = TextLocal.inst.get("cancel");
-	}
 
 	public ConfirmBox(String text, String subtext, Runnable onOk, Runnable onCancel, String customYes,
 			String customNo) {
@@ -77,11 +67,11 @@ public class ConfirmBox extends VikaNotice {
 
 	public void press(int key) {
 		if (key == PressableUIItem.KEY_OK || key == PressableUIItem.KEY_FUNC) {
-			VikaTouch.canvas.currentAlert = null;
+			VikaCanvas.currentAlert = null;
 			if (ok != null)
 				new Thread(ok).start();
 		} else if (key == PressableUIItem.KEY_RFUNC || key == PressableUIItem.KEY_BACK) {
-			VikaTouch.canvas.currentAlert = null;
+			VikaCanvas.currentAlert = null;
 			if (cancel != null)
 				new Thread(cancel).start();
 		}

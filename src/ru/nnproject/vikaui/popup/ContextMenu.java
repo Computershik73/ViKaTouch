@@ -2,12 +2,12 @@ package ru.nnproject.vikaui.popup;
 
 import javax.microedition.lcdui.Graphics;
 
+import ru.nnproject.vikaui.VikaCanvas;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
-import vikatouch.VikaTouch;
-import vikatouch.items.menu.OptionItem;
 
 public class ContextMenu extends VikaNotice {
 
@@ -53,7 +53,7 @@ public class ContextMenu extends VikaNotice {
 		ScrollableCanvas.keysMode = true;
 		try {
 			if (key == PressableUIItem.KEY_OK) {
-				VikaTouch.canvas.currentAlert = null;
+				VikaCanvas.currentAlert = null;
 				items[selected].keyPressed(PressableUIItem.KEY_OK);
 			} else if (key == -1) {
 				items[selected].setSelected(false);
@@ -68,7 +68,7 @@ public class ContextMenu extends VikaNotice {
 					selected = 0;
 				items[selected].setSelected(true);
 			} else if (key == PressableUIItem.KEY_RFUNC) {
-				VikaTouch.canvas.currentAlert = null;
+				VikaCanvas.currentAlert = null;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,7 +106,7 @@ public class ContextMenu extends VikaNotice {
 		int ry = DisplayUtils.height / 2 - th / 2;
 
 		if (x < rx || x > rx + width || y < ry || y > ry + th) {
-			VikaTouch.canvas.currentAlert = null;
+			VikaCanvas.currentAlert = null;
 			return;
 		}
 
@@ -115,7 +115,7 @@ public class ContextMenu extends VikaNotice {
 		for (int i = 0; i < items.length; i++) {
 			int h = items[i].getDrawHeight();
 			if (tapY > currY && tapY < currY + h) {
-				VikaTouch.canvas.currentAlert = null;
+				VikaCanvas.currentAlert = null;
 				items[i].tap(x - rx, tapY - currY);
 				return;
 			}

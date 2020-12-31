@@ -1,29 +1,20 @@
 package vikatouch.screens;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Random;
 
-import javax.microedition.io.Connector;
-import javax.microedition.io.file.FileConnection;
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.List;
 
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
-import ru.nnproject.kemulator.filemanagerapi.AbstractFileManager;
-import ru.nnproject.kemulator.filemanagerapi.FileManagerAPI;
+import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.EmptyMenu;
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
@@ -34,11 +25,10 @@ import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaFileManager;
 import vikatouch.VikaTouch;
 import vikatouch.canvas.VikaCanvasInst;
-import vikatouch.items.chat.IMessage;
 import vikatouch.items.chat.ActionItem;
 import vikatouch.items.chat.ChatItem;
+import vikatouch.items.chat.IMessage;
 import vikatouch.items.chat.MsgItem;
-import vikatouch.items.menu.OptionItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.menu.ChatMembersScreen;
 import vikatouch.screens.page.GroupPageScreen;
@@ -725,8 +715,8 @@ public class ChatScreen extends MainScreen {
 			keysMode = true;
 		}
 		/*
-		 * if(VikaTouch.canvas.currentAlert!=null) {
-		 * VikaTouch.canvas.currentAlert.press(key); repaint(); return; }
+		 * if(VikaCanvas.currentAlert!=null) {
+		 * VikaCanvas.currentAlert.press(key); repaint(); return; }
 		 */
 		if (key == -1) {
 			up();
@@ -1417,14 +1407,14 @@ public class ChatScreen extends MainScreen {
 					TextLocal.inst.get("msg.stickers"), TextLocal.inst.get("msg.send"),
 					TextLocal.inst.get("msg.sending"), TextLocal.inst.get("close") };
 		}
-		if (VikaTouch.canvas.currentAlert == null) {
+		if (VikaCanvas.currentAlert == null) {
 			right = kt[0];
 			left = buttonSelected == 0 ? kt[1] : kt[2];
 			ok = canSend ? ((new String[] { kt[3], kt[4], kt[5], kt[6], kt[7] })[buttonSelected]) : kt[8];
-		} else if (VikaTouch.canvas.currentAlert instanceof ContextMenu) {
+		} else if (VikaCanvas.currentAlert instanceof ContextMenu) {
 			right = kt[9];
 			left = "";
-			ContextMenu m = (ContextMenu) VikaTouch.canvas.currentAlert;
+			ContextMenu m = (ContextMenu) VikaCanvas.currentAlert;
 			ok = m.items[m.selected].text;
 		} else {
 			return;

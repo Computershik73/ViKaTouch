@@ -10,12 +10,12 @@ import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
-import vikatouch.items.menu.OptionItem;
 import vikatouch.json.JSONBase;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;

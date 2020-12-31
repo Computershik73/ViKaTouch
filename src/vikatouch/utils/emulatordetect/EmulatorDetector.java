@@ -32,6 +32,8 @@ public class EmulatorDetector {
 
 	public static final int EM_KEMMOD = 11;
 
+	public static final int EM_WTK = 102;
+
 	public static final int EM_UNDEFINED = -1;
 
 	public static final int EM_NOT_EMULATOR = 0;
@@ -73,6 +75,9 @@ public class EmulatorDetector {
 				isEmulator = true;
 				emulatorType = EM_MICROEMULATOR_V2;
 				supportsHttps = true;
+			} else if (platform.equalsIgnoreCase("SunMicrosystems_wtk")) {
+				isEmulator = true;
+				emulatorType = EM_WTK;
 			} else if(platform.indexOf("Jbed-FastBCC") != -1) {
 				isEmulator = true;
 				emulatorType = EM_JBED;
@@ -95,6 +100,7 @@ public class EmulatorDetector {
 					emulatorType = EM_NOT_EMULATOR;
 				}
 			}
+			break detect;
 		}
 		Settings.setEmulatorSettings();
 	}

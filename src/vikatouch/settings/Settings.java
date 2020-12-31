@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 
 import javax.microedition.lcdui.Image;
 import javax.microedition.rms.RecordStore;
@@ -153,12 +152,6 @@ public class Settings {
 
 	public static boolean oldlcduiFm;
 
-	public static final String[] supportedLanguages = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ"};
-
-	public static final String[] langs =              {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"};
-
-	public static final String[] regions =            {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ"};
-
 	static {
 		loadDefaultSettings();
 	}
@@ -230,8 +223,9 @@ public class Settings {
 		try {
 			if(isOldLang(language)) {
 				String x = language;
-				language = setLang(x);
-				region = setRegion(x);
+				String supportedLanguages[] = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA"};
+				language = Settings.setLang(x, supportedLanguages, new String[] {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"});
+				region = Settings.setRegion(x, supportedLanguages, new String[] {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ"});
 			}
 		} catch (Exception e) {
 
@@ -312,19 +306,14 @@ public class Settings {
 	}
 	
 	public static void switchLightTheme() {
-		if(nightTheme) {
-			try {
+		try {
+			if(nightTheme) {
 				IconsManager.ac = ImageFxUtils.transformARGB(IconsManager.ac, 0, -255, -255, -255);
-			} catch (Exception e) {
-				
-			}
-		} else {
-			try {
+			} else {
 				IconsManager.ac = Image.createImage("/ava.png");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -342,7 +331,7 @@ public class Settings {
 		messagesPerLoad = 30;
 		dialogsLength = 20;
 		videoResolution = Math.min(DisplayUtils.width, DisplayUtils.height) >= 360 ? "360" : "240";
-		language = "russian";
+		language = "english";
 		cacheImages = true;
 		dontLoadAvas = false;
 		sendLogs = true;
@@ -361,12 +350,13 @@ public class Settings {
 		dialogsRefreshRate = (byte) (isLiteOrSomething ? 2 : 0);
 		notifmode = 2;
 		hideBottom = false;
-		region = "RU";
+		region = "US";
 
 		// язык соотвествующий настройкам устройства
 		try {
-			language = Settings.setLang(System.getProperty("microedition.locale"));
-			region = Settings.setRegion(System.getProperty("microedition.locale"));
+			String supportedLanguages[] = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ"};
+			language = Settings.setLang(System.getProperty("microedition.locale"), supportedLanguages, new String[] {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"});
+			region = Settings.setRegion(System.getProperty("microedition.locale"), supportedLanguages, new String[] {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ"});
 		} catch (Exception e) {
 
 		}
@@ -376,10 +366,24 @@ public class Settings {
 			videoResolution = "240";
 			proxy = true;
 			https = false;
+			notifmode = 4;
 			// threaded = false;
 		}
+		
+		// настройки для резистивок (аши, тачи с клавами и т.д)
+		try {
+			String d[] = {"Nokia203", "Nokia305", "Nokia308", "Nokia311"};
+			for(int i = 0; i < d.length; i++) {
+				if(VikaTouch.mobilePlatform.startsWith(d[i])) {
+					sensorMode = SENSOR_RESISTIVE;
+					break;
+				}
+			}
+		} catch (Exception e) {
+
+		}
 	}
-	private static String setRegion(String l) {
+	private static String setRegion(String l, String[] supportedLanguages, String[] regions) {
 		for (int i = 0; i < supportedLanguages.length; i++) {
 			if (supportedLanguages[i].equalsIgnoreCase(VikaUtils.replace(l, "-", "_"))) {
 				return regions[i];
@@ -388,7 +392,7 @@ public class Settings {
 		return region;
 	}
 
-	private static String setLang(String l) {
+	private static String setLang(String l, String[] supportedLanguages, String[] langs) {
 		for (int i = 0; i < supportedLanguages.length; i++) {
 			if (supportedLanguages[i].equalsIgnoreCase(VikaUtils.replace(l, "-", "_"))) {
 				return langs[i];
@@ -398,12 +402,7 @@ public class Settings {
 	}
 
 	public static boolean isOldLang(String l) {
-		for (int i = 0; i < supportedLanguages.length; i++) {
-			if (supportedLanguages[i].equalsIgnoreCase(VikaUtils.replace(l, "-", "_"))) {
-				return true;
-			}
-		}
-		return false;
+		return l.length() == 5 && l.indexOf("_") == 2;
 	}
 
 	public static void setEmulatorSettings() {
