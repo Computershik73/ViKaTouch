@@ -10,6 +10,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -213,7 +214,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 			memcard = "file:///e:/";
 			hascard = true;
 		}
-		if(memcard.indexOf("e:") == -1) {
+		if(memcard.toLowerCase().indexOf("/e:") == -1) {
 			hasdiske = true;
 		}
 		if(gallery == null || gallery.length() == 0 || gallery.equalsIgnoreCase(memcard)) {
@@ -249,17 +250,17 @@ public class FileManagerScreen extends ScrollableCanvas {
 				continue;
 			}
 			if(hascard) {
-				uiItems[i] = new FolderItem(this, memcard, "Memory card");
+				uiItems[i] = new FolderItem(this, memcard, TextLocal.inst.get("fm.memorycard"));
 				hascard = false;
 				continue;
 			}
 			if(hasgallery) {
-				uiItems[i] = new FolderItem(this, gallery, "Gallery");
+				uiItems[i] = new FolderItem(this, gallery, TextLocal.inst.get("fm.gallery"));
 				hasgallery = false;
 				continue;
 			}
 			if(hasroot) {
-				uiItems[i] = new FolderItem(this, root, "Root folder");
+				uiItems[i] = new FolderItem(this, root, TextLocal.inst.get("fm.root"));
 				hasroot = false;
 				continue;
 			}
@@ -331,8 +332,9 @@ public class FileManagerScreen extends ScrollableCanvas {
 			}
 			itemsCount = (short) i;
 		} catch (Exception e) {
-			uiItems[0] = new FolderItem(this, path, e.toString());
 			e.printStackTrace();
+			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("fm.noaccess") + "\n" + e.toString(), null));
+			root();
 		}
 		if(keysMode && uiItems[0] != null)
 			uiItems[0].setSelected(true);

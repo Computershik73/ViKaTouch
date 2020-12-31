@@ -253,3 +253,8 @@ player.accessfailed=VK doesn't allow your device to access the audio file. Try t
 player.playererror=Player error
 player.internalerror=Unknown internal error (-2)
 player.cancel=Cancel downloading?
+
+fm.noaccess=No access.
+fm.memorycard=Memory card
+fm.gallery=Gallery
+fm.root=Root folder

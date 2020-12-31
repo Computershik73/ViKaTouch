@@ -106,7 +106,7 @@ msg.attach.attachments=Вложения
 msg.attach.video=Видеозапись
 msg.attach.wall=Запись на стене
 msg.attach.doc=Документ
-msg.attach.memory=С памяти
+msg.attach.memory=Из памяти
 msg.attach.album=Из ВК
 msg.keyboard=Нажмите ОК для ввода
 msg.entermsg=Введите сообщение...
@@ -287,3 +287,8 @@ wall.unlike=Не нравится
 wall.links=Ссылки...
 wall.repost=Репост
 wall.comments=Комментарии
+
+fm.noaccess=Нет доступа
+fm.memorycard=Карта памяти
+fm.gallery=Галерея
+fm.root=Корневая папка
