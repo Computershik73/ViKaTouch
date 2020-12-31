@@ -6,7 +6,7 @@
 
 langinfo.name=English
 #YYYY.MM.DD
-langinfo.version=2020.12.19
+langinfo.version=2020.12.31
 
 langinfo.hints=1
 
