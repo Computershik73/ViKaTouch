@@ -11,6 +11,9 @@ import javax.microedition.lcdui.ImageItem;
 import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 
+import ru.nnproject.vikalite.LiteMIDlet;
+import vikalite.TextEditor;
+import vikalite.VikaLite;
 import vikatouch.VikaTouch;
 
 public class TextEditor implements CommandListener {
@@ -51,19 +54,23 @@ public class TextEditor implements CommandListener {
 		return inputString(s, s2, n, false);
 	}
 
-	public static String inputString(final String preset, final String header, final int max, final boolean password) {
+
+	public static String inputString(final String header, final String preset, final int max, final boolean password) {
 		TextEditor.inputFinished = false;
-		final TextEditor commandListener = new TextEditor(header);
+		final TextEditor commandListener = new TextEditor(preset);
 		screen = Display.getDisplay(VikaTouch.appInst).getCurrent();
-		TextEditor.textBox = new TextBox(preset, header, (max > 0) ? max : 1024, password ? 65536 : 0);
+		TextEditor.textBox = new TextBox("", "", (max > 0) ? max : 1024, password ? 65536 : 0);
+		textBox.setTitle(header);
+		textBox.setString(preset);
 		textBox.addCommand(TextEditor.ok);
 		TextEditor.textBox.setCommandListener((CommandListener) commandListener);
 		VikaTouch.setDisplay((Displayable) TextEditor.textBox);
 		while (!TextEditor.inputFinished) {
-			// Thread.yield();
+			Thread.yield();
 			try {
-				Thread.sleep(20L);
-			} catch (Exception ex) {
+				Thread.sleep(20l);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 		return commandListener.str;
