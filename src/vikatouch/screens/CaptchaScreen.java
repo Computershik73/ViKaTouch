@@ -60,7 +60,7 @@ public class CaptchaScreen extends VikaScreen {
 				thread.interrupt();
 			thread = new Thread() {
 				public void run() {
-					input = TextEditor.inputString(captchaStr, input, 32, false);
+					input = TextEditor.inputString(captchaStr, input, 32, image);
 				}
 			};
 			thread.start();
@@ -82,7 +82,7 @@ public class CaptchaScreen extends VikaScreen {
 				thread.interrupt();
 			thread = new Thread() {
 				public void run() {
-					input = TextEditor.inputString(captchaStr, input, 32, false);
+					input = TextEditor.inputString(captchaStr, input, 32, image);
 					interrupt();
 				}
 			};
