@@ -139,9 +139,11 @@ public class LoginScreen extends VikaScreen {
 				selectedBtn = 0;
 		} else if (key == -7 || key == -8 || key == 8) {
 			if (selectedBtn == 1) {
-				user = user.substring(0, user.length() - 1);
+				if(user.length() > 0)
+					user = user.substring(0, user.length() - 1);
 			} else if (selectedBtn == 2) {
-				pass = pass.substring(0, pass.length() - 1);
+				if(pass.length() > 0)
+					pass = pass.substring(0, pass.length() - 1);
 			}
 		} else {
 			String s = VikaTouch.canvas.getKeyName(key);
