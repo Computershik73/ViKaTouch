@@ -11,9 +11,6 @@ import javax.microedition.lcdui.ImageItem;
 import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 
-import ru.nnproject.vikalite.LiteMIDlet;
-import vikalite.TextEditor;
-import vikalite.VikaLite;
 import vikatouch.VikaTouch;
 
 public class TextEditor implements CommandListener {

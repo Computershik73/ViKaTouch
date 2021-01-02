@@ -3,13 +3,19 @@ package vikatouch.screens;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import org.json.me.JSONObject;
+
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
+import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
+import vikatouch.screens.menu.MenuScreen;
+import vikatouch.utils.VikaUtils;
 import vikatouch.utils.captcha.CaptchaObject;
 import vikatouch.utils.text.TextEditor;
+import vikatouch.utils.url.URLBuilder;
 
 public class CaptchaScreen extends VikaScreen {
 	public Image image;
@@ -22,9 +28,13 @@ public class CaptchaScreen extends VikaScreen {
 	private String captchaRequiredStr;
 	private String captchaStr;
 	private boolean switcher;
+	private String user;
+	private String pass;
 
-	public CaptchaScreen() {
+	public CaptchaScreen(String user, String pass) {
 		super();
+		this.user = user;
+		this.pass = pass;
 		captchaRequiredStr = TextLocal.inst.get("login.captcharequired");
 		captchaStr = TextLocal.inst.get("login.captcha");
 		switcher = false;
@@ -69,9 +79,40 @@ public class CaptchaScreen extends VikaScreen {
 
 	public final void release(int x, int y) {
 		if (x > this.x && y > 150 && y < 186 && x < this.x + this.w) {
-			finished = true;
+			CaptchaScreen.finished = true;
 			VikaTouch.canvas.showCaptcha = false;
+			captcha();
 		}
+	}
+
+	private void captcha() {
+
+		try {
+			VikaTouch.inst.tokenAnswer = VikaUtils.download(new URLBuilder(VikaTouch.OAUTH, "token").addField("grant_type", "password")
+					.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
+					.addField("username", user).addField("password", pass)
+					.addField("scope",
+							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
+					.addField("captcha_sid", obj.captchasid)
+					.addField("captcha_key", CaptchaScreen.input).toString());
+			if (VikaTouch.inst.tokenAnswer.indexOf("need_captcha") > 0) {
+				VikaTouch.inst.captcha(user, pass);
+			}
+			if (VikaTouch.inst.tokenAnswer.indexOf("error") >= 0) {
+				return;
+			}
+			JSONObject json = new JSONObject(VikaTouch.inst.tokenAnswer);
+			VikaTouch.accessToken = json.getString("access_token");
+			VikaTouch.userId = json.getString("user_id");
+			VikaTouch.inst.refreshToken();
+			VikaTouch.menuScr = new MenuScreen();
+			VikaTouch.setDisplay(VikaTouch.menuScr, 1);
+			VikaTouch.inst.saveToken();
+			Dialogs.refreshDialogsList(true, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public final void press(int key) {
@@ -91,6 +132,7 @@ public class CaptchaScreen extends VikaScreen {
 			} else {
 				finished = true;
 				VikaTouch.canvas.showCaptcha = false;
+				captcha();
 			}
 		}
 	}

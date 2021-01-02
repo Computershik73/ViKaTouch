@@ -90,7 +90,7 @@ public class VikaTouch {
 	public static VikaCanvasInst canvas;
 	public CommandsImpl cmdsInst;
 	private String errReason;
-	private String tokenAnswer;
+	public String tokenAnswer;
 	private SplashScreen splash;
 	public static VikaTouch inst;
 	public static VikaTouchApp appInst;
@@ -101,7 +101,7 @@ public class VikaTouch {
 	public static int integerUserId;
 	protected static PhotosScreen photos;
 
-	private void saveToken() {
+	public void saveToken() {
 		try {
 			try {
 				if (tokenRMS != null)
@@ -384,7 +384,7 @@ public class VikaTouch {
 		}
 	}
 
-	private void refreshToken() throws IOException {
+	public void refreshToken() throws IOException {
 		if(VikaTouch.mobilePlatform.equalsIgnoreCase("NokiaN73")) {
 			return;
 		}
@@ -434,61 +434,13 @@ public class VikaTouch {
 		}
 	}
 
-	private boolean captcha(String user, String pass) throws IOException, InterruptedException {
+	public boolean captcha(String user, String pass) throws IOException, InterruptedException {
 		try {
-			captchaScr = new CaptchaScreen();
+			captchaScr = new CaptchaScreen(user, pass);
 			captchaScr.obj = new CaptchaObject(new JSONObject(tokenAnswer));
 			captchaScr.obj.parseJSON();
 			canvas.showCaptcha = true;
 			CaptchaScreen.finished = false;
-			while (appInst.started) {
-				if (captchaScr != null && CaptchaScreen.finished) {
-					tokenAnswer = VikaUtils.download(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
-							.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
-							.addField("username", user).addField("password", pass)
-							.addField("scope",
-									"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
-							.addField("captcha_sid", captchaScr.obj.captchasid)
-							.addField("captcha_key", CaptchaScreen.input).toString());
-					errReason = tokenAnswer;
-					if (tokenAnswer.indexOf("need_captcha") > 0) {
-						return captcha(user, pass);
-					}
-					if (tokenAnswer.indexOf("error") >= 0) {
-						return false;
-					}
-					JSONObject json = new JSONObject(tokenAnswer);
-					accessToken = json.getString("access_token");
-					userId = json.getString("user_id");
-					// accessToken = tokenUnswer.substring(tokenUnswer.indexOf("access_token") + 15,
-					// tokenUnswer.indexOf("expires_in") - 3);
-					// userId = tokenUnswer.substring(tokenUnswer.indexOf("user_id") + 9,
-					// tokenUnswer.indexOf("}") - 0);
-					refreshToken();
-					// String var5 =
-					// ":APA91bFAM-gVwLCkCABy5DJPPRH5TNDHW9xcGu_OLhmdUSA8zuUsBiU_DexHrTLLZWtzWHZTT5QUaVkBk_GJVQyCE_yQj9UId3pU3vxvizffCPQISmh2k93Fs7XH1qPbDvezEiMyeuLDXb5ebOVGehtbdk_9u5pwUw";
-					/*
-					 * if ((refreshToken = VikaUtils.download(new
-					 * URLBuilder("auth.refreshToken").addField("receipt",
-					 * var5).toString())).indexOf("method") == INDEX_FALSE) { accessToken =
-					 * refreshToken.substring(refreshToken.indexOf("access_token") + 23,
-					 * refreshToken.length() - 3); tokenUnswer = "{\"access_token\":\"" +
-					 * accessToken + "\",\"expires_in\":0,\"user_id\":" + userId + "}"; final
-					 * VikaScreen canvas = menuScr = new MenuScreen(); setDisplay(canvas, 1);
-					 * saveToken(); Dialogs.refreshDialogsList(true); CaptchaScreen.finished =
-					 * false; return true; } else { errReason = "failed auth with captcha"; }
-					 */
-
-					final VikaScreen canvas = menuScr = new MenuScreen();
-					setDisplay(canvas, 1);
-					saveToken();
-					Dialogs.refreshDialogsList(true, false);
-					CaptchaScreen.finished = false;
-					return true;
-					// CaptchaScreen.finished = false;
-					// break;
-				}
-			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
