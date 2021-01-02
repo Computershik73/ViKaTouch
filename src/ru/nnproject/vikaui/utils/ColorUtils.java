@@ -6,11 +6,13 @@ import vikatouch.settings.Settings;
 
 public class ColorUtils
 {
+	/*
 	public final static int[] color = {80, 118, 167};
 	public final static int[] textcolor = {193, 206, 224};
 	public final static int[] buttoncolor = {81, 129, 184};
 	public final static int[] buttoncolorhover = {102, 144, 192};
 	public final static int[] onlinecolor = {74, 178, 78};
+	*/
 	public static final int BACKGROUND = -1;
 	public static final int COLOR1 = 1;
 	public static final int TEXTCOLOR1 = 2;
@@ -68,12 +70,12 @@ public class ColorUtils
 			}
 			case COLOR1:
 			{
-				g.setColor(color[0], color[1], color[2]);
+				g.setColor(80, 118, 167);
 				break;
 			}
 			case TEXTCOLOR1:
 			{
-				g.setColor(textcolor[0], textcolor[1], textcolor[2]);
+				g.setColor(193, 206, 224);
 				break;
 			}
 			case TITLEPANELCOLOR:
@@ -81,7 +83,7 @@ public class ColorUtils
 				if(isNight())
 					g.setGrayScale(12);
 				else
-					g.setColor(buttoncolor[0], buttoncolor[1], buttoncolor[2]);
+					g.setColor(81, 129, 184);
 				break;
 			}
 			case BUTTONCOLOR:
@@ -89,12 +91,12 @@ public class ColorUtils
 				if(isNight())
 					g.setGrayScale(30);
 				else
-					g.setColor(buttoncolor[0], buttoncolor[1], buttoncolor[2]);
+					g.setColor(81, 129, 184);
 				break;
 			}
 			case ONLINE:
 			{
-				g.setColor(onlinecolor[0], onlinecolor[1], onlinecolor[2]);
+				g.setColor(74, 178, 78);
 				break;
 			}
 			case TEXT:

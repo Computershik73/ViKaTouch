@@ -294,7 +294,7 @@ public class Settings {
 				//2.8.15
 				os.writeBoolean(nightTheme);
 
-				final byte[] b = baos.toByteArray();
+				byte[] b = baos.toByteArray();
 				rs.addRecord(b, 0, b.length);
 				os.close();
 				baos.close();

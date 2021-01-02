@@ -457,12 +457,13 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			break;
 		}
 		case 23: {
-			OptionItem[] it = new OptionItem[5];
+			OptionItem[] it = new OptionItem[6];
 			it[0] = new OptionItem(this, "English", IconsManager.EDIT, 1, oneitemheight);
 			it[1] = new OptionItem(this, "Русский", IconsManager.EDIT, 2, oneitemheight);
 			it[2] = new OptionItem(this, "Español", IconsManager.EDIT, 3, oneitemheight);
 			it[3] = new OptionItem(this, "Український", IconsManager.EDIT, 4, oneitemheight);
 			it[4] = new OptionItem(this, "Беларускі", IconsManager.EDIT, 5, oneitemheight);
+			it[5] = new OptionItem(this, "Tiếng Việt", IconsManager.EDIT, 6, oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
 			break;
 		}
@@ -474,6 +475,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			it[3] = new OptionItem(this, "España (ES)", IconsManager.EDIT, 35, oneitemheight);
 			it[4] = new OptionItem(this, "Україна (UA)", IconsManager.EDIT, 36, oneitemheight);
 			it[5] = new OptionItem(this, "Беларусь (BY)", IconsManager.EDIT, 37, oneitemheight);
+			it[6] = new OptionItem(this, "Қазақстан (KZ)", IconsManager.EDIT, 38, oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
 			break;
 		}
@@ -493,14 +495,14 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		if (i >= 11 && i <= 19) {
 			int j = i - 11;
-			final String[] res = new String[] { "240", "360", "480", "720" };
+			String[] res = new String[] { "240", "360", "480", "720" };
 			Settings.setted = true;
 			Settings.videoResolution = res[j];
 			// Settings.saveSettings();
 		}
 		if (i >= 1 && i <= 9) {
 			int j = i - 1;
-			final String[] res = new String[] { "english", "russian", "spanish", "ukrainian", "belarussian"};
+			String[] res = new String[] { "english", "russian", "spanish", "ukrainian", "belarussian", "vietnamese"};
 			Settings.setted = true;
 			Settings.language = res[j];
 			System.out.println(Settings.language);
@@ -515,7 +517,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		if(i >= 32 && i <= 40) {
 
 			int j = i - 32;
-			final String[] res = new String[] { "RU", "US", "UK", "ES", "UA", "BY"};
+			String[] res = new String[] { "RU", "US", "UK", "ES", "UA", "BY", "KZ"};
 			Settings.setted = true;
 			Settings.region = res[j];
 			System.out.println(Settings.region);

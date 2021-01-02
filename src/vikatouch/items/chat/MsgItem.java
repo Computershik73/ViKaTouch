@@ -505,7 +505,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		int li = 0; // индекс в массиве
 		int tl = text.length();
 
-		final String[] glinks = new String[] { "http://", "https://", "rtsp://", "ftp://", "smb://" }; // вроде всё.
+		String[] glinks = new String[] { "http://", "https://", "rtsp://", "ftp://", "smb://" }; // вроде всё.
 																										// Ага, я
 																										// слал/принимал
 																										// пару раз
