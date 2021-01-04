@@ -94,13 +94,13 @@ public class VideoItem extends JSONUIItem {
 
 	public void tap(int x, int y) {
 		if (x < DisplayUtils.width - 50) {
-			keyPressed(KEY_OK);
+			keyPress(KEY_OK);
 		} else {
-			keyPressed(KEY_FUNC);
+			keyPress(KEY_FUNC);
 		}
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if (external == null) {
 			if (key == KEY_FUNC) {
 				if (file != null)

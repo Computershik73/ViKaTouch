@@ -43,7 +43,7 @@ public final class DateItem extends ChatItem {
 
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 
 	}
 

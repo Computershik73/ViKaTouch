@@ -54,7 +54,7 @@ public class ContextMenu extends VikaNotice {
 		try {
 			if (key == PressableUIItem.KEY_OK) {
 				VikaCanvas.currentAlert = null;
-				items[selected].keyPressed(PressableUIItem.KEY_OK);
+				items[selected].keyPress(PressableUIItem.KEY_OK);
 			} else if (key == -1) {
 				items[selected].setSelected(false);
 				selected--;

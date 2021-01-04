@@ -38,7 +38,7 @@ public class TextEditor implements CommandListener {
 		current.setCommandListener((CommandListener) commandListener);
 		VikaTouch.setDisplay((Displayable) current);
 		while (!TextEditor.inputFinished) {
-			// Thread.yield();
+			Thread.yield();
 			try {
 				Thread.sleep(20L);
 			} catch (Exception ex) {

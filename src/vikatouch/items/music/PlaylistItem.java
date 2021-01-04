@@ -93,7 +93,7 @@ public class PlaylistItem extends JSONUIItem {
 		open();
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if (key == KEY_OK) {
 			open();
 		}

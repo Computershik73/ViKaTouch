@@ -90,7 +90,7 @@ public class VideoAttachment extends ImageAttachment {
 			JSONObject r = new JSONObject(x).getJSONObject("response").getJSONArray("items").getJSONObject(0);
 			VideoItem i = new VideoItem(r);
 			i.parseJSON();
-			i.keyPressed(-5);
+			i.keyPress(-5);
 		} catch (Exception e) {
 			VikaTouch.sendLog("Video att press: " + e.toString());
 		}

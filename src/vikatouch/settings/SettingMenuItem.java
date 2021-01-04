@@ -101,10 +101,10 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	}
 
 	public void tap(int x, int y) {
-		keyPressed(-5);
+		keyPress(-5);
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if (key == KEY_OK) {
 			if(noyes) {
 				currentOption = currentOption == 0 ? 1 : 0;

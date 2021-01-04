@@ -282,7 +282,7 @@ public class DocItem extends JSONUIItem implements ISocialable {
 		}
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if (DocsScreen.current.isPreviewShown) {
 			DocsScreen.current.isPreviewShown = false;
 			DocsScreen.current.previewImage = null;

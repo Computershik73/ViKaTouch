@@ -182,7 +182,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			} else if (key == -7) {
 				DisplayUtils.canvas.callCommand(14, this);
 			} else {
-				uiItems[currentItem].keyPressed(key);
+				uiItems[currentItem].keyPress(key);
 			}
 			repaint();
 		} catch (Throwable e) {

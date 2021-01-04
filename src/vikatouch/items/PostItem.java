@@ -430,7 +430,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 		VikaTouch.popup(new AutoContextMenu(o));
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if (key == -5)
 			options(true);
 	}

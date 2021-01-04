@@ -58,6 +58,7 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.captcha.CaptchaObject;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.error.ErrorCodes;
+import vikatouch.utils.error.ExceptionUtils;
 import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
 import vikatouch.utils.url.URLDecoder;
@@ -338,7 +339,7 @@ public class VikaTouch {
 	}
 
 	private boolean code(String user, String pass, String tokenUnswer) {
-		String code = TextEditor.inputString("2Fa code", "", 16);
+		String code = TextEditor.inputString("2Fa code", "", 18);
 		try {
 			tokenUnswer = VikaUtils.download(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 					.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
@@ -441,6 +442,7 @@ public class VikaTouch {
 			captchaScr.obj.parseJSON();
 			canvas.showCaptcha = true;
 			CaptchaScreen.finished = false;
+			return true;
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -491,9 +493,6 @@ public class VikaTouch {
 				+ DisplayUtils.width + "x" + DisplayUtils.height;
 		String details = "";
 		if (extended) {
-			String m3g = System.getProperty("microedition.m3g.version");
-			if (m3g == null)
-				m3g = "-";
 			String hostname = System.getProperty("microedition.hostname");
 			if (hostname == null)
 				hostname = "-";
@@ -511,7 +510,7 @@ public class VikaTouch {
 				jver = "-";
 			details = "\nDevice info: \nRAM:" + mem + "K, profiles:" + System.getProperty("microedition.profiles")
 					+ ", conf:" + System.getProperty("microedition.configuration") + " Emulator:"
-					+ EmulatorDetector.emulatorType + " m3g:" + m3g + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + " hostname: " + hostname + "\nCamera tests:\n" + testCamera() + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
+					+ EmulatorDetector.emulatorType + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + " hostname: " + hostname + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
 					+ (Settings.https ? 1 : 0) + " proxy:" + (Settings.proxy ? 1 : 0) + " lang: " + Settings.language
 					+ " ll:" + Settings.simpleListsLength + " audio:" + Settings.audioMode + "AS:"
 					+ Settings.loadMusicViaHttp + "" + Settings.loadMusicWithKey ;
@@ -757,7 +756,7 @@ public class VikaTouch {
 		}
 
 		if (Settings.sendLogs) {
-			sendLog("Error Report", "errcode: " + i + ", throwable: " + e.toString() + (fatal ? ", fatal" : ""));
+			sendLog("Error Report", "errcode: " + i + ", throwable: " + e.toString() + (fatal ? ", fatal" : "") + (ExceptionUtils.canStackTrace() ? "\nStack Trace: " + ExceptionUtils.getStackTrace(e) : ""));
 		}
 	}
 
@@ -791,7 +790,7 @@ public class VikaTouch {
 		}
 
 		if (Settings.sendLogs) {
-			sendLog("Error Report", "throwable: " + e.toString() + ", message: " + s + (fatal ? ", fatal" : ""));
+			sendLog("Error Report", "throwable: " + e.toString() + ", message: " + s + (fatal ? ", fatal" : "") + (ExceptionUtils.canStackTrace() ? "\nStack Trace: " + ExceptionUtils.getStackTrace(e) : ""));;
 		}
 	}
 

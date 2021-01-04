@@ -10,7 +10,7 @@ public abstract interface PressableUIItem extends UIItem
 	
 	public void tap(int x, int y);
 	
-	public void keyPressed(int key);
+	public void keyPress(int key);
 	
 	public boolean isSelected();
 	

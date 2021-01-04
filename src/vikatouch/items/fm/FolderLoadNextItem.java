@@ -15,7 +15,7 @@ public class FolderLoadNextItem extends FolderItem {
 		fms.openFolder(this.path, FileManagerScreen.len - 1);
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if(key == -5 || key == -6) {
 			fms.openFolder(this.path, FileManagerScreen.len - 1);
 		}

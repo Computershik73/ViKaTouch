@@ -48,7 +48,7 @@ public class LoadMoreButtonItem implements PressableUIItem {
 		l.loadNext();
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if (key == KEY_OK) {
 			l.loadNext();
 		}

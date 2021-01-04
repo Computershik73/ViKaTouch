@@ -588,10 +588,10 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	}
 
 	public void tap(int x, int y) {
-		keyPressed(-5);
+		keyPress(-5);
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if (key == -5) {
 			int h = 48;
 			OptionItem[] opts = new OptionItem[6];

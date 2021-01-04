@@ -113,7 +113,7 @@ public class GroupItem extends JSONUIItem {
 		}
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if (key == KEY_OK)
 			tap(20, 20);
 	}

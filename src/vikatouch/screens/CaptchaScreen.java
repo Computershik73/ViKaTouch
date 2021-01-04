@@ -1,5 +1,6 @@
 package vikatouch.screens;
 
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
@@ -30,6 +31,7 @@ public class CaptchaScreen extends VikaScreen {
 	private boolean switcher;
 	private String user;
 	private String pass;
+	private String s;
 
 	public CaptchaScreen(String user, String pass) {
 		super();
@@ -37,6 +39,7 @@ public class CaptchaScreen extends VikaScreen {
 		this.pass = pass;
 		captchaRequiredStr = TextLocal.inst.get("login.captcharequired");
 		captchaStr = TextLocal.inst.get("login.captcha");
+		s = TextLocal.inst.get("title.login");
 		switcher = false;
 		input = "";
 	}
@@ -51,16 +54,26 @@ public class CaptchaScreen extends VikaScreen {
 		ColorUtils.setcolor(g, -2);
 		if (!switcher)
 			ColorUtils.setcolor(g, ColorUtils.TEXT);
-		g.drawRect(0, 100, 240, 40);
+		g.drawRect(0, 100, DisplayUtils.width - 1, 40);
 		ColorUtils.setcolor(g, 3);
 		g.fillRect(x, 150, w, 36);
+		if (switcher) {
+			ColorUtils.setcolor(g, ColorUtils.TEXT);
+			g.drawRect(x, 150, w, 36);
+		}
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
+		if (switcher)
+			ColorUtils.setcolor(g, ColorUtils.OUTLINE);
+		g.setFont(Font.getDefaultFont());
+		int sw = g.getFont().stringWidth(s);
+		g.drawString(s, x + (w - sw) / 2, 150 + (36 - g.getFont().getHeight()) / 2, 0);
 		ColorUtils.setcolor(g, 2);
+		g.setFont(Font.getFont(0, 0, Font.SIZE_MEDIUM));
 		if (input != null)
 			g.drawString(input, 10, 110, 0);
 		x = (DisplayUtils.width - w) / 2;
-		ColorUtils.setcolor(g, -5);
-		g.drawString(captchaRequiredStr/* "Требуется ввод капчи!" */, DisplayUtils.width / 2, 0,
-				Graphics.TOP | Graphics.HCENTER);
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
+		g.drawString(captchaRequiredStr, DisplayUtils.width / 2, 0, Graphics.TOP | Graphics.HCENTER);
 		g.drawImage(image, x, 24, 0);
 	}
 
@@ -88,13 +101,13 @@ public class CaptchaScreen extends VikaScreen {
 	private void captcha() {
 
 		try {
-			VikaTouch.inst.tokenAnswer = VikaUtils.download(new URLBuilder(VikaTouch.OAUTH, "token").addField("grant_type", "password")
-					.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
-					.addField("username", user).addField("password", pass)
+			VikaTouch.inst.tokenAnswer = VikaUtils.download(new URLBuilder(VikaTouch.OAUTH, "token")
+					.addField("grant_type", "password").addField("client_id", "2685278")
+					.addField("client_secret", "lxhD8OD7dMsqtXIm5IUY").addField("username", user)
+					.addField("password", pass)
 					.addField("scope",
 							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
-					.addField("captcha_sid", obj.captchasid)
-					.addField("captcha_key", CaptchaScreen.input).toString());
+					.addField("captcha_sid", obj.captchasid).addField("captcha_key", CaptchaScreen.input).toString());
 			if (VikaTouch.inst.tokenAnswer.indexOf("need_captcha") > 0) {
 				VikaTouch.inst.captcha(user, pass);
 			}
@@ -112,23 +125,24 @@ public class CaptchaScreen extends VikaScreen {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public final void press(int key) {
 		if (key == -1 || key == -2) {
 			switcher = !switcher;
 		} else if (key == -5) {
-			if (!switcher) {if (thread != null)
-				thread.interrupt();
-			thread = new Thread() {
-				public void run() {
-					input = TextEditor.inputString(captchaStr, input, 32, image);
-					interrupt();
-				}
-			};
-			thread.setPriority(Thread.MAX_PRIORITY);
-			thread.start();
+			if (!switcher) {
+				if (thread != null)
+					thread.interrupt();
+				thread = new Thread() {
+					public void run() {
+						input = TextEditor.inputString(captchaStr, input, 32, image);
+						interrupt();
+					}
+				};
+				thread.setPriority(Thread.MAX_PRIORITY);
+				thread.start();
 			} else {
 				finished = true;
 				VikaTouch.canvas.showCaptcha = false;

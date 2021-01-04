@@ -166,13 +166,15 @@ public class MenuScreen extends MainScreen implements IMenu {
 
 	public final void press(int key) {
 		keysMode = true;
-		if (key == -5) {
+		if(key == -7) {
+			
+		} else if (key == -5) {
 			if (selectedBtn == 0) {
 				VikaTouch.inst.cmdsInst.command(13, this);
 			} else if (selectedBtn == 1) {
 				VikaTouch.inst.cmdsInst.command(16, this);
 			} else {
-				uiItems[selectedBtn - 2].keyPressed(-5); // проверял хоть?
+				uiItems[selectedBtn - 2].keyPress(-5); // проверял хоть?
 			}
 		} else
 			super.press(key);

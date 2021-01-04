@@ -38,7 +38,7 @@ public class DialogsScreen extends MainScreen {
 			keysMode = true;
 		}
 		if (key == -5) {
-			Dialogs.dialogs[currentItem].keyPressed(-5);
+			Dialogs.dialogs[currentItem].keyPress(-5);
 		} else if (key == -6) {
 			callRefresh();
 			repaint();

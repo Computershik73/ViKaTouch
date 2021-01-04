@@ -60,7 +60,7 @@ public class OptionItem implements PressableUIItem {
 		menu.onMenuItemPress(i);
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if (key == KEY_OK)
 			menu.onMenuItemPress(i);
 	}

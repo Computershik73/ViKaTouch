@@ -36,7 +36,8 @@ public final class URLDecoder {
 	}
 	
 	private static String hex(int ch) {
-		return "%" + Integer.toHexString(ch);
+		String x = Integer.toHexString(ch);
+		return "%" + (x.length() == 1 ? "0" : "") + x;
 	}
 
 	public static String decode(String s) throws UnsupportedEncodingException {

@@ -294,7 +294,7 @@ public class ConversationItem extends JSONUIItem {
 		 */
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		Dialogs.openDialog(this);
 	}
 

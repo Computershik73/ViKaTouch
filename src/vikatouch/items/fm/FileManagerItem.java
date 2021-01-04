@@ -90,7 +90,7 @@ public abstract class FileManagerItem implements PressableUIItem {
 		return size / 1024 + "K";
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		if(key == -5) {
 			if(isImage())
 				fms.send(this);

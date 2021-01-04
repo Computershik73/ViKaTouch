@@ -229,7 +229,7 @@ public class ActionItem extends ChatItem implements IMessage {
 		
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 		
 	}
 

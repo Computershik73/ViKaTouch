@@ -155,7 +155,7 @@ login.captcha=Капча
 login.login=Логин
 login.password=Пароль
 login.warn=Не введен логин или пароль!
-login.failed=Не удалось ввойти
+login.failed=Не удалось войти
 
 profile.closed=Это закрытый профиль
 user=Пользователь 

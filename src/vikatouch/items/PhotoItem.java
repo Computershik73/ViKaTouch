@@ -24,7 +24,7 @@ public class PhotoItem extends JSONUIItem {
 
 	}
 
-	public void keyPressed(int key) {
+	public void keyPress(int key) {
 
 	}
 

@@ -54,7 +54,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 				back();
 			} else if(x > DisplayUtils.width - 36) {
 				if(selectedItem != null && selectedItem.isImage()) {
-					selectedItem.keyPressed(-6);
+					selectedItem.keyPress(-6);
 				}
 			} else if(x > (DisplayUtils.width - 36) / 2 && x < (DisplayUtils.width - 36) / 2 + 18) {
 				if(selectedItem != null && selectedItem.isImage()) {
@@ -83,12 +83,12 @@ public class FileManagerScreen extends ScrollableCanvas {
 	public void press(int key) {
 		if(key == -6) {
 			if(uiItems[currentItem] != null)
-				uiItems[currentItem].keyPressed(-6);
+				uiItems[currentItem].keyPress(-6);
 		} else if(key == -7) {
 			back();
 		} else if(key == -5) {
 			if(uiItems[currentItem] != null)
-				uiItems[currentItem].keyPressed(-5);
+				uiItems[currentItem].keyPress(-5);
 		} else {
 			super.press(key);
 		}

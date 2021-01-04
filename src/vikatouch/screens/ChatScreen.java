@@ -731,7 +731,7 @@ public class ChatScreen extends MainScreen {
 		} else if (key == -5) { // ok
 			switch (buttonSelected) {
 			case 0:
-				uiItems[currentItem].keyPressed(key);
+				uiItems[currentItem].keyPress(key);
 				break;
 			case 1:
 				// прикреп
