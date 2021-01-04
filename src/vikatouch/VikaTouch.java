@@ -1096,4 +1096,8 @@ public class VikaTouch {
 		System.gc();
 
 	}
+
+	public static boolean needFilePermission() {
+		return (isS40() || (mobilePlatform.indexOf("S60") != -1 && (mobilePlatform.indexOf("3.0") != -1 || mobilePlatform.indexOf("3.1") != -1 || mobilePlatform.indexOf("3.2") != -1))) && !EmulatorDetector.isEmulator;
+	}
 }

@@ -19,10 +19,10 @@ import vikatouch.VikaTouch;
 import vikatouch.items.fm.FileItem;
 import vikatouch.items.fm.FileManagerItem;
 import vikatouch.items.fm.FolderItem;
+import vikatouch.items.fm.FolderLoadNextItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
 import vikatouch.utils.VikaUtils;
-import vikatouch.utils.emulatordetect.EmulatorDetector;
 
 public class FileManagerScreen extends ScrollableCanvas {
 	
@@ -31,6 +31,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 	private String folder;
 	private boolean root;
 	private FileConnection fileconn;
+	public static int len;
 
 	public FileManagerScreen(ChatScreen chat) {
 		this.chat = chat;
@@ -39,6 +40,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 	
 	public void load() {
+		len = 30;
 		root();
 	}
 	
@@ -211,13 +213,16 @@ public class FileManagerScreen extends ScrollableCanvas {
 		String root = "file:///";
 		String e = "file:///e:/";
 		if(memcard == null || memcard.length() == 0) {
-			memcard = "file:///e:/";
+			memcard = "file:///f:/";
 			hascard = true;
-		}
-		if(memcard.toLowerCase().indexOf("/e:") == -1) {
 			hasdiske = true;
+		} else if(memcard.toLowerCase().indexOf("/e:") == -1) {
+			hasdiske = true;
+		} else {
+			hasdiske = true;
+			memcard = "file:///f:/";
 		}
-		if(gallery == null || gallery.length() == 0 || gallery.equalsIgnoreCase(memcard)) {
+		if(gallery == null || gallery.length() == 0) {
 			hasgallery = false;
 		}
 		int len = 0;
@@ -271,9 +276,10 @@ public class FileManagerScreen extends ScrollableCanvas {
 			uiItems[0].setSelected(true);
 	}
 
-	public void openFolder(String path) {
+	public void openFolder(String path, int offset) {
+		boolean s40 = VikaTouch.needFilePermission();
 		selectedItem = null;
-		uiItems = new PressableUIItem[30];
+		uiItems = new PressableUIItem[len];
 		currentItem = 0;
 		boolean createNew = false;
 		root = false;
@@ -296,7 +302,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 		}
 		folder = path;
 		System.out.println("set "+path+ " parent:" + parent+".");
-		boolean s40 = VikaTouch.isS40() && !EmulatorDetector.isEmulator;
 		try {
 			try {
 				if(fileconn == null || createNew || parent == null) {
@@ -312,7 +317,10 @@ public class FileManagerScreen extends ScrollableCanvas {
 			}
 			Enumeration var3 = fileconn.list("*", true);
 			int i = 0;
+			boolean loadnext = false;
 			for (; var3.hasMoreElements(); i++) {
+				if(i < offset)
+					continue;
 				String var4 = (String) var3.nextElement();
 				long var5;
 				FileConnection fc = null;
@@ -329,12 +337,25 @@ public class FileManagerScreen extends ScrollableCanvas {
 				if(fc != null) {
 					fc.close();
 				}
+				if(i + 1 >= len - 1) {
+					loadnext = true;
+					break;
+				}
 			}
-			itemsCount = (short) i;
+			if(loadnext) {
+				uiItems[len - 1] = new FolderLoadNextItem(this, path);
+				itemsCount = (short) len;
+			} else {
+				itemsCount = (short) (i - offset);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("fm.noaccess") + "\n" + e.toString(), null));
-			root();
+			if(e instanceof IOException || e instanceof IllegalArgumentException) {
+				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("fm.noaccess") + "\nПодробности ошибки:\n" + e.toString(), null));
+				root();
+			} else {
+				VikaTouch.popup(new InfoPopup("Ошибка заполнения директории!\nПодробности ошибки:\n" + e.toString(), null));
+			}
 		}
 		if(keysMode && uiItems[0] != null)
 			uiItems[0].setSelected(true);

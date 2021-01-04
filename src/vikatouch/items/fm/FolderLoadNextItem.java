@@ -1,27 +1,23 @@
 package vikatouch.items.fm;
 
-import javax.microedition.io.file.FileConnection;
-
 import ru.nnproject.vikaui.utils.images.IconsManager;
+import vikatouch.locale.TextLocal;
 import vikatouch.screens.temp.FileManagerScreen;
 
-public class FolderItem extends FileManagerItem {
-	
-	public FolderItem(FileManagerScreen fms, String path, String name) {
-		super(fms, path, name, 0);
+public class FolderLoadNextItem extends FolderItem {
+
+	public FolderLoadNextItem(FileManagerScreen fms, String path) {
+		super(fms, path, TextLocal.inst.get("loadmore"));
 	}
 	
-	public FolderItem(FileManagerScreen fms, FileConnection fc) {
-		super(fms, fc.getPath(), fc.getName(), 0);
-	}
 
 	public void tap(int x, int y) {
-		fms.openFolder(this.path, 0);
+		fms.openFolder(this.path, FileManagerScreen.len - 1);
 	}
 
 	public void keyPressed(int key) {
 		if(key == -5 || key == -6) {
-			fms.openFolder(this.path, 0);
+			fms.openFolder(this.path, FileManagerScreen.len - 1);
 		}
 	}
 
@@ -38,7 +34,7 @@ public class FolderItem extends FileManagerItem {
 	}
 	
 	protected String getSizeString() {
-		return "DIR";
+		return "";
 	}
 
 }
