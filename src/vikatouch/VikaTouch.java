@@ -751,7 +751,7 @@ public class VikaTouch {
 		}
 
 		if (Settings.sendLogs) {
-			sendLog("Error Report", "errcode: " + i + ", throwable: " + e.toString() + (fatal ? ", fatal" : "") + (ExceptionUtils.canStackTrace() ? "\nStack Trace: " + ExceptionUtils.getStackTrace(e) : ""));
+			sendLog("Error Report", "errcode: " + i + ", throwable: " + e.toString() + (fatal ? ", fatal" : ""));
 		}
 	}
 
@@ -785,7 +785,7 @@ public class VikaTouch {
 		}
 
 		if (Settings.sendLogs) {
-			sendLog("Error Report", "throwable: " + e.toString() + ", message: " + s + (fatal ? ", fatal" : "") + (ExceptionUtils.canStackTrace() ? "\nStack Trace: " + ExceptionUtils.getStackTrace(e) : ""));;
+			sendLog("Error Report", "throwable: " + e.toString() + ", message: " + s + (fatal ? ", fatal" : ""));
 		}
 	}
 

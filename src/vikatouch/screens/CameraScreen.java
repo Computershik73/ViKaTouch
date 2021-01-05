@@ -79,11 +79,10 @@ public class CameraScreen extends VikaScreen {
 	private void rotateall(int rot) {
 		back = Image.createImage(back, 0, 0, back.getWidth(), back.getHeight(), rot);
 		cam = Image.createImage(cam, 0, 0, cam.getWidth(), cam.getHeight(), rot);
-		flash = Image.createImage(flash, 0, 0, flash.getWidth(), flash.getHeight(), rot);
 		rotate = Image.createImage(rotate, 0, 0, rotate.getWidth(), rotate.getHeight(), rot);
 		selfie = Image.createImage(selfie, 0, 0, selfie.getWidth(), selfie.getHeight(), rot);
-		flashnot = Image.createImage(flashnot, 0, 0, flash.getWidth(), flash.getHeight(), rot);
-		flashyes = Image.createImage(flashyes, 0, 0, flash.getWidth(), flash.getHeight(), rot);
+		flashnot = Image.createImage(flashnot, 0, 0, flashnot.getWidth(), flashnot.getHeight(), rot);
+		flashyes = Image.createImage(flashyes, 0, 0, flashyes.getWidth(), flashyes.getHeight(), rot);
 		flash = Image.createImage(flash, 0, 0, flash.getWidth(), flash.getHeight(), rot);
 
 	}
