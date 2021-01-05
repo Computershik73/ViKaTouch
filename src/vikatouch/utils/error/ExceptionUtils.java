@@ -1,7 +1,5 @@
 package vikatouch.utils.error;
 
-import vikatouch.utils.url.URLDecoder;
-
 public class ExceptionUtils {
 	
 	public final static boolean canStackTrace() {

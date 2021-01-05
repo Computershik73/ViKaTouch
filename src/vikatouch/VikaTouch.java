@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
 
-import javax.microedition.amms.control.camera.FlashControl;
-import javax.microedition.amms.control.camera.FocusControl;
 import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.SocketConnection;
@@ -15,9 +13,6 @@ import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Image;
-import javax.microedition.media.Control;
-import javax.microedition.media.Manager;
-import javax.microedition.media.Player;
 import javax.microedition.rms.RecordStore;
 
 import org.json.me.JSONException;
@@ -44,8 +39,8 @@ import vikatouch.screens.MainScreen;
 import vikatouch.screens.NewsScreen;
 import vikatouch.screens.PhotosScreen;
 import vikatouch.screens.ReturnableListScreen;
-import vikatouch.screens.menu.DocsScreen;
 import vikatouch.screens.menu.ChatMembersScreen;
+import vikatouch.screens.menu.DocsScreen;
 import vikatouch.screens.menu.GroupsScreen;
 import vikatouch.screens.menu.MenuScreen;
 import vikatouch.screens.menu.VideosScreen;
@@ -517,7 +512,7 @@ public class VikaTouch {
 		}
 		return main + details;
 	}
-
+	/*
 	private static String testCamera() {
 		String x = "";
 		String exceptions = "";
@@ -616,7 +611,7 @@ public class VikaTouch {
 		x += "getfocus: " + currfocus + ".";
 		return x;
 	}
-
+	*/
 	public static void sendStats() {
 		(new Thread() {
 			public void run() {
