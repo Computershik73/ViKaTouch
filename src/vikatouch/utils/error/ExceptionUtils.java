@@ -15,7 +15,6 @@ public class ExceptionUtils {
 	}
 	
 	public final static String getStackTrace(Throwable t) {
-		System.out.println(URLDecoder.encode("\tasd"));
 		try {
 			Class.forName("com.nokia.mj.impl.utils.DebugUtils");
 			return format(com.nokia.mj.impl.utils.DebugUtils.getStackTrace(t));
