@@ -7,6 +7,7 @@ import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -26,7 +27,7 @@ import vikatouch.utils.error.ErrorCodes;
 public class GroupItem extends JSONUIItem {
 
 	private String name;
-	//private String link;
+	// private String link;
 	private int id;
 	private Image ava = null;
 	private int members;
@@ -43,7 +44,7 @@ public class GroupItem extends JSONUIItem {
 	public void parseJSON() {
 		try {
 			name = json.optString("name");
-			//link = json.optString("screen_name");
+			// link = json.optString("screen_name");
 			id = json.optInt("id");
 			isAdmin = json.optInt("is_admin") == 1;
 			members = json.optInt("members_count");
@@ -61,9 +62,9 @@ public class GroupItem extends JSONUIItem {
 		/*
 		 * switch(DisplayUtils.idispi) { case DisplayUtils.DISPLAY_S40: case
 		 * DisplayUtils.DISPLAY_ASHA311: case DisplayUtils.DISPLAY_EQWERTY: {
-		 * itemDrawHeight = 25; break; } case DisplayUtils.DISPLAY_PORTRAIT: case
-		 * DisplayUtils.DISPLAY_ALBUM: case DisplayUtils.DISPLAY_E6: default: {
-		 * itemDrawHeight = 48; break; } }
+		 * itemDrawHeight = 25; break; } case DisplayUtils.DISPLAY_PORTRAIT:
+		 * case DisplayUtils.DISPLAY_ALBUM: case DisplayUtils.DISPLAY_E6:
+		 * default: { itemDrawHeight = 48; break; } }
 		 */
 		itemDrawHeight = 50;
 		itemDrawHeight += BORDER * 2;
@@ -81,31 +82,26 @@ public class GroupItem extends JSONUIItem {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
-
-		if (selected) {
-			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-			g.fillRect(0, y, DisplayUtils.width, itemDrawHeight);
+		int tx = 4;
+		if (ava != null) {
+			g.drawImage(ava, 14, y + BORDER, 0);
+			g.drawImage(IconsManager.ac, 14, y + BORDER, 0);
+			tx = 73;
 		}
+
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
-		if (selected) {
-			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
+		if (ScrollableCanvas.keysMode && selected) {
+			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+			g.drawRect(0, y, DisplayUtils.width - 1, itemDrawHeight);
+			g.drawRect(1, y + 1, DisplayUtils.width - 3, itemDrawHeight - 2);
 		}
 		if (name != null)
-			g.drawString(name, 73, y, 0);
+			g.drawString(name, tx, y, 0);
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
 		String descrS = (isAdmin ? "Администрирование, " : "")
 				+ (members > 9999 ? ((members / 1000) + "K участников") : (members + " участников"));
-		g.drawString(descrS, 73, y + 24, 0);
-		if (ava != null) {
-			g.drawImage(ava, 14, y + BORDER, 0);
-		} else {
-			ColorUtils.setcolor(g, ColorUtils.OUTLINE);
-			g.fillRect(14, y + BORDER, 50, 50);
-		}
-		if (selected)
-			g.drawImage(IconsManager.acs, 14, y + BORDER, 0);
-		else
-			g.drawImage(IconsManager.ac, 14, y + BORDER, 0);
+		g.drawString(descrS, tx, y + 24, 0);
+
 	}
 
 	public void tap(int x, int y) {

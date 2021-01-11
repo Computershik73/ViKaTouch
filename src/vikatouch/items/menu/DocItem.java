@@ -34,7 +34,7 @@ public class DocItem extends JSONUIItem implements ISocialable {
 	private int size;
 	private PhotoSize[] prevSizes;
 	private Image iconImg;
-	//private int documentType;
+	// private int documentType;
 	private String ext;
 	private int type;
 	private String time;
@@ -149,7 +149,8 @@ public class DocItem extends JSONUIItem implements ISocialable {
 	public void paint(Graphics g, int y, int scrolled) {
 		if (ScrollableCanvas.keysMode && selected) {
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-			g.fillRect(0, y, DisplayUtils.width, itemDrawHeight);
+			g.drawRect(0, y, DisplayUtils.width - 1, itemDrawHeight);
+			g.drawRect(1, y + 1, DisplayUtils.width - 3, itemDrawHeight - 2);
 		}
 
 		if (iconImg == null)
@@ -159,11 +160,11 @@ public class DocItem extends JSONUIItem implements ISocialable {
 			time = getTime();
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		if (name != null)
-			g.drawString(name, 73, y, 0);
+			g.drawString(name, 63, y, 0);
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
-		g.drawString(size / 1000 + "кб, " + time, 73, y + 24, 0);
+		g.drawString(size / 1000 + "кб, " + time, 63, y + 24, 0);
 		if (iconImg != null) {
-			g.drawImage(iconImg, 14, y + BORDER, 0);
+			g.drawImage(iconImg, 4, y + BORDER, 0);
 		}
 		if (!ScrollableCanvas.keysMode) {
 			try {
@@ -219,8 +220,10 @@ public class DocItem extends JSONUIItem implements ISocialable {
 						return doczipImg;
 					}
 					/*
-					 * else if(ext.toLowerCase().indexOf("torrent") != VikaTouch.INDEX_FALSE) {
-					 * return ResizeUtils.resizeItemPreview(Image.createImage("/doctorr.png")); }
+					 * else if(ext.toLowerCase().indexOf("torrent") !=
+					 * VikaTouch.INDEX_FALSE) { return
+					 * ResizeUtils.resizeItemPreview(Image.createImage(
+					 * "/doctorr.png")); }
 					 */
 					else {
 						return docfileImg;
