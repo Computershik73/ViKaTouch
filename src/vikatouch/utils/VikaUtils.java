@@ -10,7 +10,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
 
@@ -22,7 +21,6 @@ import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
 
-import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.utils.images.IconsManager;

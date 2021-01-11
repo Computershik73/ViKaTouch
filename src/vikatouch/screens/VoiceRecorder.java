@@ -12,7 +12,6 @@ import javax.microedition.media.Player;
 import javax.microedition.media.control.RecordControl;
 
 import ru.nnproject.vikaui.utils.DisplayUtils;
-import vikamobilebase.HttpMultipartRequest;
 import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
@@ -92,7 +91,6 @@ public class VoiceRecorder extends MainScreen {
 			byte[] recorderSoundArray = output.toByteArray();
 			pl.close();
 			pl.deallocate();
-			Hashtable var3 = new Hashtable();
 
 			uploadUrl = VikaUtils.replace(uploadUrl, "\\/", "/");
 			String var4 = VikaUtils.upload("http://vikamobile.ru:80/upload.php?" + uploadUrl, "upload_field", "bb2.mp3", recorderSoundArray);
