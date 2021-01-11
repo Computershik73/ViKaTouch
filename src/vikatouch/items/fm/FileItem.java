@@ -6,6 +6,10 @@ import javax.microedition.io.file.FileConnection;
 
 import vikatouch.screens.temp.FileManagerScreen;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class FileItem extends FileManagerItem {
 
 	public FileItem(FileManagerScreen fms, String path, String name, int size) {

@@ -6,12 +6,16 @@ import javax.microedition.lcdui.Graphics;
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.popup.ContextMenu;
-import ru.nnproject.vikaui.popup.ImagePreview;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.popup.ImagePreview;
 import vikatouch.utils.error.ErrorCodes;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class DocumentAttachment extends Attachment implements IMenu {
 	public DocumentAttachment() {
 		this.type = "doc";

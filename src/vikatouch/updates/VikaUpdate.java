@@ -8,6 +8,10 @@ import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class VikaUpdate {
 	
 	public String currVer;

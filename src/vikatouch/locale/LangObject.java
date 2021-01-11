@@ -1,5 +1,9 @@
 package vikatouch.locale;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class LangObject
 {
 	public String shortName;

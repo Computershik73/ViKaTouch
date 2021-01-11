@@ -1,3 +1,6 @@
+// This file is part of VikaUI
+// Copyright (C) 2020  Arman Jussuplaliyev (Shinovon)
+
 package ru.nnproject.vikaui.utils.text;
 
 import java.util.Vector;
@@ -5,11 +8,12 @@ import java.util.Vector;
 import javax.microedition.lcdui.Font;
 
 import ru.nnproject.vikaui.menu.items.UIItem;
-import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class TextBreaker {
-	
-
 
 	public static boolean willTextFit(String text, int width, Font font) {
 		return getMaxFitLength(text, width, font) == text.length();
@@ -24,20 +28,20 @@ public class TextBreaker {
 	}
 
 	public static int getMaxFitLength(String text, int width, Font font) {
-		if(font.stringWidth(text) < width) {
+		if (font.stringWidth(text) < width) {
 			return text.length();
 		}
-		for(int i = text.length(); i > 0; i--) {
-			if(font.stringWidth(text.substring(0,i)) < width) {
+		for (int i = text.length(); i > 0; i--) {
+			if (font.stringWidth(text.substring(0, i)) < width) {
 				return i;
 			}
 		}
 		return 4;
 	}
-	
+
 	public static String shortText(String text, int width, Font font) {
-		String s = VikaUtils.replace(text, "\n", " ");
-		if(!willTextFit(s, width, font)) {
+		String s = text.replace('\n', ' ');
+		if (!willTextFit(s, width, font)) {
 			s = s.substring(0, getMaxFitLength(s, width - (font.stringWidth("... ")), font)) + "...";
 		}
 		return s;

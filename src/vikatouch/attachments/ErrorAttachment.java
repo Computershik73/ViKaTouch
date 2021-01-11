@@ -1,5 +1,9 @@
 package vikatouch.attachments;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class ErrorAttachment extends Attachment {
 
 	public String description;

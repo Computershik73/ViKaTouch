@@ -38,6 +38,11 @@ import vikatouch.settings.Settings;
 import vikatouch.utils.url.URLBuilder;
 import vikatouch.utils.url.URLDecoder;
 
+/**
+ * @author Shinovon
+ * @author Feodor0090
+ * 
+ */
 public final class VikaUtils {
 	private static Thread fileThread;
 	private static Object downloadLock = new Object();
@@ -166,17 +171,17 @@ public final class VikaUtils {
 		return download(url.toString());
 	}
 
-	public static String downloadE(URLBuilder url) throws VikaNetworkError, InterruptedException  {
+	public static String downloadE(URLBuilder url) throws VikaNetworkError, InterruptedException {
 		try {
 			return download(url);
 		} catch (IOException e) {
 			throw new VikaNetworkError(e.toString());
 		}
 	}
-	
-	public static String download(String url) throws IOException, InterruptedException  {
-		if(VikaTouch.isS40()) {
-			synchronized(downloadLock) {
+
+	public static String download(String url) throws IOException, InterruptedException {
+		if (VikaTouch.isS40()) {
+			synchronized (downloadLock) {
 				return download0(url);
 			}
 		} else {
@@ -184,7 +189,7 @@ public final class VikaUtils {
 		}
 	}
 
-	private static String download0(String var1) throws IOException, InterruptedException  {
+	private static String download0(String var1) throws IOException, InterruptedException {
 		ByteArrayOutputStream var4 = null;
 		HttpConnection var13 = null;
 		InputStream var14 = null;
@@ -192,7 +197,8 @@ public final class VikaUtils {
 			var4 = new ByteArrayOutputStream();
 			var13 = (HttpConnection) Connector.open(var1);
 			var13.setRequestMethod("GET");
-			var13.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
+			var13.setRequestProperty("User-Agent",
+					"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
 			if (var13.getResponseCode() != 200 && var13.getResponseCode() != 401) {
 				// System.out.println("not 200 and not 401");
 				if (var13.getHeaderField("Location") != null) {
@@ -203,28 +209,28 @@ public final class VikaUtils {
 					var13.setRequestProperty("User-Agent",
 							"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
 					var14 = var13.openInputStream();
-					//long var8 = var13.getLength();
+					// long var8 = var13.getLength();
 					byte[] var6 = new byte[16384];
-					//long var10 = 0L;
-			
+					// long var10 = 0L;
+
 					int var7;
-			
+
 					while ((var7 = var14.read(var6)) != -1) {
-						//var10 += (long) var7;
+						// var10 += (long) var7;
 						var4.write(var6, 0, var7);
 						var4.flush();
 					}
 				}
 			} else {
 				var14 = var13.openInputStream();
-				//long var8 = var13.getLength();
+				// long var8 = var13.getLength();
 				byte[] var6 = new byte[16384];
-				//long var10 = 0L;
-		
+				// long var10 = 0L;
+
 				int var7;
-		
+
 				while ((var7 = var14.read(var6)) != -1) {
-					//var10 += (long) var7;
+					// var10 += (long) var7;
 					var4.write(var6, 0, var7);
 					var4.flush();
 				}
@@ -235,11 +241,11 @@ public final class VikaUtils {
 		} catch (NullPointerException e) {
 			throw new IOException(e.toString());
 		} finally {
-			if(var14 != null)
+			if (var14 != null)
 				var14.close();
-			if(var13 != null)
+			if (var13 != null)
 				var13.close();
-			if(var4 != null)
+			if (var4 != null)
 				var4.close();
 		}
 	}
@@ -249,53 +255,52 @@ public final class VikaUtils {
 		InputStream is = null;
 		InputStreamReader isr = null;
 		String result = null;
-			Connection conn = Connector.open(url);
-			httpconn = (HttpConnection) conn;
-			httpconn.setRequestMethod("GET");
-			httpconn.setRequestProperty("User-Agent",
-					"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+		Connection conn = Connector.open(url);
+		httpconn = (HttpConnection) conn;
+		httpconn.setRequestMethod("GET");
+		httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 
-			StringBuffer sb = new StringBuffer();
-			char[] buffer;
-			int i;
-			System.out.println(url + " " + httpconn.getResponseCode());
-			if (httpconn.getResponseCode() != 200 && httpconn.getResponseCode() != 401) {
-				// System.out.println("not 200 and not 401");
-				if (httpconn.getHeaderField("Location") != null) {
-					String replacedURL = httpconn.getHeaderField("Location");
-					httpconn.close();
-					httpconn = (HttpConnection) Connector.open(replacedURL);
-					httpconn.setRequestMethod("GET");
-					httpconn.setRequestProperty("User-Agent",
-							"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
-					is = httpconn.openInputStream();
-					isr = new InputStreamReader(is, "UTF-8");
-					sb = new StringBuffer();
-					if (httpconn.getResponseCode() == 200 || httpconn.getResponseCode() == 401) {
-						buffer = new char[10000];
-
-						while ((i = isr.read(buffer, 0, buffer.length)) != -1) {
-							sb.append(buffer, 0, i);
-						}
-
-					}
-				}
-			} else {
+		StringBuffer sb = new StringBuffer();
+		char[] buffer;
+		int i;
+		System.out.println(url + " " + httpconn.getResponseCode());
+		if (httpconn.getResponseCode() != 200 && httpconn.getResponseCode() != 401) {
+			// System.out.println("not 200 and not 401");
+			if (httpconn.getHeaderField("Location") != null) {
+				String replacedURL = httpconn.getHeaderField("Location");
+				httpconn.close();
+				httpconn = (HttpConnection) Connector.open(replacedURL);
+				httpconn.setRequestMethod("GET");
+				httpconn.setRequestProperty("User-Agent",
+						"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 				is = httpconn.openInputStream();
 				isr = new InputStreamReader(is, "UTF-8");
-		
-				buffer = new char[10000];
-				while ((i = isr.read(buffer, 0, buffer.length)) != -1) {
-					sb.append(buffer, 0, i);
+				sb = new StringBuffer();
+				if (httpconn.getResponseCode() == 200 || httpconn.getResponseCode() == 401) {
+					buffer = new char[10000];
+
+					while ((i = isr.read(buffer, 0, buffer.length)) != -1) {
+						sb.append(buffer, 0, i);
+					}
 
 				}
-				buffer = null;
 			}
+		} else {
+			is = httpconn.openInputStream();
+			isr = new InputStreamReader(is, "UTF-8");
+
+			buffer = new char[10000];
+			while ((i = isr.read(buffer, 0, buffer.length)) != -1) {
+				sb.append(buffer, 0, i);
+
+			}
+			buffer = null;
+		}
 
 		result = sb.toString();
-		if(isr != null)
+		if (isr != null)
 			isr.close();
-		if(is != null)
+		if (is != null)
 			is.close();
 		return result;
 	}
@@ -371,10 +376,10 @@ public final class VikaUtils {
 		}
 		return ImageUtils.resize(image, width, height, !Settings.fastImageScaling, !Settings.fastImageScaling);
 	}
-	
+
 	public static Image downloadImage(String url) throws IOException, InterruptedException {
-		if(VikaTouch.isS40()) {
-			synchronized(downloadLock) {
+		if (VikaTouch.isS40()) {
+			synchronized (downloadLock) {
 				return downloadImage0(url);
 			}
 		} else {
@@ -395,8 +400,11 @@ public final class VikaUtils {
 			// кеширование картинок включается если запрос http
 			boolean caching = false;
 			// !startsWith(url, "file") && Settings.cacheImages;
-			if (url.indexOf("camera_50") >= 0) {
+			if (url.indexOf("camera_50") != -1 || url.indexOf("camera_100") != -1) {
 				return VikaTouch.cameraImg;
+			}
+			if (url.indexOf("deactivated_50") != -1 || url.indexOf("deactivated_100") != -1) {
+				return VikaTouch.deactivatedImg;
 			}
 			if (url.indexOf("php") >= 0 || url.indexOf("getVideoPreview") >= 0) {
 				caching = false;
@@ -457,11 +465,11 @@ public final class VikaUtils {
 
 					return Image.createImage(dis);
 				} finally {
-						if(fcon != null)
-							fcon.close();
-						if(dis != null)
-							dis.close();
-					}
+					if (fcon != null)
+						fcon.close();
+					if (dis != null)
+						dis.close();
+				}
 
 				/*
 				 * try { int length = (int) fileconn.fileSize(); byte[] imgBytes = new
@@ -493,9 +501,9 @@ public final class VikaUtils {
 				}
 				return image;
 			} finally {
-				if(ccon != null)
+				if (ccon != null)
 					ccon.close();
-				if(cin != null)
+				if (cin != null)
 					cin.close();
 			}
 		} catch (Throwable e) {
@@ -553,7 +561,7 @@ public final class VikaUtils {
 		Connection conn = Connector.open(url);
 		httpconn = (HttpConnection) conn;
 		httpconn.setRequestMethod("GET");
-		httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+		httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
 		httpconn.openInputStream();
 		httpconn.close();
 	}
@@ -593,13 +601,13 @@ public final class VikaUtils {
 		int tl = text.length();
 
 		String[] glinks = new String[] { "http://", "https://", "rtsp://", "ftp://", "smb://" }; // вроде всё.
-																										// Ага, я
-																										// слал/принимал
-																										// пару раз
-																										// ссылки на
-																										// расшаренные
-																										// папки как
-																										// smb://server/folder
+																									// Ага, я
+																									// слал/принимал
+																									// пару раз
+																									// ссылки на
+																									// расшаренные
+																									// папки как
+																									// smb://server/folder
 		try {
 			// System.out.println(text);
 			// System.out.println("tl "+tl);
@@ -817,61 +825,59 @@ public final class VikaUtils {
 
 		aString163 = VikaUtils.replace(aString163, "\\/", "/");
 
-		if(!Settings.https)
+		if (!Settings.https)
 			aString163 = VikaUtils.replace(aString163, "https:", "http:");
 		Hashtable var202 = new Hashtable();
 
-		HttpMultipartRequest var200 = new HttpMultipartRequest(aString163,
-				var202, "photo", "bb2.jpg", "multipart/form-data", var5);
+		HttpMultipartRequest var200 = new HttpMultipartRequest(aString163, var202, "photo", "bb2.jpg",
+				"multipart/form-data", var5);
 
 		byte[] var218 = var200.send();
 
 		JSONObject json = new JSONObject(new String(var218));
 		String photo = json.getString("photo");
 		String server = "" + json.getInt("server");
-		String hash =  json.getString("hash");
+		String hash = json.getString("hash");
 		String var217;
 
 		String var17;
 
 		String var175;
 
-		String var10000 = var17 = VikaUtils.download(VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo)
-				+ "&server=" + server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
+		String var10000 = var17 = VikaUtils.download(
+				VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo) + "&server="
+						+ server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
 		var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
 
 		var175 = var17.substring(var17.indexOf("\"id") + 5, var17.indexOf("owner_id") - 2);
 		URLBuilder url;
 		if (peerId < 2000000000L) {
-			url = new URLBuilder("messages.send")
-			.addField("user_id", peerId)
-			.addField("random_id", new Random().nextInt(100))
-			.addField("attachment", "photo" + var217 + "_" + var175);
-			if(text != null && text.length() > 0) {
+			url = new URLBuilder("messages.send").addField("user_id", peerId)
+					.addField("random_id", new Random().nextInt(100))
+					.addField("attachment", "photo" + var217 + "_" + var175);
+			if (text != null && text.length() > 0) {
 				url = url.addField("text", text);
 			}
-		} else if(peerId < 0l) {
+		} else if (peerId < 0l) {
 			peerId = -peerId;
-			url = new URLBuilder("messages.send")
-			.addField("group_id", peerId)
-			.addField("random_id", new Random().nextInt(100))
-			.addField("attachment", "photo" + var217 + "_" + var175);
-			if(text != null && text.length() > 0) {
+			url = new URLBuilder("messages.send").addField("group_id", peerId)
+					.addField("random_id", new Random().nextInt(100))
+					.addField("attachment", "photo" + var217 + "_" + var175);
+			if (text != null && text.length() > 0) {
 				url = url.addField("text", text);
 			}
 		} else {
 			peerId -= 2000000000L;
-			url = new URLBuilder("messages.send")
-			.addField("chat_id", peerId)
-			.addField("random_id", new Random().nextInt(100))
-			.addField("attachment", "photo" + var217 + "_" + var175);
-			if(text != null && text.length() > 0) {
+			url = new URLBuilder("messages.send").addField("chat_id", peerId)
+					.addField("random_id", new Random().nextInt(100))
+					.addField("attachment", "photo" + var217 + "_" + var175);
+			if (text != null && text.length() > 0) {
 				url = url.addField("text", text);
 			}
 		}
 		VikaUtils.download(url);
 	}
-	
+
 	public static void sendCameraPhoto(int peerId) throws Exception {
 		String var11;
 		try {
@@ -883,7 +889,7 @@ public final class VikaUtils {
 		String aString163 = var11.substring(var11.indexOf("upload_url\":\"") + 13, var11.indexOf("\",\"user_id"));
 
 		aString163 = VikaUtils.replace(aString163, "\\/", "/");
-		if(!Settings.https)
+		if (!Settings.https)
 			aString163 = VikaUtils.replace(aString163, "https:", "http:");
 
 		JSONObject json;
@@ -894,15 +900,16 @@ public final class VikaUtils {
 		}
 		String photo = json.getString("photo");
 		String server = "" + json.getInt("server");
-		String hash =  json.getString("hash");
+		String hash = json.getString("hash");
 
 		String var17;
 
 		String var10000;
 
 		try {
-			var10000 = var17 = VikaUtils.download(VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo)
-					+ "&server=" + server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
+			var10000 = var17 = VikaUtils.download(
+					VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo) + "&server="
+							+ server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
 		} catch (Exception e) {
 			throw new Exception("d " + e.toString());
 		}
@@ -911,22 +918,19 @@ public final class VikaUtils {
 		String photoid = var17.substring(var17.indexOf("\"id") + 5, var17.indexOf("owner_id") - 2);
 		URLBuilder url;
 		if (peerId < 2000000000L) {
-			url = new URLBuilder("messages.send")
-			.addField("user_id", peerId)
-			.addField("random_id", new Random().nextInt(100))
-			.addField("attachment", "photo" + ownerid + "_" + photoid);
-		} else if(peerId < 0l) {
+			url = new URLBuilder("messages.send").addField("user_id", peerId)
+					.addField("random_id", new Random().nextInt(100))
+					.addField("attachment", "photo" + ownerid + "_" + photoid);
+		} else if (peerId < 0l) {
 			peerId = -peerId;
-			url = new URLBuilder("messages.send")
-			.addField("group_id", peerId)
-			.addField("random_id", new Random().nextInt(100))
-			.addField("attachment", "photo" + ownerid + "_" + photoid);
+			url = new URLBuilder("messages.send").addField("group_id", peerId)
+					.addField("random_id", new Random().nextInt(100))
+					.addField("attachment", "photo" + ownerid + "_" + photoid);
 		} else {
 			peerId -= 2000000000L;
-			url = new URLBuilder("messages.send")
-			.addField("chat_id", peerId)
-			.addField("random_id", new Random().nextInt(100))
-			.addField("attachment", "photo" + ownerid + "_" + photoid);
+			url = new URLBuilder("messages.send").addField("chat_id", peerId)
+					.addField("random_id", new Random().nextInt(100))
+					.addField("attachment", "photo" + ownerid + "_" + photoid);
 		}
 		try {
 			VikaUtils.download(url);
@@ -936,89 +940,90 @@ public final class VikaUtils {
 	}
 
 	public static byte[] photoData;
-	
-	 private static String uploadPhoto(String var0, String var1) throws Exception {
-	      var0 = var0 + "&" + var1 + "=";
-	      String var2 = "[{\":!}]";
 
-	      for(int var3 = 0; var3 < var2.length(); ++var3) {
-	         char var4 = var2.charAt(var3);
-	         String var5 = Integer.toHexString(var4);
-	         if(var5.length() < 2) {
-	            var5 = "0" + var5;
-	         }
+	private static String uploadPhoto(String var0, String var1) throws Exception {
+		var0 = var0 + "&" + var1 + "=";
+		String var2 = "[{\":!}]";
 
-	         int var6 = var0.indexOf(63) + 1;
-	         var0 = var0.substring(0, var6) + replace(var0.substring(var6), "" + var4, "%" + var5);
-	      }
+		for (int var3 = 0; var3 < var2.length(); ++var3) {
+			char var4 = var2.charAt(var3);
+			String var5 = Integer.toHexString(var4);
+			if (var5.length() < 2) {
+				var5 = "0" + var5;
+			}
 
-	      HttpConnection var24 = null;
-	      InputStream var25 = null;
-	      String var26 = "\r\n";
-	      String var7 = "7d73991305de";
-	      String var8 = "--" + var7;
-	      String var9 = var26 + var8 + var26 + "Content-Disposition: form-data; name=\"" + var1 + "\"; filename=\"img.png\"" + var26 + "Content-Type: image/png" + var26 + var26;
-	      String var10 = var26 + var8 + "--" + var26;
-	      byte[] var11 = var9.getBytes("utf-8");
-	      byte[] var12 = var10.getBytes("utf-8");
-	      byte[] var13 = new byte[photoData.length + var11.length + var12.length];
-	      System.arraycopy(var11, 0, var13, 0, var11.length);
-	      System.arraycopy(photoData, 0, var13, var11.length, photoData.length);
-	      System.arraycopy(var12, 0, var13, var11.length + photoData.length, var12.length);
-	      photoData = null;
+			int var6 = var0.indexOf(63) + 1;
+			var0 = var0.substring(0, var6) + replace(var0.substring(var6), "" + var4, "%" + var5);
+		}
 
-	      byte[] var23;
-	      try {
-	         var24 = (HttpConnection)Connector.open(var0);
-	         var24.setRequestMethod("POST");
-	         var24.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + var7);
-	         var24.setRequestProperty("Content-Length", "" + var13.length);
-	         OutputStream var14 = var24.openOutputStream();
-	         var14.write(var13);
-	         var14.close();
-	         int var15 = var24.getResponseCode();
-	         if(var15 != 200) {
-	            throw new Exception();
-	         }
+		HttpConnection var24 = null;
+		InputStream var25 = null;
+		String var26 = "\r\n";
+		String var7 = "7d73991305de";
+		String var8 = "--" + var7;
+		String var9 = var26 + var8 + var26 + "Content-Disposition: form-data; name=\"" + var1
+				+ "\"; filename=\"img.png\"" + var26 + "Content-Type: image/png" + var26 + var26;
+		String var10 = var26 + var8 + "--" + var26;
+		byte[] var11 = var9.getBytes("utf-8");
+		byte[] var12 = var10.getBytes("utf-8");
+		byte[] var13 = new byte[photoData.length + var11.length + var12.length];
+		System.arraycopy(var11, 0, var13, 0, var11.length);
+		System.arraycopy(photoData, 0, var13, var11.length, photoData.length);
+		System.arraycopy(var12, 0, var13, var11.length + photoData.length, var12.length);
+		photoData = null;
 
-	         var25 = var24.openInputStream();
-	         byte[] var16 = new byte[1024];
-	         ByteArrayOutputStream var17 = new ByteArrayOutputStream();
-	         int var18 = 1;
+		byte[] var23;
+		try {
+			var24 = (HttpConnection) Connector.open(var0);
+			var24.setRequestMethod("POST");
+			var24.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + var7);
+			var24.setRequestProperty("Content-Length", "" + var13.length);
+			OutputStream var14 = var24.openOutputStream();
+			var14.write(var13);
+			var14.close();
+			int var15 = var24.getResponseCode();
+			if (var15 != 200) {
+				throw new Exception();
+			}
 
-	         while(var18 > 0) {
-	            var18 = var25.read(var16);
-	            if(var18 > 0) {
-	               var17.write(var16, 0, var18);
-	            }
-	         }
+			var25 = var24.openInputStream();
+			byte[] var16 = new byte[1024];
+			ByteArrayOutputStream var17 = new ByteArrayOutputStream();
+			int var18 = 1;
 
-	         var23 = var17.toByteArray();
-	      } catch (Exception var22) {
-	         var23 = null;
-	    	  throw new Exception("ud " + var22.toString());
-	      }
+			while (var18 > 0) {
+				var18 = var25.read(var16);
+				if (var18 > 0) {
+					var17.write(var16, 0, var18);
+				}
+			}
 
-	      try {
-	         var25.close();
-	      } catch (Exception var21) {
-	         ;
-	      }
+			var23 = var17.toByteArray();
+		} catch (Exception var22) {
+			var23 = null;
+			throw new Exception("ud " + var22.toString());
+		}
 
-	      try {
-	         var24.close();
-	      } catch (Exception var20) {
-	         ;
-	      }
+		try {
+			var25.close();
+		} catch (Exception var21) {
+			;
+		}
 
-	      var13 = var23;
-	      String var27 = null;
+		try {
+			var24.close();
+		} catch (Exception var20) {
+			;
+		}
 
-	      try {
-	         var27 = new String(var13, "utf-8");
-	      } catch (UnsupportedEncodingException var19) {
-	         var19.printStackTrace();
-	      }
-	      return var27;
-	   }
+		var13 = var23;
+		String var27 = null;
+
+		try {
+			var27 = new String(var13, "utf-8");
+		} catch (UnsupportedEncodingException var19) {
+			var19.printStackTrace();
+		}
+		return var27;
+	}
 }

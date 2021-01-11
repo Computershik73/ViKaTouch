@@ -12,6 +12,10 @@ import javax.microedition.media.control.VideoControl;
 
 import vikatouch.VikaTouch;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public final class Camera {
 	private static Player player;
 	public static VideoControl videoControl;

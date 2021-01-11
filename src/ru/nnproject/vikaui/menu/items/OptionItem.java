@@ -8,6 +8,10 @@ import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class OptionItem implements PressableUIItem {
 
 	public IMenu menu;
@@ -28,7 +32,8 @@ public class OptionItem implements PressableUIItem {
 		icon = ic;
 		text = t;
 		menu = m;
-		// ворчали что слишком крупно. Согласен. Ты кстати тоже, это я медиум пихнул, до
+		// ворчали что слишком крупно. Согласен. Ты кстати тоже, это я медиум
+		// пихнул, до
 		// меня смалл был
 		f = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);

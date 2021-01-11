@@ -1,5 +1,6 @@
 package vikatouch.items;
 
+import javax.microedition.io.Connector;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
@@ -15,6 +16,10 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.settings.Settings;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class VikaNotification {
 
 	public int type;
@@ -94,11 +99,15 @@ public class VikaNotification {
 						// Thread.sleep(100);
 						// d.vibrate(1000);
 					} else if (Settings.notifmode == 2) {
-						Player notifplayer = Manager.createPlayer("http://vikamobile.ru:80/music/bb2.mp3");
+						Player notifplayer;
+						if(Settings.qualityNotif)
+							notifplayer = Manager.createPlayer(Connector.openInputStream("http://vikamobile.ru:80/music/bb2.mp3"), "audio/mpeg");
+						else
+							notifplayer = Manager.createPlayer(getClass().getResourceAsStream("/c.mp3"), "audio/mpeg");
 						notifplayer.realize();
 						try {
 							((VolumeControl) notifplayer.getControl("VolumeControl")).setLevel(100);
-						} catch (Exception e) {
+						} catch (Throwable e) {
 						}
 
 						notifplayer.start();

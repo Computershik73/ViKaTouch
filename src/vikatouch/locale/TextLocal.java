@@ -10,6 +10,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.error.ErrorCodes;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class TextLocal {
 	public static TextLocal inst;
 	private Hashtable hashtable;

@@ -9,6 +9,10 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class AboutScreen extends ScrollableCanvas {
 
 	// private static final String[] strings;
@@ -67,19 +71,20 @@ public class AboutScreen extends ScrollableCanvas {
 		 */
 		// for(int i = 0; i < strings.length; i++)
 		{
-			// g.drawString(strings[i], 32, 48 + (i * 24), 0);
-			g.drawString(devsStr, 32, 48, 0);
-			g.drawString("shinovon", 32, 48 + (1 * 24), 0);
-			g.drawString("Feodor0090", 32, 48 + (2 * 24), 0);
-			g.drawString(publisherStr, 32, 48 + (4 * 24), 0);
-			g.drawString("Ilya Visotsky", 32, 48 + (5 * 24), 0);
-			g.drawString(testersStr, 32, 48 + (7 * 24), 0);
-			g.drawString("mineshanya", 32, 48 + (8 * 24), 0);
-			g.drawString("bodyz", 32, 48 + (9 * 24), 0);
-			g.drawString("niceday", 32, 48 + (10 * 24), 0);
-			g.drawString("rilliane829", 32, 48 + (11 * 24), 0);
-			g.drawString("nikitashustol", 32, 48 + (12 * 24), 0);
-			g.drawString("rehdzi", 32, 48 + (13 * 24), 0);
+			g.drawString("Copyright:", 32, 48, 0);
+			g.drawString("(c) 2020", 32, 48 + 24, 0);
+			g.drawString(devsStr, 32, 48 + (3 * 24), 0);
+			g.drawString("shinovon", 32, 48 + (4 * 24), 0);
+			g.drawString("Feodor0090", 32, 48 + (5 * 24), 0);
+			g.drawString(publisherStr, 32, 48 + (7 * 24), 0);
+			g.drawString("Ilya Visotsky", 32, 48 + (8 * 24), 0);
+			g.drawString(testersStr, 32, 48 + (10 * 24), 0);
+			g.drawString("mineshanya", 32, 48 + (11 * 24), 0);
+			g.drawString("bodyz", 32, 48 + (12 * 24), 0);
+			g.drawString("niceday", 32, 48 + (13 * 24), 0);
+			g.drawString("rilliane829", 32, 48 + (14 * 24), 0);
+			g.drawString("nikitashustol", 32, 48 + (15 * 24), 0);
+			g.drawString("rehdzi", 32, 48 + (16 * 24), 0);
 		}
 
 		g.translate(0, -g.getTranslateY());

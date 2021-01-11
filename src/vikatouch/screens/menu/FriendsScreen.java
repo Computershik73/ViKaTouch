@@ -21,6 +21,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class FriendsScreen extends MainScreen implements INextLoadable {
 	/*
 	 * private static String loadingStr;

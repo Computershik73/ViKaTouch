@@ -19,6 +19,10 @@ import vikatouch.settings.Settings;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class MemberItem extends JSONUIItem {
 	private String name;
 	//private String link;

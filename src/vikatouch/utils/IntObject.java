@@ -1,5 +1,9 @@
 package vikatouch.utils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class IntObject {
 	public IntObject(int value) {
 		this.value = value;

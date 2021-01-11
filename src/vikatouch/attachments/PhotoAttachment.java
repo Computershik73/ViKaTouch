@@ -4,12 +4,16 @@ import java.io.IOException;
 
 import javax.microedition.lcdui.Image;
 
-import ru.nnproject.vikaui.popup.ImagePreview;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.items.chat.MsgItem;
+import vikatouch.popup.ImagePreview;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class PhotoAttachment extends ImageAttachment implements ISocialable {
 	public int albumid;
 	public long ownerid;

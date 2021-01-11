@@ -7,6 +7,10 @@ import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.music.MusicPlayer;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 // а-ля по канонам ООП
 public class MusicMenuItem extends OptionItem {
 

@@ -1,3 +1,6 @@
+// This file is part of VikaUI
+// Copyright (C) 2020  Arman Jussuplaliyev (Shinovon)
+
 package ru.nnproject.vikaui.popup;
 
 import javax.microedition.lcdui.Graphics;
@@ -9,6 +12,10 @@ import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class ContextMenu extends VikaNotice {
 
 	public OptionItem[] items;

@@ -2,6 +2,10 @@ package vikatouch.utils.url;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public final class URLDecoder {
 
 	public static String encode(String s) {

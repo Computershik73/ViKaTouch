@@ -1,4 +1,4 @@
-package ru.nnproject.vikaui.popup;
+package vikatouch.popup;
 
 import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.lcdui.Font;
@@ -7,6 +7,8 @@ import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
+import ru.nnproject.vikaui.popup.InfoPopup;
+import ru.nnproject.vikaui.popup.VikaNotice;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
@@ -17,6 +19,10 @@ import vikatouch.items.menu.DocItem;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class ImagePreview extends VikaNotice {
 
 	public ImagePreview(String url, String header) {

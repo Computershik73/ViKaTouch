@@ -1,3 +1,6 @@
+// This file is part of VikaUI
+// Copyright (C) 2020  Arman Jussuplaliyev (Shinovon)
+
 package ru.nnproject.vikaui;
 
 import javax.microedition.lcdui.game.GameCanvas;
@@ -5,9 +8,15 @@ import javax.microedition.lcdui.game.GameCanvas;
 import ru.nnproject.vikaui.popup.VikaNotice;
 import ru.nnproject.vikaui.screen.VikaScreen;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class VikaCanvas extends GameCanvas {
-	
+
 	public static VikaNotice currentAlert;
+	public int fps;
+	public int realFps;
 
 	protected VikaCanvas() {
 		super(false);
@@ -28,5 +37,7 @@ public abstract class VikaCanvas extends GameCanvas {
 	protected abstract int getFPSLimit();
 
 	protected abstract boolean drawMaxPriority();
+
+	public abstract boolean isNight();
 
 }

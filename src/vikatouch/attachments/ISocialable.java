@@ -1,5 +1,9 @@
 package vikatouch.attachments;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 // Нужен для объединения разных объектов ВК, умеющих в социалку. Например, в ImagePreview. Пригодится короче.
 public interface ISocialable {
 	public boolean canSave(); // возвращать false например для УЖЕ своиих фото.

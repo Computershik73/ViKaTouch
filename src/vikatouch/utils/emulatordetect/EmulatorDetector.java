@@ -2,11 +2,16 @@ package vikatouch.utils.emulatordetect;
 
 import vikatouch.settings.Settings;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class EmulatorDetector {
 	public static int emulatorType;
 	public static boolean isEmulator;
 	public static boolean emulatorNotSupported;
 	public static boolean supportsHttps;
+	private static String version;
 
 	public static final int EM_KEM = 1;
 
@@ -16,7 +21,7 @@ public class EmulatorDetector {
 
 	public static final int EM_J2L = 16;
 
-	public static final int EM_SDK = 4;
+	public static final int EM_SONYERICSSON_JAVA_SDK = 4;
 
 	public static final int EM_S40_5_SDK = 5;
 
@@ -32,7 +37,9 @@ public class EmulatorDetector {
 
 	public static final int EM_KEMMOD = 11;
 
-	public static final int EM_WTK = 102;
+	public static final int EM_JAVA_SDK = 12;
+
+	public static final int EM_WTK = 13;
 
 	public static final int EM_UNDEFINED = -1;
 
@@ -42,6 +49,17 @@ public class EmulatorDetector {
 		String osname = System.getProperty("os.name");
 		String jvendor = System.getProperty("java.vendor");
 		detect: {
+			try {
+				Class.forName("emulator.Emulator");
+				isEmulator = true;
+				emulatorType = EM_KEM;
+				emulatorNotSupported = true;
+				version = "v1.0.3";
+				if (!platform.endsWith("/KEmulatorMod"))
+					break detect;
+			} catch (Throwable e) {
+				
+			}
 			if(osname != null) {
 				if(osname.indexOf("nux") != -1 || osname.startsWith("Windows")) {
 					emulatorType = EM_PC;
@@ -53,9 +71,23 @@ public class EmulatorDetector {
 				emulatorType = EM_J2L;
 				supportsHttps = true;
 			} else if (platform.endsWith("/KEmulatorMod")) {
+				emulatorNotSupported = false;
 				isEmulator = true;
 				emulatorType = EM_KEMMOD;
 				supportsHttps = true;
+				version = "v1-v3";
+				if(System.getProperty("kemulator.notificationapi.version") != null) {
+					version = "v5";
+				}
+				if(System.getProperty("fileconn.dir.memorycard") != null) {
+					version = "v6";
+				}
+				if(System.getProperty("microedition.hostname") != null) {
+					version = "v7";
+				}
+				if(System.getProperty("kemulator.mod.version") != null) {
+					version = System.getProperty("kemulator.mod.version");
+				}
 			} else if (platform.indexOf("03.xx") >= 0) {
 				isEmulator = true;
 				emulatorType = EM_S40_5_SDK;
@@ -78,6 +110,12 @@ public class EmulatorDetector {
 			} else if (platform.equalsIgnoreCase("SunMicrosystems_wtk")) {
 				isEmulator = true;
 				emulatorType = EM_WTK;
+			} else if (platform.toLowerCase().startsWith("sonyericsson") && platform.toLowerCase().endsWith("/javasdk")) {
+				isEmulator = true;
+				emulatorType = EM_SONYERICSSON_JAVA_SDK;
+			} else if (platform.toLowerCase().endsWith("/javasdk")) {
+				isEmulator = true;
+				emulatorType = EM_JAVA_SDK;
 			} else if(platform.indexOf("Jbed-FastBCC") != -1) {
 				isEmulator = true;
 				emulatorType = EM_JBED;
@@ -116,7 +154,7 @@ public class EmulatorDetector {
 		case EM_KEM:
 			return false;
 
-		case EM_SDK:
+		case EM_SONYERICSSON_JAVA_SDK:
 			return true;
 
 		case EM_S40_5_SDK:
@@ -132,7 +170,7 @@ public class EmulatorDetector {
 			return false;
 
 		case EM_MICROEMULATOR_V2:
-			return false;
+			return true;
 
 		case EM_PC:
 			return false;
@@ -144,6 +182,12 @@ public class EmulatorDetector {
 			return true;
 
 		case EM_KEM_OR_J2L:
+			return true;
+
+		case EM_JBED:
+			return true;
+
+		case EM_WTK:
 			return true;
 		}
 		return false;
@@ -161,7 +205,7 @@ public class EmulatorDetector {
 			return "kemulator";
 
 		case 4:
-			return "nokiasdk";
+			return "sonyericsson-java-sdk";
 
 		case 5:
 			return "s40v5sdk";
@@ -170,7 +214,7 @@ public class EmulatorDetector {
 			return "s40v6sdk";
 
 		case 7:
-			return "incompatible";
+			return "epoc32emulator";
 
 		case 8:
 			return "microemu";
@@ -182,13 +226,21 @@ public class EmulatorDetector {
 			return "unknown";
 
 		case 11:
-			return "kemulator-mod";
+			return "kemulator-mod" + (version != null ? "-" + version : "");
+			
+		case 12:
+		case 13:
+			return "wtk2";
 
 		case 16:
 			return "j2meloader";
 
 		case 17:
 			return "j2ml-or-kem";
+
+		case 18:
+			return "jbed";
+
 		}
 		return "unknown";
 	}

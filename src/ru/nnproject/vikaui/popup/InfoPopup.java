@@ -1,3 +1,6 @@
+// This file is part of VikaUI
+// Copyright (C) 2020  Arman Jussuplaliyev (Shinovon)
+
 package ru.nnproject.vikaui.popup;
 
 import javax.microedition.lcdui.Font;
@@ -9,6 +12,10 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class InfoPopup extends VikaNotice {
 	private String[] lines;
 	private Runnable ok;
@@ -37,10 +44,12 @@ public class InfoPopup extends VikaNotice {
 	public void draw(Graphics g) {
 		int width = Math.min(DisplayUtils.width - 8, 350);
 		Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
-		Font hf = Font.getFont(0, Font.STYLE_BOLD, Font.SIZE_MEDIUM); // Header Font
+		Font hf = Font.getFont(0, Font.STYLE_BOLD, Font.SIZE_MEDIUM); // Header
+																		// Font
 		int hh = hf.getHeight(); // Header Height
 		int h1 = f.getHeight();
-		int hp = header == null ? 0 : hh + (h1 / 2); // Header Place (сколько он занимает)
+		int hp = header == null ? 0 : hh + (h1 / 2); // Header Place (сколько он
+														// занимает)
 		int th = h1 * 4 + h1 * linesCount + hp;
 		int y = DisplayUtils.height / 2 - th / 2;
 		int x = DisplayUtils.width / 2 - width / 2;

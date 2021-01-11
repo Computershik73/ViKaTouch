@@ -9,6 +9,10 @@ import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.NewsScreen;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class WallAttachment extends Attachment {
 	public void parseJSON() {
 		this.type = "wall";

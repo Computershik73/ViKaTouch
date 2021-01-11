@@ -7,6 +7,10 @@ import javax.microedition.lcdui.Image;
 import vikatouch.VikaTouch;
 import vikatouch.settings.Settings;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class ImageStorage
 {
     //private static final int MAX_AREA_OF_IMAGE = 640 * 480;

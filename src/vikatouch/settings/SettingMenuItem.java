@@ -14,6 +14,10 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class SettingMenuItem implements PressableUIItem, IMenu {
 
 	public SettingsScreen ss;

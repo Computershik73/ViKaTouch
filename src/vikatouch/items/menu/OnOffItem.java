@@ -10,6 +10,10 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class OnOffItem implements PressableUIItem {
 
 	public IMenu menu;

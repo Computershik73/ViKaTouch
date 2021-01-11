@@ -16,6 +16,10 @@ import vikatouch.screens.AboutScreen;
 import vikatouch.screens.LoginScreen;
 import vikatouch.screens.MainScreen;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class SettingsScreen extends MainScreen implements IMenu {
 
 	static int[] countVals = new int[] { 10, 20, 30, 50, 80, 100 };

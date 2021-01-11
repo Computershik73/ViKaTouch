@@ -1,9 +1,16 @@
+// This file is part of VikaUI
+// Copyright (C) 2020  Arman Jussuplaliyev (Shinovon)
+
 package ru.nnproject.vikaui.screen;
 
 import javax.microedition.lcdui.Graphics;
 
 import ru.nnproject.vikaui.utils.DisplayUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class VikaScreen {
 	public abstract void draw(Graphics g);
 
@@ -36,8 +43,8 @@ public abstract class VikaScreen {
 			DisplayUtils.canvas.draw();
 		}
 	}
-	
+
 	public void onLeave() {
-		
+
 	}
 }

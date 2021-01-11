@@ -18,6 +18,10 @@ import vikatouch.utils.captcha.CaptchaObject;
 import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class CaptchaScreen extends VikaScreen {
 	public Image image;
 	private Thread thread;

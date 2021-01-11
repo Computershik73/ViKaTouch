@@ -30,6 +30,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 
 	private JSONObject json2;

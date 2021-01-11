@@ -22,6 +22,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.url.URLDecoder;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class VideoItem extends JSONUIItem {
 	public int id;
 	public int owner;
@@ -163,10 +167,6 @@ public class VideoItem extends JSONUIItem {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
-		if (ScrollableCanvas.keysMode && selected) {
-			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-			g.fillRect(0, y, DisplayUtils.width, itemDrawHeight);
-		}
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		if (title != null)
 			g.drawString(title, 73, y, 0);
@@ -189,6 +189,11 @@ public class VideoItem extends JSONUIItem {
 			} catch (Exception e) {
 
 			}
+		}
+		if (ScrollableCanvas.keysMode && selected) {
+			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+			g.drawRect(0, y, DisplayUtils.width - 1, itemDrawHeight);
+			g.drawRect(1, y + 1, DisplayUtils.width - 3, itemDrawHeight - 2);
 		}
 	}
 

@@ -12,6 +12,10 @@ import vikatouch.items.menu.VideoItem;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class VideoAttachment extends ImageAttachment {
 	public VideoAttachment() {
 		this.type = "video";

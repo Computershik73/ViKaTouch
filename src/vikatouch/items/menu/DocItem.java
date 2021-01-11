@@ -22,6 +22,10 @@ import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class DocItem extends JSONUIItem implements ISocialable {
 	public String name;
 	public String url;

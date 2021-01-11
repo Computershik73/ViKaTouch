@@ -2,6 +2,10 @@ package vikatouch.utils.url;
 
 import vikatouch.VikaTouch;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class URLBuilder {
 
 	private String urlString = "";

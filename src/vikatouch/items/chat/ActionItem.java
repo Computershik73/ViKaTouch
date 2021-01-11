@@ -13,6 +13,10 @@ import vikatouch.screens.ChatScreen;
 import vikatouch.utils.IntObject;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class ActionItem extends ChatItem implements IMessage {
 
 	private int msgWidth;
@@ -25,7 +29,7 @@ public class ActionItem extends ChatItem implements IMessage {
 	public ActionItem(JSONObject json) {
 		super(json);
 	}
-	
+
 	public void parseJSON() {
 		msgWidth = DisplayUtils.width - (DisplayUtils.width <= 240 ? 10 : 40);
 		margin = (DisplayUtils.width <= 240 ? 0 : 10);
@@ -34,78 +38,78 @@ public class ActionItem extends ChatItem implements IMessage {
 		type = VikaUtils.replace(action.getString("type"), "chat_", "");
 		memberid = action.optInt("member_id");
 		fromid = json.getInt("from_id");
-		
-		if(type.equalsIgnoreCase("kick_user")) {
+
+		if (type.equalsIgnoreCase("kick_user")) {
 			String s1;
-			if(fromid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (fromid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "id" + fromid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "gid" + -fromid;
 				}
 			}
 			String s2;
-			if(memberid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (memberid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s2 = (String) ChatScreen.profileNames.get(new IntObject(memberid));
 				} else {
 					s2 = "id" + memberid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s2 = (String) ChatScreen.groupNames.get(new IntObject(memberid));
 				} else {
 					s2 = "gid" + -memberid;
 				}
 			}
 			text = s1 + " изгнал " + s2;
-			
-		} else if(type.equalsIgnoreCase("invite_user")) {
+
+		} else if (type.equalsIgnoreCase("invite_user")) {
 			String s1;
-			if(fromid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (fromid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "id" + fromid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "gid" + -fromid;
 				}
 			}
 			String s2;
-			if(memberid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (memberid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s2 = (String) ChatScreen.profileNames.get(new IntObject(memberid));
 				} else {
 					s2 = "id" + memberid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s2 = (String) ChatScreen.groupNames.get(new IntObject(memberid));
 				} else {
 					s2 = "gid" + -memberid;
 				}
 			}
 			text = s1 + " пригласил " + s2;
-		} else if(type.equalsIgnoreCase("photo_update")) {
+		} else if (type.equalsIgnoreCase("photo_update")) {
 			String s1;
-			if(fromid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (fromid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "id" + fromid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "gid" + -fromid;
@@ -113,16 +117,16 @@ public class ActionItem extends ChatItem implements IMessage {
 			}
 
 			text = s1 + " поменял фото";
-		} else if(type.equalsIgnoreCase("photo_remove")) {
+		} else if (type.equalsIgnoreCase("photo_remove")) {
 			String s1;
-			if(fromid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (fromid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "id" + fromid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "gid" + -fromid;
@@ -130,16 +134,16 @@ public class ActionItem extends ChatItem implements IMessage {
 			}
 
 			text = s1 + " удалил фото";
-		} else if(type.equalsIgnoreCase("create")) {
+		} else if (type.equalsIgnoreCase("create")) {
 			String s1;
-			if(fromid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (fromid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "id" + fromid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "gid" + -fromid;
@@ -147,16 +151,16 @@ public class ActionItem extends ChatItem implements IMessage {
 			}
 
 			text = s1 + " создал беседу";
-		} else if(type.equalsIgnoreCase("pin_message")) {
+		} else if (type.equalsIgnoreCase("pin_message")) {
 			String s1;
-			if(fromid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (fromid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "id" + fromid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "gid" + -fromid;
@@ -164,16 +168,16 @@ public class ActionItem extends ChatItem implements IMessage {
 			}
 
 			text = s1 + " закрепил сообщение";
-		} else if(type.equalsIgnoreCase("unpin_message")) {
+		} else if (type.equalsIgnoreCase("unpin_message")) {
 			String s1;
-			if(fromid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (fromid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "id" + fromid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "gid" + -fromid;
@@ -181,16 +185,16 @@ public class ActionItem extends ChatItem implements IMessage {
 			}
 
 			text = s1 + " открепил сообщение";
-		} else if(type.equalsIgnoreCase("chat_invite_user_by_link")) {
+		} else if (type.equalsIgnoreCase("chat_invite_user_by_link")) {
 			String s1;
-			if(fromid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (fromid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "id" + fromid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "gid" + -fromid;
@@ -200,14 +204,14 @@ public class ActionItem extends ChatItem implements IMessage {
 			text = s1 + " зашел по ссылке";
 		} else {
 			String s1;
-			if(fromid > 0) {
-				if(ChatScreen.profileNames != null) {
+			if (fromid > 0) {
+				if (ChatScreen.profileNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "id" + fromid;
 				}
 			} else {
-				if(ChatScreen.groupNames != null) {
+				if (ChatScreen.groupNames != null) {
 					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
 				} else {
 					s1 = "gid" + -fromid;
@@ -226,11 +230,11 @@ public class ActionItem extends ChatItem implements IMessage {
 	}
 
 	public void tap(int x, int y) {
-		
+
 	}
 
 	public void keyPress(int key) {
-		
+
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
@@ -246,8 +250,8 @@ public class ActionItem extends ChatItem implements IMessage {
 			itemDrawHeight = th;
 			int textX = 0;
 			int radius = 16;
-			//int msgWidthInner = msgWidth;
-			//if (foreign) {
+			// int msgWidthInner = msgWidth;
+			// if (foreign) {
 			ColorUtils.setcolor(g, ColorUtils.FOREIGNMSG);
 			g.fillRoundRect(margin, y, msgWidth, th, radius, radius);
 			g.fillRect(margin, y + th - radius, radius, radius);
@@ -257,16 +261,17 @@ public class ActionItem extends ChatItem implements IMessage {
 				g.setStrokeStyle(Graphics.SOLID);
 				g.drawRoundRect(margin, y, msgWidth, th, radius, radius);
 			}
-			/*} else {
-				ColorUtils.setcolor(g, ColorUtils.MYMSG);
-				g.fillRoundRect(DisplayUtils.width - (margin + msgWidth), y, msgWidth, th, radius, radius);
-				g.fillRect(DisplayUtils.width - (margin + radius), y + th - radius, radius, radius);
-				textX = DisplayUtils.width - (margin + msgWidth) + h1 / 2;
-				if (selected && ScrollableCanvas.keysMode) {
-					ColorUtils.setcolor(g, ColorUtils.TEXT);
-					g.setStrokeStyle(Graphics.SOLID);
-					g.drawRoundRect(DisplayUtils.width - (margin + msgWidth), y, msgWidth, th, radius, radius);
-				}*/
+			/*
+			 * } else { ColorUtils.setcolor(g, ColorUtils.MYMSG);
+			 * g.fillRoundRect(DisplayUtils.width - (margin + msgWidth), y,
+			 * msgWidth, th, radius, radius); g.fillRect(DisplayUtils.width -
+			 * (margin + radius), y + th - radius, radius, radius); textX =
+			 * DisplayUtils.width - (margin + msgWidth) + h1 / 2; if (selected
+			 * && ScrollableCanvas.keysMode) { ColorUtils.setcolor(g,
+			 * ColorUtils.TEXT); g.setStrokeStyle(Graphics.SOLID);
+			 * g.drawRoundRect(DisplayUtils.width - (margin + msgWidth), y,
+			 * msgWidth, th, radius, radius); }
+			 */
 			ColorUtils.setcolor(g, ColorUtils.TEXT);
 			g.drawString(text, textX, y + h1 / 2, 0);
 		} catch (Throwable e) {
@@ -287,15 +292,15 @@ public class ActionItem extends ChatItem implements IMessage {
 	}
 
 	public void setName(String name) {
-		
+
 	}
 
 	public void setRead(boolean isRead) {
-		this.isRead  = isRead;
+		this.isRead = isRead;
 	}
 
 	public boolean isRead() {
 		return isRead;
 	}
-	
+
 }

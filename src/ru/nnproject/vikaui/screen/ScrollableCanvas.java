@@ -1,3 +1,6 @@
+// This file is part of VikaUI
+// Copyright (C) 2020  Arman Jussuplaliyev (Shinovon)
+
 package ru.nnproject.vikaui.screen;
 
 import javax.microedition.lcdui.Graphics;
@@ -6,6 +9,10 @@ import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.MathUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class ScrollableCanvas extends VikaScreen {
 
 	protected int startx;
@@ -80,51 +87,51 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			lasty = y;
 			timer = 0;
 		} else {
-		try {
-			if (!dragging) {
+			try {
+				if (!dragging) {
+					if (poorScrolling()) {
+						lastx = startx;
+						lasty = y;
+					} else {
+						lastx = startx;
+						lasty = starty;
+					}
+				}
+				final int deltaX = lastx - x;
+				final int deltaY = lasty - y;
+				final int ndeltaX = Math.abs(deltaX);
+				final int ndeltaY = Math.abs(deltaY);
+				if (canScroll) {
+					if (ndeltaY > ndeltaX) {
+						scroll = (short) ((double) -deltaY * scrollSpeed);
+						scrollPrev += scroll;
+						scrollingTimer += Math.abs(scroll) / 14;
+						if (Math.abs(scroll / 3) > Math.abs(driftSpeed))
+							driftSpeed = (short) (scroll / 3);
+						if (poorScrolling())
+							scroll *= 16;
+					} else {
+						scrollHorizontally(deltaX);
+					}
+				}
+				if (DisplayUtils.canvas.isSensorModeOK()) {
+					if (ndeltaY > 0 || ndeltaX > 0) {
+						dragging = true;
+					}
+				} else {
+					if (ndeltaY > 2 || ndeltaX > 2) {
+						dragging = true;
+					}
+				}
 				if (poorScrolling()) {
-					lastx = startx;
-					lasty = y;
-				} else {
-					lastx = startx;
-					lasty = starty;
-				}
-			}
-			final int deltaX = lastx - x;
-			final int deltaY = lasty - y;
-			final int ndeltaX = Math.abs(deltaX);
-			final int ndeltaY = Math.abs(deltaY);
-			if (canScroll) {
-				if (ndeltaY > ndeltaX) {
-					scroll = (short) ((double) -deltaY * scrollSpeed);
-					scrollPrev += scroll;
-					scrollingTimer += Math.abs(scroll) / 14;
-					if (Math.abs(scroll / 3) > Math.abs(driftSpeed))
-						driftSpeed = (short) (scroll / 3);
-					if (poorScrolling())
-						scroll *= 16;
-				} else {
-					scrollHorizontally(deltaX);
-				}
-			}
-			if (DisplayUtils.canvas.isSensorModeOK()) {
-				if (ndeltaY > 0 || ndeltaX > 0) {
 					dragging = true;
 				}
-			} else {
-				if (ndeltaY > 2 || ndeltaX > 2) {
-					dragging = true;
-				}
+				lastx = x;
+				lasty = y;
+				timer = 0;
+			} catch (Throwable e) {
+
 			}
-			if (poorScrolling()) {
-				dragging = true;
-			}
-			lastx = x;
-			lasty = y;
-			timer = 0;
-		} catch (Throwable e) {
-			
-		}
 		}
 	}
 
@@ -148,7 +155,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	}
 
 	public void release(int x, int y) {
-		//dragged = false;
+		// dragged = false;
 		try {
 			if (!poorScrolling() && timer < 7) {
 				if (scrollPrev != 0)
@@ -162,7 +169,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			dragging = false;
 			repaint();
 		} catch (Throwable e) {
-			
+
 		}
 	}
 
@@ -203,11 +210,11 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			}
 			repaint();
 		} catch (Throwable e) {
-			
+
 		}
 	}
 
-	//private int scrolebd;
+	// private int scrolebd;
 
 	protected void down() {
 		if (scrollWithKeys) {
@@ -216,18 +223,18 @@ public abstract class ScrollableCanvas extends VikaScreen {
 		}
 		// TODO: паблик бета
 		/*
-		 * if(uiItems[currentItem].getDrawHeight() > vmeshautsa) { if(scrolebd == 0) {
-		 * scrolebd = uiItems[currentItem].getDrawHeight(); } if(scrolebd == -1) {
-		 * scrolebd = 0; try { uiItems[currentItem].setSelected(false); } catch
-		 * (Exception e) {
+		 * if(uiItems[currentItem].getDrawHeight() > vmeshautsa) { if(scrolebd
+		 * == 0) { scrolebd = uiItems[currentItem].getDrawHeight(); }
+		 * if(scrolebd == -1) { scrolebd = 0; try {
+		 * uiItems[currentItem].setSelected(false); } catch (Exception e) {
 		 * 
 		 * } currentItem++; if(currentItem >= itemsCount) { } else scrolled -=
-		 * uiItems[currentItem].getDrawHeight(); uiItems[currentItem].setSelected(true);
-		 * }
+		 * uiItems[currentItem].getDrawHeight();
+		 * uiItems[currentItem].setSelected(true); }
 		 * 
 		 * 
-		 * int x = 20; if(scrolebd < x) { scrolled -= scrolebd; scrolebd = -1; } else {
-		 * scrolled -= x; scrolebd -= x; } } else
+		 * int x = 20; if(scrolebd < x) { scrolled -= scrolebd; scrolebd = -1; }
+		 * else { scrolled -= x; scrolebd -= x; } } else
 		 */
 		{
 			try {
@@ -240,7 +247,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				scrollToSelected();
 				uiItems[currentItem].setSelected(true);
 			} catch (Throwable e) {
-				
+
 			}
 		}
 	}
@@ -255,7 +262,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 		} catch (Throwable e) {
 
 			e.printStackTrace();
-			
 
 		}
 		currentItem--;
@@ -267,7 +273,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			uiItems[currentItem].setSelected(true);
 		} catch (Throwable e) {
 			e.printStackTrace();
-			
+
 		}
 	}
 
@@ -288,7 +294,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				e.printStackTrace();
 			}
 			try {
-				
+
 				uiItems[i].setSelected(true);
 				currentItem = i;
 			} catch (RuntimeException e) {
@@ -296,7 +302,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				e.printStackTrace();
 			}
 		} catch (Throwable e) {
-			
+
 		}
 	}
 
@@ -361,7 +367,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			if (!poorScrolling())
 				scroll = 0;
 		} catch (Throwable e) {
-			
+
 		}
 	}
 
@@ -376,11 +382,13 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			int y = 0;
 			for (int i = 0; (i < uiItems.length && i < n); i++) {
 				if (uiItems[i] != null)
-					y += uiItems[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
+					y += uiItems[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы
+														// могут быть разной
+														// высоты.
 			}
 			return y;
 		} catch (Throwable e) {
-			
+
 		}
 		return 0;
 	}

@@ -16,6 +16,10 @@ import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 import vikatouch.utils.text.TextEditor;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class LoginScreen extends VikaScreen {
 
 	// private static Image vikaLogo;

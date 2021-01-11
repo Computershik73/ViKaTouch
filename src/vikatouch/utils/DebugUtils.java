@@ -1,5 +1,9 @@
 package vikatouch.utils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class DebugUtils {
 
 	public static void printStackTrace() {

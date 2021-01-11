@@ -4,6 +4,10 @@ import org.json.me.JSONObject;
 
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class JSONBase {
 	public JSONObject json;
 

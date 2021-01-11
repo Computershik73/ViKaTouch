@@ -5,6 +5,10 @@ import javax.microedition.io.file.FileConnection;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.screens.temp.FileManagerScreen;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class FolderItem extends FileManagerItem {
 	
 	public FolderItem(FileManagerScreen fms, String path, String name) {

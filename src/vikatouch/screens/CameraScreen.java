@@ -16,6 +16,10 @@ import vikatouch.VikaTouch;
 import vikatouch.utils.Camera;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class CameraScreen extends VikaScreen {
 
 	private boolean failed;

@@ -4,28 +4,29 @@ import java.io.IOException;
 
 import javax.microedition.lcdui.*;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class IconsManager {
-	
+
 	public static Image[] ico;
 	public static Image[] selIco;
-	
-	public static void Load()
-			throws IOException
-	{
+
+	public static void Load() throws IOException {
 		String string = "init";
 		try {
 			string = "icons.png";
 			Image sheet = Image.createImage("/icons.png");
-			int c /*count*/ = sheet.getWidth() / 24;
+			int c /* count */ = sheet.getWidth() / 24;
 			ico = new Image[c];
 			selIco = new Image[c];
-			//sheet = Image.createImage(sheet);
+			// sheet = Image.createImage(sheet);
 			string = "crop";
-			for(int i = 0; i < c; i++)
-			{
-				ico[i] = Image.createImage(sheet, i*24, 0, 24, 24, 0);
-				//ico[i] = ImageUtils.crop(sheet, i*24, 0, i*24+24, 24);
-				selIco[i] = Image.createImage(sheet, i*24, 24, 24, 24, 0);
+			for (int i = 0; i < c; i++) {
+				ico[i] = Image.createImage(sheet, i * 24, 0, 24, 24, 0);
+				// ico[i] = ImageUtils.crop(sheet, i*24, 0, i*24+24, 24);
+				selIco[i] = Image.createImage(sheet, i * 24, 24, 24, 24, 0);
 			}
 			string = "ava.png";
 			ac = Image.createImage("/ava.png");
@@ -40,12 +41,12 @@ public class IconsManager {
 			throw new IOException(string);
 		}
 	}
-	
+
 	public static Image ac;
 	public static Image acs;
 	public static Image logoImg;
 	public static Image backImg;
-	
+
 	public static final int FRIENDS = 0;
 	public static final int GROUPS = 1;
 	public static final int PHOTOS = 2;

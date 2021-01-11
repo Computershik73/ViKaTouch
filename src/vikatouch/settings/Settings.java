@@ -16,6 +16,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.error.ErrorCodes;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class Settings {
 
 	public static boolean setted = false;
@@ -152,6 +156,8 @@ public class Settings {
 
 	public static boolean oldlcduiFm;
 
+	public static boolean qualityNotif;
+
 	static {
 		loadDefaultSettings();
 	}
@@ -210,6 +216,8 @@ public class Settings {
 					//тут должна быть настройка с старым фм, но я передумал.
 					//2.8.15
 					nightTheme = is.readBoolean();
+					//2.9.1
+					telemetry = is.readBoolean();
 				} catch (Exception e) {
 
 				}
@@ -293,6 +301,8 @@ public class Settings {
 				//тут должна быть настройка с старым фм, но я передумал.
 				//2.8.15
 				os.writeBoolean(nightTheme);
+				//2.9.1
+				os.writeBoolean(telemetry);
 
 				byte[] b = baos.toByteArray();
 				rs.addRecord(b, 0, b.length);
@@ -308,8 +318,11 @@ public class Settings {
 	public static void switchLightTheme() {
 		try {
 			if(nightTheme) {
-				IconsManager.ac = ImageFxUtils.transformARGB(IconsManager.ac, 0, -255, -255, -255);
+				IconsManager.logoImg = Image.createImage("/vikaheadnight2.png");
+				IconsManager.acs = ImageFxUtils.transformARGB(Image.createImage("/ava.png"), 0, -255 + 30, -255 + 30, -255 + 30);
+				IconsManager.ac = ImageFxUtils.transformARGB(Image.createImage("/ava.png"), 0, -255, -255, -255);
 			} else {
+				IconsManager.logoImg = Image.createImage("/vikahead.png");
 				IconsManager.ac = Image.createImage("/ava.png");
 			}
 		} catch (Throwable e) {
@@ -318,6 +331,7 @@ public class Settings {
 	}
 
 	public static void loadDefaultSettings() {
+		String x = System.getProperty("microedition.locale");
 		nightTheme = false;
 		setted = false;
 		animateTransition = false;
@@ -355,8 +369,8 @@ public class Settings {
 		// язык соотвествующий настройкам устройства
 		try {
 			String supportedLanguages[] = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ"};
-			language = Settings.setLang(System.getProperty("microedition.locale"), supportedLanguages, new String[] {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"});
-			region = Settings.setRegion(System.getProperty("microedition.locale"), supportedLanguages, new String[] {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ"});
+			language = Settings.setLang(x, supportedLanguages, new String[] {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"});
+			region = Settings.setRegion(x, supportedLanguages, new String[] {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ"});
 		} catch (Exception e) {
 
 		}

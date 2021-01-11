@@ -4,6 +4,10 @@ import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class JSONUIItem extends JSONItem implements PressableUIItem {
 	public int itemDrawHeight;
 	public boolean selected;

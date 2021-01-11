@@ -14,6 +14,10 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.screens.temp.FileManagerScreen;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class FileManagerItem implements PressableUIItem {
 
 	protected FileManagerScreen fms;

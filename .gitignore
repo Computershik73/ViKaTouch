@@ -24,3 +24,4 @@ build.properties
 .idea/*
 vikatouch.iml
 serverdata/
+.settings/org.eclipse.jdt.ui.prefs

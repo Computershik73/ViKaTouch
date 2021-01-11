@@ -33,6 +33,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.CountUtils;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class MsgItem extends ChatItem implements IMenu, IMessage {
 	public MsgItem(JSONObject json) {
 		super(json);
@@ -83,7 +87,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 
 			foreign = !("" + json.optInt("from_id")).equalsIgnoreCase(VikaTouch.userId);
 			mid = json.optInt("id");
-			
+
 			int h1 = Font.getFont(0, 0, 8).getHeight();
 			// 27864
 			String textt = "";
@@ -139,7 +143,8 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			// b1 = str[0] & 0x1f; b2 = str[1] & 0x3f;
 			// ucs = (b1 << 6) | b2;
 
-			// textt = VikaUtils.replace(textt, "5535756834", String.valueOf((char)57349));
+			// textt = VikaUtils.replace(textt, "5535756834",
+			// String.valueOf((char)57349));
 
 			text = textt;
 			drawText = TextBreaker.breakText(text, Font.getFont(0, 0, Font.SIZE_SMALL),
@@ -194,10 +199,10 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				int fromId = reply.optInt("from_id");
 				if (fromId == Integer.parseInt(VikaTouch.userId)) {
 					replyName = TextLocal.inst.get("msg.you");
-				} else {
-					if (fromId > 0 && ChatScreen.profileNames.containsKey(new IntObject(fromId))) {
-						replyName = (String) ChatScreen.profileNames.get(new IntObject(fromId));
-					}
+				} else if (fromId > 0 && ChatScreen.profileNames.containsKey(new IntObject(fromId))) {
+					replyName = (String) ChatScreen.profileNames.get(new IntObject(fromId));
+				} else if (fromId < 0 && ChatScreen.groupNames.containsKey(new IntObject(-fromId))) {
+					replyName = (String) ChatScreen.groupNames.get(new IntObject(-fromId));
 				}
 			}
 			if (fwds != null && fwds.length() > 0) {
@@ -233,7 +238,8 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 
 		// experimental
 		{
-			// if(text.equals("Т")) VikaTouch.popup(new InfoPopup(json.toString(), null));
+			// if(text.equals("Т")) VikaTouch.popup(new
+			// InfoPopup(json.toString(), null));
 		}
 	}
 
@@ -286,27 +292,25 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		}
 		return null;
 	}
-	
-	private static String[] split(String in, char t)
-	{
-		int l = count(in, t)+1;
+
+	private static String[] split(String in, char t) {
+		int l = count(in, t) + 1;
 		String[] res = new String[l];
 		String[] c = VEUtils.singleSplit(in, t);
 		res[0] = c[0];
-		for(int i = 1; i < l-1; i++)
-		{
+		for (int i = 1; i < l - 1; i++) {
 			c = VEUtils.singleSplit(c[1], t);
 			res[i] = c[0];
 		}
-		res[l-1] = c[1];
+		res[l - 1] = c[1];
 		return res;
 	}
 
 	private static int count(String in, char t) {
 		int r = 0;
 		char[] c = in.toCharArray();
-		for(int i = 0; i < c.length; i++) {
-			if(c[i] == t) {
+		for (int i = 0; i < c.length; i++) {
+			if (c[i] == t) {
 				r++;
 			}
 		}
@@ -374,49 +378,51 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			}
 			ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
 			try {
-			for (int i = 0; i < linesC; i++) {
-				if(drawText[i] != null) {
-					String s1 = drawText[i];
-					if((s1.indexOf("[club") != -1 || s1.indexOf("[id") != -1) && s1.indexOf("|") != -1 && s1.indexOf("]") != -1) {
-						String[] arr1 = split(s1, '[');
-						int x = textX;
-						int yy = y + h1 / 2 + h1 * (i + (showName ? 1 : 0));
-						ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
-						if(arr1[0] != null) {
-							g.drawString(arr1[0], x, yy, 0);
-						x += font.stringWidth(arr1[0]);
-						for(int c = 1; c < arr1.length; c++) {
-							if(arr1[c] != null && arr1[c].indexOf('|') != -1)
-							{
-								String[] arr2 = VEUtils.split(arr1[c], 2, '|');
-								String[] arr3 = VEUtils.singleSplit(arr2[1], ']');
-								String ping = arr3[0];
-								String after = arr3[1];
-								g.setColor(0x2a5885);
-								g.drawString(ping, x, yy, 0);
-								x += font.stringWidth(ping);
-								if(after != null) {
-									ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
-									g.drawString(after, x, yy, 0);
-									x += font.stringWidth(after);
+				for (int i = 0; i < linesC; i++) {
+					if (drawText[i] != null) {
+						String s1 = drawText[i];
+						if ((s1.indexOf("[club") != -1 || s1.indexOf("[id") != -1) && s1.indexOf("|") != -1
+								&& s1.indexOf("]") != -1) {
+							String[] arr1 = split(s1, '[');
+							int x = textX;
+							int yy = y + h1 / 2 + h1 * (i + (showName ? 1 : 0));
+							ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
+							if (arr1[0] != null) {
+								g.drawString(arr1[0], x, yy, 0);
+								x += font.stringWidth(arr1[0]);
+								for (int c = 1; c < arr1.length; c++) {
+									if (arr1[c] != null && arr1[c].indexOf('|') != -1) {
+										String[] arr2 = VEUtils.split(arr1[c], 2, '|');
+										String[] arr3 = VEUtils.singleSplit(arr2[1], ']');
+										String ping = arr3[0];
+										String after = arr3[1];
+										g.setColor(0x2a5885);
+										g.drawString(ping, x, yy, 0);
+										x += font.stringWidth(ping);
+										if (after != null) {
+											ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
+											g.drawString(after, x, yy, 0);
+											x += font.stringWidth(after);
+										}
+									}
 								}
 							}
+						} else {
+							if (s1.equalsIgnoreCase("@all") || s1.startsWith("@all")
+									|| s1.equalsIgnoreCase("@online")) {
+								g.setColor(0x2a5885);
+							}
+							g.drawString(s1, textX, y + h1 / 2 + h1 * (i + (showName ? 1 : 0)), 0);
 						}
-						}
-					} else {
-						if(s1.equalsIgnoreCase("@all") || s1.startsWith("@all") || s1.equalsIgnoreCase("@online")) {
-							g.setColor(0x2a5885);
-						}
-						g.drawString(s1, textX, y + h1 / 2 + h1 * (i + (showName ? 1 : 0)), 0);
+
 					}
-				
-			}
-			}
-			} catch(Throwable t) {
+				}
+			} catch (Throwable t) {
 				t.printStackTrace();
 			}
 
 			if (hasReply) {
+				ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
 				if (replyText != null)
 					g.drawString(replyText, textX + h1, y + h1 / 2 + h1 * (linesC + 1 + (showName ? 1 : 0)), 0);
 				ColorUtils.setcolor(g, ColorUtils.COLOR1);
@@ -500,25 +506,32 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	public String[] searchLinks() {
 		if (text == null || text.length() < 2)
 			return null;
-		int lm = 8; // links max (больше на экран не влезет (смотря какой конечно))
+		int lm = 8; // links max (больше на экран не влезет (смотря какой
+					// конечно))
 		String[] la = new String[lm];
 		int li = 0; // индекс в массиве
 		int tl = text.length();
 
-		String[] glinks = new String[] { "http://", "https://", "rtsp://", "ftp://", "smb://" }; // вроде всё.
-																										// Ага, я
-																										// слал/принимал
-																										// пару раз
-																										// ссылки на
-																										// расшаренные
-																										// папки как
-																										// smb://server/folder
+		String[] glinks = new String[] { "http://", "https://", "rtsp://", "ftp://", "smb://" }; // вроде
+																									// всё.
+																									// Ага,
+																									// я
+																									// слал/принимал
+																									// пару
+																									// раз
+																									// ссылки
+																									// на
+																									// расшаренные
+																									// папки
+																									// как
+																									// smb://server/folder
 		try {
 			// System.out.println(text);
 			// System.out.println("tl "+tl);
 			// Поиск внешних ссылок
 			// сначала ищем их на случай сообщения
-			// @id89277233 @id2323 @id4 @id5 @id6 ... [ещё 100509 @] ... @id888292,
+			// @id89277233 @id2323 @id4 @id5 @id6 ... [ещё 100509 @] ...
+			// @id888292,
 			// http://что-тоТам
 			// В беседе вики такое постоянно.
 			for (int gli = 0; gli < glinks.length; gli++) {
@@ -667,8 +680,14 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				VikaTouch.popup(new InfoPopup("Ссылки не найдены либо произошла ошибка.", null));
 			} else {
 				OptionItem[] opts2 = new OptionItem[c];
-				int h = DisplayUtils.height > 240 ? 50 : 30; // вот как делается адаптация, а не твои километровые
-																// свитчи и да, я буду ещё долго ворчать.
+				int h = DisplayUtils.height > 240 ? 50 : 30; // вот как делается
+																// адаптация, а
+																// не твои
+																// километровые
+																// свитчи и да,
+																// я буду ещё
+																// долго
+																// ворчать.
 				for (int j = 0; j < c; j++) {
 					int icon = IconsManager.LINK;
 					if (links[j].indexOf("id") == 0) {
@@ -767,7 +786,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	public void setRead(boolean i) {
 		this.isRead = i;
 	}
-	
+
 	public boolean isRead() {
 		return this.isRead;
 	}

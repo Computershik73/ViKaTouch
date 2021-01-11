@@ -8,6 +8,10 @@ import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 import vikatouch.settings.Settings;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class PhotosScreen extends MainScreen {
 	private String title;
 

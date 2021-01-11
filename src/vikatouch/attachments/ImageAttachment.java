@@ -2,6 +2,10 @@ package vikatouch.attachments;
 
 import javax.microedition.lcdui.Image;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class ImageAttachment extends Attachment {
 	public abstract Image getPreviewImage();
 

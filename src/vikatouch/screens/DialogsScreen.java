@@ -10,6 +10,10 @@ import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.menu.MenuScreen;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class DialogsScreen extends MainScreen {
 
 	private static String titleStr;
@@ -131,7 +135,7 @@ public class DialogsScreen extends MainScreen {
 	}
 
 	public final void drawHUD(Graphics g) {
-		drawHUD(g, Dialogs.dialogs == null ? "Загрузка диалогов..." : titleStr); // временно, потом оно будет грузиться
+		drawHUD(g, Dialogs.dialogs == null ? TextLocal.inst.get("title2.loading") : titleStr); // временно, потом оно будет грузиться
 																					// во время сплеша. Привет Илье))0)
 	}
 

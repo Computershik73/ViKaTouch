@@ -24,6 +24,10 @@ import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class FileManagerScreen extends ScrollableCanvas {
 	
 	private ChatScreen chat;

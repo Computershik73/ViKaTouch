@@ -6,6 +6,10 @@ import javax.microedition.lcdui.Image;
 
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class StickerAttachment extends ImageAttachment {
 
 	public int productid;

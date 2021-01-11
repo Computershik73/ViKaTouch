@@ -13,6 +13,10 @@ import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class SplashScreen extends MainScreen {
 	private Image logo;
 	private String header;

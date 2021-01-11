@@ -14,6 +14,10 @@ import vikatouch.screens.music.MusicScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class PlaylistItem extends JSONUIItem {
 	public int id;
 	public int owner_id;

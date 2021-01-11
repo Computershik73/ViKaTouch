@@ -22,6 +22,10 @@ import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class CommandsImpl implements CommandListener {
 
 	public static final Command close = new Command("Закрыть приложение", 4, 0);

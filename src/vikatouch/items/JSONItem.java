@@ -7,6 +7,10 @@ import vikatouch.attachments.Attachment;
 import vikatouch.json.JSONBase;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class JSONItem extends JSONBase {
 	public JSONItem(JSONObject json) {
 		this.json = json;

@@ -13,6 +13,10 @@ import javax.microedition.lcdui.TextField;
 
 import vikatouch.VikaTouch;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class TextEditor implements CommandListener {
 	public String str;
 	private static TextBox textBox;

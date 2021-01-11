@@ -40,6 +40,10 @@ import vikatouch.utils.text.CountUtils;
 import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class ChatScreen extends MainScreen {
 
 	public boolean ready = false;
@@ -503,7 +507,7 @@ public class ChatScreen extends MainScreen {
 		VikaCanvasInst.msgColor = 0xffffff00;
 		JSONObject res = new JSONObject(x).optJSONObject("response");
 		JSONArray json = res.optJSONArray("items");
-		profileNames.put(new IntObject(peerId), title);
+		profileNames.put(new IntObject(peerId < 0 ? -peerId : peerId), title);
 		inr = res.optJSONArray("conversations").optJSONObject(0).optInt("in_read");
 		outr = res.optJSONArray("conversations").optJSONObject(0).optInt("out_read");
 
@@ -1359,19 +1363,19 @@ public class ChatScreen extends MainScreen {
 		Font font1 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
 		g.setFont(font1);
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
-		g.drawString(title, 64, 10, 0);
+		g.drawString(TextBreaker.shortText(title, DisplayUtils.width - 50 - 38, font1), 50, 12, 0);
 
 		Font font2 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		g.setFont(font2);
 		ColorUtils.setcolor(g, ColorUtils.TEXT2);
 		if (!canSend) {
-			g.drawString(sendingStr, 64, 30, 0);
+			g.drawString(sendingStr, 50, 32, 0);
 		} else if (refreshOk) {
-			g.drawString(title2, 64, 30, 0);
+			g.drawString(title2, 50, 32, 0);
 		} else {
 			g.setColor(255, 0, 0);
 			g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL));
-			g.drawString(this.refreshErrorStr, 64, 30, 0);
+			g.drawString(this.refreshErrorStr, 50, 30, 0);
 		}
 
 		g.drawImage(IconsManager.selIco[IconsManager.BACK], 16, 16, 0);

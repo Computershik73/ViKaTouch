@@ -5,6 +5,10 @@ import javax.microedition.lcdui.Image;
 import tube42.lib.imagelib.ImageUtils;
 import vikatouch.settings.Settings;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class ResizeUtils {
 
 	public static Image resizeava(Image img) {

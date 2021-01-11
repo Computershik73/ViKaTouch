@@ -4,6 +4,10 @@ import org.json.me.JSONObject;
 
 import vikatouch.items.JSONUIItem;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class ChatItem extends JSONUIItem {
 	public ChatItem(JSONObject json) {
 		super(json);

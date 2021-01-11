@@ -2,6 +2,10 @@ package vikatouch.attachments;
 
 import javax.microedition.lcdui.Image;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class GiftAttachment extends ImageAttachment {
 
 	public void parseJSON() {

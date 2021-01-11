@@ -29,6 +29,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class ProfilePageScreen extends MainScreen implements IMenu {
 
 	public int id;

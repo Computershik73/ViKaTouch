@@ -20,6 +20,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class VoiceAttachment extends DocumentAttachment {
 
 	public VoiceAttachment() {

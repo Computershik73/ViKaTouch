@@ -5,6 +5,10 @@ import org.json.me.JSONObject;
 
 import vikatouch.json.JSONBase;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class PhotoSize {
 	public int height;
 	public String url;

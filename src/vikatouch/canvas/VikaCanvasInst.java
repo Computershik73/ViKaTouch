@@ -15,6 +15,10 @@ import vikatouch.screens.temp.SplashScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.error.ErrorCodes;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class VikaCanvasInst extends VikaCanvas {
 	public VikaScreen currentScreen;
 	public VikaScreen lastTempScreen;
@@ -102,7 +106,7 @@ public class VikaCanvasInst extends VikaCanvas {
 
 				int freeMem = (int) (Runtime.getRuntime().freeMemory() / 1024);
 				int totalMem = (int) (Runtime.getRuntime().totalMemory() / 1024);
-				String memStr = String.valueOf(totalMem - freeMem) + "K/" + totalMem + "K, free:" + freeMem + "K";
+				String memStr = String.valueOf(totalMem - freeMem) + "K/" + totalMem + "K," + freeMem + "K";
 				g.setGrayScale(255);
 				g.fillRect(0, 0, g.getFont().stringWidth(memStr), h);
 				g.setGrayScale(0);
@@ -110,7 +114,7 @@ public class VikaCanvasInst extends VikaCanvas {
 
 				if (timingsStr == null)
 					timingsStr = "...";
-				String infoStr = "RT:" + rT + " (" + timingsStr + ") gc:" + gcT;
+				String infoStr = "FPS:"+this.realFps+"(" + this.fps + ")RT:" + rT + "(" + timingsStr + ")gc:" + gcT;
 				g.setGrayScale(255);
 				g.fillRect(0, h, g.getFont().stringWidth(infoStr), h);
 				g.setGrayScale(0);
@@ -233,7 +237,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			 * g.drawString(debugString, 65, 2, 0); } }
 			 */
 		if (Settings.debugInfo) {
-			timingsStr = "s:" + csrT + " a:" + carT + " hud:" + hudrT;
+			timingsStr = "s:" + csrT + ",a:" + carT + ",hud:" + hudrT;
 		}
 	}
 
@@ -334,6 +338,10 @@ public class VikaCanvasInst extends VikaCanvas {
 
 	protected boolean drawMaxPriority() {
 		return Settings.drawMaxPriority;
+	}
+
+	public boolean isNight() {
+		return Settings.nightTheme;
 	}
 
 }

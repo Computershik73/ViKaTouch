@@ -48,8 +48,8 @@ menu.about=О программе
 menu.loading=Загрузка...
 
 about.devs=Разработчики
-about.vendor=Владелец
-about.testers=Тестировщики приложений 
+about.vendor=Поставщики
+about.testers=Бета-тестеры
 
 group=Группа
 group.s=Группы

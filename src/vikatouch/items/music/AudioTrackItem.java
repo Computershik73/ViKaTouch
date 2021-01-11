@@ -16,6 +16,10 @@ import vikatouch.items.JSONUIItem;
 import vikatouch.music.MusicPlayer;
 import vikatouch.screens.music.MusicScreen;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class AudioTrackItem extends JSONUIItem implements UIItem {
 	public int id;
 	public int owner_id;
@@ -103,7 +107,7 @@ public class AudioTrackItem extends JSONUIItem implements UIItem {
 			String[] x = Manager.getSupportedContentTypes((String)null);
 			String x2 = "";
 			for(int i = 0; i < x.length; i++) {
-				x2 += x +(i == x.length-1 ? "" : " ");
+				x2 += x[i] +(i == x.length-1 ? "" : " ");
 			}
 			if(x2.indexOf("audio/mpeg") == -1) {
 				VikaTouch.popup(new InfoPopup("Внимание!\nВаше устройство не поддерживает mp3", new Runnable() {

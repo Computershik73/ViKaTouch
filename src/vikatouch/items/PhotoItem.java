@@ -2,6 +2,10 @@ package vikatouch.items;
 
 import javax.microedition.lcdui.Graphics;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class PhotoItem extends JSONUIItem {
 	/*
 	public int itemDrawWidth = 50;

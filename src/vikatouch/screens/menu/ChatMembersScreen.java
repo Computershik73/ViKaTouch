@@ -18,6 +18,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class ChatMembersScreen extends MainScreen {
 	/*
 	 * private static String loadingStr;

@@ -19,6 +19,10 @@ import vikatouch.screens.temp.FileManagerScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class VikaFileManager {
 	
 	private static List list;

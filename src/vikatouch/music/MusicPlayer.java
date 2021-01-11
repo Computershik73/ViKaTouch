@@ -42,6 +42,10 @@ import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.url.URLDecoder;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 // экранчик с названием песни, перемоткой ии... Всё.
 public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
@@ -166,7 +170,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						try {
 							time = "00:00";
 							totalTime = "--:--";
-							player = Manager.createPlayer(url);
+							player = Manager.createPlayer(Connector.openInputStream(url), "audio/mpeg");
 							player.realize();
 
 							player.start();
@@ -211,6 +215,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						}
 						try {
 
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								return;
+							}
 							FileConnection trackFile = (FileConnection) Connector.open(path);
 							try {
 								if (trackFile.exists()) {
@@ -231,14 +240,35 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 							int trackSegSize = (int) trackSize / 100;
 							int i = 0;
-
-							if ((int) contCon.getLength() != -1) {
-								while ((contCon.getLength() / 100) * (i + 1) < contCon.getLength()) {
-									cacheBuffer = new byte[trackSegSize];
+							
+							boolean simple = true;
+							
+							if(trackSize / 1024 == 0) {
+								// Происходит абсолютно рандомно, но после одного раза.
+								// UPD 10.01 04:54: добавил Thread.sleep(100); перед загрузкой, вроде помогло.
+								System.out.println(url);
+								VikaTouch.popup(new InfoPopup("Cache error: 404", null));
+								try {
+									output.close();
+									dis.close();
+									contCon.close();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								return;
+							}
+							
+							if(simple) {
+								System.out.println("need: " + trackSize / 1024 + "K");
+								byte[] buf = new byte[4096];
+								int read;
+								int downloaded = 0;
+								while((read = dis.read(buf)) != -1) {
+									output.write(buf, 0, read);
+									downloaded += read;
+									i = (int)(((double)downloaded / (double)trackSize) * 100d);
 									time = i + "%";
-									dis.read(cacheBuffer);
-									output.write(cacheBuffer);
-									i++;
+
 									if (stop) {
 										stop = false;
 										dis.close();
@@ -246,14 +276,33 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 										output.close();
 										return;
 									}
-									if (Runtime.getRuntime().freeMemory() < trackSize * 3)
-										System.gc();
 								}
-								cacheBuffer = new byte[(int) (contCon.getLength() - contCon.getLength() / 100 * (i))];
-								time = "99,9%";
-								dis.read(cacheBuffer);
-								output.write(cacheBuffer);
-								output.flush();
+								System.out.println("downloaded: " + (downloaded / 1024) + "K");
+							} else {
+
+								if ((int) contCon.getLength() != -1) {
+									while ((contCon.getLength() / 100) * (i + 1) < contCon.getLength()) {
+										cacheBuffer = new byte[trackSegSize];
+										time = i + "%";
+										dis.read(cacheBuffer);
+										output.write(cacheBuffer);
+										i++;
+										if (stop) {
+											stop = false;
+											dis.close();
+											contCon.close();
+											output.close();
+											return;
+										}
+										if (Runtime.getRuntime().freeMemory() < trackSize * 3)
+											System.gc();
+									}
+									cacheBuffer = new byte[(int) (contCon.getLength() - contCon.getLength() / 100 * (i))];
+									time = "99,9%";
+									dis.read(cacheBuffer);
+									output.write(cacheBuffer);
+									output.flush();
+								}
 							}
 
 							if (dis != null) {
@@ -281,7 +330,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							if (Settings.audioMode == Settings.AUDIO_LOADANDPLAY) {
 
 								try {
-									player = Manager.createPlayer(path);
+									player = Manager.createPlayer(Connector.openInputStream(path), "audio/mpeg");
 									player.addPlayerListener(inst);
 								} catch (Exception e) {
 									stop = false;
@@ -311,13 +360,17 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								}
 								try {
 									player.start();
-									((VolumeControl) player.getControl("VolumeControl"))
-											.setLevel(Settings.playerVolume);
 								} catch (MediaException e) {
 									stop = false;
 									VikaTouch.popup(new InfoPopup("Player running error", null));
 									e.printStackTrace();
 									return;
+								}
+								try {
+									((VolumeControl) player.getControl("VolumeControl"))
+									.setLevel(Settings.playerVolume);
+								} catch (Throwable e) {
+									e.printStackTrace();
 								}
 								time = "0:00";
 								totalTime = time(player.getDuration() / 1000000L);
@@ -768,11 +821,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			}
 		}
 		try {
-			if (https) {
+			if (https || Settings.https) {
 				turl = VikaUtils.replace(turl, "http:", "https:");
 				// turl = VikaUtils.replace(turl, "httpss", "https");
 			} else {
-				turl = VikaUtils.replace(turl, "https", "http");
+				turl = VikaUtils.replace(turl, "https:", "http:");
 			}
 		} catch (Exception e) {
 		}
@@ -796,6 +849,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				if (mrl.indexOf("xtrafrancyz") != -1) {
 					mrl = "https://" + mrl.substring("http://vk-api-proxy.xtrafrancyz.net/_/".length());
 				}
+				mrl = VikaUtils.replace(mrl, "https:///", "https://");
 				String cmd = "vlc.exe \"" + mrl + "\"";
 				boolean res = VikaTouch.appInst.platformRequest(cmd);
 				if (!res) {
@@ -1067,7 +1121,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						closePlayer();
 					} catch (Exception e2) {
 					}
-					player = Manager.createPlayer(url);
+					player = Manager.createPlayer(Connector.openInputStream(url), "audio/mpeg");
 					player.start();
 					isReady = true;
 					isPlaying = true;
@@ -1157,7 +1211,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						e.printStackTrace();
 					}
 					try {
-						player = Manager.createPlayer(System.getProperty("fileconn.dir.music") + "vikaMusicCache.mp3");
+						player = Manager.createPlayer(Connector.openInputStream(System.getProperty("fileconn.dir.music") + "vikaMusicCache.mp3"), "audio/mpeg");
 						player.addPlayerListener(inst);
 						player.realize();
 					} catch (Exception e) {

@@ -10,6 +10,10 @@ import vikatouch.music.MusicPlayer;
 import vikatouch.screens.music.MusicScreen;
 import vikatouch.utils.error.ErrorCodes;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class AudioAttachment extends DocumentAttachment {
 	public AudioAttachment() {
 		this.type = "audio";

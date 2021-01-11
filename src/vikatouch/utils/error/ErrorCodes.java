@@ -1,5 +1,9 @@
 package vikatouch.utils.error;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class ErrorCodes
 {
 	//коды ошибок

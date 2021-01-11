@@ -10,6 +10,10 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.json.INextLoadable;
 import vikatouch.locale.TextLocal;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class LoadMoreButtonItem implements PressableUIItem {
 
 	public LoadMoreButtonItem(INextLoadable list) {

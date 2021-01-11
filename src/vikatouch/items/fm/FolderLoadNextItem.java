@@ -4,6 +4,10 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.temp.FileManagerScreen;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class FolderLoadNextItem extends FolderItem {
 
 	public FolderLoadNextItem(FileManagerScreen fms, String path) {

@@ -19,6 +19,10 @@ import vikatouch.settings.Settings;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class ConversationItem extends JSONUIItem {
 	public String text;
 	public String title;
@@ -46,7 +50,8 @@ public class ConversationItem extends JSONUIItem {
 		/*
 		 * if(DisplayUtils.compact) { itemDrawHeight = 36; } else {
 		 */
-		ava = VikaTouch.cameraImg;
+		if (DisplayUtils.width > 240)
+			ava = VikaTouch.cameraImg;
 		// }
 	}
 
@@ -54,7 +59,7 @@ public class ConversationItem extends JSONUIItem {
 
 		// if(!DisplayUtils.compact)
 		// {
-		if (ava == null || ava == VikaTouch.cameraImg) {
+		if (DisplayUtils.width > 240 && (ava == null || ava == VikaTouch.cameraImg)) {
 			ava = VikaTouch.cameraImg;
 			Image img = null;
 			try {
@@ -77,8 +82,8 @@ public class ConversationItem extends JSONUIItem {
 
 	public String getTime() {
 		/*
-		 * супер-мега костыль 2000 try { if(date == 0) Thread.sleep(10l); } catch
-		 * (InterruptedException e) {}
+		 * супер-мега костыль 2000 try { if(date == 0) Thread.sleep(10l); }
+		 * catch (InterruptedException e) {}
 		 */
 		return VikaUtils.parseShortTime(date);
 	}
@@ -99,15 +104,18 @@ public class ConversationItem extends JSONUIItem {
 		 */
 		int h = itemDrawHeight;
 		int hfh = font.getHeight() / 2;
+		int tx = 73;
+		if (DisplayUtils.width <= 240)
+			tx = 4;
 		if (title != null) {
-			g.drawString(title, 73, y + h / 4 - hfh, 0);
+			g.drawString(title, tx, y + h / 4 - hfh, 0);
 		}
 
 		if (!selected) {
 			ColorUtils.setcolor(g, ColorUtils.OUTLINE);
 		}
 
-		g.drawString(text == null ? "Сообщение" : text, 73, y + h * 3 / 4 - hfh, 0);
+		g.drawString(text == null ? "Сообщение" : text, tx, y + h * 3 / 4 - hfh, 0);
 
 		if (!selected) {
 			ColorUtils.setcolor(g, 7);
@@ -117,14 +125,18 @@ public class ConversationItem extends JSONUIItem {
 			g.drawString(time, DisplayUtils.width - (16 + font.stringWidth(time)), y + h / 4 - hfh, 0);
 		}
 
-		if (ava != null) {
+		if (DisplayUtils.width > 240 && ava != null) {
 			g.drawImage(ava, 14, y + 8, 0);
 			if (IconsManager.ac == null) {
 				System.out.print("F");
 			} else // а что, бывало что оно не загрузилось? лол))
-				g.drawImage(selected ? IconsManager.acs : IconsManager.ac, 14, y + 8, 0); // и вообще, ACS проверить
-																							// забыли. Приделаю костыль.
-
+				g.drawImage(selected ? IconsManager.acs : IconsManager.ac, 14, y + 8, 0); // и
+																							// вообще,
+																							// ACS
+																							// проверить
+																							// забыли.
+																							// Приделаю
+																							// костыль.
 		}
 
 		if (!selected) {
@@ -162,7 +174,8 @@ public class ConversationItem extends JSONUIItem {
 				}
 			} catch (Throwable e) {
 				// System.out.println("conv " + peerId + ": " + e.toString());
-				// chat_settings может не существовать, так-что это исключение игнорируется
+				// chat_settings может не существовать, так-что это исключение
+				// игнорируется
 
 				// if(e instanceof InterruptedException) throw e;
 			}
@@ -215,41 +228,39 @@ public class ConversationItem extends JSONUIItem {
 			time = getTime();
 
 			String nameauthora = "";
-
 			if (text == "" || text == null || text.length() == 0) {
 				JSONArray attachments = msg.optJSONArray("attachments");
-				// if(lastmessage.attachments != null && lastmessage.attachments.length != 0 &&
+				// if(lastmessage.attachments != null &&
+				// lastmessage.attachments.length != 0 &&
 				// lastmessage.attachments[0] != null)
 				// {
 				try {
-					if(attachments.optJSONObject(0) != null) {
-						if (attachments.optJSONObject(0).optString("type").equals("photo")) {
+					if (attachments.optJSONObject(1) != null) {
+						text = TextLocal.inst.get("msg.attach.attachments");
+					} else if (attachments.optJSONObject(0) != null) {
+						if (attachments.optJSONObject(0).optString("photo", null) != null) {
 							text = TextLocal.inst.get("msg.attach.photo");
+						} else if (attachments.optJSONObject(0).optString("audio", null) != null) {
+							text = TextLocal.inst.get("msg.attach.audio");
+						} else if (attachments.optJSONObject(0).optString("video", null) != null) {
+							text = TextLocal.inst.get("msg.attach.video");
+						} else if (attachments.optJSONObject(0).optString("wall", null) != null) {
+							text = TextLocal.inst.get("msg.attach.wall");
+						} else if (attachments.optJSONObject(0).optString("action", null) != null) {
+							text = TextLocal.inst.get("msg.attach.action");
+						} else if (attachments.optJSONObject(0).optString("gift", null) != null) {
+							text = TextLocal.inst.get("msg.attach.gift");
 						} else {
-							if (attachments.optJSONObject(0).optString("type").equals("audio")) {
-								text = TextLocal.inst.get("msg.attach.audio");
-							} else {
-								if (attachments.optJSONObject(0).optString("type").equals("video")) {
-									text = TextLocal.inst.get("msg.attach.video");
-								} else {
-									if (attachments.optJSONObject(0).optString("type").equals("wall")) {
-										text = TextLocal.inst.get("msg.attach.wall");
-									} else {
-	
-										text = TextLocal.inst.get("msg.attach.attachment");
-	
-									}
-								}
-							}
+							text = TextLocal.inst.get("msg.attach.attachment");
 						}
 					}
 				} catch (Throwable e) {
 					e.printStackTrace();
 					/*
-					 * if(lastmessage.attachments[0] instanceof PhotoAttachment) { text =
-					 * TextLocal.inst.get("msg.attach.photo"); } else if(lastmessage.attachments[0]
-					 * instanceof AudioAttachment) { text = "Аудиозапись"; } else { text =
-					 * "Вложение"; }
+					 * if(lastmessage.attachments[0] instanceof PhotoAttachment)
+					 * { text = TextLocal.inst.get("msg.attach.photo"); } else
+					 * if(lastmessage.attachments[0] instanceof AudioAttachment)
+					 * { text = "Аудиозапись"; } else { text = "Вложение"; }
 					 */
 				}
 				// }
@@ -272,13 +283,19 @@ public class ConversationItem extends JSONUIItem {
 			if (nameauthora != "") {
 				text = nameauthora + ": " + text;
 			}
-			text = TextBreaker.shortText(text, DisplayUtils.width - 100, Font.getFont(0, 0, 8));
+			int x = 100;
+			if (DisplayUtils.width <= 240)
+				x = 32;
+			text = TextBreaker.shortText(text, DisplayUtils.width - x, Font.getFont(0, 0, 8));
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
 		if (title != null) {
-			title = TextBreaker.shortText(title, DisplayUtils.width - 150, Font.getFont(0, 0, 8));
+			int x = 150;
+			if (DisplayUtils.width <= 240)
+				x = 72;
+			title = TextBreaker.shortText(title, DisplayUtils.width - x, Font.getFont(0, 0, 8));
 		}
 		type = null;
 		json.dispose();
@@ -289,8 +306,8 @@ public class ConversationItem extends JSONUIItem {
 	public void tap(int x, int y) {
 		Dialogs.openDialog(this);
 		/*
-		 * if(x > DisplayUtils.width - 25 && y > 16 && y < 32) { remove(); } else {
-		 * Dialogs.openDialog(this); }
+		 * if(x > DisplayUtils.width - 25 && y > 16 && y < 32) { remove(); }
+		 * else { Dialogs.openDialog(this); }
 		 */
 	}
 

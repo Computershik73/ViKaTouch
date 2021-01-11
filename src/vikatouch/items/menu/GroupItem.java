@@ -19,6 +19,10 @@ import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class GroupItem extends JSONUIItem {
 
 	private String name;

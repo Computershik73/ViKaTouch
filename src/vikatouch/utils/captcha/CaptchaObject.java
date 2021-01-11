@@ -9,6 +9,10 @@ import org.json.me.JSONObject;
 import vikatouch.json.JSONBase;
 import vikatouch.utils.VikaUtils;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class CaptchaObject extends JSONBase {
 
 	public String captchasid;

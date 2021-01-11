@@ -53,11 +53,14 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.captcha.CaptchaObject;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.error.ErrorCodes;
-import vikatouch.utils.error.ExceptionUtils;
 import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
 import vikatouch.utils.url.URLDecoder;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class VikaTouch {
 
 	public static boolean DEMO_MODE = false;
@@ -96,6 +99,9 @@ public class VikaTouch {
 	public static boolean musicIsProxied;
 	public static int integerUserId;
 	protected static PhotosScreen photos;
+	public static Image deactivatedImg;
+	//Вотэто очень прошу не трогать.
+	public static final boolean SIGNED = false;
 
 	public void saveToken() {
 		try {
@@ -505,7 +511,7 @@ public class VikaTouch {
 				jver = "-";
 			details = "\nDevice info: \nRAM:" + mem + "K, profiles:" + System.getProperty("microedition.profiles")
 					+ ", conf:" + System.getProperty("microedition.configuration") + " Emulator:"
-					+ EmulatorDetector.emulatorType + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + " hostname: " + hostname + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
+					+ EmulatorDetector.getString(EmulatorDetector.emulatorType) + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + " hostname: " + hostname + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
 					+ (Settings.https ? 1 : 0) + " proxy:" + (Settings.proxy ? 1 : 0) + " lang: " + Settings.language
 					+ " ll:" + Settings.simpleListsLength + " audio:" + Settings.audioMode + "AS:"
 					+ Settings.loadMusicViaHttp + "" + Settings.loadMusicWithKey ;
@@ -880,6 +886,13 @@ public class VikaTouch {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		try {
+			Image deactivated = Image.createImage("/deactivated.png");
+			deactivatedImg = ResizeUtils.resizeava(deactivated);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			deactivatedImg = cameraImg;
+		}
 
 		SplashScreen.currState = 4;
 
@@ -990,7 +1003,8 @@ public class VikaTouch {
 			setDisplay(new Alert("", n.title + "\n" + n.text, null, AlertType.ALARM));
 		} else {
 			canvas.currentNof = n;
-			VikaNotification.vib();
+			if(n.type == VikaNotification.NEW_MSG)
+				VikaNotification.vib();
 		}
 	}
 
@@ -1092,6 +1106,6 @@ public class VikaTouch {
 	}
 
 	public static boolean needFilePermission() {
-		return (isS40() || (mobilePlatform.indexOf("S60") != -1 && (mobilePlatform.indexOf("3.0") != -1 || mobilePlatform.indexOf("3.1") != -1 || mobilePlatform.indexOf("3.2") != -1))) && !EmulatorDetector.isEmulator;
+		return (isS40() || (mobilePlatform.indexOf("S60") != -1 && (mobilePlatform.indexOf("3.0") != -1 || mobilePlatform.indexOf("3.1") != -1 || mobilePlatform.indexOf("3.2") != -1))) && !EmulatorDetector.isEmulator && !SIGNED;
 	}
 }

@@ -1,3 +1,6 @@
+// This file is part of VikaUI
+// Copyright (C) 2020  Arman Jussuplaliyev (Shinovon)
+
 package ru.nnproject.vikaui.popup;
 
 import javax.microedition.lcdui.Font;
@@ -8,6 +11,10 @@ import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class ConfirmBox extends VikaNotice {
 
 	private String line1;
@@ -36,7 +43,7 @@ public class ConfirmBox extends VikaNotice {
 		int th = h1 * 6;
 		int y = DisplayUtils.height / 2 - th / 2;
 		int x = DisplayUtils.width / 2 - width / 2;
-		
+
 		if (customYes != null)
 			okT = customYes;
 		if (customNo != null)

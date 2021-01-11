@@ -23,6 +23,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class MenuScreen extends MainScreen implements IMenu {
 
 	private static Image profileImg;

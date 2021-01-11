@@ -4,6 +4,10 @@ import org.json.me.JSONObject;
 
 import vikatouch.json.JSONBase;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class Attachment extends JSONBase {
 	public String type;
 

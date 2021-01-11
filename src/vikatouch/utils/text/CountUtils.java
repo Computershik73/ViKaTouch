@@ -2,6 +2,10 @@ package vikatouch.utils.text;
 
 import vikatouch.locale.TextLocal;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public class CountUtils {
 
 	public static String countStrMessages(int length) {

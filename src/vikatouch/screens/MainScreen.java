@@ -13,6 +13,10 @@ import vikatouch.screens.menu.MenuScreen;
 import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
 
+/**
+ * @author Shinovon
+ * 
+ */
 public abstract class MainScreen extends ScrollableCanvas {
 
 	public static int lastMenu;
@@ -42,7 +46,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 					if (hasBackButton && x < oneitemheight) {
 						VikaTouch.inst.cmdsInst.command(14, this);
 					}
-					if (this instanceof MainScreen && x > DisplayUtils.width - oneitemheight) {
+					if (this instanceof MenuScreen && x > DisplayUtils.width - oneitemheight) {
 						VikaTouch.inst.cmdsInst.command(13, this);
 					}
 				} else if (!(this instanceof SettingsScreen) && y >= DisplayUtils.height - bottomPanelH) {

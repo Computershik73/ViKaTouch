@@ -19,6 +19,10 @@ import vikatouch.locale.TextLocal;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.url.URLBuilder;
 
+/**
+ * @author Feodor0090
+ * 
+ */
 public class VoiceRecorder extends MainScreen {
 
 	public Player pl;

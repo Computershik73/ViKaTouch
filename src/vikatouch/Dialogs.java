@@ -14,7 +14,10 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.url.URLBuilder;
 
-//FIXME: переписать
+/**
+ * @author Shinovon
+ * 
+ */
 public class Dialogs extends TimerTask {
 
 	public static ConversationItem[] dialogs = new ConversationItem[0];
