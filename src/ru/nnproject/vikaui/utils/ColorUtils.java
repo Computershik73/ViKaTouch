@@ -32,6 +32,7 @@ public class ColorUtils {
 	public static final int BOTTOMPANELCOLOR = -3;
 	public static final int TITLEPANELCOLOR = -99;
 	public static final int MSGTEXT = -50;
+	public static final int MUSICCOLOR = -49;
 
 	public static boolean isNight() {
 		return DisplayUtils.canvas.isNight();
@@ -71,6 +72,13 @@ public class ColorUtils {
 		case TITLEPANELCOLOR: {
 			if (isNight())
 				g.setGrayScale(12);
+			else
+				g.setColor(81, 129, 184);
+			break;
+		}
+		case MUSICCOLOR: {
+			if (isNight())
+				g.setGrayScale(100);
 			else
 				g.setColor(81, 129, 184);
 			break;

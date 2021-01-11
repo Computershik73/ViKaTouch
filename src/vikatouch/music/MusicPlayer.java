@@ -895,7 +895,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			}
 			Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
 			g.setFont(f);
-			g.setGrayScale(0);
+			ColorUtils.setcolor(g, 0);
 			currTx -= 1;
 			currAx -= 1;
 			if (-currTx > (titleW / 2 + hdw))
@@ -945,7 +945,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				g.drawString(title, textAnchor + (titleW > dw ? currTx : 0), timeY - f.getHeight() * 5 / 2,
 						Graphics.HCENTER | Graphics.TOP);
 			}
-			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+			ColorUtils.setcolor(g, ColorUtils.MUSICCOLOR);
 			g.drawRect(x1, timeY, x2 - x1, 10);
 			if (isReady) {
 				g.fillRect(x1 + 2, timeY + 2, Math.min(currX - x1 - 4, x2 - x1 - 4), 6);
@@ -961,16 +961,16 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				}
 				g.setGrayScale(200);
 				g.fillRect(px1, timeY + 2, px2 - px1, 6);
-				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+				ColorUtils.setcolor(g, ColorUtils.MUSICCOLOR);
 			}
 
 			int volumeXc = volumeX1 + ((volumeX2 - volumeX1) * Settings.playerVolume / 100);
-			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+			ColorUtils.setcolor(g, ColorUtils.MUSICCOLOR);
 			g.fillRect(volumeX1, volumeY, volumeXc - volumeX1, 6);
 			g.setGrayScale(200);
 			g.fillRect(volumeXc, volumeY, volumeX2 - volumeXc, 6);
 
-			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+			ColorUtils.setcolor(g, ColorUtils.MUSICCOLOR);
 			f = Font.getFont(0, 0, Font.SIZE_SMALL);
 			g.setFont(f);
 			g.drawString(time, x1 - 4, timeY - 6, Graphics.TOP | Graphics.RIGHT);

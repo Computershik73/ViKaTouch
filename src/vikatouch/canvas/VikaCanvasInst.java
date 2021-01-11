@@ -120,11 +120,6 @@ public class VikaCanvasInst extends VikaCanvas {
 				g.setGrayScale(0);
 				g.drawString(infoStr, 0, h, 0);
 			}
-
-			g.setColor(msgColor);
-			g.fillRect(DisplayUtils.width - 8, 0, 4, 4);
-			g.setColor(updColor);
-			g.fillRect(DisplayUtils.width - 4, 0, 4, 4);
 		}
 	}
 
