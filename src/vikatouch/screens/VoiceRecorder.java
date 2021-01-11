@@ -95,9 +95,7 @@ public class VoiceRecorder extends MainScreen {
 			Hashtable var3 = new Hashtable();
 
 			uploadUrl = VikaUtils.replace(uploadUrl, "\\/", "/");
-			byte[] var5 = (new HttpMultipartRequest("http://vikamobile.ru:80/upload.php?" + uploadUrl, var3,
-					"upload_field", "bb2.mp3", "multipart/form-data", recorderSoundArray)).send();
-			String var4 = new String(var5);
+			String var4 = VikaUtils.upload("http://vikamobile.ru:80/upload.php?" + uploadUrl, "upload_field", "bb2.mp3", recorderSoundArray);
 
 			String var178 = VikaUtils.downloadE(new URLBuilder("docs.save").addField("file", var4));
 			String var6 = var178.substring(var178.indexOf("owner_id") + 10,
@@ -113,6 +111,9 @@ public class VoiceRecorder extends MainScreen {
 
 		} catch (RuntimeException e) {
 
+		} catch (Exception e) {
+			if(e instanceof InterruptedException)
+				throw (InterruptedException) e;
 		}
 	}
 

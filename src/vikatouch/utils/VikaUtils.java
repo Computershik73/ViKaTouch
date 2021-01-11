@@ -22,11 +22,11 @@ import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
 
+import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import tube42.lib.imagelib.ImageUtils;
-import vikamobilebase.HttpMultipartRequest;
 import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
 import vikatouch.caching.ImageStorage;
@@ -195,7 +195,7 @@ public final class VikaUtils {
 		InputStream var14 = null;
 		try {
 			var4 = new ByteArrayOutputStream();
-			var13 = (HttpConnection) Connector.open(var1);
+			var13 = (HttpConnection) Connector.open(var1, Connector.READ);
 			var13.setRequestMethod("GET");
 			var13.setRequestProperty("User-Agent",
 					"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
@@ -204,7 +204,7 @@ public final class VikaUtils {
 				if (var13.getHeaderField("Location") != null) {
 					String replacedURL = var13.getHeaderField("Location");
 					var13.close();
-					var13 = (HttpConnection) Connector.open(replacedURL);
+					var13 = (HttpConnection) Connector.open(replacedURL, Connector.READ);
 					var13.setRequestMethod("GET");
 					var13.setRequestProperty("User-Agent",
 							"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
@@ -255,7 +255,7 @@ public final class VikaUtils {
 		InputStream is = null;
 		InputStreamReader isr = null;
 		String result = null;
-		Connection conn = Connector.open(url);
+		Connection conn = Connector.open(url, Connector.READ);
 		httpconn = (HttpConnection) conn;
 		httpconn.setRequestMethod("GET");
 		httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
@@ -269,7 +269,7 @@ public final class VikaUtils {
 			if (httpconn.getHeaderField("Location") != null) {
 				String replacedURL = httpconn.getHeaderField("Location");
 				httpconn.close();
-				httpconn = (HttpConnection) Connector.open(replacedURL);
+				httpconn = (HttpConnection) Connector.open(replacedURL, Connector.READ);
 				httpconn.setRequestMethod("GET");
 				httpconn.setRequestProperty("User-Agent",
 						"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
@@ -437,7 +437,7 @@ public final class VikaUtils {
 			}
 
 			// ByteArrayOutputStream baos = null;
-			final Connection con = Connector.open(url);
+			final Connection con = Connector.open(url, Connector.READ);
 			if (con instanceof HttpConnection) {
 				HttpConnection var2 = (HttpConnection) con;
 				var2.setRequestMethod("GET");
@@ -460,7 +460,7 @@ public final class VikaUtils {
 				DataInputStream dis = null;
 				FileConnection fcon = null;
 				try {
-					fcon = (FileConnection) Connector.open(url);
+					fcon = (FileConnection) Connector.open(url, Connector.READ);
 					dis = fcon.openDataInputStream();
 
 					return Image.createImage(dis);
@@ -493,7 +493,7 @@ public final class VikaUtils {
 			ContentConnection ccon = null;
 			DataInputStream cin = null;
 			try {
-				ccon = (ContentConnection) Connector.open(url);
+				ccon = (ContentConnection) Connector.open(url, Connector.READ);
 				cin = (ccon).openDataInputStream();
 				Image image = Image.createImage(cin);
 				if (image != null && caching) {
@@ -558,7 +558,7 @@ public final class VikaUtils {
 
 	public static void makereq(String url) throws IOException {
 		HttpConnection httpconn = null;
-		Connection conn = Connector.open(url);
+		Connection conn = Connector.open(url, Connector.READ);
 		httpconn = (HttpConnection) conn;
 		httpconn.setRequestMethod("GET");
 		httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
@@ -773,14 +773,14 @@ public final class VikaUtils {
 			fileThread = new Thread() {
 				public void run() {
 					try {
-						FileConnection var2 = (FileConnection) Connector.open(url, 1);
+						FileConnection var2 = (FileConnection) Connector.open(url, Connector.READ);
 						String var4;
 						Enumeration var3 = var2.list("*", true);
 						for (; var3.hasMoreElements() && this.isAlive(); filenamesVector.addElement(var4)) {
 
 							var4 = (String) var3.nextElement();
 							long var5;
-							if ((var2 = (FileConnection) Connector.open(url + var4, 1)).isDirectory()) {
+							if ((var2 = (FileConnection) Connector.open(url + var4, Connector.READ)).isDirectory()) {
 								var5 = var2.directorySize(false);
 								list.append(var4 + " - " + Integer.toString((int) (var5 / 1024L)) + "кб\n", null);
 								filesVector.addElement(url + var4);
@@ -827,14 +827,13 @@ public final class VikaUtils {
 
 		if (!Settings.https)
 			aString163 = VikaUtils.replace(aString163, "https:", "http:");
-		Hashtable var202 = new Hashtable();
 
-		HttpMultipartRequest var200 = new HttpMultipartRequest(aString163, var202, "photo", "bb2.jpg",
-				"multipart/form-data", var5);
-
-		byte[] var218 = var200.send();
-
-		JSONObject json = new JSONObject(new String(var218));
+		JSONObject json;
+		try {
+			json = new JSONObject(upload(aString163, "photo", "bb2.jpg", var5));
+		} catch (Exception e) {
+			throw new IOException(e.toString());
+		}
 		String photo = json.getString("photo");
 		String server = "" + json.getInt("server");
 		String hash = json.getString("hash");
@@ -974,7 +973,92 @@ public final class VikaUtils {
 
 		byte[] var23;
 		try {
-			var24 = (HttpConnection) Connector.open(var0);
+			var24 = (HttpConnection) Connector.open(var0, Connector.READ_WRITE);
+			var24.setRequestMethod("POST");
+			var24.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + var7);
+			var24.setRequestProperty("Content-Length", "" + var13.length);
+			OutputStream var14 = var24.openOutputStream();
+			var14.write(var13);
+			var14.close();
+			int var15 = var24.getResponseCode();
+			if (var15 != 200) {
+				throw new Exception();
+			}
+
+			var25 = var24.openInputStream();
+			byte[] var16 = new byte[1024];
+			ByteArrayOutputStream var17 = new ByteArrayOutputStream();
+			int var18 = 1;
+
+			while (var18 > 0) {
+				var18 = var25.read(var16);
+				if (var18 > 0) {
+					var17.write(var16, 0, var18);
+				}
+			}
+
+			var23 = var17.toByteArray();
+		} catch (Exception var22) {
+			var23 = null;
+			throw new Exception("ud " + var22.toString());
+		}
+
+		try {
+			var25.close();
+		} catch (Exception var21) {
+			;
+		}
+
+		try {
+			var24.close();
+		} catch (Exception var20) {
+			;
+		}
+
+		var13 = var23;
+		String var27 = null;
+
+		try {
+			var27 = new String(var13, "utf-8");
+		} catch (UnsupportedEncodingException var19) {
+			var19.printStackTrace();
+		}
+		return var27;
+	}
+
+	public static String upload(String server, String field, String filename, byte[] file) throws Exception {
+		server = server + "&" + field + "=";
+		String var2 = "[{\":!}]";
+
+		for (int var3 = 0; var3 < var2.length(); ++var3) {
+			char var4 = var2.charAt(var3);
+			String var5 = Integer.toHexString(var4);
+			if (var5.length() < 2) {
+				var5 = "0" + var5;
+			}
+
+			int var6 = server.indexOf(63) + 1;
+			server = server.substring(0, var6) + replace(server.substring(var6), "" + var4, "%" + var5);
+		}
+
+		HttpConnection var24 = null;
+		InputStream var25 = null;
+		String var26 = "\r\n";
+		String var7 = "7d73991305de";
+		String var8 = "--" + var7;
+		String var9 = var26 + var8 + var26 + "Content-Disposition: form-data; name=\"" + field
+				+ "\"; filename=\""+filename+"\"" + var26 + "Content-Type: image/png" + var26 + var26;
+		String var10 = var26 + var8 + "--" + var26;
+		byte[] var11 = var9.getBytes("utf-8");
+		byte[] var12 = var10.getBytes("utf-8");
+		byte[] var13 = new byte[file.length + var11.length + var12.length];
+		System.arraycopy(var11, 0, var13, 0, var11.length);
+		System.arraycopy(file, 0, var13, var11.length, file.length);
+		System.arraycopy(var12, 0, var13, var11.length + file.length, var12.length);
+
+		byte[] var23;
+		try {
+			var24 = (HttpConnection) Connector.open(server, Connector.READ_WRITE);
 			var24.setRequestMethod("POST");
 			var24.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + var7);
 			var24.setRequestProperty("Content-Length", "" + var13.length);

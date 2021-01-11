@@ -220,7 +220,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							} catch (InterruptedException e) {
 								return;
 							}
-							FileConnection trackFile = (FileConnection) Connector.open(path);
+							FileConnection trackFile = (FileConnection) Connector.open(path, Connector.WRITE);
 							try {
 								if (trackFile.exists()) {
 									trackFile.delete();
@@ -231,7 +231,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							trackFile.create();
 							output = trackFile.openOutputStream();
 
-							ContentConnection contCon = (ContentConnection) Connector.open(url);
+							ContentConnection contCon = (ContentConnection) Connector.open(url, Connector.READ);
 							DataInputStream dis = contCon.openDataInputStream();
 
 							int trackSize = (int) contCon.getLength();
@@ -405,7 +405,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				ContentConnection contCon = null;
 				DataInputStream dis = null;
 				try {
-					contCon = (ContentConnection) Connector.open(url);
+					contCon = (ContentConnection) Connector.open(url, Connector.READ);
 					dis = contCon.openDataInputStream();
 				} catch (IOException e1) {
 					e1.printStackTrace();

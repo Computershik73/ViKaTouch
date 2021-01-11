@@ -183,7 +183,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 		}
 		FileConnection fileconn;
 		try {
-			fileconn = (FileConnection) Connector.open(path);
+			fileconn = (FileConnection) Connector.open(path, Connector.READ);
 			DataInputStream dis;
 			dis = fileconn.openDataInputStream();
 			byte[] bytes = new byte[(int) fileconn.fileSize()];
@@ -310,14 +310,14 @@ public class FileManagerScreen extends ScrollableCanvas {
 			try {
 				if(fileconn == null || createNew || parent == null) {
 					System.out.println(path);
-					fileconn = (FileConnection) Connector.open("file://" + path);
+					fileconn = (FileConnection) Connector.open("file://" + path, Connector.READ);
 				} else {
 					System.out.println("not new "+parent);
 					fileconn.setFileConnection(parent);
 				}
 			} catch (IllegalArgumentException e) {
 				System.out.println(path);
-				fileconn = (FileConnection) Connector.open("file://" + path);
+				fileconn = (FileConnection) Connector.open("file://" + path, Connector.READ);
 			}
 			Enumeration var3 = fileconn.list("*", true);
 			int i = 0;
@@ -332,7 +332,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 					uiItems[i] = new FolderItem(this, path + var4, var4.substring(0, var4.length() - 1));
 				} else if(s40) {
 					uiItems[i] = new FileItem(this, path + var4, var4, 0);
-				} else if ((fc = (FileConnection) Connector.open("file://" + path + var4)).isDirectory()) {
+				} else if ((fc = (FileConnection) Connector.open("file://" + path + var4, Connector.READ)).isDirectory()) {
 					uiItems[i] = new FolderItem(this, path + var4, var4.substring(0, var4.length() - 1));
 				} else {
 					var5 = fc.fileSize();
