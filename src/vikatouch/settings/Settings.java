@@ -217,7 +217,7 @@ public class Settings {
 					//2.8.15
 					nightTheme = is.readBoolean();
 					//2.9.1
-					telemetry = is.readBoolean();
+					sendLogs = is.readBoolean();
 				} catch (Exception e) {
 
 				}
