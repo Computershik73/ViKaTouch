@@ -302,7 +302,7 @@ public class Settings {
 				//2.8.15
 				os.writeBoolean(nightTheme);
 				//2.9.1
-				os.writeBoolean(telemetry);
+				os.writeBoolean(sendLogs);
 
 				byte[] b = baos.toByteArray();
 				rs.addRecord(b, 0, b.length);
