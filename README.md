@@ -59,7 +59,7 @@ Vika Touch это клиент соц. сети "ВКонтакте" для см
 <br/>
 
 # Разработчики
-@shinovon Арман Джусупгалиев (покинул проект, проделав колоссальную работу)<br/>
-@Computershik73 (vk.com/okabe2011) Илья Высоцкий<br/>
-@r_f_klin (Фёдор Рыжов)<br/>
+@Shinovon (vk.com/shinovon) Арман Джусупгалиев (покинул проект, проделав колоссальную работу)<br/>
+@Feodor0090 (vk.com/feodor0090) Фёдор Рыжов<br/>
 @Azreale1997 (vk.com/yrii.belov1997) Юрий Белов<br/>
+@Computershik73 (vk.com/okabe2011) Илья Высоцкий<br/>
