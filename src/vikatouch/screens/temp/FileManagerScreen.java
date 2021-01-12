@@ -285,40 +285,12 @@ public class FileManagerScreen extends ScrollableCanvas {
 		selectedItem = null;
 		uiItems = new PressableUIItem[len];
 		currentItem = 0;
-		boolean createNew = false;
 		root = false;
 		if(path.startsWith("file://"))
 			path = path.substring("file://".length());
-
-		if(folder == null)
-			createNew = true;
-		else if(path.indexOf(folder) == -1)
-			createNew = true;
-		String parent = null;
-		try {
-			parent = VikaUtils.replace(path, folder, "");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if(folder.indexOf(path) > -1) {
-			parent = "../";
-			createNew = false;
-		}
 		folder = path;
-		System.out.println("set "+path+ " parent:" + parent+".");
 		try {
-			try {
-				if(fileconn == null || createNew || parent == null) {
-					System.out.println(path);
-					fileconn = (FileConnection) Connector.open("file://" + path, Connector.READ);
-				} else {
-					System.out.println("not new "+parent);
-					fileconn.setFileConnection(parent);
-				}
-			} catch (IllegalArgumentException e) {
-				System.out.println(path);
-				fileconn = (FileConnection) Connector.open("file://" + path, Connector.READ);
-			}
+			fileconn = (FileConnection) Connector.open("file://" + path, Connector.READ);
 			Enumeration var3 = fileconn.list("*", true);
 			int i = 0;
 			boolean loadnext = false;
