@@ -2,6 +2,7 @@ package vikatouch;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Hashtable;
 import java.util.Random;
 
 import javax.microedition.io.ConnectionNotFoundException;
@@ -32,19 +33,12 @@ import vikatouch.items.VikaNotification;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.AboutScreen;
 import vikatouch.screens.CaptchaScreen;
-import vikatouch.screens.ChatScreen;
 import vikatouch.screens.DialogsScreen;
 import vikatouch.screens.LoginScreen;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.NewsScreen;
 import vikatouch.screens.PhotosScreen;
-import vikatouch.screens.ReturnableListScreen;
-import vikatouch.screens.menu.ChatMembersScreen;
-import vikatouch.screens.menu.DocsScreen;
-import vikatouch.screens.menu.GroupsScreen;
 import vikatouch.screens.menu.MenuScreen;
-import vikatouch.screens.menu.VideosScreen;
-import vikatouch.screens.page.GroupPageScreen;
 import vikatouch.screens.temp.SplashScreen;
 import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
@@ -66,7 +60,6 @@ public class VikaTouch {
 	public static boolean DEMO_MODE = false;
 	public static final String API_VERSION = "5.122";
 	public static final String TOKEN_RMS = "vikatouchtoken";
-	public static final int INDEX_FALSE = -1;
 	public static String API = "http://vk-api-proxy.xtrafrancyz.net:80";
 	public static String OAUTH = "https://oauth.vk.com:443";
 	public static String accessToken;
@@ -100,6 +93,7 @@ public class VikaTouch {
 	public static int integerUserId;
 	protected static PhotosScreen photos;
 	public static Image deactivatedImg;
+	public static Hashtable profiles = new Hashtable();
 	//Вотэто очень прошу не трогать.
 	public static final boolean SIGNED = false;
 
@@ -161,52 +155,6 @@ public class VikaTouch {
 			//	canvas.oldScreen = canvas.currentScreen;
 		}
 		appInst.isPaused = false;
-		if (s instanceof MenuScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_MENU;
-			MainScreen.lastMenu = DisplayUtils.CANVAS_MENU;
-		}
-		if (s instanceof NewsScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_NEWS;
-		}
-		if (s instanceof DialogsScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_CHATSLIST;
-		}
-		if (s instanceof AboutScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_ABOUT;
-		}
-		if (s instanceof LoginScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_LOGIN;
-		}
-		if (s instanceof ChatScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_CHAT;
-		}
-		if (s instanceof ReturnableListScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_TEMPLIST;
-		}
-		if (s instanceof GroupPageScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_TEMPLIST;
-			canvas.lastTempScreen = s;
-		}
-		if (s instanceof DocsScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_DOCSLIST;
-			MainScreen.lastMenu = DisplayUtils.CANVAS_DOCSLIST;
-		}
-		if (s instanceof GroupsScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_GROUPSLIST;
-			MainScreen.lastMenu = DisplayUtils.CANVAS_GROUPSLIST;
-		}
-		if (s instanceof ChatMembersScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_FRIENDSLIST;
-			MainScreen.lastMenu = DisplayUtils.CANVAS_FRIENDSLIST;
-		}
-		if (s instanceof PhotosScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_PHOTOSLIST;
-			MainScreen.lastMenu = DisplayUtils.CANVAS_PHOTOSLIST;
-		}
-		if (s instanceof VideosScreen) {
-			DisplayUtils.current = DisplayUtils.CANVAS_VIDEOSLIST;
-			MainScreen.lastMenu = DisplayUtils.CANVAS_VIDEOSLIST;
-		}
 		//canvas.slide = direction;
 		canvas.currentScreen = s;
 		canvas.draw();
@@ -258,11 +206,11 @@ public class VikaTouch {
 			}
 
 			errReason = tokenAnswer;
-			if (tokenAnswer.indexOf("error") >= 0) {
-				if (tokenAnswer.indexOf("need_captcha") > 0) {
+			if (tokenAnswer.indexOf("error") > -1) {
+				if (tokenAnswer.indexOf("need_captcha") > -1) {
 					return captcha(user, pass);
 				}
-				if (tokenAnswer.indexOf("2fa") > 0) {
+				if (tokenAnswer.indexOf("2fa") > -1) {
 					return code(user, pass, tokenAnswer);
 				}
 				errReason = tokenAnswer;
@@ -355,11 +303,11 @@ public class VikaTouch {
 			}
 			System.out.println(tokenUnswer);
 			errReason = tokenUnswer;
-			if (tokenUnswer.indexOf("error") >= 0) {
-				if (tokenUnswer.indexOf("need_captcha") > 0) {
+			if (tokenUnswer.indexOf("error") > -1) {
+				if (tokenUnswer.indexOf("need_captcha") > -1) {
 					return captcha(user, pass);
 				}
-				if (tokenUnswer.indexOf("2fa") > 0) {
+				if (tokenUnswer.indexOf("2fa") > -1) {
 					return code(user, pass, tokenUnswer);
 				}
 				errReason = tokenUnswer;
@@ -397,7 +345,7 @@ public class VikaTouch {
 			String refreshToken;
 			String m = VikaUtils.music(URLBuilder.makeSimpleURL("audio.get"));
 
-			if (m.indexOf("confirmation") >= 0) {
+			if (m.indexOf("confirmation") > -1) {
 
 				String recept = ":APA91bFAM-gVwLCkCABy5DJPPRH5TNDHW9xcGu_OLhmdUSA8zuUsBiU_DexHrTLLZWtzWHZTT5QUaVkBk_GJVQyCE_yQj9UId3pU3vxvizffCPQISmh2k93Fs7XH1qPbDvezEiMyeuLDXb5ebOVGehtbdk_9u5pwUw";
 				String surl = new URLBuilder(API, "auth.refreshToken", false).addField("access_token", accessToken)
@@ -413,7 +361,7 @@ public class VikaTouch {
 				System.out.println(refreshToken);
 				// VikaTouch.sendLog("refr1 "+refreshToken);
 				try {
-					if (refreshToken.indexOf("Unknown method") != -1) {
+					if (refreshToken.indexOf("Unknown method") > -1) {
 						musicIsProxied = true;
 						refreshToken = VikaUtils.music(surl);
 						// VikaTouch.sendLog("unk "+refreshToken);
@@ -703,7 +651,8 @@ public class VikaTouch {
 		} : null, TextLocal.inst.get("error"), fatal ? TextLocal.inst.get("close") : "ОК"));
 	}
 
-	public static void error(Throwable e, int i) {
+	public static void error(Throwable e, int i, boolean fatal) {
+
 		String error = "Error";
 		if (i != ErrorCodes.LANGLOAD) {
 			if (TextLocal.inst.get("error") != "error")
@@ -711,11 +660,6 @@ public class VikaTouch {
 		}
 		String errortitle = error + "!";
 		inst.errReason = e.toString();
-		boolean fatal = e instanceof IOException
-				|| e instanceof NullPointerException;
-		if (fatal) {
-			crashed = true;
-		}
 		if (e instanceof OutOfMemoryError) {
 			canvas.currentScreen = null;
 			VikaCanvas.currentAlert = null;
@@ -759,6 +703,22 @@ public class VikaTouch {
 		if (Settings.sendLogs) {
 			sendLog("Error Report", "errcode: " + i + ", throwable: " + e.toString() + (fatal ? ", fatal" : ""));
 		}
+	}
+
+	public static void error(Throwable e, int i) {
+
+		boolean fatal = e instanceof IOException
+				|| e instanceof NullPointerException || i == ErrorCodes.VIKACANVASPAINT;
+		if(i == ErrorCodes.VIKACANVASPAINT) {
+			// Думаю все уже знают что значит эта ошибка.
+			sendLog("Error Report", "errcode: " + i + ", throwable: " + e.toString() + ", fatal");
+			appInst.destroyApp(false);
+			return;
+		}
+		if (fatal) {
+			crashed = true;
+		}
+		error(e, i, fatal);
 	}
 
 	public static void error(Throwable e, String s) {
@@ -898,16 +858,16 @@ public class VikaTouch {
 
 		// Выбор сервера
 		if (!Settings.setted) {
-			if (mobilePlatform.indexOf("S60") > 0) {
-				if (mobilePlatform.indexOf("5.3") == INDEX_FALSE && mobilePlatform.indexOf("5.2") == INDEX_FALSE
-						&& mobilePlatform.indexOf("5.1") == INDEX_FALSE
-						&& mobilePlatform.indexOf("5.0") == INDEX_FALSE) {
-					if (mobilePlatform.indexOf("3.2") > 0) {
+			if (mobilePlatform.indexOf("S60") > -1) {
+				if (mobilePlatform.indexOf("5.3") < 0 && mobilePlatform.indexOf("5.2") < 0
+						&& mobilePlatform.indexOf("5.1") < 0
+						&& mobilePlatform.indexOf("5.0") < 0) {
+					if (mobilePlatform.indexOf("3.2") > -1) {
 						OAUTH = "https://oauth.vk.com:443";
 						API = "https://api.vk.com:443";
 						Settings.https = true;
 						Settings.proxy = false;
-					} else if (mobilePlatform.indexOf("3.1") > 0) {
+					} else if (mobilePlatform.indexOf("3.1") > -1) {
 						OAUTH = Settings.proxyOAuth;
 						API = Settings.proxyApi;
 						Settings.proxy = true;
@@ -990,7 +950,7 @@ public class VikaTouch {
 	}
 
 	public static boolean isS40() {
-		return mobilePlatform.indexOf("S60") <= -1 || Runtime.getRuntime().totalMemory() / 1024 == 2048;
+		return mobilePlatform.indexOf("S60") < 0 || Runtime.getRuntime().totalMemory() / 1024 == 2048;
 	}
 
 	public static void popup(VikaNotice popup) {
@@ -1031,9 +991,9 @@ public class VikaTouch {
 				e2.printStackTrace();
 			}
 			String mobilePlatform = VikaTouch.mobilePlatform;
-			if (mobilePlatform.indexOf("5.5") <= 0 && mobilePlatform.indexOf("5.4") <= 0
-					&& mobilePlatform.indexOf("5.3") <= 0 && mobilePlatform.indexOf("5.2") <= 0
-					&& mobilePlatform.indexOf("5.1") <= 0 && mobilePlatform.indexOf("Samsung") < 0) {
+			if (mobilePlatform.indexOf("5.5") < 0 && mobilePlatform.indexOf("5.4") < 0
+					&& mobilePlatform.indexOf("5.3") < 0 && mobilePlatform.indexOf("5.2") < 0
+					&& mobilePlatform.indexOf("5.1") < 0 && !mobilePlatform.startsWith("Samsung")) {
 				VikaTouch.appInst.platformRequest(urlF);
 			} else {
 				VikaTouch.appInst.platformRequest(System.getProperty("fileconn.dir.music") + "test.ram");
@@ -1106,6 +1066,6 @@ public class VikaTouch {
 	}
 
 	public static boolean needFilePermission() {
-		return (isS40() || (mobilePlatform.indexOf("S60") != -1 && (mobilePlatform.indexOf("3.0") != -1 || mobilePlatform.indexOf("3.1") != -1 || mobilePlatform.indexOf("3.2") != -1))) && !EmulatorDetector.isEmulator && !SIGNED;
+		return (isS40() || (mobilePlatform.indexOf("S60") > -1 && (mobilePlatform.indexOf("3.0") > -1 || mobilePlatform.indexOf("3.1") > -1 || mobilePlatform.indexOf("3.2") > -1))) && !EmulatorDetector.isEmulator && !SIGNED;
 	}
 }

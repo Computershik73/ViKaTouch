@@ -112,10 +112,10 @@ public class CaptchaScreen extends VikaScreen {
 					.addField("scope",
 							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
 					.addField("captcha_sid", obj.captchasid).addField("captcha_key", CaptchaScreen.input).toString());
-			if (VikaTouch.inst.tokenAnswer.indexOf("need_captcha") > 0) {
+			if (VikaTouch.inst.tokenAnswer.indexOf("need_captcha") > -1) {
 				VikaTouch.inst.captcha(user, pass);
 			}
-			if (VikaTouch.inst.tokenAnswer.indexOf("error") >= 0) {
+			if (VikaTouch.inst.tokenAnswer.indexOf("error") > -1) {
 				return;
 			}
 			JSONObject json = new JSONObject(VikaTouch.inst.tokenAnswer);

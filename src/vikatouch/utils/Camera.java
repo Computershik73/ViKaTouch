@@ -29,7 +29,7 @@ public final class Camera {
 			} else {
 				try {
 					try {
-						if (VikaTouch.mobilePlatform.indexOf("S60") != -1) {
+						if (VikaTouch.mobilePlatform.indexOf("S60") > -1) {
 							player = Manager.createPlayer("capture://video");
 						} else {
 							player = Manager.createPlayer("capture://image");

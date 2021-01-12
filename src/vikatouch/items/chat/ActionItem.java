@@ -12,6 +12,7 @@ import vikatouch.VikaTouch;
 import vikatouch.screens.ChatScreen;
 import vikatouch.utils.IntObject;
 import vikatouch.utils.VikaUtils;
+import vikatouch.utils.ProfileObject;
 
 /**
  * @author Shinovon
@@ -41,183 +42,90 @@ public class ActionItem extends ChatItem implements IMessage {
 
 		if (type.equalsIgnoreCase("kick_user")) {
 			String s1;
-			if (fromid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "id" + fromid;
-				}
+			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "gid" + -fromid;
-				}
+				s1 = "id" + fromid;
 			}
 			String s2;
-			if (memberid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s2 = (String) ChatScreen.profileNames.get(new IntObject(memberid));
-				} else {
-					s2 = "id" + memberid;
-				}
+
+			if (VikaTouch.profiles.containsKey(new IntObject(memberid))) {
+				s2 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(memberid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s2 = (String) ChatScreen.groupNames.get(new IntObject(memberid));
-				} else {
-					s2 = "gid" + -memberid;
-				}
+				s2 = "id" + memberid;
 			}
 			text = s1 + " изгнал " + s2;
 
 		} else if (type.equalsIgnoreCase("invite_user")) {
 			String s1;
-			if (fromid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "id" + fromid;
-				}
+			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "gid" + -fromid;
-				}
+				s1 = "id" + fromid;
 			}
 			String s2;
-			if (memberid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s2 = (String) ChatScreen.profileNames.get(new IntObject(memberid));
-				} else {
-					s2 = "id" + memberid;
-				}
+
+			if (VikaTouch.profiles.containsKey(new IntObject(memberid))) {
+				s2 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(memberid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s2 = (String) ChatScreen.groupNames.get(new IntObject(memberid));
-				} else {
-					s2 = "gid" + -memberid;
-				}
+				s2 = "id" + memberid;
 			}
 			text = s1 + " пригласил " + s2;
 		} else if (type.equalsIgnoreCase("photo_update")) {
 			String s1;
-			if (fromid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "id" + fromid;
-				}
+			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "gid" + -fromid;
-				}
+				s1 = "id" + fromid;
 			}
-
 			text = s1 + " поменял фото";
 		} else if (type.equalsIgnoreCase("photo_remove")) {
 			String s1;
-			if (fromid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "id" + fromid;
-				}
+			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "gid" + -fromid;
-				}
+				s1 = "id" + fromid;
 			}
-
 			text = s1 + " удалил фото";
 		} else if (type.equalsIgnoreCase("create")) {
 			String s1;
-			if (fromid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "id" + fromid;
-				}
+			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "gid" + -fromid;
-				}
+				s1 = "id" + fromid;
 			}
-
 			text = s1 + " создал беседу";
 		} else if (type.equalsIgnoreCase("pin_message")) {
 			String s1;
-			if (fromid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "id" + fromid;
-				}
+			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "gid" + -fromid;
-				}
+				s1 = "id" + fromid;
 			}
-
 			text = s1 + " закрепил сообщение";
 		} else if (type.equalsIgnoreCase("unpin_message")) {
 			String s1;
-			if (fromid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "id" + fromid;
-				}
+			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "gid" + -fromid;
-				}
+				s1 = "id" + fromid;
 			}
-
 			text = s1 + " открепил сообщение";
-		} else if (type.equalsIgnoreCase("chat_invite_user_by_link")) {
+		} else if (type.equalsIgnoreCase("invite_user_by_link")) {
 			String s1;
-			if (fromid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "id" + fromid;
-				}
+			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "gid" + -fromid;
-				}
+				s1 = "id" + fromid;
 			}
-
 			text = s1 + " зашел по ссылке";
 		} else {
 			String s1;
-			if (fromid > 0) {
-				if (ChatScreen.profileNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "id" + fromid;
-				}
+			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 			} else {
-				if (ChatScreen.groupNames != null) {
-					s1 = (String) ChatScreen.profileNames.get(new IntObject(fromid));
-				} else {
-					s1 = "gid" + -fromid;
-				}
+				s1 = "id" + fromid;
 			}
-
 			text = s1 + " " + type;
 		}
 		try {

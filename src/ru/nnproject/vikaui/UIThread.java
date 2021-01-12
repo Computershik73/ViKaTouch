@@ -16,7 +16,8 @@ public class UIThread extends Thread {
 		super();
 		this.canvas = canvas;
 		if (canvas.drawMaxPriority()) {
-			this.setPriority(Thread.MAX_PRIORITY);
+			// Ставим девятку, что-бы в случае крайней необходимости, интерфейс был в меньшем приоритете.
+			this.setPriority(9);
 		} else {
 			this.setPriority(Thread.NORM_PRIORITY);
 		}

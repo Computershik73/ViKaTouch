@@ -300,7 +300,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(folder.indexOf(path) != -1) {
+		if(folder.indexOf(path) > -1) {
 			parent = "../";
 			createNew = false;
 		}

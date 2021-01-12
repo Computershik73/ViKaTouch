@@ -132,7 +132,7 @@ public class Settings {
 	public static final int AUDIO_LOADANDOPEN = 3; // скачиваем и просим систему открыть.
 	public static final int AUDIO_LOADANDSYSTEMPLAY = 4; // скачиваем и тормошим плеер симбы методом Ильи.
 	public static final int AUDIO_SYSTEMPLAYER = 5; // только не скачивая.
-	public static final int AUDIO_VLC = 6; // алё, ну чо там с кемулятором
+	public static final int AUDIO_VLC = 6; // алё, ну чо там с кемулятором // UPD: норм все
 	public static final int AUDIO_DOWNLOAD = 7; // браузер
 	// теперь точно всё, осталось выяснить ГДЕ ВЛЦ и что из этого умеет СЕшка.
 	/*
@@ -324,6 +324,7 @@ public class Settings {
 			} else {
 				IconsManager.logoImg = Image.createImage("/vikahead.png");
 				IconsManager.ac = Image.createImage("/ava.png");
+				IconsManager.acs = Image.createImage("/avas.png");
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -396,7 +397,21 @@ public class Settings {
 		} catch (Exception e) {
 
 		}
+		
+
+		try {
+			setAudioModeForDevice(VikaTouch.mobilePlatform);
+		} catch (Exception e) {
+
+		}
 	}
+	
+	private static void setAudioModeForDevice(String s) throws Exception {
+		if(s.indexOf("sw_platform_version=5.3") > -1) {
+			
+		}
+	}
+
 	private static String setRegion(String l, String[] supportedLanguages, String[] regions) {
 		for (int i = 0; i < supportedLanguages.length; i++) {
 			if (supportedLanguages[i].equalsIgnoreCase(VikaUtils.replace(l, "-", "_"))) {
@@ -431,8 +446,14 @@ public class Settings {
 				Settings.sensorMode = Settings.SENSOR_J2MELOADER;
 			}
 
+			if (EmulatorDetector.emulatorType == EmulatorDetector.EM_KEM) {
+				Settings.sensorMode = Settings.SENSOR_KEMULATOR;
+				Settings.audioMode = Settings.AUDIO_SYSTEMPLAYER;
+			}
+
 			if (EmulatorDetector.emulatorType == EmulatorDetector.EM_KEMMOD) {
 				Settings.sensorMode = Settings.SENSOR_KEMULATOR;
+				Settings.audioMode = Settings.AUDIO_VLC;
 			}
 		}
 	}

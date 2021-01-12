@@ -114,7 +114,7 @@ public class TextLocal {
 			int j = str.indexOf(from);
 			int k = 0;
 
-			for (int i = from.length(); j != -1; j = str.indexOf(from, k)) {
+			for (int i = from.length(); j > -1; j = str.indexOf(from, k)) {
 				result += str.substring(k, j) + to;
 				k = j + i;
 			}

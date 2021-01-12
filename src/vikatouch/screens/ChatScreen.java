@@ -1,7 +1,6 @@
 package vikatouch.screens;
 
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.Random;
 
 import javax.microedition.lcdui.Font;
@@ -35,6 +34,7 @@ import vikatouch.screens.page.GroupPageScreen;
 import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.IntObject;
+import vikatouch.utils.ProfileObject;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.CountUtils;
 import vikatouch.utils.text.TextEditor;
@@ -70,7 +70,7 @@ public class ChatScreen extends MainScreen {
 	// private String typing2Str = "";
 	private String refreshErrorStr = "";
 	private String sendingStr = "";
-	public static String[] kt;
+	private String[] kt;
 
 	// private boolean scrolledDown = false;
 	private int inputBoxH = 48;
@@ -153,9 +153,6 @@ public class ChatScreen extends MainScreen {
 			typer.start();
 		}
 	}
-
-	public static Hashtable profileNames = new Hashtable();
-	public static Hashtable groupNames = new Hashtable();
 
 	public ChatScreen(int peerId, String title) {
 		title2 = TextLocal.inst.get("title2.loading");
@@ -340,24 +337,33 @@ public class ChatScreen extends MainScreen {
 			inr = response.optJSONArray("conversations").optJSONObject(0).optInt("in_read");
 			outr = response.optJSONArray("conversations").optJSONObject(0).optInt("out_read");
 			errst = "outr";
-			for (int i = 0; i < profiles.length(); i++) {
-				JSONObject profile = profiles.optJSONObject(i);
-				String firstname = profile.optString("first_name");
-				String lastname = profile.optString("last_name");
-				int id = profile.optInt("id");
-				if (id > 0 && firstname != null)
-					profileNames.put(new IntObject(id), firstname + " " + lastname);
-				errst = "pn" + String.valueOf(i);
-			}
-			if (groups != null) {
-				for (int i = 0; i < groups.length(); i++) {
-					JSONObject group = groups.optJSONObject(i);
-					String name = group.optString("name");
-					int id = -group.optInt("id");
-					if (name != null)
-						groupNames.put(new IntObject(id), name);
-					errst = "gn" + String.valueOf(i);
+			try {
+				if(profiles != null) {
+					for(int i = 0; i < profiles.length(); i++) {
+						JSONObject profile = profiles.getJSONObject(i);
+						if(!VikaTouch.profiles.containsKey(new IntObject(profile.getInt("id"))) && profile != null)
+							VikaTouch.profiles.put(new IntObject(profile.getInt("id")), 
+									new ProfileObject(profile.getInt("id"), 
+											profile.getString("first_name"), profile.getString("last_name"), 
+											profile.getString("photo_50").indexOf("camera_50") > -1 ? "camera_50." : profile.getString("photo_50")));
+					}
 				}
+			} catch (Exception e) {
+				
+			}
+			try {
+				if(groups != null) {
+					for(int i = 0; i < groups.length(); i++) {
+						JSONObject group = groups.getJSONObject(i);
+						if(!VikaTouch.profiles.containsKey(new IntObject(-group.getInt("id"))) && group != null)
+							VikaTouch.profiles.put(new IntObject(-group.getInt("id")), 
+									new ProfileObject(group.getInt("id"), 
+											group.getString("name"), 
+											group.getString("photo_50").indexOf("camera_50") > -1 ? "camera_50." : group.getString("photo_50")));
+					}
+				}
+			} catch (Exception e) {
+				
 			}
 			// VikaTouch.sendLog(""+items.length()+" msgs");
 			// MsgItem last = null;
@@ -381,14 +387,8 @@ public class ChatScreen extends MainScreen {
 
 						String name = (fromId < 0 ? "g" : "") + "id" + fromId;
 
-						if (fromId > 0 && profileNames.containsKey(new IntObject(fromId))) {
-							name = (String) profileNames.get(new IntObject(fromId));
-							errst = "msgnm" + String.valueOf(i);
-						} else {
-							if (groupNames.containsKey(new IntObject(fromId))) {
-								name = (String) groupNames.get(new IntObject(fromId));
-								errst = "msgnm2_" + String.valueOf(i);
-							}
+						if (VikaTouch.profiles.containsKey(new IntObject(fromId))) {
+							name = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromId))).getName();
 						}
 
 						boolean chain = false;
@@ -440,8 +440,8 @@ public class ChatScreen extends MainScreen {
 					pinText = j.optString("text");
 					pinId = j.getInt("id");
 					int fromid = j.getInt("from_id");
-					if (profileNames != null) {
-						pinName = (String) profileNames.get(new IntObject(fromid));
+					if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+						pinName = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
 					} else {
 						pinName = "id" + fromid;
 					}
@@ -507,7 +507,8 @@ public class ChatScreen extends MainScreen {
 		VikaCanvasInst.msgColor = 0xffffff00;
 		JSONObject res = new JSONObject(x).optJSONObject("response");
 		JSONArray json = res.optJSONArray("items");
-		profileNames.put(new IntObject(peerId < 0 ? -peerId : peerId), title);
+		if(!VikaTouch.profiles.containsKey(new IntObject(peerId)))
+			VikaTouch.profiles.put(new IntObject(peerId), new ProfileObject(localId, title, null));
 		inr = res.optJSONArray("conversations").optJSONObject(0).optInt("in_read");
 		outr = res.optJSONArray("conversations").optJSONObject(0).optInt("out_read");
 
@@ -1042,29 +1043,41 @@ public class ChatScreen extends MainScreen {
 					}
 					if (type == TYPE_CHAT) {
 						try {
-							JSONArray profiles = new JSONObject(x).getJSONObject("response").optJSONArray("profiles");
-							JSONArray groups = new JSONObject(x).getJSONObject("response").optJSONArray("groups");
-							for (int i = 0; i < profiles.length(); i++) {
-								JSONObject profile = profiles.getJSONObject(i);
-								String firstname = profile.optString("first_name");
-								String lastname = profile.optString("last_name");
-								int id = profile.optInt("id");
-								if (id > 0 && firstname != null)
-									profileNames.put(new IntObject(id), firstname + " " + lastname);
-							}
-							if (groups != null) {
-								for (int i = 0; i < groups.length() - 1; i++) {
-									JSONObject group = groups.getJSONObject(i);
-									String name = group.optString("name");
-									int id = -group.optInt("id");
-									if (name != null)
-										groupNames.put(new IntObject(id), name);
+							JSONObject x2 = new JSONObject(x).getJSONObject("response");
+							JSONArray profiles = x2.optJSONArray("profiles");
+							JSONArray groups = x2.optJSONArray("groups");
+							if(profiles != null) 
+								try {
+									for(int i = 0; i < profiles.length(); i++) {
+										JSONObject profile = profiles.getJSONObject(i);
+										if(!VikaTouch.profiles.containsKey(new IntObject(profile.getInt("id"))) && profile != null)
+											VikaTouch.profiles.put(new IntObject(profile.getInt("id")), 
+													new ProfileObject(profile.getInt("id"), 
+															profile.getString("first_name"), profile.getString("last_name"), 
+															profile.optString("photo_50")));
+									}
+								} catch (Exception e) {
+									
 								}
-							}
-						} catch (JSONException e) {
-						} catch (NullPointerException e) {
+							if(groups != null)
+								try {
+									for(int i = 0; i < groups.length(); i++) {
+										JSONObject group = groups.getJSONObject(i);
+										if(!VikaTouch.profiles.containsKey(new IntObject(-group.getInt("id"))) && group != null)
+											VikaTouch.profiles.put(new IntObject(-group.getInt("id")), 
+													new ProfileObject(group.getInt("id"), 
+															group.getString("name"), 
+															group.optString("photo_50")));
+									}
+								} catch (Exception e) {
+									
+								}
+							x2.dispose();
+							profiles.dispose();
+							groups.dispose();
+							x2 = null;
 						} catch (Throwable e) {
-							e.printStackTrace();
+							
 						}
 					}
 					VikaCanvasInst.updColor = 0xff0000ff;
@@ -1082,10 +1095,10 @@ public class ChatScreen extends MainScreen {
 							MsgItem m = new MsgItem(j);
 							m.parseJSON();
 							int fromId = m.fromid;
-							String name = "user" + fromId;
+							String name = "id" + fromId;
 
-							if (profileNames.containsKey(new IntObject(fromId))) {
-								name = (String) profileNames.get(new IntObject(fromId));
+							if (VikaTouch.profiles.containsKey(new IntObject(fromId))) {
+								name = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromId))).getName();
 							}
 
 							boolean chain = false;

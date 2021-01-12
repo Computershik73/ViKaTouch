@@ -188,9 +188,10 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						} catch (InterruptedException e) {
 							return;
 						} catch (Exception e) {
+							e.printStackTrace();
 							isReady = true;
 							String es = e.toString();
-							if (es.indexOf("nvalid") != -1 && es.indexOf("esponse") != -1) {
+							if (es.indexOf("nvalid") > -1 && es.indexOf("esponse") > -1) {
 								es = TextLocal.inst.get("player.accessfailed");
 							} else {
 								es = "Online mode loading: " + es;
@@ -201,6 +202,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						}
 					}
 				};
+				loader.setPriority(Thread.MAX_PRIORITY);
 				loader.start();
 			} else if (Settings.audioMode != Settings.AUDIO_CACHEANDPLAY) {
 
@@ -374,6 +376,13 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								}
 								time = "0:00";
 								totalTime = time(player.getDuration() / 1000000L);
+								if(player.getDuration() <= 0)
+									totalTime = time(voice == null ? getC().length : voice.size);
+								try {
+									player.addPlayerListener(inst);
+								} catch (Throwable e) {
+									e.printStackTrace();
+								}
 							} else if (Settings.audioMode == Settings.AUDIO_LOADANDSYSTEMPLAY) {
 								VikaTouch.callSystemPlayer(path);
 								// ну вдруг вот то что ниже хер знает на каком ублюдстве не заработает?))
@@ -398,6 +407,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						System.gc();
 					}
 				};
+				loader.setPriority(Thread.MAX_PRIORITY);
 				loader.start();
 			} else {
 				time = "...";
@@ -784,7 +794,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		String turl = "";
 		if (voice != null) {
 			String s = voice.musUrl;
-			if (VikaTouch.mobilePlatform.indexOf("NokiaN97") != 1) {
+			if (VikaTouch.mobilePlatform.indexOf("NokiaN97") > 1) {
 				turl = s;
 			} else {
 				// обычно УРЛ голоса в обработке не нуждается.
@@ -801,7 +811,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		} else if (Settings.loadMusicViaHttp == Settings.AUDIO_HTTPS) {
 			https = true;
 		} else {
-			if (VikaTouch.mobilePlatform.indexOf("NokiaN97") != 1) {
+			if (VikaTouch.mobilePlatform.indexOf("NokiaN97") > 1) {
 				https = false;
 			} else if (!Settings.https) {
 				https = false;
@@ -814,7 +824,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		} else if (Settings.loadMusicWithKey == Settings.AUDIO_NOEXTRA) {
 			extra = false;
 		} else {
-			if (VikaTouch.mobilePlatform.indexOf("NokiaN97") != 1) {
+			if (VikaTouch.mobilePlatform.indexOf("NokiaN97") > 1) {
 				extra = false;
 			} else {
 				extra = Settings.https;
@@ -846,7 +856,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			case Settings.AUDIO_VLC:
 				String mrl = ((AudioTrackItem) list.uiItems[track]).mp3;
 				System.out.println(mrl);
-				if (mrl.indexOf("xtrafrancyz") != -1) {
+				if (mrl.indexOf("xtrafrancyz") > -1) {
 					mrl = "https://" + mrl.substring("http://vk-api-proxy.xtrafrancyz.net/_/".length());
 				}
 				mrl = VikaUtils.replace(mrl, "https:///", "https://");
@@ -1198,7 +1208,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 	}
 
 	public void playerUpdate(Player pl, String event, Object data) {
+		System.out.println(event);
 		if (event == END_OF_MEDIA) {
+			System.out.println("end of media");
 			if (loop) {
 				try {
 					player.stop();
@@ -1239,12 +1251,15 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				next();
 			}
 		} else if (event == ERROR) {
+			System.out.println("event error");
 			String err = data.toString();
-			if (err.indexOf("-3") != -1)
+			if (err.indexOf("-3") > -1)
 				return;
-			if (err.indexOf("-2") != -1)
+			if (err.indexOf("-2") > -1)
 				err = TextLocal.inst.get("player.internalerror");
 			VikaTouch.popup(new InfoPopup(err, null, TextLocal.inst.get("player.playererror"), null));
+		} else {
+			System.out.println("unknown event!! " + event + " " + data);
 		}
 	}
 }

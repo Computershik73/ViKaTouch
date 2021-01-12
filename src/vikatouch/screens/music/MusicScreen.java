@@ -23,7 +23,6 @@ import vikatouch.items.music.AudioTrackItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.music.MusicPlayer;
 import vikatouch.screens.MainScreen;
-import vikatouch.screens.menu.PlaylistsScreen;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
@@ -90,7 +89,7 @@ public class MusicScreen extends MainScreen {
 					String x = VikaUtils.music(new URLBuilder("audio.get").addField("owner_id", oid)
 							.addField("album_id", albumId).addField("count", 500).addField("offset", 0).toString());
 					// VikaTouch.sendLog(x);
-					if (x.indexOf("error") != -1) {
+					if (x.indexOf("error") > -1) {
 						VikaTouch.error(ErrorCodes.MUSICLISTLOAD, x, false);
 						return;
 					}

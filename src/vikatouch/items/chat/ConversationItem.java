@@ -16,6 +16,8 @@ import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.settings.Settings;
+import vikatouch.utils.IntObject;
+import vikatouch.utils.ProfileObject;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 
@@ -190,28 +192,10 @@ public class ConversationItem extends JSONUIItem {
 
 			conv.dispose();
 
-			if (type.equalsIgnoreCase("user") && Dialogs.profiles != null) {
-				for (int i = 0; i < Dialogs.profiles.length(); i++) {
-					JSONObject profile = Dialogs.profiles.optJSONObject(i);
-					if (profile != null && profile.optInt("id") == id) {
-						title = fixJSONString(profile.optString("first_name") + " " + profile.optString("last_name"));
-						if (!Settings.dontLoadAvas)
-							avaurl = fixJSONString(profile.optString("photo_50"));
-						break;
-					}
-				}
-			}
-			if (type.equalsIgnoreCase("group") && Dialogs.groups != null) {
-				for (int i = 0; i < Dialogs.groups.length(); i++) {
-					JSONObject group = Dialogs.groups.optJSONObject(i);
-					if (group != null && group.optInt("id") == id) {
-						title = fixJSONString(group.optString("name"));
-						if (!Settings.dontLoadAvas)
-							avaurl = fixJSONString(group.optString("photo_50"));
-						break;
-					}
-
-				}
+			if ((type.equalsIgnoreCase("user") || type.equalsIgnoreCase("group")) && VikaTouch.profiles.containsKey(new IntObject(peerId))) {
+				ProfileObject p = ((ProfileObject) VikaTouch.profiles.get(new IntObject(peerId)));
+				title = p.getName();
+				avaurl = p.getUrl();
 			}
 		} catch (Throwable e) {
 			// VikaTouch.error(e, ErrorCodes.CONVERPARSE);
@@ -272,11 +256,8 @@ public class ConversationItem extends JSONUIItem {
 			if (("" + lastSenderId).equalsIgnoreCase(VikaTouch.userId)) {
 				nameauthora = TextLocal.inst.get("msg.you");
 			} else if (isGroup || type.equalsIgnoreCase("chat")) {
-				for (int i = 0; i < Dialogs.profiles.length(); i++) {
-					JSONObject profile = Dialogs.profiles.getJSONObject(i);
-					if (lastSenderId == profile.optInt("id")) {
-						nameauthora = profile.optString("first_name");
-					}
+				if (VikaTouch.profiles.containsKey(new IntObject(lastSenderId))) {
+					nameauthora = ((ProfileObject) VikaTouch.profiles.get(new IntObject(lastSenderId))).getFirstName();
 				}
 			}
 

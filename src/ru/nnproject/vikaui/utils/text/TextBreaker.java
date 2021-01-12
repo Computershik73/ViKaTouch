@@ -51,7 +51,7 @@ public class TextBreaker {
 			final int width) {
 		Font font = Font.getFont(0, 0, 8);
 		String[] result;
-		if (text.length() > 24 || text.indexOf("\n") != -1) {
+		if (text.length() > 24 || text.indexOf("\n") > -1) {
 			char[] chars = text.toCharArray();
 			int lncount = 0;
 			result = new String[10];

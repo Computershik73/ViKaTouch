@@ -2,7 +2,6 @@ package vikatouch.screens;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Hashtable;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;

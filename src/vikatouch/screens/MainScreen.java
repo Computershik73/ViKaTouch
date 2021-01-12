@@ -19,7 +19,6 @@ import vikatouch.settings.SettingsScreen;
  */
 public abstract class MainScreen extends ScrollableCanvas {
 
-	public static int lastMenu;
 	protected boolean hasBackButton; // кст, почему не статик?
 	public MainScreen backScreen;
 
@@ -41,7 +40,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	public void release(int x, int y) {
 		if (!(this instanceof ChatScreen)) {
 			if (!dragging || !canScroll) {
-				int wyw = bbw(DisplayUtils.idispi);
+				int wyw = DisplayUtils.width / 4;
 				if ((y < topPanelH)) {
 					if (hasBackButton && x < oneitemheight) {
 						VikaTouch.inst.cmdsInst.command(14, this);
@@ -367,25 +366,6 @@ public abstract class MainScreen extends ScrollableCanvas {
 	 * driftSpeed + " st" + scrollingTimer + " sp" + scrollPrev + " t" + timer, 0,
 	 * 30, 0); } }
 	 */
-
-	private int bbw(int i) {
-		switch (i) {
-		case 1:
-			return 96;
-		case 2:
-			return 64;
-		case 5:
-			return 96;
-		case 6:
-			return 96;
-		case 3:
-			return 64;
-		case 4:
-			return 64;
-		default:
-			return 64;
-		}
-	}
 
 	// events
 	public void onLeave() {

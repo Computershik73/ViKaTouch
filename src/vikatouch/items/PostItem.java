@@ -516,13 +516,13 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 				try {
 					for (int j = 0; j < c; j++) {
 						int icon = IconsManager.LINK;
-						if (links[j].indexOf("id") == 0) {
+						if (links[j].startsWith("id")) {
 							icon = IconsManager.FRIENDS;
 						}
-						if (links[j].indexOf("club") == 0) {
+						if (links[j].startsWith("club")) {
 							icon = IconsManager.GROUPS;
 						}
-						if (links[j].indexOf("rtsp") == 0) {
+						if (links[j].startsWith("rtsp")) {
 							icon = IconsManager.VIDEOS;
 						}
 						opts2[j] = new OptionItem(this, links[j], icon, -j, h);

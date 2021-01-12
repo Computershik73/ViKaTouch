@@ -29,6 +29,7 @@ import vikatouch.screens.ChatScreen;
 import vikatouch.settings.Settings;
 import vikatouch.updates.VikaUpdate.VEUtils;
 import vikatouch.utils.IntObject;
+import vikatouch.utils.ProfileObject;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.CountUtils;
 import vikatouch.utils.url.URLBuilder;
@@ -199,10 +200,8 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				int fromId = reply.optInt("from_id");
 				if (fromId == Integer.parseInt(VikaTouch.userId)) {
 					replyName = TextLocal.inst.get("msg.you");
-				} else if (fromId > 0 && ChatScreen.profileNames.containsKey(new IntObject(fromId))) {
-					replyName = (String) ChatScreen.profileNames.get(new IntObject(fromId));
-				} else if (fromId < 0 && ChatScreen.groupNames.containsKey(new IntObject(-fromId))) {
-					replyName = (String) ChatScreen.groupNames.get(new IntObject(-fromId));
+				} else if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
+					replyName = ((ProfileObject)VikaTouch.profiles.get(new IntObject(fromid))).getName();
 				}
 			}
 			if (fwds != null && fwds.length() > 0) {
@@ -218,13 +217,14 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 						m.parseJSON();
 						int fromId = m.fromid;
 
-						String name = (fromId < 0 ? "g" : "") + "id" + fromId;
-
-						if (fromId > 0 && ChatScreen.profileNames.containsKey(new IntObject(fromId))) {
-							name = (String) ChatScreen.profileNames.get(new IntObject(fromId));
+						if (VikaTouch.profiles.containsKey(new IntObject(fromId))) {
+							m.name = ((ProfileObject)VikaTouch.profiles.get(new IntObject(fromId))).getName();
+						} else if(m.foreign) {
+							m.name = TextLocal.inst.get("msg.you");
+						} else {
+							m.name = "id" + fromId;
 						}
 						m.showName = true;
-						m.name = (m.foreign ? name : TextLocal.inst.get("msg.you"));
 						m.loadAtts();
 						forward[i] = m;
 					}
@@ -305,7 +305,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		res[l - 1] = c[1];
 		return res;
 	}
-
+ 
 	private static int count(String in, char t) {
 		int r = 0;
 		char[] c = in.toCharArray();
@@ -381,8 +381,8 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				for (int i = 0; i < linesC; i++) {
 					if (drawText[i] != null) {
 						String s1 = drawText[i];
-						if ((s1.indexOf("[club") != -1 || s1.indexOf("[id") != -1) && s1.indexOf("|") != -1
-								&& s1.indexOf("]") != -1) {
+						if ((s1.indexOf("[club") > -1 || s1.indexOf("[id") > -1) && s1.indexOf("|") > -1
+								&& s1.indexOf("]") > -1) {
 							String[] arr1 = split(s1, '[');
 							int x = textX;
 							int yy = y + h1 / 2 + h1 * (i + (showName ? 1 : 0));
@@ -391,7 +391,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 								g.drawString(arr1[0], x, yy, 0);
 								x += font.stringWidth(arr1[0]);
 								for (int c = 1; c < arr1.length; c++) {
-									if (arr1[c] != null && arr1[c].indexOf('|') != -1) {
+									if (arr1[c] != null && arr1[c].indexOf('|') > -1) {
 										String[] arr2 = VEUtils.split(arr1[c], 2, '|');
 										String[] arr3 = VEUtils.singleSplit(arr2[1], ']');
 										String ping = arr3[0];
@@ -690,13 +690,13 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 																// ворчать.
 				for (int j = 0; j < c; j++) {
 					int icon = IconsManager.LINK;
-					if (links[j].indexOf("id") == 0) {
+					if (links[j].startsWith("id")) {
 						icon = IconsManager.FRIENDS;
 					}
-					if (links[j].indexOf("club") == 0) {
+					if (links[j].startsWith("club")) {
 						icon = IconsManager.GROUPS;
 					}
-					if (links[j].indexOf("rtsp") == 0) {
+					if (links[j].startsWith("rtsp")) {
 						icon = IconsManager.VIDEOS;
 					}
 					opts2[j] = new OptionItem(this, links[j], icon, -(j + 100), h);

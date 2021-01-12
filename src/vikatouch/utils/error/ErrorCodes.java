@@ -60,4 +60,7 @@ public class ErrorCodes
 	public static final int MENUNOUSERID = 51;
 	public static final int PLAYLISTSLOAD = 52;
 	public static final int PLAYLISTSPARSE = 53;
+	public static final int POINTERRELEASED = 54;
+	public static final int POINTERPRESSED = 55;
+	public static final int POINTERDRAGGED = 56;
 }

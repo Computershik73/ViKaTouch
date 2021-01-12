@@ -242,37 +242,53 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void pointerPressed(int x, int y) {
-		if (Settings.vibOnTouch)
-			Display.getDisplay(VikaTouch.appInst).vibrate(50);
-		if (currentAlert != null) {
-			currentAlert.press(x, y);
-		} else if (currentNof != null && currentNof.active && y < VikaNotification.nofH && x > VikaNotification.nofX
-				&& x < DisplayUtils.width - VikaNotification.nofX) {
-			currentNof.open();
-		} else if (showCaptcha) {
-			VikaTouch.captchaScr.press(x, y);
-		} else if (currentScreen != null) {
-			currentScreen.press(x, y);
+		try {
+			try {
+				if (Settings.vibOnTouch)
+					Display.getDisplay(VikaTouch.appInst).vibrate(50);
+				} catch (Exception e) {
+					
+				}
+			if (currentAlert != null) {
+				currentAlert.press(x, y);
+			} else if (currentNof != null && currentNof.active && y < VikaNotification.nofH && x > VikaNotification.nofX
+					&& x < DisplayUtils.width - VikaNotification.nofX) {
+				currentNof.open();
+			} else if (showCaptcha) {
+				VikaTouch.captchaScr.press(x, y);
+			} else if (currentScreen != null) {
+				currentScreen.press(x, y);
+			}
+		} catch (Exception e) {
+			VikaTouch.error(e, ErrorCodes.POINTERPRESSED, false);
 		}
 	}
 
 	public void pointerReleased(int x, int y) {
-		if (currentAlert != null) {
-			currentAlert.release(x, y);
-		} else if (showCaptcha) {
-			VikaTouch.captchaScr.release(x, y);
-		} else if (currentScreen != null) {
-			currentScreen.release(x, y);
+		try {
+			if (currentAlert != null) {
+				currentAlert.release(x, y);
+			} else if (showCaptcha) {
+				VikaTouch.captchaScr.release(x, y);
+			} else if (currentScreen != null) {
+				currentScreen.release(x, y);
+			}
+		} catch (Exception e) {
+			VikaTouch.error(e, ErrorCodes.POINTERRELEASED, false);
 		}
 	}
 
 	public void pointerDragged(int x, int y) {
-		if (currentAlert != null) {
-			currentAlert.drag(x, y);
-		} else if (showCaptcha) {
-			VikaTouch.captchaScr.drag(x, y);
-		} else if (currentScreen != null) {
-			currentScreen.drag(x, y);
+		try {
+			if (currentAlert != null) {
+				currentAlert.drag(x, y);
+			} else if (showCaptcha) {
+				VikaTouch.captchaScr.drag(x, y);
+			} else if (currentScreen != null) {
+				currentScreen.drag(x, y);
+			}
+		} catch (Exception e) {
+			VikaTouch.error(e, ErrorCodes.POINTERDRAGGED, false);
 		}
 	}
 

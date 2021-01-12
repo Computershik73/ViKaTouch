@@ -337,7 +337,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			} catch (ArithmeticException e) {
 
 			}
-			if (itemsh > vmeshautsa) {
+			int a = DisplayUtils.height - 110;
+			if (itemsh > a) {
 				canScroll = true;
 			} else {
 				canScroll = false;
@@ -350,8 +351,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				if (scrolled > 0) {
 					scrolled = 0;
 				}
-				if (scrolled < vmeshautsa - itemsh && scrolled != 0) {
-					scrolled = vmeshautsa - itemsh;
+				if (scrolled < a - itemsh && scrolled != 0) {
+					scrolled = a - itemsh;
 				}
 				g.translate(0, scrolled);
 				scroll = 0;
@@ -359,8 +360,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				if (scrolled > 0) {
 					scrolled = 0;
 				}
-				if (scrolled < vmeshautsa - itemsh && scrolled != 0) {
-					scrolled = vmeshautsa - itemsh;
+				if (scrolled < a - itemsh && scrolled != 0) {
+					scrolled = a - itemsh;
 				}
 				g.translate(0, scrolled);
 			}

@@ -61,7 +61,7 @@ public class EmulatorDetector {
 				
 			}
 			if(osname != null) {
-				if(osname.indexOf("nux") != -1 || osname.startsWith("Windows")) {
+				if(osname.indexOf("nux") > -1 || osname.startsWith("Windows")) {
 					emulatorType = EM_PC;
 					isEmulator = true;
 				}
@@ -88,7 +88,7 @@ public class EmulatorDetector {
 				if(System.getProperty("kemulator.mod.version") != null) {
 					version = System.getProperty("kemulator.mod.version");
 				}
-			} else if (platform.indexOf("03.xx") >= 0) {
+			} else if (platform.indexOf("03.xx") > -1) {
 				isEmulator = true;
 				emulatorType = EM_S40_5_SDK;
 			} else if (platform.equalsIgnoreCase("Nokia 6233")) {
@@ -116,7 +116,7 @@ public class EmulatorDetector {
 			} else if (platform.toLowerCase().endsWith("/javasdk")) {
 				isEmulator = true;
 				emulatorType = EM_JAVA_SDK;
-			} else if(platform.indexOf("Jbed-FastBCC") != -1) {
+			} else if(platform.indexOf("Jbed-FastBCC") > -1) {
 				isEmulator = true;
 				emulatorType = EM_JBED;
 			} else if (platform.equalsIgnoreCase("MicroEmulator")) {
@@ -124,13 +124,13 @@ public class EmulatorDetector {
 				emulatorType = EM_MICROEMULATOR;
 				emulatorNotSupported = true;
 			} else if(!isEmulator) {
-				if (platform.indexOf("Emulator") >= 0) {
+				if (platform.indexOf("Emulator") > -1) {
 					isEmulator = true;
 					emulatorType = EM_UNDEFINED;
 				} else if (platform.equalsIgnoreCase("j2me")) {
 					isEmulator = true;
 					emulatorType = EM_UNDEFINED;
-				} else if (platform.indexOf(" ") >= 0) {
+				} else if (platform.indexOf(" ") > -1) {
 					isEmulator = true;
 					emulatorType = EM_KEM_OR_J2L;
 				} else {

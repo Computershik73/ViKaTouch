@@ -10,6 +10,8 @@ import vikatouch.items.VikaNotification;
 import vikatouch.items.chat.ConversationItem;
 import vikatouch.screens.ChatScreen;
 import vikatouch.settings.Settings;
+import vikatouch.utils.IntObject;
+import vikatouch.utils.ProfileObject;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.url.URLBuilder;
@@ -21,10 +23,6 @@ import vikatouch.utils.url.URLBuilder;
 public class Dialogs extends TimerTask {
 
 	public static ConversationItem[] dialogs = new ConversationItem[0];
-
-	public static JSONArray profiles;
-
-	public static JSONArray groups;
 
 	public static int itemsCount;
 
@@ -86,8 +84,34 @@ public class Dialogs extends TimerTask {
 								VikaTouch.loading = true;
 							response = new JSONObject(x).getJSONObject("response");
 							items = response.getJSONArray("items");
-							profiles = response.getJSONArray("profiles");
-							groups = response.optJSONArray("groups");
+							JSONArray profiles = response.optJSONArray("profiles");
+							JSONArray groups = response.optJSONArray("groups");
+							if(profiles != null) 
+								try {
+									for(int i = 0; i < profiles.length(); i++) {
+										JSONObject profile = profiles.getJSONObject(i);
+										if(!VikaTouch.profiles.containsKey(new IntObject(profile.getInt("id"))) && profile != null)
+											VikaTouch.profiles.put(new IntObject(profile.getInt("id")), 
+													new ProfileObject(profile.getInt("id"), 
+															profile.getString("first_name"), profile.getString("last_name"), 
+															profile.optString("photo_50")));
+									}
+								} catch (Exception e) {
+									
+								}
+							if(groups != null)
+								try {
+									for(int i = 0; i < groups.length(); i++) {
+										JSONObject group = groups.getJSONObject(i);
+										if(!VikaTouch.profiles.containsKey(new IntObject(-group.getInt("id"))) && group != null)
+											VikaTouch.profiles.put(new IntObject(-group.getInt("id")), 
+													new ProfileObject(group.getInt("id"), 
+															group.getString("name"), 
+															group.optString("photo_50")));
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							for (int i = 0; i < items.length(); i++) {
 								item = items.getJSONObject(i);
 								dialogs[i] = new ConversationItem(item);
@@ -97,7 +121,7 @@ public class Dialogs extends TimerTask {
 							}
 							if (sendNofs && dialogs.length > 1 && dialogs[0] != null
 									&& !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId)) {
-								if(VikaTouch.mobilePlatform.indexOf("S60") >= 0 && (VikaTouch.mobilePlatform.indexOf("5.3") >= 0 || VikaTouch.mobilePlatform.indexOf("5.4") >= 0 || VikaTouch.mobilePlatform.indexOf("5.5") >= 0)) {
+								if(VikaTouch.mobilePlatform.indexOf("S60") > -1 && (VikaTouch.mobilePlatform.indexOf("5.3") > -1 || VikaTouch.mobilePlatform.indexOf("5.4") > -1 || VikaTouch.mobilePlatform.indexOf("5.5") > -1)) {
 									VikaTouch.notify("type", dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40));
 								}
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,

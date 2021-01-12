@@ -351,7 +351,7 @@ public final class VikaUtils {
 		if (j == -1)
 			return str;
 
-		for (int i = from.length(); j != -1; j = str.indexOf(from, k)) {
+		for (int i = from.length(); j > -1; j = str.indexOf(from, k)) {
 			sb.append(str.substring(k, j)).append(to);
 			k = j + i;
 		}
@@ -398,13 +398,13 @@ public final class VikaUtils {
 			// кеширование картинок включается если запрос http
 			boolean caching = false;
 			// !startsWith(url, "file") && Settings.cacheImages;
-			if (url.indexOf("camera_50") != -1 || url.indexOf("camera_100") != -1) {
+			if (url.indexOf("camera_50") > -1 || url.indexOf("camera_100") > -1) {
 				return VikaTouch.cameraImg;
 			}
-			if (url.indexOf("deactivated_50") != -1 || url.indexOf("deactivated_100") != -1) {
+			if (url.indexOf("deactivated_50") > -1 || url.indexOf("deactivated_100") > -1) {
 				return VikaTouch.deactivatedImg;
 			}
-			if (url.indexOf("php") >= 0 || url.indexOf("getVideoPreview") >= 0) {
+			if (url.indexOf("php") > -1 || url.indexOf("getVideoPreview") > -1) {
 				caching = false;
 			}
 			// System.out.println(url + " " + caching);
@@ -413,7 +413,7 @@ public final class VikaUtils {
 
 				filename = url;
 
-				if (filename.indexOf("?") > 0)
+				if (filename.indexOf("?") > -1)
 					filename = filename.substring(0, filename.indexOf("?"));
 
 				filename = replace(
@@ -686,16 +686,16 @@ public final class VikaUtils {
 
 	public static void openLink(String s) {
 		try {
-			if (s.indexOf("@") == 0) {
+			if (s.startsWith("@")) {
 				// упоминание
-			} else if (s.indexOf("id") == 0) {
+			} else if (s.startsWith("id")) {
 				try {
 					VikaTouch.setDisplay(VikaUtils.openPage(Integer.parseInt(s.substring(2))), 1);
 				} catch (RuntimeException e) {
 				}
-			} else if (s.indexOf("rtsp://") != -1) {
+			} else if (s.indexOf("rtsp://") > -1) {
 				VikaTouch.openRtspLink(s);
-			} else if (s.indexOf("youtube.com") != -1) {
+			} else if (s.indexOf("youtube.com") > -1) {
 				if (!Settings.symtube) {
 					VikaTouch.appInst.platformRequest(s);
 				} else {

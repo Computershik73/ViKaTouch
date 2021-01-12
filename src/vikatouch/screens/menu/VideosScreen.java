@@ -147,24 +147,18 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 
 	public final void release(int x, int y) {
 		try {
-			switch (DisplayUtils.idispi) {
-			case DisplayUtils.DISPLAY_ALBUM:
-			case DisplayUtils.DISPLAY_PORTRAIT: {
-				if (y > 58 && y < DisplayUtils.height - oneitemheight) {
-					int h = 50;
-					int yy1 = y - (scrolled + 58);
-					int i = yy1 / h;
-					if (i < 0)
-						i = 0;
-					if (!dragging) {
-						uiItems[i].tap(x, yy1 - (h * i));
-					}
-					break;
+			if (y > 58 && y < DisplayUtils.height - oneitemheight) {
+				int h = 50;
+				int yy1 = y - (scrolled + 58);
+				int i = yy1 / h;
+				if (i < 0)
+					i = 0;
+				if (!dragging) {
+					uiItems[i].tap(x, yy1 - (h * i));
 				}
-				break;
+				return;
 			}
-
-			}
+			return;
 		} catch (ArrayIndexOutOfBoundsException e) {
 		} catch (Exception e) {
 			e.printStackTrace();

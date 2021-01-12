@@ -5,6 +5,5 @@
 	<classpathentry kind="src" path="langs"/>
 	<classpathentry kind="con" path="org.elipse.mtj.JavaMEContainer/Series 40 5th Edition SDK/S40_5th_Edition_SDK"/>
 	<classpathentry kind="lib" path="kemfm1.0.jar"/>
-	<classpathentry kind="lib" path="bellecldc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

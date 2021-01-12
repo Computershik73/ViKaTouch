@@ -184,56 +184,59 @@ public class DocItem extends JSONUIItem implements ISocialable {
 	}
 
 	private Image getIcon() {
-		Image img = null;
-		try {
-			img = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(iconUrl));
-		} catch (Exception e) {
+		if (iconUrl != null)
 			try {
-				switch (type) {
-				case TYPE_PHOTO:
-				case TYPE_GIF:
-					return VikaTouch.cameraImg;
-				case TYPE_AUDIO:
-					return docmusImg;
-				case TYPE_VIDEO:
-					return docvidImg;
-				case TYPE_ARCHIVE:
-					if (ext.toLowerCase().indexOf("sis") != VikaTouch.INDEX_FALSE) {
-						return docsisImg;
-					} else
-						return doczipImg;
-				case TYPE_TEXT:
-				case TYPE_EBOOK:
-					return doctxtImg;
-				case TYPE_UNKNOWN:
-				case TYPE_UNDEFINED:
-				default:
-					if (ext.toLowerCase().indexOf("jar") != VikaTouch.INDEX_FALSE
-							|| ext.toLowerCase().indexOf("jad") != VikaTouch.INDEX_FALSE) {
-						return docjarImg;
-					} else if (ext.toLowerCase().indexOf("sis") != VikaTouch.INDEX_FALSE) {
-						return docsisImg;
-					} else if (ext.toLowerCase().indexOf("rar") != VikaTouch.INDEX_FALSE
-							|| ext.toLowerCase().indexOf("zip") != VikaTouch.INDEX_FALSE
-							|| ext.toLowerCase().indexOf("tar") != VikaTouch.INDEX_FALSE
-							|| ext.toLowerCase().indexOf("7z") != VikaTouch.INDEX_FALSE) {
-						return doczipImg;
-					}
-					/*
-					 * else if(ext.toLowerCase().indexOf("torrent") !=
-					 * VikaTouch.INDEX_FALSE) { return
-					 * ResizeUtils.resizeItemPreview(Image.createImage(
-					 * "/doctorr.png")); }
-					 */
-					else {
-						return docfileImg;
-					}
-				}
-			} catch (Exception e2) {
-
+				return ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(iconUrl));
+			} catch (Exception e) {
 			}
+		try {
+			switch (type) {
+			case TYPE_PHOTO:
+			case TYPE_GIF:
+				return VikaTouch.cameraImg;
+			case TYPE_AUDIO:
+				return docmusImg;
+			case TYPE_VIDEO:
+				return docvidImg;
+			case TYPE_ARCHIVE:
+				if (ext.toLowerCase().endsWith("sis") || ext.toLowerCase().endsWith("sisx")) {
+					return docsisImg;
+				} else
+					return doczipImg;
+			case TYPE_TEXT:
+			case TYPE_EBOOK:
+				return doctxtImg;
+			case TYPE_UNKNOWN:
+			case TYPE_UNDEFINED:
+			default:
+				if (ext.substring(0, ext.length() - 1).toLowerCase().endsWith("jar")
+						|| ext.toLowerCase().endsWith("jad") || ext.toLowerCase().endsWith("jar")) {
+					return docjarImg;
+				} else if (ext.toLowerCase().endsWith("sis") || ext.toLowerCase().endsWith("sisx")) {
+					return docsisImg;
+				} else if (ext.toLowerCase().endsWith("rar") || ext.toLowerCase().endsWith("zip")
+						|| ext.toLowerCase().endsWith("tar") || ext.toLowerCase().endsWith("7z")
+						|| ext.substring(0, ext.length() - 1).toLowerCase().endsWith("zip")
+						|| ext.substring(0, ext.length() - 1).toLowerCase().endsWith("rar")
+						|| ext.substring(0, ext.length() - 1).toLowerCase().endsWith("7z")
+						|| ext.toLowerCase().endsWith("gz")) {
+					return doczipImg;
+				}
+				/*
+				 * else if(ext.toLowerCase().indexOf("torrent") !=
+				 * VikaTouch.INDEX_FALSE) { return
+				 * ResizeUtils.resizeItemPreview(Image.createImage(
+				 * "/doctorr.png")); }
+				 */
+				else {
+					return docfileImg;
+				}
+			}
+		} catch (Exception e2) {
+
 		}
-		return img;
+
+		return VikaTouch.cameraImg;
 	}
 
 	public void startPreview() {
