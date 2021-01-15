@@ -335,6 +335,7 @@ public class VikaTouch {
 	}
 
 	public void refreshToken() throws IOException {
+		// проверка на psp эмулятор такая*
 		if(VikaTouch.mobilePlatform.equalsIgnoreCase("NokiaN73")) {
 			return;
 		}

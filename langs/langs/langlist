@@ -1,0 +1,20 @@
+# Список языков
+# Languages list
+#
+# Для моддеров!
+# For modders!
+#
+# Название файла не должно содержать пробелы и не латинские символы!
+# File name must not contain spaces or non-Latin characters!
+#
+# Format: <file>;<authors>;<compatible locales (separating with ',')>;<alias name>;<localized name>
+#
+# Example:
+# language.txt;Me, and you;en-US,en-UK;example;My locale
+#
+english.txt;Shinovon;en-US,en-UK;english;English
+russian.txt;Shinovon, Feodor0090;ru-RU,ru-KZ,kk-KZ,ru-KZ,ru-UA;russian;Русский
+spanish.txt;Илья Высоцкий, Jazminrocio, Shinovon;es-ES,es-AR;spanish,Español
+ukrainian.txt;Phantom_Horror;uk-UA;ukrainian;Українська
+belarussian.txt;Jazminrocio;be-BY;belarus;Беларуская
+vietnamese.txt;Jazminrocio;vi-VN;vietnamese;Tiếng Việt

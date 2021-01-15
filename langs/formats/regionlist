@@ -1,0 +1,21 @@
+# Список регионов
+# Region list
+#
+# Для моддеров!
+# For modders!
+#
+# Название файла не должно содержать пробелы и не латинские символы!
+# File name must not contain spaces or non-Latin characters!
+#
+# Format: <alias name>;<authors>;<compatible locales (separating with ',')>;<localized name>
+#
+# Example:
+# AB;me, and you;en-US;My region
+#
+US;Shinovon;en-US;United States
+UK;Shinovon;en-UK;United Kingdom
+RU;Shinovon;ru-RU,ru-UA,ru-KZ,ru-BY;Россия
+ES;Jazminrocio, Shinovon;es-ES,es-AR;España
+UA;Phantom_Horror, Shinovon;uk-UA;Україна
+BY;Jazminrocio, Shinovon;be-BY;Беларусь
+KZ;Shinovon;kk-KZ;Қазақстан

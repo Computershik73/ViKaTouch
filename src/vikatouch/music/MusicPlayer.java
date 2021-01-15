@@ -158,6 +158,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			final String path = tpath + "vikaMusicCache.mp3";
 			System.out.println(path);
 			if ((Settings.audioMode == Settings.AUDIO_PLAYONLINE) || (this.voice != null)) {
+				if(loader != null)
+					loader.interrupt();
+				loader = null;
 				loader = new Thread() {
 					public void run() {
 						while (stop) {
@@ -207,6 +210,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			} else if (Settings.audioMode != Settings.AUDIO_CACHEANDPLAY) {
 
 				loader = new Thread() {
+					private int downloaded;
+
 					public void run() {
 						while (stop) {
 							try {
@@ -264,7 +269,40 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								System.out.println("need: " + trackSize / 1024 + "K");
 								byte[] buf = new byte[4096];
 								int read;
-								int downloaded = 0;
+								downloaded = 0;
+								Thread speedCount = new Thread() {
+									public void run() {
+										System.out.println("speed run");
+										try {
+											// на какоето время показывать размер песни, а потом уже скорость
+											Thread.sleep(100);
+										} catch (InterruptedException e1) {
+											System.out.println("ne uspel");
+											return;
+										}
+										System.out.println("speed start");
+										while(true) {
+											int i = downloaded;
+											try {
+												Thread.sleep(1000);
+											} catch (InterruptedException e) {
+												System.out.println("speed end");
+												return;
+											}
+											int kilo = downloaded - i;
+											double mega = (double)kilo / 2024d / 1024d;
+											double round = 0;
+											int pow = 100;
+											double tmp = mega * pow;
+											round = (double) (int) ((tmp - (int) tmp) >= 0.5 ? tmp + 1 : tmp) / pow;
+											totalTime = round + " MB/s";
+											System.out.println(round + " MB/s");
+											yield();
+										}
+									}
+								};
+								speedCount.setPriority(Thread.NORM_PRIORITY);
+								speedCount.start();
 								while((read = dis.read(buf)) != -1) {
 									output.write(buf, 0, read);
 									downloaded += read;
@@ -273,12 +311,14 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 									if (stop) {
 										stop = false;
+										speedCount.interrupt();
 										dis.close();
 										contCon.close();
 										output.close();
 										return;
 									}
 								}
+								speedCount.interrupt();
 								System.out.println("downloaded: " + (downloaded / 1024) + "K");
 							} else {
 

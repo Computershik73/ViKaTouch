@@ -9,6 +9,7 @@ import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
+import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
 import vikatouch.utils.IntObject;
 import vikatouch.utils.VikaUtils;
@@ -56,69 +57,6 @@ public class ActionItem extends ChatItem implements IMessage {
 			}
 			text = s1 + " изгнал " + s2;
 
-		} else if (type.equalsIgnoreCase("invite_user")) {
-			String s1;
-			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
-				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
-			} else {
-				s1 = "id" + fromid;
-			}
-			String s2;
-
-			if (VikaTouch.profiles.containsKey(new IntObject(memberid))) {
-				s2 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(memberid))).getName();
-			} else {
-				s2 = "id" + memberid;
-			}
-			text = s1 + " пригласил " + s2;
-		} else if (type.equalsIgnoreCase("photo_update")) {
-			String s1;
-			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
-				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
-			} else {
-				s1 = "id" + fromid;
-			}
-			text = s1 + " поменял фото";
-		} else if (type.equalsIgnoreCase("photo_remove")) {
-			String s1;
-			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
-				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
-			} else {
-				s1 = "id" + fromid;
-			}
-			text = s1 + " удалил фото";
-		} else if (type.equalsIgnoreCase("create")) {
-			String s1;
-			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
-				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
-			} else {
-				s1 = "id" + fromid;
-			}
-			text = s1 + " создал беседу";
-		} else if (type.equalsIgnoreCase("pin_message")) {
-			String s1;
-			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
-				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
-			} else {
-				s1 = "id" + fromid;
-			}
-			text = s1 + " закрепил сообщение";
-		} else if (type.equalsIgnoreCase("unpin_message")) {
-			String s1;
-			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
-				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
-			} else {
-				s1 = "id" + fromid;
-			}
-			text = s1 + " открепил сообщение";
-		} else if (type.equalsIgnoreCase("invite_user_by_link")) {
-			String s1;
-			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
-				s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(fromid))).getName();
-			} else {
-				s1 = "id" + fromid;
-			}
-			text = s1 + " зашел по ссылке";
 		} else {
 			String s1;
 			if (VikaTouch.profiles.containsKey(new IntObject(fromid))) {
@@ -126,7 +64,15 @@ public class ActionItem extends ChatItem implements IMessage {
 			} else {
 				s1 = "id" + fromid;
 			}
-			text = s1 + " " + type;
+			String s2 = "null";
+			if(memberid != 0) {
+			if (VikaTouch.profiles.containsKey(new IntObject(memberid))) {
+				s2 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(memberid))).getName();
+			} else {
+				s2 = "id" + memberid;
+			}
+			}
+			text = TextLocal.inst.getFormatted("msg.action." + type, new String[] { s1, s2});
 		}
 		try {
 			Font font = Font.getFont(0, 0, 8);

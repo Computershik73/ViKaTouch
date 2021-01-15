@@ -7,7 +7,7 @@
 
 langinfo.name=Español
 #YYYY.MM.DD
-langinfo.version=2020.12.19
+langinfo.version=2021.1.4
 
 langinfo.hints=2
 
@@ -72,6 +72,7 @@ title.member=Mienbro
 title.members=Miembros
 title.login=Iniciar sesión
 title.groups=Grupos
+title.groupsw=Lista de Grupos
 title.friends=Amigos
 title.music=Música
 title.playlists=Listas de Reproducción
@@ -114,6 +115,7 @@ msg.attach.attachments=Archivos Adjuntos
 msg.attach.attachment=Archivo Adjunto
 msg.attach.memory=Adjuntar desde el celular
 msg.attach.album=Adjuntar desde album de VK
+msg.attach.camera=Sacar foto por camara 
 msg.attach.photo=Adjuntar una foto
 msg.attach.doc=Adjuntar un documento
 msg.attach.video=Vídeo
@@ -162,10 +164,10 @@ count.audiosfew=Grabaciones de audio
 count.audios=Audios
 
 video=Video
-video.addtosebe=Añadir video
 video.1view=Ver
 video.views=Vistas
 video.viewsfew=Cantidad de visitas
+video.addtosebe=Añadir a mis videos 
 
 title2.member=Miembro
 title2.members=Mienbros
@@ -222,10 +224,11 @@ settings.audio=Método de reproducción de audio
 settings.keepaudiocache=Guardar música en caché
 settings.apiproxy=Api Proxy
 settings.authproxy=OAuth Proxy
-settings.language=Idioma
+settings.language=Idioma 
+settings.region=Región 
 settings.audioc.0=Reproducir en línea
 settings.audioc.1=Guardar caché en RAM y reproducir
-settings.audioc.2=Guardar caché en el móvil y jugar
+settings.audioc.2=Guardar caché en el móvil y reproducir
 settings.audioc.3=Guardar caché en la memoria del teléfono y abrir
 settings.audioc.4=Reproducir en el reproductor del sistema
 settings.audioc.5=Reproductor Nativo en Linea
@@ -249,11 +252,12 @@ settings.vibro=Vibración
 settings.sound=Sonido
 settings.hidebottom=Ocultar botones inferiores
 settings.region=Región
-settings.doublebuffer=Doble búfer
+settings.doublebuffer=Doble búffer
 settings.drawpriority=Prioridad máxima de procesamiento
-settings.imagescaling=Prioridad máxima de sorteo
+settings.imagescaling=Prioridad máxima de escala de imagen 
 settings.fast=Rápido
-settings.filtered=Suave
+settings.filtered=Suave 
+settings.night=Tema nocturno 
 
 back=Atrás
 select=Seleccionar
@@ -265,7 +269,7 @@ close=Cerrar
 yes=Si
 ok=Aceptar
 cancel=Cancelar
-loadmore=Carga más...
+loadmore=Cargando más...
 
 splash.emnotsupported=Lo más probable es que ViKa Touch se esté ejecutando actualmente en un emulador no compatible. Recomendamos el uso de kemulator, J2ME Loader, JBed o emuladores oficiales de paquetes para desarrolladores; en otros, puede haber problemas de visualización, funcionalidad y seguridad.
 splash.title.3=Preparación de assets
@@ -310,3 +314,8 @@ player.internalerror=Error interno  desconocido (-2)
 player.cancel=¿Cancelar descarga?
 
 audio.getplaylists=Obtener listas de reproducción
+
+fm.noaccess=Sin acceso.
+fm.memorycard=Tarjeta de memoria
+fm.gallery=Galería
+fm.root=Carpeta raíz

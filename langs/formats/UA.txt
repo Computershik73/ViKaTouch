@@ -1,5 +1,5 @@
 #Ukraine
-#Authors: Jazminrocio, shinovon
+#Authors: Phantom_Horror, shinovon
 #YYYY.MM.DD
 format.version=2020.12.16
 

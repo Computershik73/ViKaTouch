@@ -197,7 +197,8 @@ public final class VikaUtils {
 			var13.setRequestMethod("GET");
 			var13.setRequestProperty("User-Agent",
 					"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
-			if (var13.getResponseCode() != 200 && var13.getResponseCode() != 401) {
+			int i = var13.getResponseCode();
+			if (i != 200 && i != 401) {
 				// System.out.println("not 200 and not 401");
 				if (var13.getHeaderField("Location") != null) {
 					String replacedURL = var13.getHeaderField("Location");
@@ -505,6 +506,7 @@ public final class VikaUtils {
 					cin.close();
 			}
 		} catch (Throwable e) {
+			e.printStackTrace();
 			return VikaTouch.cameraImg;
 		}
 		/*
