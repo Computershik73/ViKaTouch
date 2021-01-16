@@ -1,4 +1,5 @@
 #español
+#
 #authors: Илья Высоцкий, Jazminrocio
 #
 #authors' vk:
@@ -7,7 +8,7 @@
 
 langinfo.name=Español
 #YYYY.MM.DD
-langinfo.version=2021.1.4
+langinfo.version=2021.1.16
 
 langinfo.hints=2
 
@@ -17,12 +18,10 @@ error=Error
 error.additionalinfo=Información adicional
 error.description=Posible descripción
 error.contactdevs=Póngase en contacto con el desarrollador para obtener más información.
-
 close=Cerrar aplicación
 
 online=En linea
 offline=Desconectado
-
 wasonlinedate=Estaba en línea
 wasonlinetime=Estaba en línea a las
 
@@ -55,46 +54,28 @@ about.testers=Comprobadores de la aplicación
 group=Grupo
 group.s=Grupos
 group.descriptionempty=[descripción vacía]
-groups.join=Unirse al grupo
-groups.leave=Dejar el grupo
 
 title.people=Gente
 title.chats=Chats
 title.newsfeed=Noticias
 title.docs=Documentos
 title.docsw=Lista de documentos
-title.photos=Fotos
-title.photosw=Lista de fotos
 title.videos=Videos
-title.videosw=Lista de videos
+title.videosw=%1 Videos
 title.loading=Cargando...
-title.member=Mienbro
-title.members=Miembros
 title.login=Iniciar sesión
 title.groups=Grupos
-title.groupsw=Lista de Grupos
 title.friends=Amigos
 title.music=Música
 title.playlists=Listas de Reproducción
-title.album=Álbum
-title.albums=Álbumes
 title.settings=Configuración
-title.friendsw=Amigos %1
-title.documentsw=Lista de documentos %1
-title.groupsw=Grupos %1
-title.membersw=Miembros %1
-title.musicw=Música %1
-title.playlistsw=Listas de reproducción %1
-title.albumsw=Álbumes %1
-
-wall.like=Me gusta
-wall.unlike=No me gusta
-wall.links=Enlaces de la publicación
-wall.repost=Re-publicar
-wall.comments=Comentarios
-
-likes.add=Dar me gusta
-likes.delete=Eliminar me gusta
+title.friendsw=%2 Amigos
+title.documentsw=%2 Documentos
+title.groupsw=%2 Grupos
+title.musicw=%2 Música
+title.comments=Comentarios
+title.photos=Fotos
+title.photosw=%2 Fotos
 
 friend.remove=Eliminar de amigos
 friend.add=Agregar como amigo
@@ -108,26 +89,23 @@ music.all=Toda la música
 msg=Mensaje
 msg.online=En linea
 msg.offline=Desconectado
+msg.attach.photo=Adjuntar una foto
 msg.attach.audio=Grabación de Audio
+msg.attach.voice=Mensaje de voz
 msg.attach.reply=Respuesta
 msg.attach.fwd=Mensaje Reenviado
-msg.attach.attachments=Archivos Adjuntos
 msg.attach.attachment=Archivo Adjunto
-msg.attach.memory=Adjuntar desde el celular
-msg.attach.album=Adjuntar desde album de VK
-msg.attach.camera=Sacar foto por camara 
-msg.attach.photo=Adjuntar una foto
-msg.attach.doc=Adjuntar un documento
+msg.attach.attachments=Archivos Adjuntos
 msg.attach.video=Vídeo
 msg.attach.wall=Archivo
-msg.attach.voice=Mensaje de voz
-msg.write=Escribir
-msg.entermsg=Ingrese mensaje
+msg.attach.doc=Documento
+msg.attach.memory=Adjuntar desde el celular
+msg.attach.album=Adjuntar desde album de VK
 msg.keyboard=Toque espacio para escribir
-msg.typing=Escribiendo...
-msg.typing2=Enviando...
+msg.entermsg=Ingrese mensaje
+msg.typing=escribiendo...
+msg.typing2=enviando...
 msg.sending=Enviar un mensaje...
-msg.sending2=Enviando un mensaje ...
 msg.editing=Editando
 msg.failedtoload=No se pudo cargar la información
 msg.failedtoload2=No se pudieron cargar los mensajes
@@ -143,17 +121,21 @@ msg.delete=Eliminar
 msg.edit=Editar
 msg.markasread=Leer
 msg.reply=Responder
-
-messages.delete=Borrar mensaje
-messages.gethistory=Obtener historial
-messages.getbyid=Obtener por id
-messages.getconversationsbyId=Obtener conversación por id
-messages.getconversations=Obtener conversaciones
+msg.write=Escribir
+msg.attach.camera=Sacar foto por camara 
+msg.attach.gift=Подарок
+msg.attach.sticker=Стикер
+msg.action.leave=%1 вышел
+msg.action.kick=%$1 изгнал(а) %2
+msg.action.invite_user_by_link=%1 зашел по ссылке
+msg.action.invite_user=%1 пригласил(а) %2
+msg.action.photo_update=%1 поменял фото
+msg.action.invite_user=%1 удалил фото
 
 count.message=Mensaje
-count.messages=Mensajes
+count.messages=Mensajesэ
 count.messagesfew=Cantidad de mensajes
-count.ver=Ver
+count.view=Ver
 count.views=Vistas
 count.viewsfew=Cantidad de vistas
 count.member=Miembro
@@ -164,14 +146,8 @@ count.audiosfew=Grabaciones de audio
 count.audios=Audios
 
 video=Video
-video.1view=Ver
-video.views=Vistas
-video.viewsfew=Cantidad de visitas
 video.addtosebe=Añadir a mis videos 
 
-title2.member=Miembro
-title2.members=Mienbros
-title2.membersfew=Ver Miembros
 title2.loading=Cargando...
 title2.msgloadingfailed=¡No se pudieron actualizar los mensajes!
 
@@ -184,7 +160,6 @@ login.failed=Fallo el inicio de sesión
 
 profile.closed=Este es un perfil cerrado
 user=Usuario
-users.get=Obtener usuarios
 
 settings.system=Básico
 settings.appearance=Interfaz
@@ -202,12 +177,10 @@ settings.j2meloader=J2ME Loader
 settings.resistive=Ajuste resistivo
 settings.kemulator=Kemulator
 settings.logout=Cerrar sesión
-settings.reset=Configuración  predeterminada
+settings.reset=Configuración predeterminada
 settings.clearcache=Borrar imágenes en caché
-settings.transitionanimation=Animación de transiciones
 settings.listslength=Número de elementos en las listas
 settings.dontloadavas=No cargar avatares
-settings.cacheimages=Imágenes en caché
 settings.historycount=Cantidad de Historial
 settings.refreshrate=Frecuencia de actualización
 settings.telemetry=Envío de estadísticas de uso
@@ -217,15 +190,12 @@ settings.rtsp=Método para abrir enlaces RTSP
 settings.rtspc.0=Por defecto
 settings.rtspc.1=Abrir Reproductor nativo [Symbian]
 settings.rtspc.2=" vlc.exe <MRL>" [KEmulator]
-settings.loadmusicviahttp=Cargar música a través de HTTP
-settings.dontloadmusicwithkey=No cargar música con cifrado
-settings.youtube=Abrir YouTube a través de:
+settings.youtube=Abrir YouTube a través de
 settings.audio=Método de reproducción de audio
 settings.keepaudiocache=Guardar música en caché
 settings.apiproxy=Api Proxy
 settings.authproxy=OAuth Proxy
-settings.language=Idioma 
-settings.region=Región 
+settings.language=Idioma
 settings.audioc.0=Reproducir en línea
 settings.audioc.1=Guardar caché en RAM y reproducir
 settings.audioc.2=Guardar caché en el móvil y reproducir
@@ -242,11 +212,9 @@ settings.itunescovers=Buscar portadas en iTunes
 settings.loadmusicviahttp=Protocolo
 settings.datafolder=Carpeta de almacenamiento
 settings.automarkasread=Marcar mensajes como leídos
+settings.vibontouch=Vibración al tacto
 settings.dialogscount=Numero de diálogos
 settings.dialogsrefreshrate=Tiempo de actualizacion de dialogos
-settings.notificationmode=Modo de  notificationes
-settings.vibontouch=Vibración al tacto
-settings.kemulator=KEmulator
 settings.notificationmode=Modo de notificación
 settings.vibro=Vibración
 settings.sound=Sonido
@@ -261,9 +229,9 @@ settings.night=Tema nocturno
 
 back=Atrás
 select=Seleccionar
-options=Opciones
 up=Arriba
 down=Abajo
+options=Opciones
 keyboard=Teclado
 close=Cerrar
 yes=Si
@@ -278,7 +246,6 @@ splash.title.5=Cargar información de perfil
 splash.title.6=Cargar diálogos
 splash.title.7=Listo.
 splash.tip= - - - - sugerencia Aleatoria ----
-#splash.tip.0=¿la Aplicación se bloquea constantemente debido a la falta de memoria? Intente deshabilitar la carga de avatares en la configuración y reduzca la longitud de las listas.
 splash.tip.0=si cierra la aplicación con un botón en el menú, le dirá a Vkontakte que se ha desconectado.
 splash.tip.1=si en la lista de documentos, haga clic en el icono del documento-imágenes, se abrirá su vista previa.
 splash.tip.2=Alrededor de algunos ajustes entre corchetes se especifica la plataforma para la que están diseñados; en otros, no funcionarán.
@@ -313,7 +280,11 @@ player.playererror=Error del reproductor
 player.internalerror=Error interno  desconocido (-2)
 player.cancel=¿Cancelar descarga?
 
-audio.getplaylists=Obtener listas de reproducción
+wall.like=Me gusta
+wall.unlike=No me gusta
+wall.links=Enlaces de la publicación
+wall.repost=Re-publicar
+wall.comments=Comentarios
 
 fm.noaccess=Sin acceso.
 fm.memorycard=Tarjeta de memoria

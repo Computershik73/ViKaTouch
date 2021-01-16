@@ -69,6 +69,8 @@ public class TextLocal {
 						
 					} else {
 						String val = VikaUtils.replace(VikaUtils.replace(x.substring(splitLoc + 1, len), "\r", ""), "|", "\n");
+						if(hashtable.contains(key))
+							System.out.println("WARNING: " + key + " value already exists");
 						hashtable.put(key, val);
 					}
 					// System.out.println(key + "=" + val);

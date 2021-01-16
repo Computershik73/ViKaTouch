@@ -53,8 +53,6 @@ about.testers=Тестувальники
 group=Група
 group.s=Групи
 group.descriptionempty=[опис порожній]
-groups.join=Приєднатися до групи
-groups.leave=Покинути групу
 
 title.people=Люди
 title.chats=Повідомлення
@@ -82,10 +80,6 @@ title.musicw=Музика %1
 title.playlistsw=Списки відтворення %1
 title.albumsw=Альбоми %1
 title.comments=Коментарі
-
-
-likes.add=Поставити вподобання
-likes.delete=Видалити вподобання
 
 friend.remove=Видалити з друзів
 friend.add=Додати в друзі
@@ -151,7 +145,6 @@ video.addtosebe=Додати до себе
 
 title2.loading=Завантаження...
 title2.msgloadingfailed=Не вдалося оновити повідомлення!
-
 
 login.captcharequired=Потрібно ввести капчу!
 login.captcha=Капча

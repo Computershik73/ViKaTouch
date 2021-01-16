@@ -53,8 +53,6 @@ about.testers=Người kiểm tra ứng dụng
 group=Nhóm
 group.s=Các nhóm
 group.descriptionempty=[mô tả trống] 
-groups.join=Tham gia vào nhóm 
-groups.leave=Rời khỏi nhóm 
 
 title.people=Người
 title.chats=Trò chuyện
@@ -84,15 +82,6 @@ title.membersw=Thành viên% 1
 title.musicw=Âm nhạc% 1
 title.playlistsw=Danh sách phát% 1
 title.albumsw=Album% 1
-
-wall.like=Thích 
-wall.unlike=Tôi không thích 
-wall.links=Đăng liên kết 
-wall.repost=Đăng lại 
-wall.comments=Bình luận 
-
-likes.add=Thêm Thích 
-likes.delete=Xóa lượt thích 
 
 friend.remove=Xóa khỏi bạn bè
 friend.add=Thêm làm bạn
@@ -273,7 +262,6 @@ splash.title.5=Tải thông tin hồ sơ
 splash.title.6=Tải hộp thoại
 splash.title.7=Đã xong.
 splash.tip= - - - - Đề xuất ngẫu nhiên ----
-# splash.tip.0=Ứng dụng liên tục bị treo do hết bộ nhớ? Thử tắt tính năng tải hình đại diện trong cài đặt và giảm độ dài của danh sách.
 splash.tip.0=nếu bạn đóng ứng dụng bằng một nút trong menu, nó sẽ cho Vkontakte biết rằng bạn đã ngắt kết nối.
 splash.tip.1=nếu trong danh sách tài liệu, nhấp vào biểu tượng hình ảnh tài liệu, bản xem trước của nó sẽ mở ra.
 splash.tip.2=Xung quanh một số cài đặt trong dấu ngoặc vuông, nền tảng mà chúng được thiết kế được chỉ định; ở những người khác, chúng sẽ không hoạt động.
@@ -309,3 +297,9 @@ player.internalerror=Lỗi nội bộ không xác định (-2)
 player.cancel=Hủy tải xuống?
 
 audio.getplaylists=Nhận danh sách chơi 
+
+wall.like=Thích 
+wall.unlike=Tôi không thích 
+wall.links=Đăng liên kết 
+wall.repost=Đăng lại 
+wall.comments=Bình luận 

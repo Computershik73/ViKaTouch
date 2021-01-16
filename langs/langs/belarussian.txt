@@ -52,8 +52,6 @@ about.testers=Тэсціроўшчыкі
 group=Група
 group.s=Групы
 group.descriptionempty=[пустое апісанне]
-groups.join=Далучыцца да групы
-groups.leave=Пакінуць групу
 
 title.people=Людзі
 title.chats=Паведамленні
@@ -83,9 +81,6 @@ title.albumsw=Альбомы% 1
 wall.links=Размясціць спасылкі
 wall.like=мне падабаецца
 wall.unlike=мне не падабаецца
-
-likes.add=Падабаецца
-likes.delete=Выдаліць лайкі
 
 friend.remove=Выдаліць з сяброў
 friend.add=Дадаць у сябры
