@@ -470,7 +470,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 					res = VikaUtils.download(url);
 				
 					if (res == null) {
-						VikaTouch.popup(new InfoPopup("Ошибка", null));
+						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error"), null));
 					}
 					liked = val;
 				} catch (InterruptedException ex) {
@@ -509,7 +509,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 				c++;
 			}
 			if (c == 0) {
-				VikaTouch.popup(new InfoPopup("Ссылки не найдены либо произошла ошибка.", null));
+				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error.linksnotfound"), null));
 			} else {
 				OptionItem[] opts2 = new OptionItem[c];
 				int h = 40;

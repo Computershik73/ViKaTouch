@@ -56,9 +56,9 @@ public class VikaUpdate {
 	
 	public void ask()
 	{
-		VikaTouch.popup(new InfoPopup("Доступна новая версия - "+newVer+"\n"+changeLog, new Runnable() {
+		VikaTouch.popup(new InfoPopup(TextLocal.inst.get("update.available") + " - "+newVer+"\n"+changeLog, new Runnable() {
 			public void run () {
-				VikaTouch.popup(new ConfirmBox("Загрузить?", "", new Runnable() {
+				VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("update.dl"), "", new Runnable() {
 					public void run () {
 						try {
 							VikaTouch.appInst.platformRequest(url);

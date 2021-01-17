@@ -327,10 +327,10 @@ public class FileManagerScreen extends ScrollableCanvas {
 		} catch (Exception e) {
 			e.printStackTrace();
 			if(e instanceof IOException || e instanceof IllegalArgumentException) {
-				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("fm.noaccess") + "\nПодробности ошибки:\n" + e.toString(), null));
+				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("fm.noaccess") + "\n" + TextLocal.inst.get("error.additionalinfo") + "\n" + e.toString(), null));
 				root();
 			} else {
-				VikaTouch.popup(new InfoPopup("Ошибка заполнения директории!\nПодробности ошибки:\n" + e.toString(), null));
+				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error") + "!\n" + TextLocal.inst.get("error.additionalinfo") + ":\n" + e.toString(), null));
 			}
 		}
 		if(keysMode && uiItems[0] != null)

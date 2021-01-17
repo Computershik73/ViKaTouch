@@ -647,8 +647,8 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			break; // БРЕАК НА МЕСТЕ!!11!!1!
 		case -2:
 			OptionItem[] opts1 = new OptionItem[2];
-			opts1[0] = new OptionItem(this, "Удалить у себя", IconsManager.EDIT, -98, 60);
-			opts1[1] = new OptionItem(this, "Удалить везде", IconsManager.CLOSE, -99, 60);
+			opts1[0] = new OptionItem(this, TextLocal.inst.get("msg.remove0"), IconsManager.EDIT, -98, 60);
+			opts1[1] = new OptionItem(this, TextLocal.inst.get("msg.remove1"), IconsManager.CLOSE, -99, 60);
 			VikaTouch.popup(new AutoContextMenu(opts1));
 			break;
 		case -4:
@@ -668,7 +668,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			}
 			break;
 		case -6:
-			VikaTouch.popup(new InfoPopup("Пересылку скоро изобретём.", null));
+			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 			break;
 		case -8: {
 			String[] links = searchLinks();
@@ -677,7 +677,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				c++;
 			}
 			if (c == 0) {
-				VikaTouch.popup(new InfoPopup("Ссылки не найдены либо произошла ошибка.", null));
+				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error.linksnotfound"), null));
 			} else {
 				OptionItem[] opts2 = new OptionItem[c];
 				int h = DisplayUtils.height > 240 ? 50 : 30; // вот как делается
@@ -713,7 +713,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			for (int j = 0; j < l; j++) {
 				Attachment a = attachments[j];
 				if (a.type.equals("photo")) {
-					opts[j] = new OptionItem(this, "Фотография " + photoC, IconsManager.PHOTOS, j, h);
+					opts[j] = new OptionItem(this, TextLocal.inst.get("msg.attach.photo") + " " + photoC, IconsManager.PHOTOS, j, h);
 					a.attNumber = photoC;
 					photoC++;
 				} else if (a.type.equals("doc")) {
@@ -730,7 +730,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				} else if (a.type.equals("audio_message")) {
 					opts[j] = new OptionItem(this, VoiceAttachment.name, IconsManager.VOICE, j, h);
 				} else {
-					opts[j] = new OptionItem(this, "Вложение", IconsManager.ATTACHMENT, j, h);
+					opts[j] = new OptionItem(this, TextLocal.inst.get("msg.attach.attachment"), IconsManager.ATTACHMENT, j, h);
 				}
 			}
 			if (opts != null && opts.length > 0) {
@@ -754,7 +754,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				ok = false;
 			}
 			if (ok) {
-				text = "[удалено]";
+				text = TextLocal.inst.get("msg.removed");
 				drawText = new String[] { text };
 				linesC = 1;
 			}

@@ -683,7 +683,7 @@ public class ChatScreen extends MainScreen {
 						send();
 					} else if (x > DisplayUtils.width - 90) {
 						// емоци и стикеры
-						VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
+						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 					}
 				}
 			} else if (y < topPanelH) {
@@ -749,7 +749,7 @@ public class ChatScreen extends MainScreen {
 				break;
 			case 3:
 				// смайлы
-				VikaTouch.popup(new InfoPopup("Будет реализовано в будущих обновлениях", null));
+				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 				break;
 			case 4:
 				send();
@@ -791,10 +791,10 @@ public class ChatScreen extends MainScreen {
 									if (fotka) {
 										VikaFileManager.chatPhoto(ChatScreen.this);
 									} else {
-										VikaTouch.popup(new InfoPopup("не реализовано", null));
+										VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 									}
 								} else if (i == 1) {
-									VikaTouch.popup(new InfoPopup("не реализовано", null));
+									VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 								} else if(i == 2) {
 									VikaTouch.setDisplay(new CameraScreen(ChatScreen.this), 1);
 								}

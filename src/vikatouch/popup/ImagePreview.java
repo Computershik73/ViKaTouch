@@ -16,6 +16,7 @@ import vikatouch.attachments.DocumentAttachment;
 import vikatouch.attachments.ISocialable;
 import vikatouch.attachments.PhotoAttachment;
 import vikatouch.items.menu.DocItem;
+import vikatouch.locale.TextLocal;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 
@@ -185,21 +186,21 @@ public class ImagePreview extends VikaNotice {
 			if (socialActions.canSave()) {
 				// сохранение
 				if (x > currX) {
-					VikaTouch.popup(new InfoPopup("Сохранение пока не реализовано.", null));
+					VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 					return;
 				}
 				currX -= 24;
 			}
 			// отправка
 			if (x > currX) {
-				VikaTouch.popup(new InfoPopup("Отправку ещё не завезли", null));
+				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 				return;
 			}
 			currX -= 24;
 			if (socialActions.commentsAliveable()) {
 				// каменты
 				if (x > currX) {
-					VikaTouch.popup(new InfoPopup("Комменты тоже.", null));
+					VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 					return;
 				}
 				currX -= 24;
@@ -207,7 +208,7 @@ public class ImagePreview extends VikaNotice {
 			if (socialActions.canLike()) {
 				// луцки
 				if (x > currX) {
-					VikaTouch.popup(new InfoPopup("Лайки сожрали неко", null));
+					VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 					return;
 				}
 				currX -= 24;

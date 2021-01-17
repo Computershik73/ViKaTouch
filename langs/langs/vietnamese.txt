@@ -18,6 +18,7 @@ error=Lỗi
 error.additionalinfo=Thông tin bổ sung
 error.description=Mô tả
 error.contactdevs=Liên hệ với các nhà phát triển để biết thêm thông tin.
+error.linksnotfound=Không tìm thấy liên kết hoặc xảy ra lỗi.
 close=Đóng ứng dụng 
 
 online=Trực tuyến 
@@ -136,6 +137,9 @@ msg.action.title_update=%1 updated title
 msg.action.pin_message=%1 pinned a message
 msg.action.unpin_message=%1 pinned a message
 msg.attach.action=Action
+msg.remove0=Xóa tại nhà
+msg.remove1=Xóa khỏi mọi người
+msg.removed=[đã xóa]
 
 count.message=Tin nhắn
 count.messages=Tin nhắn
@@ -281,3 +285,8 @@ fm.noaccess=No access.
 fm.memorycard=Memory card
 fm.gallery=Gallery
 fm.root=Root folder
+
+popup.unrealized=Chưa nhận ra.
+
+update.available=Có bản cập nhật mới
+update.dl=Tải xuống?
