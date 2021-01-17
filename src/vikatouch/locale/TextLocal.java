@@ -97,6 +97,16 @@ public class TextLocal {
 		return key;
 	}
 
+	public String opt(String key) {
+		try {
+			if (hashtable.containsKey(key)) {
+				return (String) hashtable.get(key);
+			}
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
 	private String replace(String str, String from, int to) {
 		if (to == -1) {
 			return str;

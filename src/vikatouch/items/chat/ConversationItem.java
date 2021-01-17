@@ -117,7 +117,7 @@ public class ConversationItem extends JSONUIItem {
 			ColorUtils.setcolor(g, ColorUtils.OUTLINE);
 		}
 
-		g.drawString(text == null ? "Сообщение" : text, tx, y + h * 3 / 4 - hfh, 0);
+		g.drawString(text == null ? TextLocal.inst.get("msg") : text, tx, y + h * 3 / 4 - hfh, 0);
 
 		if (!selected) {
 			ColorUtils.setcolor(g, 7);
@@ -210,48 +210,79 @@ public class ConversationItem extends JSONUIItem {
 			lasttext = text = fixJSONString(msg.optString("text"));
 
 			time = getTime();
+			
+			lastSenderId = msg.optInt("from_id");
 
 			String nameauthora = "";
-			if (text == "" || text == null || text.length() == 0) {
-				JSONArray attachments = msg.optJSONArray("attachments");
-				// if(lastmessage.attachments != null &&
-				// lastmessage.attachments.length != 0 &&
-				// lastmessage.attachments[0] != null)
-				// {
-				try {
-					if (attachments.optJSONObject(1) != null) {
-						text = TextLocal.inst.get("msg.attach.attachments");
-					} else if (attachments.optJSONObject(0) != null) {
-						if (attachments.optJSONObject(0).optString("photo", null) != null) {
-							text = TextLocal.inst.get("msg.attach.photo");
-						} else if (attachments.optJSONObject(0).optString("audio", null) != null) {
-							text = TextLocal.inst.get("msg.attach.audio");
-						} else if (attachments.optJSONObject(0).optString("video", null) != null) {
-							text = TextLocal.inst.get("msg.attach.video");
-						} else if (attachments.optJSONObject(0).optString("wall", null) != null) {
-							text = TextLocal.inst.get("msg.attach.wall");
-						} else if (attachments.optJSONObject(0).optString("action", null) != null) {
-							text = TextLocal.inst.get("msg.attach.action");
-						} else if (attachments.optJSONObject(0).optString("gift", null) != null) {
-							text = TextLocal.inst.get("msg.attach.gift");
+			textget: {
+				if (text == "" || text == null || text.length() == 0) {
+					JSONObject action = msg.optJSONObject("action");
+					if(action != null) {
+						String type = VikaUtils.replace(action.getString("type"), "chat_", "");
+						int memberid = action.optInt("member_id");
+		
+						if (type.equalsIgnoreCase("kick_user")) {
+							String s1;
+							if (VikaTouch.profiles.containsKey(new IntObject(lastSenderId))) {
+								s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(lastSenderId))).getName();
+							} else {
+								s1 = "id" + lastSenderId;
+							}
+							String s2;
+		
+							if (VikaTouch.profiles.containsKey(new IntObject(memberid))) {
+								s2 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(memberid))).getName();
+							} else {
+								s2 = "id" + memberid;
+							}
+							text = TextLocal.inst.getFormatted(lastSenderId == memberid ? "msg.action.leave" : "msg.action.kick", new String[] { s1, s2});
+		
 						} else {
-							text = TextLocal.inst.get("msg.attach.attachment");
+							String s1;
+							if (VikaTouch.profiles.containsKey(new IntObject(lastSenderId))) {
+								s1 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(lastSenderId))).getName();
+							} else {
+								s1 = "id" + lastSenderId;
+							}
+							String s2 = "null";
+							if(memberid != 0) {
+							if (VikaTouch.profiles.containsKey(new IntObject(memberid))) {
+								s2 = ((ProfileObject) VikaTouch.profiles.get(new IntObject(memberid))).getName();
+							} else {
+								s2 = "id" + memberid;
+							}
+							}
+							text = TextLocal.inst.getFormatted("msg.action." + type, new String[] { s1, s2});
+						}
+						break textget;
+					} else {
+						JSONArray attachments = msg.optJSONArray("attachments");
+						try {
+							if (attachments.optJSONObject(1) != null) {
+								text = TextLocal.inst.get("msg.attach.attachments");
+							} else if (attachments.optJSONObject(0) != null) {
+								if (attachments.optJSONObject(0).optString("photo", null) != null) {
+									text = TextLocal.inst.get("msg.attach.photo");
+								} else if (attachments.optJSONObject(0).optString("audio", null) != null) {
+									text = TextLocal.inst.get("msg.attach.audio");
+								} else if (attachments.optJSONObject(0).optString("video", null) != null) {
+									text = TextLocal.inst.get("msg.attach.video");
+								} else if (attachments.optJSONObject(0).optString("wall", null) != null) {
+									text = TextLocal.inst.get("msg.attach.wall");
+								} else if (attachments.optJSONObject(0).optString("action", null) != null) {
+									text = TextLocal.inst.get("msg.attach.action");
+								} else if (attachments.optJSONObject(0).optString("gift", null) != null) {
+									text = TextLocal.inst.get("msg.attach.gift");
+								} else {
+									text = TextLocal.inst.get("msg.attach.attachment");
+								}
+							}
+						} catch (Throwable e) {
+							e.printStackTrace();
 						}
 					}
-				} catch (Throwable e) {
-					e.printStackTrace();
-					/*
-					 * if(lastmessage.attachments[0] instanceof PhotoAttachment)
-					 * { text = TextLocal.inst.get("msg.attach.photo"); } else
-					 * if(lastmessage.attachments[0] instanceof AudioAttachment)
-					 * { text = "Аудиозапись"; } else { text = "Вложение"; }
-					 */
 				}
-				// }
-
-				// text = TextLocal.inst.get("msg.attach.attachment");
 			}
-			lastSenderId = msg.optInt("from_id");
 			msg.dispose();
 			if (("" + lastSenderId).equalsIgnoreCase(VikaTouch.userId)) {
 				nameauthora = TextLocal.inst.get("msg.you");

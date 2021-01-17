@@ -55,7 +55,7 @@ public class ActionItem extends ChatItem implements IMessage {
 			} else {
 				s2 = "id" + memberid;
 			}
-			text = s1 + " изгнал " + s2;
+			text = TextLocal.inst.getFormatted(fromid == memberid ? "msg.action.leave" : "msg.action.kick", new String[] { s1, s2});
 
 		} else {
 			String s1;

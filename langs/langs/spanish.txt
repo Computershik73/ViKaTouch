@@ -10,7 +10,7 @@ langinfo.name=Español
 #YYYY.MM.DD
 langinfo.version=2021.1.16
 
-langinfo.hints=2
+langinfo.hints=1
 
 error.outofmem=No hay suficiente memoria para que la aplicación funcione!
 error.errcode=Código de error
@@ -123,14 +123,19 @@ msg.markasread=Leer
 msg.reply=Responder
 msg.write=Escribir
 msg.attach.camera=Sacar foto por camara 
-msg.attach.gift=Подарок
-msg.attach.sticker=Стикер
-msg.action.leave=%1 вышел
-msg.action.kick=%$1 изгнал(а) %2
-msg.action.invite_user_by_link=%1 зашел по ссылке
-msg.action.invite_user=%1 пригласил(а) %2
-msg.action.photo_update=%1 поменял фото
-msg.action.invite_user=%1 удалил фото
+msg.attach.gift=Regalo
+msg.attach.sticker=Pegatina
+msg.action.leave=%1 abandonó el chat
+msg.action.kick=%1 exiliado %2
+msg.action.invite_user_by_link=%1 siguió el enlace
+msg.action.invite_user=%1 invitado a chatear %2
+msg.action.photo_update=%1 foto modificada
+msg.action.photo_remove=%1 borró la foto
+msg.action.create=%1 creó un chat
+msg.action.title_update=%1 título actualizado
+msg.action.pin_message=%1 ancló un mensaje
+msg.action.unpin_message=%1 ancló un mensaje
+msg.attach.action=Actuar
 
 count.message=Mensaje
 count.messages=Mensajesэ
@@ -245,22 +250,8 @@ splash.title.4=Autorización
 splash.title.5=Cargar información de perfil
 splash.title.6=Cargar diálogos
 splash.title.7=Listo.
-splash.tip= - - - - sugerencia Aleatoria ----
-splash.tip.0=si cierra la aplicación con un botón en el menú, le dirá a Vkontakte que se ha desconectado.
-splash.tip.1=si en la lista de documentos, haga clic en el icono del documento-imágenes, se abrirá su vista previa.
-splash.tip.2=Alrededor de algunos ajustes entre corchetes se especifica la plataforma para la que están diseñados; en otros, no funcionarán.
-splash.tip.3=Los Videos se abrirán y descargarán en la resolución seleccionada en la configuración.
-splash.tip.4=el método de apertura del video se selecciona automáticamente según la plataforma.
-splash.tip.5=¿no se reproduce música? Intente seleccionar otro método en la configuración que sea compatible con su plataforma. Tenemos hasta 8 de ellos, algo y funcionará.
-splash.tip.6=En cualquier parte del historial de correspondencia, presione la tecla suave izquierda para mover rápidamente el foco en el campo de entrada.
-splash.tip.7=Los botones izquierdo/derecho se pueden mover entre las pantallas de noticias, mensajes y Menús.
-splash.tip.8=¿Los datos de la aplicación ocupan demasiado espacio? Intenta borrar la caché de imágenes en la configuración.
-splash.tip.9=puede Descargar una foto en el Tamaño original seleccionando el botón de descarga en la vista previa.
-splash.tip.10=la foto Abierta se puede cerrar rápidamente con la tecla suave derecha.
-splash.tip.11=apoyamos la reproducción de medios en kemulator 1.0.3-instalar VLC y seleccione su apertura en la configuración de la aplicación. La música y los videos se abrirán allí en línea. A menos que quiera.
-splash.tip.12=para el cargador J2ME, tenemos una muleta personal: un intento de adaptarse al error del Sensor local. Habilítelo en la configuración si tiene problemas con el toque en los botones del menú.
-splash.tip.13=Si la aplicación consume demasiado tráfico y / o obstruye todo el ancho de banda, reduzca la frecuencia de actualización de los mensajes.
-splash.tip.14=¡podemos abrir enlaces de mensajes! Soporta http / https, ftp, smb, rtsp, menciones y enlaces a páginas de Vkontakte. Para hacerlo, abra las opciones de mensaje y seleccione enlaces.
+splash.tip= 
+splash.tip.0= 
 
 busy=Cargando...
 
