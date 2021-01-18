@@ -58,7 +58,7 @@ import vikatouch.utils.url.URLDecoder;
 public class VikaTouch {
 
 	public static boolean DEMO_MODE = false;
-	public static final String API_VERSION = "5.122";
+	public static final String API_VERSION = "5.126";
 	public static final String TOKEN_RMS = "vikatouchtoken";
 	public static String API = "http://vk-api-proxy.xtrafrancyz.net:80";
 	public static String OAUTH = "https://oauth.vk.com:443";
@@ -143,6 +143,8 @@ public class VikaTouch {
 	public static void setDisplay(VikaScreen s, int direction) {
 		if (s == null) {
 			if (accessToken == null || accessToken.length() < 2) {
+				if(loginScr == null)
+					loginScr = new LoginScreen();
 				s = loginScr;
 			} else {
 				s = menuScr;
@@ -350,11 +352,11 @@ public class VikaTouch {
 
 				String recept = ":APA91bFAM-gVwLCkCABy5DJPPRH5TNDHW9xcGu_OLhmdUSA8zuUsBiU_DexHrTLLZWtzWHZTT5QUaVkBk_GJVQyCE_yQj9UId3pU3vxvizffCPQISmh2k93Fs7XH1qPbDvezEiMyeuLDXb5ebOVGehtbdk_9u5pwUw";
 				String surl = new URLBuilder(API, "auth.refreshToken", false).addField("access_token", accessToken)
-						.addField("v", "5.120").addField("receipt", recept).toString();
+						.addField("v", API_VERSION).addField("receipt", recept).toString();
 				String url = surl;
 				if(mobilePlatform.indexOf("S60") < 0) {
 					surl = new URLBuilder(Settings.httpsApi, "auth.refreshToken", false).addField("access_token", accessToken)
-							.addField("v", "5.120").addField("receipt", recept).toString();
+							.addField("v", API_VERSION).addField("receipt", recept).toString();
 					url = "http://vikamobile.ru:80/tokenproxy.php?" + URLDecoder.encode(surl);
 					musicIsProxied = true;
 				}
@@ -1055,7 +1057,11 @@ public class VikaTouch {
 		} catch (Exception e) {
 
 		}
-		RecordStore.deleteRecordStore(VikaTouch.TOKEN_RMS);
+		try {
+			RecordStore.deleteRecordStore(VikaTouch.TOKEN_RMS);
+		} catch (Exception e) {
+			
+		}
 		VikaTouch.menuScr = null;
 
 	}

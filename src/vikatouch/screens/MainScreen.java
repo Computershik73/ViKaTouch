@@ -41,6 +41,8 @@ public abstract class MainScreen extends ScrollableCanvas {
 		if (!(this instanceof ChatScreen)) {
 			if (!dragging || !canScroll) {
 				int wyw = DisplayUtils.width / 4;
+				boolean showBottomPanel = !Settings.hideBottom && VikaTouch.accessToken != null && !DisplayUtils.compact
+						&& (!(this instanceof SettingsScreen));
 				if ((y < topPanelH)) {
 					if (hasBackButton && x < oneitemheight) {
 						VikaTouch.inst.cmdsInst.command(14, this);
@@ -48,7 +50,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 					if (this instanceof MenuScreen && x > DisplayUtils.width - oneitemheight) {
 						VikaTouch.inst.cmdsInst.command(13, this);
 					}
-				} else if (!(this instanceof SettingsScreen) && y >= DisplayUtils.height - bottomPanelH) {
+				} else if (!(this instanceof SettingsScreen) && y >= DisplayUtils.height - bottomPanelH && showBottomPanel) {
 					int acenter = (DisplayUtils.width - wyw) / 2;
 					if (x < wyw) {
 						VikaTouch.inst.cmdsInst.command(0, this);

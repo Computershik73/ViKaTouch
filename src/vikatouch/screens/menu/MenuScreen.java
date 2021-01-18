@@ -15,6 +15,7 @@ import vikatouch.VikaTouch;
 import vikatouch.items.music.MusicMenuItem;
 import vikatouch.json.JSONBase;
 import vikatouch.locale.TextLocal;
+import vikatouch.screens.LoginScreen;
 import vikatouch.screens.MainScreen;
 import vikatouch.settings.Settings;
 import vikatouch.updates.VikaUpdate;
@@ -60,12 +61,13 @@ public class MenuScreen extends MainScreen implements IMenu {
 			hasAva = true;
 		}
 		/* if (VikaTouch.userId != null) { */
+		String x = null;
 		try {
 			String avaurl;
-			String var10 = VikaUtils.download(new URLBuilder("users.get")/* .addField("user_ids", VikaTouch.userId) */
+			x = VikaUtils.download(new URLBuilder("users.get")/* .addField("user_ids", VikaTouch.userId) */
 					.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
-			System.out.println(var10);
-			JSONObject profileobj = new JSONObject(var10).getJSONArray("response").getJSONObject(0);
+			System.out.println(x);
+			JSONObject profileobj = new JSONObject(x).getJSONArray("response").getJSONObject(0);
 			name = profileobj.optString("first_name");
 			lastname = profileobj.optString("last_name");
 			status = profileobj.optString("status");
@@ -85,6 +87,21 @@ public class MenuScreen extends MainScreen implements IMenu {
 				hasAva = false;
 			}
 		} catch (Throwable a) {
+			if(x != null && x.indexOf("User authorization failed: invalid session.") > -1) {
+				new Thread() {
+					public void run() {
+						try {
+							Thread.sleep(100l);
+							VikaTouch.logout();
+							VikaTouch.gc();
+						} catch (Exception e) {
+		
+						}
+						VikaTouch.setDisplay(new LoginScreen(), -1);
+					}
+				}.start();
+				return;
+			}
 			VikaTouch.error(ErrorCodes.MENUPROFILEINFO1, a.toString(), false);
 			VikaTouch.sendLog("Menu profile info: " + a.toString() + " uid:" + VikaTouch.userId);
 			a.printStackTrace();

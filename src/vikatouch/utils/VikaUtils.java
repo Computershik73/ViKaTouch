@@ -819,7 +819,7 @@ public final class VikaUtils {
 
 	public static void sendPhoto(int peerId, byte[] var5, String text) throws IOException, InterruptedException {
 		String var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
-				+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=5.120");
+				+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=" + VikaTouch.API_VERSION);
 
 		String aString163 = var11.substring(var11.indexOf("upload_url\":\"") + 13, var11.indexOf("\",\"user_id"));
 
@@ -845,7 +845,7 @@ public final class VikaUtils {
 
 		String var10000 = var17 = VikaUtils.download(
 				VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo) + "&server="
-						+ server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
+						+ server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=" + VikaTouch.API_VERSION);
 		var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
 
 		var175 = var17.substring(var17.indexOf("\"id") + 5, var17.indexOf("owner_id") - 2);
@@ -881,7 +881,7 @@ public final class VikaUtils {
 		String var11;
 		try {
 			var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
-					+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=5.120");
+					+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=" + VikaTouch.API_VERSION);
 		} catch (Exception e) {
 			throw new Exception("a " + e.toString());
 		}
@@ -908,7 +908,7 @@ public final class VikaUtils {
 		try {
 			var10000 = var17 = VikaUtils.download(
 					VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo) + "&server="
-							+ server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=5.120");
+							+ server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=" + VikaTouch.API_VERSION);
 		} catch (Exception e) {
 			throw new Exception("d " + e.toString());
 		}

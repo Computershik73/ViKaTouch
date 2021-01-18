@@ -209,21 +209,15 @@ public class CommandsImpl implements CommandListener {
 		 */
 		if (Settings.dontBack) {
 			if (s instanceof SettingsScreen) {
-				// Settings.saveSettings();
-				if (VikaTouch.menuScr != null && VikaTouch.accessToken != null && VikaTouch.accessToken != "") {
-					VikaTouch.setDisplay(VikaTouch.menuScr, -1);
-				} else {
-					VikaTouch.setDisplay(VikaTouch.loginScr, -1);
-				}
+				VikaTouch.setDisplay(null, -1);
 			} else if (s instanceof ChatScreen) {
 				VikaTouch.setDisplay(VikaTouch.dialogsScr, -1);
 			} else
 				VikaTouch.setDisplay(VikaTouch.menuScr, -1);
 		} else {
 			if (s instanceof SettingsScreen) {
-
-			}
-			if (s instanceof MainScreen) {
+				VikaTouch.setDisplay(null, -1);
+			} else if (s instanceof MainScreen) {
 				VikaTouch.setDisplay(((MainScreen) s).backScreen, -1);
 			}
 			if (s instanceof ChatScreen) {
