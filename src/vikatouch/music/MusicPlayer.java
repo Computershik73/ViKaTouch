@@ -233,11 +233,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								if (outConn.exists()) {
 									outConn.delete();
 								}
-							} catch (IllegalModeException e) {
-								e.printStackTrace();
 							} catch (IOException e) {
 								e.printStackTrace();
-							}
+							} catch (Exception e) {
+								e.printStackTrace();
+							} 
 							outConn.create();
 							outStream = outConn.openOutputStream();
 
