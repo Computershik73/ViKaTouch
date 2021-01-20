@@ -11,6 +11,7 @@ import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.Connector;
 import javax.microedition.io.ContentConnection;
 import javax.microedition.io.file.FileConnection;
+import javax.microedition.io.file.IllegalModeException;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
@@ -232,8 +233,10 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								if (outConn.exists()) {
 									outConn.delete();
 								}
+							} catch (IllegalModeException e) {
+								e.printStackTrace();
 							} catch (IOException e) {
-								
+								e.printStackTrace();
 							}
 							outConn.create();
 							outStream = outConn.openOutputStream();
