@@ -77,16 +77,16 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 	public Image[] buttons;
 	private Image coverOrig;
 	private Image resizedCover;
-	public static Image nullCover;
+	public static Image defaultCover;
 	private int lastW;
 
 	private int volumeY, volumeX1, volumeX2;
 
 	public static MusicPlayer inst;
 	public Player player;
-	public Manager man;
-	public InputStream input;
-	public OutputStream output;
+	public Manager mgr;
+	public InputStream inStream;
+	public OutputStream outStream;
 	public Thread loader;
 
 	public MusicPlayer() {
@@ -227,21 +227,21 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							} catch (InterruptedException e) {
 								return;
 							}
-							FileConnection trackFile = (FileConnection) Connector.open(path, Connector.WRITE);
+							FileConnection outConn = (FileConnection) Connector.open(path, Connector.READ_WRITE);
 							try {
-								if (trackFile.exists()) {
-									trackFile.delete();
+								if (outConn.exists()) {
+									outConn.delete();
 								}
 							} catch (IOException e) {
-								e.printStackTrace();
+								
 							}
-							trackFile.create();
-							output = trackFile.openOutputStream();
+							outConn.create();
+							outStream = outConn.openOutputStream();
 
-							ContentConnection contCon = (ContentConnection) Connector.open(url, Connector.READ);
-							DataInputStream dis = contCon.openDataInputStream();
+							ContentConnection inConn = (ContentConnection) Connector.open(url, Connector.READ);
+							DataInputStream netInStream = inConn.openDataInputStream();
 
-							int trackSize = (int) contCon.getLength();
+							int trackSize = (int) inConn.getLength();
 							totalTime = (trackSize / 1024 / 1024) + "." + (trackSize / 1024 % 103) + "MB";
 							byte[] cacheBuffer;
 
@@ -256,9 +256,10 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								System.out.println(url);
 								VikaTouch.popup(new InfoPopup("Cache error: 404", null));
 								try {
-									output.close();
-									dis.close();
-									contCon.close();
+									outStream.close();
+									outConn.close();
+									netInStream.close();
+									inConn.close();
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -303,8 +304,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								};
 								speedCount.setPriority(Thread.NORM_PRIORITY);
 								speedCount.start();
-								while((read = dis.read(buf)) != -1) {
-									output.write(buf, 0, read);
+								while((read = netInStream.read(buf)) != -1) {
+									outStream.write(buf, 0, read);
 									downloaded += read;
 									i = (int)(((double)downloaded / (double)trackSize) * 100d);
 									time = i + "%";
@@ -312,9 +313,10 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 									if (stop) {
 										stop = false;
 										speedCount.interrupt();
-										dis.close();
-										contCon.close();
-										output.close();
+										outStream.close();
+										outConn.close();
+										netInStream.close();
+										inConn.close();
 										return;
 									}
 								}
@@ -322,39 +324,39 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								System.out.println("downloaded: " + (downloaded / 1024) + "K");
 							} else {
 
-								if ((int) contCon.getLength() != -1) {
-									while ((contCon.getLength() / 100) * (i + 1) < contCon.getLength()) {
+								if ((int) inConn.getLength() != -1) {
+									while ((inConn.getLength() / 100) * (i + 1) < inConn.getLength()) {
 										cacheBuffer = new byte[trackSegSize];
 										time = i + "%";
-										dis.read(cacheBuffer);
-										output.write(cacheBuffer);
+										netInStream.read(cacheBuffer);
+										outStream.write(cacheBuffer);
 										i++;
 										if (stop) {
 											stop = false;
-											dis.close();
-											contCon.close();
-											output.close();
+											netInStream.close();
+											inConn.close();
+											outStream.close();
 											return;
 										}
 										if (Runtime.getRuntime().freeMemory() < trackSize * 3)
 											System.gc();
 									}
-									cacheBuffer = new byte[(int) (contCon.getLength() - contCon.getLength() / 100 * (i))];
+									cacheBuffer = new byte[(int) (inConn.getLength() - inConn.getLength() / 100 * (i))];
 									time = "99,9%";
-									dis.read(cacheBuffer);
-									output.write(cacheBuffer);
-									output.flush();
+									netInStream.read(cacheBuffer);
+									outStream.write(cacheBuffer);
+									outStream.flush();
 								}
 							}
 
-							if (dis != null) {
-								dis.close();
+							if (netInStream != null) {
+								netInStream.close();
 							}
-							if (contCon != null) {
-								contCon.close();
+							if (inConn != null) {
+								inConn.close();
 							}
-							if (output != null) {
-								output.close();
+							if (outStream != null) {
+								outStream.close();
 							}
 
 							/*
@@ -477,8 +479,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				}
 				ByteArrayInputStream aByteArrayInputStream212 = new ByteArrayInputStream(aByteArray207);
 				System.gc();
-				input = aByteArrayInputStream212;
-				player = Manager.createPlayer(input, "audio/mpeg");
+				inStream = aByteArrayInputStream212;
+				player = Manager.createPlayer(inStream, "audio/mpeg");
 				player.realize();
 				try {
 					((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
@@ -518,12 +520,12 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		}
 
 		player = null;
-		if (input != null) {
+		if (inStream != null) {
 			try {
-				input.close();
+				inStream.close();
 			} catch (IOException e) {
 			}
-			input = null;
+			inStream = null;
 		}
 		System.gc();
 	}
@@ -1042,10 +1044,10 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 					int s = (dw > dh) ? hdw : dw;
 					g.setGrayScale(200);
 					g.fillRect(0, coverY, s, s);
-					if (nullCover == null) {
-						nullCover = Image.createImage("/emptyCover.png");
+					if (defaultCover == null) {
+						defaultCover = Image.createImage("/emptyCover.png");
 					}
-					g.drawImage(nullCover, s / 2, (dw > dh) ? (dh / 2) : hdw, Graphics.HCENTER | Graphics.VCENTER);
+					g.drawImage(defaultCover, s / 2, (dw > dh) ? (dh / 2) : hdw, Graphics.HCENTER | Graphics.VCENTER);
 				}
 			}
 		} catch (Exception e) {
