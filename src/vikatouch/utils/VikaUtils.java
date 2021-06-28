@@ -306,7 +306,7 @@ public final class VikaUtils {
 				var14 = var13.openInputStream();
 				// long var8 = var13.getLength();
 				//524288
-				byte[] var6 = new byte[4096];
+				byte[] var6 = new byte[VikaTouch.isNotS60()? 4096 : 524288];
 				// long var10 = 0L;
 
 				int var7;
