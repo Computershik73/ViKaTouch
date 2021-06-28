@@ -7,18 +7,28 @@ import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.menu.EmptyMenu;
+import ru.nnproject.vikaui.menu.IMenu;
+import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
+import ru.nnproject.vikaui.popup.ContextMenu;
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
+import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.items.LoadMoreButtonItem;
 import vikatouch.items.menu.FriendItem;
 import vikatouch.json.INextLoadable;
 import vikatouch.locale.TextLocal;
+import vikatouch.music.MusicPlayer;
 import vikatouch.screens.MainScreen;
+import vikatouch.screens.music.MusicScreen;
+import vikatouch.screens.music.PlaylistsScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
+import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
 
 /**
@@ -67,7 +77,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 
 	private String formattedTitle;
 
-	public void loadFriends(final int from, final int id, final String name1, final String name2) {
+	public void loadFriends(final int from, final int id, final String name1, final String name2, final boolean online) {
 		formattedTitle = TextLocal.inst.get("title.people");
 		scrolled = 0;
 		uiItems = null;
@@ -94,12 +104,15 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 					} else {
 						// как друзья
 						x = VikaUtils
-								.download(new URLBuilder("friends.get").addField("count", Settings.simpleListsLength)
+								.download(new URLBuilder("friends.get"+ (online ? "Online" : "")).addField("count", Settings.simpleListsLength)
 										.addField("fields", "domain,last_seen,photo_50").addField("offset", from)
-										.addField("user_id", id));
+										.addField("user_id", id).addField("order", "hints"));
+						VikaTouch.sendLog(x);
 					}
 					try {
+						
 						VikaTouch.loading = true;
+						if (!online) {
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = response.getJSONArray("items");
 						totalItems = response.getInt("count");
@@ -152,6 +165,13 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 								((FriendItem) uiItems[i]).getAva();
 							}
 						}
+						} else {
+							JSONArray response = new JSONObject(x).getJSONArray("response");
+							totalItems = response.length();
+							itemsCount = (short) response.length();
+							canLoadMore = totalItems > from + Settings.simpleListsLength;
+							uiItems = new PressableUIItem[itemsCount + (canLoadMore ? 1 : 0)];
+						}
 						VikaTouch.loading = false;
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -173,6 +193,45 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 		hasBackButton = true;
 
 		downloaderThread.start();
+	}
+	
+	
+	public static void open(final int id, final String name, final String name2) {
+		IMenu m = new EmptyMenu() {
+			public void onMenuItemPress(int i) {
+				try {
+					if (i == 0) {
+						FriendsScreen friendsScr = new FriendsScreen();
+						friendsScr.loadFriends(id == VikaTouch.integerUserId ? 0 : 0, VikaTouch.integerUserId, name, name2, false);
+						VikaTouch.setDisplay(friendsScr, 1);
+					} else if (i == 1) {
+						FriendsScreen friendsScr = new FriendsScreen();
+						friendsScr.loadFriends(id == VikaTouch.integerUserId ? 0 : 0, VikaTouch.integerUserId , name, name2, true);
+						VikaTouch.setDisplay(friendsScr, 1);
+					} else if (i == 2) {
+						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
+					} else if (i == 3) {
+						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
+			        } 
+				} catch (Exception e) {
+					VikaTouch.sendLog("Friends open: " + e.toString());
+				}
+			}
+		};
+		OptionItem[] oi = new OptionItem[id==VikaTouch.integerUserId ? 4 : 2];
+		try {
+			oi[0] = new OptionItem(m, TextLocal.inst.get("friends.all"), IconsManager.FRIENDS, 0, 50);
+			oi[1] = new OptionItem(m, TextLocal.inst.get("friends.online"), IconsManager.FRIENDS, 1, 50);
+			if (id==VikaTouch.integerUserId) {
+			 oi[2] = new OptionItem(m, TextLocal.inst.get("friends.incoming"), IconsManager.FRIENDS, 2, 50);
+			 oi[3] = new OptionItem(m, TextLocal.inst.get("friends.outcoming"), IconsManager.FRIENDS, 3, 50);
+			}
+				
+			
+		} catch (Exception e) {
+		}
+
+		VikaTouch.popup(new ContextMenu(oi));
 	}
 
 	public void draw(Graphics g) {
@@ -228,6 +287,8 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 	}
 
 	public void loadNext() {
-		loadFriends(fromF + Settings.simpleListsLength, currId, whose, name2);
+		loadFriends(fromF + Settings.simpleListsLength, currId, whose, name2, false);
 	}
+
+	
 }

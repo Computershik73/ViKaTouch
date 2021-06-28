@@ -125,7 +125,7 @@ public class TextBreaker {
 						boolean f = false;
 						for (int j = i2; j > i1; j--) {
 							char c = text.charAt(j);
-							if (c == ' ' || c == '-') {
+							if (c == ' ' || c == '-' ) {
 								f = true;
 								v.addElement(text.substring(i1, j + 1));
 								i2 = i1 = j + 1;

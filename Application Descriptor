@@ -1,20 +1,20 @@
-Nokia-MIDlet-Category: Application
-Nokia-MIDlet-No-Exit: true
-Manifest-Version: 1.0
-MIDlet-Version: 2.9.1
-MIDlet-Info-URL: http://vikamobile.ru
+VikaTouch-Edition: openbeta
 Nokia-MIDlet-Background-Event: run
-Nokia-MIDlet-On-Screen-Keypad: no
-MIDlet-Icon: vika256.png
-MicroEdition-Configuration: CLDC-1.1
-MIDlet-Jar-URL: vikaTouch.jar
+MIDlet-Version: 2.9.4
+MIDlet-Info-URL: http://vikamobile.ru
+Manifest-Version: 1.0
+LGE-MIDlet-TargetLCD-Width: 480
 Nokia-MIDlet-UID-1: 0xA02033e9
+MicroEdition-Configuration: CLDC-1.0
 MIDlet-Name: Vika Touch
 FlipInsensitive: True
-MIDlet-1: Vika Touch,/vika256.png,ru.nnproject.vikatouch.VikaTouchApp
-VikaTouch-Edition: openbeta
-MIDlet-Permissions-Opt: javax.microedition.io.Connector.https,javax.microedition.io.Connector.socket,javax.microedition.io.Connector.file.write,javax.microedition.media.control.VideoControl.getSnapshot
-Progressive_Download: enabled
-MIDlet-Permissions: javax.microedition.io.Connector.http,javax.microedition.io.Connector.file.read
+Nokia-MIDlet-On-Screen-Keypad: no
 MIDlet-Vendor: nnproject
-MicroEdition-Profile: MIDP-2.0
+Progressive_Download: enabled
+MIDlet-Icon: vika256.png
+LGE-MIDlet-TargetLCD-Height: 800
+MIDlet-1: Vika Touch,/vika256.png,ru.nnproject.vikatouch.VikaTouchApp
+MicroEdition-Profile: MIDP-1.0
+MIDlet-Permissions: javax.microedition.io.Connector.http
+MIDlet-Jar-URL: vikaTouch.jar
+Nokia-MIDlet-No-Exit: true

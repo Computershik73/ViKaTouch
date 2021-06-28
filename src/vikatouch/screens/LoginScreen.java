@@ -14,6 +14,7 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
+import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.TextEditor;
 
 /**
@@ -66,6 +67,7 @@ public class LoginScreen extends VikaScreen {
 		failedStr = TextLocal.inst.get("login.failed");
 		selectedBtn = 1;
 		keysMode = true;
+		//VikaUtils.logToFile("login screen start");
 	}
 
 	public void login() {
@@ -240,6 +242,7 @@ public class LoginScreen extends VikaScreen {
 	}
 
 	public final void press(int x, int y) {
+		VikaTouch.supportsTouch=true;
 		if (isLoggingInNow)
 			return;
 		if (x > DisplayUtils.width - 50 && y < 50) {
@@ -276,7 +279,7 @@ public class LoginScreen extends VikaScreen {
 	}
 
 	public final void release(int x, int y) {
-
+		VikaTouch.supportsTouch=true;
 		if (isLoggingInNow)
 			return;
 		if (pressed) {

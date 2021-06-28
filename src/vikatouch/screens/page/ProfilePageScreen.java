@@ -282,9 +282,10 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 		itemsh = itemsCount * oneitemheight + y;
 		g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM));
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
-		g.drawString(name == null ? loadingStr + "..." : name, 74, 74, 0);
+		//drawString(name + " " + lastname, 74, topPanelH + 12, 0);
+		g.drawString(name == null ? loadingStr + "..." : name, 74, topPanelH + 12, 0);
 		g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL));
-		g.drawString(status == null ? visitStr : status, 74, 98, 0);
+		g.drawString(status == null ? visitStr : status, 74, topPanelH + 36, 0);
 
 		ColorUtils.setcolor(g, -3);
 		g.drawRect(0, 140, DisplayUtils.width, 50);
@@ -344,9 +345,10 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 				}).start();
 				break;
 			case 2:
-				FriendsScreen fs = new FriendsScreen();
+				FriendsScreen.open(VikaTouch.integerUserId, wname, name2);
+				/*FriendsScreen fs = new FriendsScreen();
 				VikaTouch.setDisplay(fs, 1);
-				fs.loadFriends(0, id, wname, name2);
+				fs.loadFriends(0, id, wname, name2);*/
 				break;
 			case 3:
 				NewsScreen newsScr = new NewsScreen();

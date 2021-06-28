@@ -77,9 +77,10 @@ public class CommandsImpl implements CommandListener {
 					case 4: {
 						// Друзья
 						if (s instanceof MenuScreen) {
-							FriendsScreen friendsScr = new FriendsScreen();
+							FriendsScreen.open(VikaTouch.integerUserId, null, null);
+							/*FriendsScreen friendsScr = new FriendsScreen();
 							friendsScr.loadFriends(0, 0, null, null);
-							VikaTouch.setDisplay(friendsScr, 1);
+							VikaTouch.setDisplay(friendsScr, 1);*/
 						}
 						break;
 					}
@@ -221,6 +222,7 @@ public class CommandsImpl implements CommandListener {
 				VikaTouch.setDisplay(((MainScreen) s).backScreen, -1);
 			}
 			if (s instanceof ChatScreen) {
+				
 				VikaTouch.setDisplay(VikaTouch.dialogsScr, -1);
 				Dialogs.refreshDialogsList(true, false);
 			}

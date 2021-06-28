@@ -13,6 +13,7 @@ import vikatouch.items.VikaNotification;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.temp.SplashScreen;
 import vikatouch.settings.Settings;
+import vikatouch.utils.KeyCodeAdapter;
 import vikatouch.utils.error.ErrorCodes;
 
 /**
@@ -39,6 +40,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	public long lastInputTime = 0;
 	private Image image;
 	private Graphics buffer;
+	private boolean visible;
 	public static final long uiSleepTimeout = 8000;
 
 	public VikaCanvasInst() {
@@ -57,6 +59,19 @@ public class VikaCanvasInst extends VikaCanvas {
 		}
 		 
 	}
+	
+	
+	protected void showNotify() {
+		this.visible = true;
+		}
+
+		protected void hideNotify() {
+		this.visible = false;
+		}
+
+		public boolean isVisible() {
+		return visible;
+		}
 
 	public void draw() {
 		if(dontBuffer()) {
@@ -80,6 +95,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public int getFPSLimit() {
+		
 		return Settings.fpsLimit;
 	}
 	
@@ -242,6 +258,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void pointerPressed(int x, int y) {
+		VikaTouch.supportsTouch=true;
 		try {
 			try {
 				if (Settings.vibOnTouch)
@@ -265,6 +282,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void pointerReleased(int x, int y) {
+		VikaTouch.supportsTouch=true;
 		try {
 			if (currentAlert != null) {
 				currentAlert.release(x, y);
@@ -279,6 +297,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void pointerDragged(int x, int y) {
+		VikaTouch.supportsTouch=true;
 		try {
 			if (currentAlert != null) {
 				currentAlert.drag(x, y);
@@ -293,6 +312,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void keyPressed(int i) {
+		   i = KeyCodeAdapter.getInstance().adoptKeyCode(i);  
 		if (currentAlert != null) {
 			currentAlert.press(i);
 		} else if (showCaptcha) {
@@ -303,6 +323,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void keyRepeated(int i) {
+		 i = KeyCodeAdapter.getInstance().adoptKeyCode(i);  
 		if (currentAlert != null) {
 			currentAlert.repeat(i);
 		} else if (showCaptcha) {
@@ -313,6 +334,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void keyReleased(int i) {
+		 i = KeyCodeAdapter.getInstance().adoptKeyCode(i);  
 		if (currentAlert != null) {
 			currentAlert.release(i);
 		} else if (showCaptcha) {

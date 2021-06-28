@@ -6,7 +6,7 @@
 
 langinfo.name=Беларуская
 #YYYY.MM.DD
-langinfo.version=2020.12.19
+langinfo.version=2021.6.25
 
 langinfo.hints=2
 
@@ -86,10 +86,17 @@ friend.remove=Выдаліць з сяброў
 friend.add=Дадаць у сябры
 friend.accept=Прыняць запыт
 friend.cancel=Запыт адпраўлены (адмяніць)
+friends.all=Усе сябры
+friends.online=Сябры онлайн
+friends.incoming=Уваходныя заяўкі
+friends.outcoming=Выходныя заяўкі
 
 subscribe=Падпісацца
 
 music.all=Уся музыка
+music.search=Пошук музыкі
+music.searchresult=Вынікі пошуку:
+music.recommendations=Рэкамендацыі
 
 msg=Паведамленне
 msg.online=Підключений

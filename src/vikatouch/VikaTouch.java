@@ -19,6 +19,8 @@ import javax.microedition.rms.RecordStore;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import com.nokia.mid.ui.SoftNotificationListener;
+
 import ru.nnproject.vikatouch.VikaTouchApp;
 import ru.nnproject.vikaui.UIThread;
 import ru.nnproject.vikaui.VikaCanvas;
@@ -42,6 +44,7 @@ import vikatouch.screens.menu.MenuScreen;
 import vikatouch.screens.temp.SplashScreen;
 import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
+import vikatouch.utils.KeyCodeAdapter;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.captcha.CaptchaObject;
@@ -94,6 +97,21 @@ public class VikaTouch {
 	protected static PhotosScreen photos;
 	public static Image deactivatedImg;
 	public static Hashtable profiles = new Hashtable();
+	public static int a;
+	public static int b;
+	public static Hashtable hash;
+	public static Hashtable hashNotifs;
+	public static SoftNotificationListener blist;
+	public static SoftNotificationListener alist;
+	public static boolean isresending;
+	public static long resendingmid;
+	public static String resendingobjectid;
+	public static String resendingname;
+	public static String resendingtext;
+	public static int muscount;
+	public static boolean isRecording;
+	public static String mylanguage;
+	public static boolean supportsTouch;
 	//Вотэто очень прошу не трогать.
 	public static final boolean SIGNED = false;
 
@@ -174,6 +192,7 @@ public class VikaTouch {
 			errReason = "login is invalid";
 			return false;
 		}
+		//VikaUtils.logToFile("1");
 		try {
 			if (!Settings.proxy) {
 				Settings.proxy = false;
@@ -184,29 +203,35 @@ public class VikaTouch {
 				OAUTH = Settings.proxyOAuth;
 				API = Settings.proxyApi;
 			}
-
+		//	VikaUtils.logToFile("2");
 			tokenAnswer = VikaUtils.download(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 					.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
 					.addField("username", user).addField("password", pass)
 					.addField("scope",
-							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
-					.addField("2fa_supported", 1).addField("force_sms", 1));
+							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline"));
+		//	VikaUtils.logToFile("3 3");
+		//	VikaUtils.logToFile("3 " + tokenAnswer);
+					//.addField("2fa_supported", 1).addField("force_sms", 1));
 			if (tokenAnswer == null && !Settings.proxy) {
 				Settings.proxy = true;
 				Settings.https = false;
 				OAUTH = Settings.proxyOAuth;
+			//	VikaUtils.logToFile("4");
 				tokenAnswer = VikaUtils.download(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 						.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
 						.addField("username", user).addField("password", pass)
 						.addField("scope",
-								"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
-						.addField("2fa_supported", 1).addField("force_sms", 1));
+								"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline"));
+					//	.addField("2fa_supported", 1).addField("force_sms", 1));
+			//	VikaUtils.logToFile("4 4");
+			//	VikaUtils.logToFile("4 " + tokenAnswer);
 			}
 			if (tokenAnswer == null) {
 				errReason = "Network error!";
+			//	VikaUtils.logToFile("Network error!");
 				return false;
 			}
-
+		//	VikaUtils.logToFile("5");
 			errReason = tokenAnswer;
 			if (tokenAnswer.indexOf("error") > -1) {
 				if (tokenAnswer.indexOf("need_captcha") > -1) {
@@ -218,21 +243,37 @@ public class VikaTouch {
 				errReason = tokenAnswer;
 				return false;
 			} else {
+		//		VikaUtils.logToFile("6");
 				JSONObject json = new JSONObject(tokenAnswer);
+		//		VikaUtils.logToFile("7");
 				accessToken = json.getString("access_token");
+		//		VikaUtils.logToFile("8");
 				userId = json.getString("user_id");
+		//		VikaUtils.logToFile("9");
 				integerUserId = json.getInt("user_id");
+		//		VikaUtils.logToFile("10");
+		//		VikaUtils.logToFile("10 "+VikaTouch.mobilePlatform);
 				refreshToken();
+		//		VikaUtils.logToFile("11");
 				saveToken();
+		//		VikaUtils.logToFile("12");
+				Settings.saveSettings();
+		//		VikaUtils.logToFile("13");
 				VikaUtils.download(new URLBuilder("groups.join").addField("group_id", 168202266));
+		//		VikaUtils.logToFile("14");
 				MenuScreen canvas = menuScr = new MenuScreen();
+		//		VikaUtils.logToFile("15");
 				setDisplay(canvas, 1);
+		//		VikaUtils.logToFile("16");
 
 				Dialogs.refreshDialogsList(true, false);
+		//		VikaUtils.logToFile("17");
 				return true;
 			}
 		} catch (Throwable e) {
+			
 			errReason = e.toString();
+		//	VikaUtils.logToFile(e.getMessage() + " err");
 			VikaTouch.error(-1, e.toString(), false);
 			e.printStackTrace();
 			// VikaTouch.popup(new InfoPopup(e.toString(), null,
@@ -288,6 +329,55 @@ public class VikaTouch {
 		    }
 		}
 	}
+	
+	public static void notifyy (String type, String title, String subtitle) {
+		//String reply = "";
+		//int ch;
+		SocketConnection socket = null;
+		OutputStream os = null;
+		//InputStream is = null;
+		try {
+			socket =(SocketConnection)Connector.open("socket://127.0.0.1:2020");
+		    String request = //"ViKaNotification\nName=ViKa Touch\nTitle="+title+"\nSubTitle=Test\nMaskIconName=\nBadgeType=0\nBadgeNumber=0\nUseNotification\nUsePopup\nUseLockScreen\nUsePopup\nCloseOnTap\nUseVibration\nOverrideFormat\nStatusIcon=69\nUserData={\"key\":\"value\"}"; 
+		    		"StartApplication\nuid="+title;
+		   // socket = (SocketConnection)Connector.open(name, Connector.READ_WRITE, true);
+		    os = socket.openOutputStream();
+		    os.write(request.getBytes("UTF-8"));
+		  //  is = socket.openInputStream();                
+		   /* while( true) {                           
+		        ch = is.read(); 
+		        if(ch == -1) break;
+		        if(ch < 0 && ch != -1){
+		            break;
+		        }
+		        reply += (char) ch;
+		        if(ch == '?'){
+		            break;
+		        }
+		    }*/
+		   // socketReply(GlobalFunctions.Split(reply, "|"));                    
+		} catch (IOException ex){
+		   // socketError("Error: " + ex);
+		} catch (NullPointerException ex){
+		    //socketError("Error: " + ex);
+		} catch (ArrayIndexOutOfBoundsException ex){
+		   // socketError("Error: " + ex);
+		} catch (StringIndexOutOfBoundsException ex){
+		    //socketError("Error: " + ex);
+		} catch (Exception ex){
+		   // socketError("Error: " + ex);
+		} finally {
+		    try {
+		        // Close open streams and the socket
+		     //   is.close();
+		        os.close();                
+		        socket.close();
+		    } catch (IOException ex) {
+		        ex.printStackTrace();
+		    }
+		}
+	}
+	
 
 	private boolean code(String user, String pass, String tokenUnswer) {
 		String code = TextEditor.inputString("2Fa code", "", 18);
@@ -338,7 +428,7 @@ public class VikaTouch {
 
 	public void refreshToken() throws IOException {
 		// проверка на psp эмулятор такая*
-		if(VikaTouch.mobilePlatform.equalsIgnoreCase("NokiaN73")) {
+		if(VikaTouch.mobilePlatform.equalsIgnoreCase("NokiaN73") || VikaTouch.mobilePlatform.indexOf("6681")>-1 || VikaTouch.mobilePlatform.indexOf("6630")>-1 || VikaTouch.mobilePlatform.indexOf("6680")>-1) {
 			return;
 		}
 		if(VikaTouch.mobilePlatform.equalsIgnoreCase("Nokia N73")) {
@@ -346,45 +436,56 @@ public class VikaTouch {
 		}
 		try {
 			String refreshToken;
-			String m = VikaUtils.music(URLBuilder.makeSimpleURL("audio.get"));
-
+			String m = VikaUtils.download(URLBuilder.makeSimpleURL("audio.get"));
+			//sendLog(m);
 			if (m.indexOf("confirmation") > -1) {
 
 				String recept = ":APA91bFAM-gVwLCkCABy5DJPPRH5TNDHW9xcGu_OLhmdUSA8zuUsBiU_DexHrTLLZWtzWHZTT5QUaVkBk_GJVQyCE_yQj9UId3pU3vxvizffCPQISmh2k93Fs7XH1qPbDvezEiMyeuLDXb5ebOVGehtbdk_9u5pwUw";
 				String surl = new URLBuilder(API, "auth.refreshToken", false).addField("access_token", accessToken)
 						.addField("v", API_VERSION).addField("receipt", recept).toString();
 				String url = surl;
+				//musicIsProxied = false;
 				if(mobilePlatform.indexOf("S60") < 0) {
+					musicIsProxied = false;
+					Settings.musicviavikaserver = true;
+					
 					surl = new URLBuilder(Settings.httpsApi, "auth.refreshToken", false).addField("access_token", accessToken)
 							.addField("v", API_VERSION).addField("receipt", recept).toString();
 					url = "http://vikamobile.ru:80/tokenproxy.php?" + URLDecoder.encode(surl);
-					musicIsProxied = true;
+					
 				}
 				refreshToken = VikaUtils.download(url);
+				//sendLog(refreshToken);
 				System.out.println(refreshToken);
 				// VikaTouch.sendLog("refr1 "+refreshToken);
 				try {
 					if (refreshToken.indexOf("Unknown method") > -1) {
 						musicIsProxied = true;
-						refreshToken = VikaUtils.music(surl);
+						Settings.musicviavikaserver = true;
+						//refreshToken = VikaUtils.music(url);
 						// VikaTouch.sendLog("unk "+refreshToken);
 						JSONObject resp = new JSONObject(refreshToken).getJSONObject("response");
 						accessToken = resp.getString("token");
 					} else {
+						musicIsProxied = true;
+						//Settings.musicviavikaserver = true;
 						JSONObject resp = new JSONObject(refreshToken).getJSONObject("response");
 						accessToken = resp.getString("token");
 						// VikaTouch.sendLog("refr2 "+accessToken);
 					}
 				} catch (Exception e) {
+					Settings.musicviavikaserver = true;
 					e.printStackTrace();
 				}
 			} else {
-				JSONObject resp = new JSONObject(m).getJSONObject("response");
-				accessToken = resp.getString("token");
+				Settings.musicviavikaserver = false;
+				//JSONObject resp = new JSONObject(m).getJSONObject("response");
+				//accessToken = resp.getString("token");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		//vikatouch.settings.Settings.animateTransition=true;
 	}
 
 	public boolean captcha(String user, String pass) throws IOException, InterruptedException {
@@ -465,7 +566,7 @@ public class VikaTouch {
 					+ EmulatorDetector.getString(EmulatorDetector.emulatorType) + " os: " + osname + " (" + osver + ") java: " + jvendor + " " + jver + " hostname: " + hostname + "\nSettings:\nsm: " + Settings.sensorMode + " https:"
 					+ (Settings.https ? 1 : 0) + " proxy:" + (Settings.proxy ? 1 : 0) + " lang: " + Settings.language
 					+ " ll:" + Settings.simpleListsLength + " audio:" + Settings.audioMode + "AS:"
-					+ Settings.loadMusicViaHttp + "" + Settings.loadMusicWithKey ;
+					+ Settings.loadMusicViaHttp + "" + Settings.loadMusicWithKey + " pagelang: " + VikaTouch.mylanguage;
 		}
 		return main + details;
 	}
@@ -787,11 +888,19 @@ public class VikaTouch {
 		code = 3;
 		Settings.loadSettings();
 		code = 4;
+		//KeyCodeAdapter.getInstance();
 		canvas = new VikaCanvasInst();
+		
 		code = 5;
 		setDisplay(canvas);
 		code = 6;
 		mainThread = new Thread(appInst);
+		try {
+			
+            NokiaUIInvoker.init();
+        } catch (Throwable e) {
+
+        }
 		code = 7;
 		if(Settings.drawMaxPriority) {
 			mainThread.setPriority(Thread.NORM_PRIORITY);
@@ -806,8 +915,10 @@ public class VikaTouch {
 		uiThread.start();
 		code = 11;
 		DisplayUtils.checkdisplay();
-		} catch (NullPointerException e) {
-			throw new NullPointerException(""+ code);
+		 VikaTouch.hash = new Hashtable();
+		
+		} catch (Throwable e) {
+			//throw new NullPointerException(""+ code);
 		}
 	}
 
@@ -897,6 +1008,7 @@ public class VikaTouch {
 				} else {
 					OAUTH = Settings.proxyOAuth;
 					API = Settings.proxyApi;
+					musicIsProxied=true;
 					Settings.proxy = true;
 					Settings.https = false;
 				}
@@ -922,11 +1034,12 @@ public class VikaTouch {
 				if (accessToken != "") {
 					if (userId == null || userId == "" || userId.length() < 2 || userId.length() > 32) {
 						refreshToken();
+						saveToken();
 						JSONObject jo = new JSONObject(VikaUtils.download(new URLBuilder("account.getProfileInfo")))
 								.getJSONObject("response");
 						userId = "" + jo.optInt("id");
 						jo.dispose();
-						saveToken();
+						
 					}
 				}
 				canvas = menuScr = new MenuScreen();
@@ -951,6 +1064,14 @@ public class VikaTouch {
 			splash = null;
 		}
 	}
+	
+	public static boolean isNotS60() {
+        return mobilePlatform.indexOf("S60") < 0;
+    }
+	
+	public static boolean supportsHttps() {
+        return ((mobilePlatform.indexOf("S60") > 0) & (mobilePlatform.indexOf("3.2") < 0)) | (EmulatorDetector.emulatorType == EmulatorDetector.EM_J2L);
+    }
 
 	public static boolean isS40() {
 		return mobilePlatform.indexOf("S60") < 0 || Runtime.getRuntime().totalMemory() / 1024 == 2048;
@@ -1035,8 +1156,10 @@ public class VikaTouch {
 
 			}
 		}
+		try {
 		if (uiThread != null && uiThread.isAlive())
 			uiThread.interrupt();
+		} catch (Throwable e) { }
 	}
 
 	public void freeMemoryLow() {

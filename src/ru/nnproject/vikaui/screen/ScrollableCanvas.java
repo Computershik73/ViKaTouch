@@ -20,7 +20,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	protected int endx;
 	protected int endy;
 	protected short scroll;
-	protected int scrolled;
+	public int scrolled;
 	protected int lasty;
 	protected boolean dragging;
 	protected boolean canScroll;
@@ -244,8 +244,9 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				if (currentItem >= itemsCount) {
 					currentItem = 0;
 				}
-				scrollToSelected();
 				uiItems[currentItem].setSelected(true);
+				scrollToSelected();
+				
 			} catch (Throwable e) {
 
 			}

@@ -8,7 +8,7 @@
 
 langinfo.name=Español
 #YYYY.MM.DD
-langinfo.version=2021.1.17
+langinfo.version=2021.6.25
 
 langinfo.hints=1
 
@@ -82,10 +82,17 @@ friend.remove=Eliminar de amigos
 friend.add=Agregar como amigo
 friend.accept=Aceptar solicitud
 friend.cancel=Solicitud enviada (cancelar)
+friends.all=Todos los amigos
+friends.online=Amigos online
+friends.incoming=Solicitudes entrantes
+friends.outcoming=Solicitudes salientes
 
 subscribe=Suscribirse
 
 music.all=Toda la música
+music.search=Buscar música
+music.searchresults=Resultados de la búsqueda:
+music.recommendations=Recomendación:
 
 msg=Mensaje
 msg.online=En linea
@@ -280,6 +287,10 @@ wall.unlike=No me gusta
 wall.links=Enlaces de la publicación
 wall.repost=Re-publicar
 wall.comments=Comentarios
+wall.towall=Publish on wall
+wall.tofriend=Send to friend
+wall.togroup=Publish in group
+wall.tochat=Send to chat
 
 fm.noaccess=Sin acceso.
 fm.memorycard=Tarjeta de memoria

@@ -3,6 +3,7 @@ package ru.nnproject.vikatouch;
 import javax.microedition.midlet.*;
 
 import vikatouch.Dialogs;
+import vikatouch.NokiaUIInvoker;
 import vikatouch.VikaTouch;
 import vikatouch.screens.ChatScreen;
 
@@ -28,19 +29,35 @@ public final class VikaTouchApp extends MIDlet implements Runnable {
 	protected void startApp() {
 		VikaTouch.mobilePlatform = System.getProperty("microedition.platform");
 		isPaused = false;
-
+		//if (VikaTouch.a!=0) {
+		/*try {
+			VikaTouch.sendLog("started " + String.valueOf(VikaTouch.a));
+		} catch (Throwable e) {
+			
+		}*/
+			//}
 		if (!started) {
+			
+			VikaTouch.a=0;
+			VikaTouch.supportsTouch=false;
+			
+			try {
 			started = true;
 			VikaTouch.appInst = this;
 			VikaTouch.inst = new VikaTouch();
+			
 			VikaTouch.inst.start();
+			} catch (Throwable e) {
+
+	        }
 		}
+		
 	}
 
 	public void run() {
 		try {
 			VikaTouch.inst.threadRun();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}

@@ -6,6 +6,11 @@ import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import com.nokia.mid.ui.SoftNotification;
+import com.nokia.mid.ui.SoftNotificationListener;
+import com.nokia.mid.ui.TextEditor;
+import com.nokia.mid.ui.TextEditorListener;
+
 import vikatouch.items.VikaNotification;
 import vikatouch.items.chat.ConversationItem;
 import vikatouch.screens.ChatScreen;
@@ -54,7 +59,7 @@ public class Dialogs extends TimerTask {
 						dialogs = new ConversationItem[Settings.dialogsLength];
 					itemsCount = Settings.dialogsLength;
 					// if(async) VikaTouch.loading = true;
-					String x = VikaUtils.downloadE(new URLBuilder("messages.getConversations").addField("count", "1"));
+					String x = VikaUtils.downloadE(new URLBuilder("messages.getConversations").addField("count", "6"));
 
 					try {
 						// if(async) VikaTouch.loading = true;
@@ -64,9 +69,18 @@ public class Dialogs extends TimerTask {
 						boolean hasNew = dialogs[0] == null;
 						short unreadC = 0;
 						try {
+							//hasNew = dialogs[0] == null
+							//		|| !VikaUtils.cut(item.getJSONObject("last_message").optString("text"), 7)
+							//				.equalsIgnoreCase(VikaUtils.cut(dialogs[0].lasttext, 7));
 							hasNew = dialogs[0] == null
-									|| !VikaUtils.cut(item.getJSONObject("last_message").optString("text"), 7)
-											.equalsIgnoreCase(VikaUtils.cut(dialogs[0].lasttext, 7));
+											|| !VikaUtils.cut(item.getJSONObject("last_message").optString("text"), 7)
+													.equalsIgnoreCase(VikaUtils.cut(dialogs[0].lasttext, 7)) || !VikaUtils.cut(items.getJSONObject(1).getJSONObject("last_message").optString("text"), 7)
+													.equalsIgnoreCase(VikaUtils.cut(dialogs[1].lasttext, 7)) || !VikaUtils.cut(items.getJSONObject(2).getJSONObject("last_message").optString("text"), 7)
+													.equalsIgnoreCase(VikaUtils.cut(dialogs[2].lasttext, 7)) || !VikaUtils.cut(items.getJSONObject(3).getJSONObject("last_message").optString("text"), 7)
+													.equalsIgnoreCase(VikaUtils.cut(dialogs[3].lasttext, 7)) || !VikaUtils.cut(items.getJSONObject(4).getJSONObject("last_message").optString("text"), 7)
+													.equalsIgnoreCase(VikaUtils.cut(dialogs[4].lasttext, 7)) || !VikaUtils.cut(items.getJSONObject(5).getJSONObject("last_message").optString("text"), 7)
+													.equalsIgnoreCase(VikaUtils.cut(dialogs[5].lasttext, 7));
+												
 
 						} catch (Exception e) {
 						}
@@ -119,13 +133,26 @@ public class Dialogs extends TimerTask {
 								dialogs[i].disposeJson();
 								item.dispose();
 							}
-							if (sendNofs && dialogs.length > 1 && dialogs[0] != null
+							if (dialogs.length > 1 && dialogs[0] != null
 									&& !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId)) {
-								if(VikaTouch.mobilePlatform.indexOf("S60") > -1 && (VikaTouch.mobilePlatform.indexOf("5.3") > -1 || VikaTouch.mobilePlatform.indexOf("5.4") > -1 || VikaTouch.mobilePlatform.indexOf("5.5") > -1)) {
-									VikaTouch.notify("type", dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40));
-								}
+								try {
+								NokiaUIInvoker.softNotification(String.valueOf(dialogs[0].lastSenderId), VikaUtils.cut(dialogs[0].title, 10));
+								} catch (Throwable ee) {}
+								//!!!
+								//VikaTouch.sendLog("lastsenderid = " + dialogs[0].lastSenderId);
+								//VikaTouch.sendLog("notifid = " +String.valueOf(VikaTouch.a));
+								
+							//	VikaTouch.sendLog("notifid = " +String.valueOf(VikaTouch.a));
+								
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,
 										VikaUtils.cut(dialogs[0].lasttext, 40), VikaTouch.dialogsScr));
+								return;
+								//if(VikaTouch.mobilePlatform.indexOf("S60") > -1 && (VikaTouch.mobilePlatform.indexOf("5.3") > -1 || VikaTouch.mobilePlatform.indexOf("5.4") > -1 || VikaTouch.mobilePlatform.indexOf("5.5") > -1)) {
+								//	VikaTouch.notifyy("type", "100058ec", "");
+									//notify("type", dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40));
+									
+								//}
+								
 							}
 							items.dispose();
 							x = null;
@@ -234,7 +261,17 @@ public class Dialogs extends TimerTask {
 	public static void openDialog(int peerId, String title) {
 		// VikaTouch.appInst.notifyDestroyed();
 		try {
+			VikaTouch.isresending=true;
+			
 			VikaTouch.setDisplay(new ChatScreen(peerId, title), 1);
+			if (VikaTouch.resendingmid!=0) {
+			ChatScreen.attachAnswer(VikaTouch.resendingmid, VikaTouch.resendingname, VikaTouch.resendingtext);
+			}
+			if (VikaTouch.resendingobjectid!="") {
+				ChatScreen.attachAnswer(VikaTouch.resendingobjectid, VikaTouch.resendingname, VikaTouch.resendingtext);	
+			}
+			//VikaTouch.sendLog(String.valueOf(VikaTouch.resendingmid)+ " " + VikaTouch.resendingname + " " + VikaTouch.resendingtext);
+			//ChatScreen.attachAnswer(VikaTouch.resendingmid, VikaTouch.resendingname, VikaTouch.resendingtext);
 		} catch (Throwable e) {
 			// VikaTouch.sendLog("Dialog fail. "+e.toString());
 			VikaTouch.appInst.notifyDestroyed();
@@ -248,8 +285,10 @@ public class Dialogs extends TimerTask {
 	}
 
 	public static void stopUpdater() {
+		try {
 		if (updater != null && updater.isAlive())
 			updater.interrupt();
+		} catch (Throwable ee) { }
 	}
 
 }

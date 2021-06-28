@@ -157,13 +157,75 @@ public final class VikaUtils {
 	}
 
 	public static String music(final String url) throws IOException, InterruptedException {
-		if (VikaTouch.musicIsProxied) {
+		
+		if ((Settings.musicviavikaserver == true) || (VikaTouch.isS40())) {
 			final String x = URLDecoder.encode(url);
+			Settings.loadMusicViaHttp = Settings.AUDIO_HTTPS;
+			//VikaTouch.sendLog("is http://vikamobile.ru:80/tokenproxy.php?" + x);
 			return download("http://vikamobile.ru:80/tokenproxy.php?" + x);
 		} else {
+			//VikaTouch.sendLog("notis " + url);
 			return download(url);
 		}
 	}
+	
+	public static void logToFile(String text) {
+	
+	FileConnection fileCon = null;
+	
+	try {
+		fileCon = (FileConnection) Connector.open(System.getProperty("fileconn.dir.music") + "log.txt", 3);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	if (!fileCon.exists()) {
+		try {
+			fileCon.create();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	} else {
+		try {
+			fileCon.delete();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			fileCon.create();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	OutputStream stream = null;
+	try {
+		stream = fileCon.openOutputStream();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	try {
+		stream.write(text.getBytes("UTF-8"));
+	} catch (UnsupportedEncodingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	try {
+		stream.flush();
+		stream.close();
+		fileCon.close();
+	} catch (Exception e2) {
+		e2.printStackTrace();
+	}
+	
+}
 
 	public static String download(URLBuilder url) throws IOException, InterruptedException {
 		return download(url.toString());
@@ -185,6 +247,26 @@ public final class VikaUtils {
 		} else {
 			return download0(url);
 		}
+	}
+	
+	public static String getRedirUrl(String oldurl) throws IOException, InterruptedException  {
+		HttpConnection var13 = null;
+		int i = 0;
+		while (i!=200) {
+		var13 = (HttpConnection) Connector.open(oldurl, Connector.READ);
+		var13.setRequestMethod("GET");
+		var13.setRequestProperty("User-Agent",
+				"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
+		 i = var13.getResponseCode();
+		 
+		if (var13.getHeaderField("Location") != null) {
+				oldurl = var13.getHeaderField("Location");
+			}
+		var13.close();
+		}
+		
+		return oldurl;
+		
 	}
 
 	private static String download0(String var1) throws IOException, InterruptedException {

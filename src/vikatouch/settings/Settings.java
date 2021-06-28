@@ -91,6 +91,8 @@ public class Settings {
 	public static boolean hideBottom = false;
 	
 	public static boolean nightTheme = false;
+	
+	public static boolean musicviavikaserver;
 
 	// Не нуждаются сохранению (м.б передумаем)
 	public static boolean threaded;
@@ -146,7 +148,7 @@ public class Settings {
 	public static String region;
 	
 	// 100/60/30/15
-	public static int fpsLimit = 60;
+	public static int fpsLimit = 30;
 
 	public static boolean doubleBufferization = false;
 	
@@ -175,6 +177,7 @@ public class Settings {
 					animateTransition = is.readBoolean();
 					proxy = is.readBoolean();
 					https = is.readBoolean();
+					
 					debugInfo = is.readBoolean();
 					proxyApi = is.readUTF();
 					proxyOAuth = is.readUTF();
@@ -209,6 +212,9 @@ public class Settings {
 					region = is.readUTF();
 					// 2.8.13
 					fpsLimit = is.readShort();
+					if (VikaTouch.isS40()) {
+					fpsLimit = 15;
+					}
 					doubleBufferization = is.readBoolean();
 					drawMaxPriority = is.readBoolean();
 					fastImageScaling = is.readBoolean();
@@ -218,8 +224,13 @@ public class Settings {
 					nightTheme = is.readBoolean();
 					//2.9.1
 					sendLogs = is.readBoolean();
+					//2.9.3
+					musicviavikaserver = is.readBoolean();
+					
 				} catch (Exception e) {
-
+					//VikaTouch.error(e, ErrorCodes.SETSSAVE);
+					VikaTouch.sendLog(e.getMessage());
+					musicviavikaserver = false;
 				}
 				is.close();
 				bais.close();
@@ -241,7 +252,10 @@ public class Settings {
 		if(fpsLimit <= 0) {
 			fpsLimit = 60;
 		}
-
+		if (!(VikaTouch.supportsHttps())) {
+			https=false;
+			
+		}
 		switchLightTheme();
 	}
 
@@ -303,7 +317,9 @@ public class Settings {
 				os.writeBoolean(nightTheme);
 				//2.9.1
 				os.writeBoolean(sendLogs);
-
+				//2.9.3
+				os.writeBoolean(musicviavikaserver);
+				
 				byte[] b = baos.toByteArray();
 				rs.addRecord(b, 0, b.length);
 				os.close();
@@ -354,8 +370,8 @@ public class Settings {
 		isLiteOrSomething = VikaTouch.isS40();
 		threaded = true;
 		audioMode = AUDIO_LOADANDPLAY;
-		loadMusicViaHttp = 0;
-		loadMusicWithKey = 0;
+		
+		loadMusicWithKey = 1;
 		imageTrimming = false;
 		playerVolume = 100;
 		loadITunesCovers = true;
@@ -366,7 +382,25 @@ public class Settings {
 		notifmode = 2;
 		hideBottom = false;
 		region = "US";
-
+		musicviavikaserver = false;
+		//musicviavikaserver = false;
+		if (VikaTouch.isS40()) {
+			fpsLimit = 15;
+			VikaTouch.muscount=50;
+			
+			https = false;
+			}
+		else {
+			VikaTouch.muscount=500;
+			if (VikaTouch.supportsHttps()) {
+				https = true;
+			}
+		}
+		if (!(VikaTouch.supportsHttps())) {
+			loadMusicViaHttp = Settings.AUDIO_HTTP;
+		}
+		
+		
 		// язык соотвествующий настройкам устройства
 		try {
 			String supportedLanguages[] = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ"};
@@ -387,7 +421,7 @@ public class Settings {
 		
 		// настройки для резистивок (аши, тачи с клавами и т.д)
 		try {
-			String d[] = {"Nokia203", "Nokia305", "Nokia308", "Nokia311"};
+			String d[] = {"Nokia202", "Nokia203", "Nokia300", "Nokia305", "Nokia306", "Nokia308", "Nokia309", "Nokia310", "Nokia311"};
 			for(int i = 0; i < d.length; i++) {
 				if(VikaTouch.mobilePlatform.startsWith(d[i])) {
 					sensorMode = SENSOR_RESISTIVE;

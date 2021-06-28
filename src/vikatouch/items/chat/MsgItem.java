@@ -1,7 +1,11 @@
 package vikatouch.items.chat;
 
+import java.util.Vector;
+import vikatouch.items.smile;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONArray;
 import org.json.me.JSONObject;
@@ -41,6 +45,7 @@ import vikatouch.utils.url.URLBuilder;
 public class MsgItem extends ChatItem implements IMenu, IMessage {
 	public MsgItem(JSONObject json) {
 		super(json);
+		smilesarray = new Vector(0, 1);
 	}
 
 	private int mid;
@@ -67,7 +72,9 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 
 	public int forwardedX = -1;
 	public int forwardedW = -1;
-
+	//public smiles[] smilesarray;
+	public Vector smilesarray = new Vector(0, 1);
+	public String codestext="";
 	public void ChangeText(String s) {
 		text = s;
 		int h1 = Font.getFont(0, 0, 8).getHeight();
@@ -100,10 +107,36 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			/// textt += Integer.toBinaryString(xxx[ii]).+ " ";
 			// }
 			// textt = VikaUtils.replace(text, from, to);
+			codestext ="";
+			int smilescount=0;
+			if (foreign) {
+			if (ChatScreen.peerlanguage==null) {
+				text = TextLocal.translateText(text, "en", VikaTouch.mylanguage);
+			} else {
+			if (!(VikaTouch.mylanguage.equals(ChatScreen.peerlanguage))) {
+				text = TextLocal.translateText(text, ChatScreen.peerlanguage, VikaTouch.mylanguage);
+			}
+			}
+			}
 			while (ii < text.length()) {
-
-				if ((((long) text.toCharArray()[ii]) == 55357) || (((long) text.toCharArray()[ii]) == 55358)) {
+				
+				if (((long)text.toCharArray()[ii] >= 55350) && ((long)text.toCharArray()[ii] <= 55360)) {
+					codestext = codestext.concat(" ").concat(String.valueOf((long) text.toCharArray()[ii])).concat(" ");
 					ii++;
+					codestext = codestext.concat(" ").concat(String.valueOf((long) text.toCharArray()[ii])).concat(" ");
+					textt+="     ";
+					smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/"+Integer.toHexString((int) text.toCharArray()[ii-1]).toUpperCase()+Integer.toHexString((int) text.toCharArray()[ii]).toUpperCase()+".png"));
+					//smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/D83DDE00.png"));
+					smilescount++;
+					//Integer.toHexString((int) text.toCharArray()[ii]).toUpperCase();
+					//55357 56838
+					/*if (((long) text.toCharArray()[ii]) == 56611) {
+						textt+="     ";
+						//xdImg= Image.createImage("/D83DDE06.png");
+						smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/D83DDE02.png"));
+						smilescount++;
+					}
+					
 					if (((long) text.toCharArray()[ii]) == 56834) {
 						textt += String.valueOf((char) 57349);
 					}
@@ -119,19 +152,42 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 					if (((long) text.toCharArray()[ii]) == 56833) {
 						textt += String.valueOf((char) 57353);
 					}
+					if (((long) text.toCharArray()[ii]) == 56834) {
+						textt+="     ";
+						//xdImg= Image.createImage("/D83DDE06.png");
+						smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/D83DDE02.png"));
+						smilescount++;
+					}
+					
 					if (((long) text.toCharArray()[ii]) == 56837) {
-						textt += String.valueOf((char) 57354);
+						textt+="     ";
+						//xdImg= Image.createImage("/D83DDE06.png");
+						smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/D83DDE05.png"));
+						smilescount++;
 					}
 					if (((long) text.toCharArray()[ii]) == 56838) {
-						textt += String.valueOf((char) 57355);
+						textt+="     ";
+						//xdImg= Image.createImage("/D83DDE06.png");
+						smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/D83DDE06.png"));
+						smilescount++;
+						//textt += String.valueOf((char) 57355);
 					}
-					if (((long) text.toCharArray()[ii]) == 56611) {
-						textt += String.valueOf((char) 57349); // временно
+					if (((long) text.toCharArray()[ii]) == 56841) {
+						textt+="     ";
+						//xdImg= Image.createImage("/D83DDE06.png");
+						smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/D83DDE09.png"));
+						smilescount++;
 					}
+					if (((long) text.toCharArray()[ii]) == 56842) {
+						textt+="     ";
+						//xdImg= Image.createImage("/D83DDE06.png");
+						smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/D83DDE0A.png"));
+						smilescount++;
+					}*/
 
 				} else {
 					textt += String.valueOf(text.toCharArray()[ii]);
-
+					//codestext = codestext.concat(" ").concat(String.valueOf((long) text.toCharArray()[ii])).concat(" ");
 				}
 				// String.valueOf((char) 27864);
 				// (long) text.toCharArray()[ii];
@@ -148,6 +204,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			// String.valueOf((char)57349));
 
 			text = textt;
+		//	VikaTouch.sendLog(codestext);
 			drawText = TextBreaker.breakText(text, Font.getFont(0, 0, Font.SIZE_SMALL),
 					(forwardedW == -1 ? msgWidth : forwardedW) - h1);
 			// отладка
@@ -355,6 +412,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				g.fillRoundRect(DisplayUtils.width - (margin + msgWidth), y, msgWidth, th, radius, radius);
 				g.fillRect(DisplayUtils.width - (margin + radius), y + th - radius, radius, radius);
 				textX = DisplayUtils.width - (margin + msgWidth) + h1 / 2;
+				
 				if (selected && ScrollableCanvas.keysMode) {
 					ColorUtils.setcolor(g, ColorUtils.TEXT);
 					g.setStrokeStyle(Graphics.SOLID);
@@ -377,50 +435,176 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				g.drawString(time, textX - h1 + msgWidthInner - font.stringWidth(time), y + h1 / 2, 0);
 			}
 			ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
-			try {
+			int symbolspassed=0;
+			//smilesarray = new Vector(1, 5);
+		//	try {
 				for (int i = 0; i < linesC; i++) {
+					int errst=0;
+					try {
+						errst=1;
 					if (drawText[i] != null) {
+						errst=2;
+					//	VikaTouch.sendLog("i = "+String.valueOf(i) + " " + "text="+drawText[i]);
 						String s1 = drawText[i];
+						errst=3;
+						int yy=0;
+						errst=4;
 						if ((s1.indexOf("[club") > -1 || s1.indexOf("[id") > -1) && s1.indexOf("|") > -1
 								&& s1.indexOf("]") > -1) {
+							errst=5;
 							String[] arr1 = split(s1, '[');
+							errst=6;
 							int x = textX;
-							int yy = y + h1 / 2 + h1 * (i + (showName ? 1 : 0));
+							errst=7;
+							yy = y + h1 / 2 + h1 * (i + (showName ? 1 : 0));
+							errst=8;
 							ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
+							errst=9;
 							if (arr1[0] != null) {
+								errst=10;
 								g.drawString(arr1[0], x, yy, 0);
+								errst=11;
 								x += font.stringWidth(arr1[0]);
+								errst=12;
 								for (int c = 1; c < arr1.length; c++) {
+									errst=13;
 									if (arr1[c] != null && arr1[c].indexOf('|') > -1) {
+										errst=14;
 										String[] arr2 = VEUtils.split(arr1[c], 2, '|');
+										errst=15;
 										String[] arr3 = VEUtils.singleSplit(arr2[1], ']');
+										errst=16;
 										String ping = arr3[0];
+										errst=17;
 										String after = arr3[1];
+										errst=18;
 										g.setColor(0x2a5885);
+										errst=19;
 										g.drawString(ping, x, yy, 0);
+										errst=20;
 										x += font.stringWidth(ping);
+										errst=21;
 										if (after != null) {
+											errst=22;
 											ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
+											errst=23;
 											g.drawString(after, x, yy, 0);
+											errst=24;
 											x += font.stringWidth(after);
+											errst=25;
 										}
+										errst=26;
 									}
+									errst=27;
 								}
+								errst=28;
 							}
+							errst=29;
 						} else {
+							errst=30;
 							if (s1.equalsIgnoreCase("@all") || s1.startsWith("@all")
 									|| s1.equalsIgnoreCase("@online")) {
+								errst=31;
 								g.setColor(0x2a5885);
 							}
-							g.drawString(s1, textX, y + h1 / 2 + h1 * (i + (showName ? 1 : 0)), 0);
+							errst=32;
+							yy = y + h1 / 2 + h1 * (i + (showName ? 1 : 0));
+							errst=33;
+							g.drawString(s1, textX, yy, 0);
+							errst=34;
 						}
-
+						errst=35;
+						if (smilesarray.capacity()>0) {
+							errst=36;
+							//String gf=" ";
+							int lil=0;
+						for (int li=0; li<smilesarray.capacity(); li++) {
+							errst=37;
+							
+							//VikaTouch.sendLog("F"+String.valueOf(li));
+							if (((smile)smilesarray.elementAt(li)).smilePos>=symbolspassed) {
+									 if (((smile)smilesarray.elementAt(li)).smilePos<=(symbolspassed+s1.length()))
+									 {
+								int tempsmPos = ((smile)smilesarray.elementAt(li)).smilePos;
+								errst=38;
+								String tempsmPath = ((smile)smilesarray.elementAt(li)).smilePath;
+								errst=39;
+							//	VikaTouch.sendLog("substr" + s1.substring(0, ((smile)smilesarray.elementAt(li)).smilePos-symbolspassed));
+								//VikaTouch.sendLog(" smposx = ".concat(String.valueOf(textX+Font.getDefaultFont().stringWidth(s1.substring(0, ((vsmile)smilesarray.elementAt(li)).smilePos-symbolspassed))-6)).concat(" maxwidth = ").concat(String.valueOf(msgWidthInner)));
+							if (textX+Font.getDefaultFont().stringWidth(s1.substring(0, ((smile)smilesarray.elementAt(li)).smilePos-symbolspassed))-6<msgWidth - h1) {
+								smilesarray.setElementAt(new smile (tempsmPos, tempsmPath, textX+Font.getDefaultFont().stringWidth(s1.substring(0, ((smile)smilesarray.elementAt(li)).smilePos-symbolspassed)), yy+3), li);
+							} else {
+								lil=0;
+								smilesarray.setElementAt(new smile (tempsmPos, tempsmPath, textX-6
+										//+Font.getDefaultFont().stringWidth(s1.substring(0, ((smile)smilesarray.elementAt(li)).smilePos-symbolspassed))-6
+										, y + h1 / 2 + h1 * (i + 1 + (showName ? 1 : 0))+3), li);
+								
+								/*if (textX+Font.getDefaultFont().stringWidth(s1.substring(0, ((smile)smilesarray.elementAt(li+1)).smilePos-symbolspassed))-6 -((smile)smilesarray.elementAt(li)).smileX<12) {
+								for (int lii=li+1; lii<smilesarray.capacity(); lii++) {
+									smilesarray.setElementAt(new smile (((smile)smilesarray.elementAt(lii)).smilePos, ((smile)smilesarray.elementAt(lii)).smilePath, 0, 0), lii);
+								}
+								}*/
+							}
+							errst=40;
+							//VikaTouch.sendLog(String.valueOf(textX+Font.getDefaultFont().stringWidth(s1.substring(0, ((smile)smilesarray.elementAt(li)).smilePos+1-symbolspassed))));
+							//((smile)smilesarray.elementAt(li)).smileX = textX+Font.getDefaultFont().stringWidth(s1.substring(0, ((smile)smilesarray.elementAt(li)).smilePos-symbolspassed));
+							//((smile)smilesarray.elementAt(li)).smileY = yy;
+							//VikaTouch.sendLog("F"+String.valueOf(li));
+							} else {
+							/*	VikaTouch.sendLog("smilepos = " + String.valueOf(((smile)smilesarray.elementAt(li)).smilePos)+ "length = " + String.valueOf(symbolspassed+s1.length()));
+								if (((smile)smilesarray.elementAt(li)).smilePos<=(symbolspassed+s1.length()+5)) {
+									int tempsmPos = ((smile)smilesarray.elementAt(li)).smilePos;
+									
+									String tempsmPath = ((smile)smilesarray.elementAt(li)).smilePath;
+									
+								//	VikaTouch.sendLog("substr" + s1.substring(0, ((smile)smilesarray.elementAt(li)).smilePos-symbolspassed));
+								smilesarray.setElementAt(new smile (tempsmPos, tempsmPath, textX
+										//+Font.getDefaultFont().stringWidth(s1.substring(0, ((smile)smilesarray.elementAt(li)).smilePos-symbolspassed))-6
+										, y + h1 / 2 + h1 * (i + 1 + (showName ? 1 : 0))+3), li);
+								
+								}*/
+							}
+						}
+							//g.drawImage(Image.createImage(((smile)smilesarray.elementAt(li)).smilePath), textX+Font.getDefaultFont().stringWidth(s1.substring(0, ((smile)smilesarray.elementAt(li)).smilePos-symbolspassed)), yy, 0);
+							lil++;
+						}
+						//if (gf!=" ") {
+						//VikaTouch.sendLog(gf);
+						//}
+						errst=41;
+						
+					}
+						errst=42;
+						symbolspassed+=s1.length();
+						errst=43;
+					}
+					} catch (Throwable eh) {
+						VikaTouch.sendLog(eh.getMessage()+String.valueOf(errst));
 					}
 				}
-			} catch (Throwable t) {
+		/*	} catch (Throwable t) {
 				t.printStackTrace();
+			}*/
+			//VikaTouch.sendLog("Всего смайлов в облачке: "+String.valueOf(smilesarray.capacity()));
+			//smilesarray.removeAllElements();
+			String smilesinfo = "";
+			if (smilesarray.capacity()>0) {
+			for (int li=0; li<smilesarray.capacity(); li++) {
+				/*try {
+				smilesinfo=smilesinfo+"smile " + String.valueOf(li)+ " path " +  ((smile)smilesarray.elementAt(li)).smilePath + " smileX:" + String.valueOf(((smile)smilesarray.elementAt(li)).smileX) + " smileY:" + String.valueOf(((smile)smilesarray.elementAt(li)).smileY) + " smilePos:" + String.valueOf(((smile)smilesarray.elementAt(li)).smilePos) + " ";
+				} catch (Throwable ee) {
+					//VikaTouch.sendLog(ee.getMessage());
+				}*/
+				try {
+			g.drawImage(Image.createImage(((smile)smilesarray.elementAt(li)).smilePath), ((smile)smilesarray.elementAt(li)).smileX , ((smile)smilesarray.elementAt(li)).smileY, 0);
+				} catch (Throwable eg) {
+					
+				}
 			}
-
+			}
+			if (smilesinfo!="") {
+			VikaTouch.sendLog(smilesinfo);
+			}
 			if (hasReply) {
 				ColorUtils.setcolor(g, ColorUtils.MSGTEXT);
 				if (replyText != null)
@@ -668,7 +852,12 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			}
 			break;
 		case -6:
-			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
+			//VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
+			VikaTouch.resendingmid=mid;
+			VikaTouch.resendingname=name;
+			VikaTouch.resendingtext=text;
+			vikatouch.screens.DialogsScreen.titleStr="Выберите диалог для пересылки:";
+			VikaTouch.setDisplay(VikaTouch.dialogsScr, -1);
 			break;
 		case -8: {
 			String[] links = searchLinks();

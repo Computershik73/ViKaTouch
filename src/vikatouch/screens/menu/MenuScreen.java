@@ -1,5 +1,7 @@
 package vikatouch.screens.menu;
 
+import java.io.IOException;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -15,6 +17,7 @@ import vikatouch.VikaTouch;
 import vikatouch.items.music.MusicMenuItem;
 import vikatouch.json.JSONBase;
 import vikatouch.locale.TextLocal;
+import vikatouch.screens.ChatScreen;
 import vikatouch.screens.LoginScreen;
 import vikatouch.screens.MainScreen;
 import vikatouch.settings.Settings;
@@ -35,6 +38,23 @@ public class MenuScreen extends MainScreen implements IMenu {
 	public static boolean hasAva;
 	public static String lastname;
 	public static String status;
+	public boolean online;
+	public int lastSeen;
+	
+	private String visitStr;
+	protected String wname;
+	protected String name2;
+	
+	private static String userStr;
+	private static String loadingStr;
+	protected static String onlineStr;
+	protected static String wasOnlineStr;
+	protected static String wasOnlineJustNowStr;
+	protected static String minutesAgoStr;
+	protected static String hoursAgoStr;
+
+	
+	
 	// public static String avaurl;
 	/*
 	 * private static int[] itemscmd = {4, 5, 6, 7, 8, 9, -1};
@@ -50,6 +70,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 
 	public MenuScreen() {
 		super();
+		
 		selectedBtn = 1;
 		profileImg = VikaTouch.cameraImg;
 		if (VikaTouch.DEMO_MODE) {
@@ -75,7 +96,41 @@ public class MenuScreen extends MainScreen implements IMenu {
 			hasAva = profileobj.optInt("has_photo") == 1;
 			VikaTouch.integerUserId = profileobj.optInt("id");
 			VikaTouch.userId = "" + VikaTouch.integerUserId;
+			String mycountry =  profileobj.optJSONObject("country").optString("id");
+			VikaTouch.mylanguage = (String) TextLocal.countries.get(mycountry);
 
+			visitStr = "";
+			if (onlineStr == null) {
+				userStr = TextLocal.inst.get("user");
+				loadingStr = TextLocal.inst.get("menu.loading");
+				onlineStr = TextLocal.inst.get("online");
+				minutesAgoStr = TextLocal.inst.get("date.minutesago");
+				hoursAgoStr = TextLocal.inst.get("date.hoursago");
+				wasOnlineStr = TextLocal.inst.get("wasonlinedate");
+				wasOnlineJustNowStr = wasOnlineStr + " " + TextLocal.inst.get("date.justnow");
+			}
+			
+			
+			try {
+				lastSeen = profileobj.getJSONObject("last_seen").optInt("time");
+			} catch (Exception e) {
+			}
+			online = profileobj.optInt("online") == 1;
+
+			if (online) {
+				visitStr = onlineStr;
+			} else {
+				int now = (int) (System.currentTimeMillis() / 1000);
+				int r = now - lastSeen;
+				if (r < 90) {
+					visitStr = wasOnlineJustNowStr;
+				} else if (r < 60 * 60) {
+					visitStr = wasOnlineStr + " " + (r / 60) + " " + minutesAgoStr;
+				} else {
+					visitStr = wasOnlineStr + " " + (r / 3600) + " " + hoursAgoStr;
+				}
+			}
+			
 			try {
 				if (!Settings.dontLoadAvas && hasAva && avaurl != null && avaurl != "" && avaurl != "null") {
 					profileImg = ResizeUtils.resizeava(VikaUtils.downloadImage(avaurl));
@@ -138,7 +193,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 
 		// sending stats
 		VikaTouch.sendStats();
-
+		
 		(new Thread() {
 			public void run() {
 				try {
@@ -168,11 +223,12 @@ public class MenuScreen extends MainScreen implements IMenu {
 		if (selectedBtn > 1)
 			uiItems[selectedBtn - 2].setSelected(false);
 		selectedBtn++;
-		if (selectedBtn >= 9)
-			selectedBtn = 9 - 1;
-		scrollToSelected();
+		if (selectedBtn > 8)
+			selectedBtn = 8;
+		
 		if (selectedBtn > 1)
 			uiItems[selectedBtn - 2].setSelected(true);
+		scrollToSelected();
 	}
 
 	public void scrollToSelected() {
@@ -230,6 +286,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 			g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM));
 			ColorUtils.setcolor(g, ColorUtils.TEXT);
 			g.drawString(name + " " + lastname, 74, topPanelH + 12, 0);
+			g.drawString(status == null ? visitStr : status, 74, topPanelH + 36, 0);
 			if (selectedBtn == 1 && keysMode) {
 				ColorUtils.setcolor(g, 3);
 				g.drawRect(0, topPanelH + 1, DisplayUtils.width - 1, 72);
@@ -261,12 +318,17 @@ public class MenuScreen extends MainScreen implements IMenu {
 
 		// g.drawImage(settingsImg, DisplayUtils.width-35, DisplayUtils.compact?0:18,
 		// 0);
-
+		//g.drawImage(IconsManager.selIco[IconsManager.SEARCH], DisplayUtils.width - 70, DisplayUtils.compact ? 0 : 18,
+		//		0);
 		if (keysMode && selectedBtn == 0) {
 			// g.setGrayScale(255);
 			// g.drawRect(DisplayUtils.width-35, DisplayUtils.compact?0:18, 24, 24);
+			//drawImage(IconsManager.ico[IconsManager.SEARCH], DisplayUtils.width - 70, DisplayUtils.compact ? 0 : 18,
+			//		0);
 			g.drawImage(IconsManager.ico[IconsManager.SETTINGS], DisplayUtils.width - 35, DisplayUtils.compact ? 0 : 18,
 					0);
+			
+			
 		} else {
 			g.drawImage(IconsManager.selIco[IconsManager.TOPBAR], DisplayUtils.width - 35,
 					DisplayUtils.compact ? 0 : 18, 0);
@@ -548,6 +610,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 	 */
 
 	public final void release(int x, int y) {
+		VikaTouch.supportsTouch=true;
 		if (!dragging) {
 			try {
 				if (y > topPanelH + 82 && y < DisplayUtils.height - bottomPanelH) {

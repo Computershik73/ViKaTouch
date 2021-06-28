@@ -63,9 +63,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 	public VoiceAttachment voice;
 
-	public String url;
+	public static String url;
 
-	// кэш для рисования
+	// кэш для рисования 
 	public String title = "Track name";
 	private String artist = "track artist";
 	private int titleW, artistW;
@@ -89,7 +89,12 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 	public InputStream inStream;
 	public OutputStream outStream;
 	public Thread loader;
-
+	public FileConnection outConn;
+	public DataInputStream netInStream;
+	public ContentConnection inConn;
+	public int prevsongindex=-1;
+	public int prevprevsongindex=-1;
+	
 	public MusicPlayer() {
 		try {
 			Image sheet = Image.createImage("/playerbtns.png");
@@ -107,11 +112,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			player.stop();
 		} catch (Exception e) {
 		}
-		try {
-			closePlayer();
-		} catch (MediaException e) {
-			e.printStackTrace();
-		}
+		closePlayer();
+		
 	}
 
 	public void firstLoad() {
@@ -119,13 +121,33 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 	}
 
 	public void loadTrack() {
-		if (VikaTouch.canvas.currentScreen != this && voice == null) {
+	/*	if (VikaTouch.canvas.currentScreen != this && voice == null) {
 			VikaTouch.notificate(new VikaNotification(VikaNotification.NEXT_TRACK, "Сейчас играет",
 					VikaUtils.cut(getC().name, 40), this));
+		}*/
+		if (player != null) {
+			if (player.getState() == 400) {
+				try {
+					player.stop();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			try {
+			if (player.getState() == 300) {
+				player.deallocate();
+			}
+			}  catch (Exception e1) {}
+			try {
+			if (player.getState() == 200 || player.getState() == 100) {
+				player.close();
+			}
+			}  catch (Exception e2) {}
 		}
 		try {
 			player.stop();
-		} catch (Exception e) {
+		} catch (Exception e3) {
 		}
 		coverOrig = null;
 		resizedCover = null;
@@ -138,26 +160,171 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		inst = this;
 		byte[] aByteArray207 = null;
 		System.gc();
-
-		// TODO move temp constants
-		boolean CACHETOPRIVATE = false;
-
 		try {
-			try {
-				closePlayer();
-			} catch (Exception var20) {
-				VikaTouch.popup(new InfoPopup("Player closing error", null));
-			}
-			url = getMp3Link();
-			// VikaTouch.sendLog(url);
-			String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private")
-					: System.getProperty("fileconn.dir.music"));
+			outStream.close();
+			outConn.close();
+			netInStream.close();
+			inConn.close();
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		boolean CACHETOPRIVATE = false;
+		String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private")
+				: System.getProperty("fileconn.dir.music"));
+		String jver = System.getProperty("java.version");
+		if (jver == null)
+			jver = "-";
+		if (jver.indexOf("phoneme")<0) {
 			if (tpath == null)
 				tpath = System.getProperty("fileconn.dir.photos");
 			if (tpath == null)
 				tpath = "file:///C:/";
-			final String path = tpath + "vikaMusicCache.mp3";
-			System.out.println(path);
+			} else {
+				tpath = "file:///"+"MyDocs/.sounds/";
+			}
+		final String path = tpath +  String.valueOf(current) +"vikaMusicCache.mp3";
+		//for (int i=0; i<99; i++) 
+		if (prevprevsongindex!=-1) 
+		{
+		 String pathx = tpath +  String.valueOf(prevprevsongindex) +"vikaMusicCache.mp3";
+		 FileConnection outConnx = null;
+		try {
+			outConnx = (FileConnection) Connector.open(pathx, Connector.READ_WRITE);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		 if (outConnx.exists()) {
+			 try {
+					outConnx.delete();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					outConnx.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+			 try {
+					outConn.delete();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					outConn.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			} else {
+				//outConn.create();
+			}
+		}
+		
+		if (prevsongindex!=-1) 
+		{
+		 String pathx = tpath +  String.valueOf(prevsongindex) +"vikaMusicCache.mp3";
+		 FileConnection outConnx = null;
+		try {
+			outConnx = (FileConnection) Connector.open(pathx, Connector.READ_WRITE);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		 if (outConnx.exists()) {
+				
+			 try {
+					outConnx.delete();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					outConnx.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			 try {
+					outConn.delete();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					outConn.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			} else {
+				//outConn.create();
+			}
+		}
+		
+		
+		System.out.println(path);
+		try {
+			outConn = (FileConnection) Connector.open(path, Connector.READ_WRITE);
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+			try {
+				outConn.delete();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				outConn.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			if (outConn.exists()) {
+				outConn.delete();
+				outConn.create();
+			} else {
+				outConn.create();
+			}
+		} catch (IOException e) {
+			//e.printStackTrace();
+		} catch (Exception e) {
+			//e.printStackTrace();
+		} 
+		// TODO move temp constants
+		
+
+		//try {
+			try {
+				closePlayer();
+			} catch (Exception var20) {
+				//VikaTouch.popup(new InfoPopup("Player closing error", null));
+			}
+			try {
+				getCover();
+			} catch (InterruptedException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			try {
+			resizeCover();
+			} catch (Exception ee) {}
+			//resizeCover();
+			url = getMp3Link();
+			// VikaTouch.sendLog(url);
+			
 			if ((Settings.audioMode == Settings.AUDIO_PLAYONLINE) || (this.voice != null)) {
 				if(loader != null)
 					loader.interrupt();
@@ -228,21 +395,27 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							} catch (InterruptedException e) {
 								return;
 							}
-							FileConnection outConn = (FileConnection) Connector.open(path, Connector.READ_WRITE);
-							try {
+							// outConn = (FileConnection) Connector.open(path, Connector.READ_WRITE);
+							/*try {
 								if (outConn.exists()) {
 									outConn.delete();
+									outConn.create();
+								} else {
+									outConn.create();
 								}
 							} catch (IOException e) {
 								e.printStackTrace();
 							} catch (Exception e) {
 								e.printStackTrace();
-							} 
-							outConn.create();
+							} */
+							
 							outStream = outConn.openOutputStream();
-
-							ContentConnection inConn = (ContentConnection) Connector.open(url, Connector.READ);
-							DataInputStream netInStream = inConn.openDataInputStream();
+							//VikaUtils.makereq(url);
+							//Thread.sleep(1000);
+							//VikaTouch.sendLog(url);
+							url = VikaUtils.getRedirUrl(url);
+							 inConn = (ContentConnection) Connector.open(url, Connector.READ);
+							 netInStream = inConn.openDataInputStream();
 
 							int trackSize = (int) inConn.getLength();
 							totalTime = (trackSize / 1024 / 1024) + "." + (trackSize / 1024 % 103) + "MB";
@@ -256,6 +429,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							if(trackSize / 1024 == 0) {
 								// Происходит абсолютно рандомно, но после одного раза.
 								// UPD 10.01 04:54: добавил Thread.sleep(100); перед загрузкой, вроде помогло.
+								//VikaTouch.sendLog(url);
+								//simple=true;
 								System.out.println(url);
 								VikaTouch.popup(new InfoPopup("Cache error: 404", null));
 								try {
@@ -270,11 +445,15 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							}
 							
 							if(simple) {
+								//if(trackSize / 1024 != 0) {
 								System.out.println("need: " + trackSize / 1024 + "K");
+								//}
 								byte[] buf = new byte[4096];
 								int read;
 								downloaded = 0;
-								Thread speedCount = new Thread() {
+								Thread speedCount = null;
+								//if(trackSize / 1024 != 0) {
+								 speedCount = new Thread() {
 									public void run() {
 										System.out.println("speed run");
 										try {
@@ -305,17 +484,24 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 										}
 									}
 								};
+								
 								speedCount.setPriority(Thread.NORM_PRIORITY);
 								speedCount.start();
+								//}
 								while((read = netInStream.read(buf)) != -1) {
 									outStream.write(buf, 0, read);
+									outStream.flush();
 									downloaded += read;
+									//if(trackSize / 1024 != 0) {
 									i = (int)(((double)downloaded / (double)trackSize) * 100d);
 									time = i + "%";
+									//}
 
 									if (stop) {
 										stop = false;
+										if (speedCount!=null) {
 										speedCount.interrupt();
+										}
 										outStream.close();
 										outConn.close();
 										netInStream.close();
@@ -361,7 +547,21 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							if (outStream != null) {
 								outStream.close();
 							}
-
+							stop = false;
+							try {
+							//speedCount.interrupt();
+							outStream.close();
+							} catch (Exception e1) {}
+							try {
+							outConn.close();
+							
+						} catch (Exception e1) {}
+							try {
+							netInStream.close();
+					} catch (Exception e1) {}
+							try {
+							inConn.close();
+				} catch (Exception e1) {}
 							/*
 							 * if ((VikaTouch.mobilePlatform.indexOf("S60") > 0 &&
 							 * (VikaTouch.mobilePlatform.indexOf("5.5") > 0 ||
@@ -470,63 +670,113 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 					System.out.println("var5: " + var5);
 					if (var5 != -1) {
 						aByteArray207 = new byte[var5];
-						dis.read(aByteArray207);
+						try {
+							dis.read(aByteArray207);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
+				} catch (Throwable ee) {
+					
 				} finally {
 					if (dis != null) {
-						dis.close();
+						try {
+							dis.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					if (contCon != null) {
-						contCon.close();
+						try {
+							contCon.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 				ByteArrayInputStream aByteArrayInputStream212 = new ByteArrayInputStream(aByteArray207);
 				System.gc();
 				inStream = aByteArrayInputStream212;
-				player = Manager.createPlayer(inStream, "audio/mpeg");
-				player.realize();
+				try {
+					player = Manager.createPlayer(inStream, "audio/mpeg");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (Throwable e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					player.realize();
+				} catch (Throwable e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				try {
 					((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
 				} catch (Exception e) {
 				}
-				player.start();
+				try {
+					player.start();
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				totalTime = time(player.getDuration() / 1000000L);
 				isReady = true;
 				isPlaying = true;
 				stop = false;
-				getCover();
-				resizeCover();
+				try {
+					getCover();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//resizeCover();
+				//prevprevsongindex=prevsongindex;
+				//prevsongindex=current;
+			
 			}
-
+			
 			// System.gc();
-		} catch (Throwable e) {
-			stop = false;
-			VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
-		}
+		//} catch (Throwable e) {
+			//stop = false;
+		//	VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
+		//}
 
 		Settings.saveSettings(); // громкость там...
 	}
 
-	private void closePlayer() throws MediaException {
+	private void closePlayer()  {
 		if (player != null) {
 			if (player.getState() == 400) {
-				player.stop();
+				try {
+					player.stop();
+				} catch (MediaException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e1) {}
 			}
-
+  try { 
 			if (player.getState() == 300) {
 				player.deallocate();
-			}
-
+			} }
+			catch (Exception e2) {}
+			try {
 			if (player.getState() == 200 || player.getState() == 100) {
 				player.close();
 			}
+			} catch (Exception e3) {}
 		}
 
 		player = null;
 		if (inStream != null) {
 			try {
 				inStream.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 			}
 			inStream = null;
 		}
@@ -542,8 +792,12 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				try {
 					player.stop();
 				} catch (Exception e) {
-					player.deallocate();
+					
 				}
+				try {
+					player.deallocate();
+				} catch (Exception e) {}
+				
 				isPlaying = false;
 			} else {
 				VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("player.cancel"), null, new Runnable() {
@@ -637,6 +891,125 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				if (current >= playlist.uiItems.length)
 					current = 0;
 			}
+			
+			
+			
+			
+			if (player != null) {
+				if (player.getState() == 400) {
+					try {
+						player.stop();
+					} catch (MediaException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				if (player.getState() == 300) {
+					player.deallocate();
+				}
+
+				if (player.getState() == 200 || player.getState() == 100) {
+					player.close();
+				}
+			}
+			try {
+				player.stop();
+			} catch (Exception e) {
+			}
+			
+			if(loader != null)
+				loader.interrupt();
+			
+			
+			if (netInStream != null) {
+				try {
+					netInStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (inConn != null) {
+				try {
+					inConn.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (outStream != null) {
+				try {
+					outStream.close();
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			stop = false;
+			try {
+			//speedCount.interrupt();
+			outStream.close();
+			} catch (Exception e1) {}
+			try {
+			outConn.close();
+			
+		} catch (Exception e1) {}
+			try {
+			netInStream.close();
+	} catch (Exception e1) {}
+			try {
+			inConn.close();
+} catch (Exception e1) {}
+			boolean CACHETOPRIVATE = false;
+			String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private")
+					: System.getProperty("fileconn.dir.music"));
+			String jver = System.getProperty("java.version");
+			if (jver == null)
+				jver = "-";
+			if (jver.indexOf("phoneme")<0) {
+			if (tpath == null)
+				tpath = System.getProperty("fileconn.dir.photos");
+			if (tpath == null)
+				tpath = "file:///C:/";
+			} else {
+				tpath = "file:///"+"MyDocs/.sounds/";
+			}
+			final String path = tpath +  String.valueOf(prevprevsongindex) +"vikaMusicCache.mp3";
+			System.out.println(path);
+			try {
+				outConn = (FileConnection) Connector.open(path, Connector.READ_WRITE);
+			} catch (Exception e2) {}
+				// TODO Auto-generated catch block
+				//e2.printStackTrace();
+				try {
+					outConn.delete();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					outConn.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			//}
+			try {
+				if (outConn.exists()) {
+					outConn.delete();
+					//outConn.create();
+				} else {
+					//outConn.create();
+				}
+			} catch (IOException e) {
+				//e.printStackTrace();
+			} catch (Exception e) {
+				//printStackTrace();
+			} 
+			prevprevsongindex=prevsongindex;
+			prevsongindex=current;
 			loadTrack();
 		}
 	}
@@ -769,7 +1142,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 					if (!DisplayUtils.compact) {
 						s = VikaUtils.replace(s, "100x100bb", "600x600bb");
 					}
-					s = VikaUtils.replace(s, "https", "http://vikamobile.ru:80/proxy.php?https");
+					s = VikaUtils.replace(s, "https", "http://vikamobile.ru:80/pr.php?https");
 					coverOrig = VikaUtils.downloadImage(s);
 				}
 				if (coverOrig == null) {
@@ -852,14 +1225,14 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		} else {
 			turl = getC().mp3;
 		}
-		boolean https;
+		//boolean https = false;
 		boolean extra;
 
-		if (Settings.loadMusicViaHttp == Settings.AUDIO_HTTP) {
+		/*if (Settings.loadMusicViaHttp == Settings.AUDIO_HTTP) {
 			https = false;
 		} else if (Settings.loadMusicViaHttp == Settings.AUDIO_HTTPS) {
 			https = true;
-		} else {
+		} */ /*else {
 			if (VikaTouch.mobilePlatform.indexOf("NokiaN97") > 1) {
 				https = false;
 			} else if (!Settings.https) {
@@ -867,7 +1240,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			} else {
 				https = Settings.audioMode != Settings.AUDIO_PLAYONLINE;
 			}
-		}
+		}*/
 		if (Settings.loadMusicWithKey == Settings.AUDIO_EXTRA) {
 			extra = true;
 		} else if (Settings.loadMusicWithKey == Settings.AUDIO_NOEXTRA) {
@@ -880,7 +1253,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			}
 		}
 		try {
-			if (https || Settings.https) {
+			if (
+				//	https ||
+					Settings.https) {
 				turl = VikaUtils.replace(turl, "http:", "https:");
 				// turl = VikaUtils.replace(turl, "httpss", "https");
 			} else {
@@ -918,7 +1293,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				System.out.println(cmd);
 				break;
 			case Settings.AUDIO_DOWNLOAD:
-				VikaTouch.appInst.platformRequest(((AudioTrackItem) list.uiItems[track]).mp3);
+				VikaTouch.appInst.platformRequest(url
+						///((AudioTrackItem) list.uiItems[track]).mp3
+						);
 				break;
 			case Settings.AUDIO_SYSTEMPLAYER:
 				VikaTouch.callSystemPlayer(((AudioTrackItem) list.uiItems[track]).mp3);
@@ -1297,6 +1674,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 					}
 				}
 			} else {
+				
 				next();
 			}
 		} else if (event == ERROR) {

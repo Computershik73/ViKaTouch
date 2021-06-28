@@ -57,7 +57,9 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 					VikaTouch.loading = true;
 					repaint();
 					String x = VikaUtils.download(new URLBuilder("video.get").addField("owner_id", id)
-							.addField("count", count).addField("offset", from));
+							.addField("count", Settings.simpleListsLength).addField("offset", from));
+					//Thread.sleep(5000);
+					//VikaUtils.logToFile(x);
 					try {
 						VikaTouch.loading = true;
 						// System.out.println(x);
@@ -156,15 +158,17 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 				if (!dragging) {
 					uiItems[i].tap(x, yy1 - (h * i));
 				}
-				return;
+			//	return;
 			}
-			return;
+			//return;
 		} catch (ArrayIndexOutOfBoundsException e) {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		super.release(x, y);
 	}
+	
+	
 
 	public void loadNext() {
 		load(fromVid + Settings.simpleListsLength, currId, whose, name2);

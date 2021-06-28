@@ -16,7 +16,7 @@ import vikatouch.screens.menu.MenuScreen;
  */
 public class DialogsScreen extends MainScreen {
 
-	private static String titleStr;
+	public static String titleStr;
 
 	public DialogsScreen() {
 		super();

@@ -39,8 +39,9 @@ public class VikaUpdate {
 				VikaUpdate vu = new VikaUpdate();
 				vu.currVer = VikaTouch.getVersion();
 				vu.newVer = ver;
-				vu.changeLog = VikaUtils.download("http://vikamobile.ru:80/vkt/cl.txt");
 				vu.url = "http://vikamobile.ru/vkt/"+ver+".jar";
+				vu.changeLog = "http://vikamobile.ru/vkt/"+ver+".jar " + VikaUtils.download("http://vikamobile.ru:80/vkt/cl.txt");
+				
 				return vu;
 			}
 			

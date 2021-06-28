@@ -3,17 +3,18 @@ package vikatouch.screens.music;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
-
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
-
 import ru.nnproject.vikaui.menu.EmptyMenu;
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.popup.InfoPopup;
+import ru.nnproject.vikaui.popup.VikaNotice;
+import ru.nnproject.vikaui.screen.ScrollableCanvas;
+import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
@@ -23,10 +24,12 @@ import vikatouch.items.music.AudioTrackItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.music.MusicPlayer;
 import vikatouch.screens.MainScreen;
+import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
+import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
-
+import vikatouch.utils.url.URLDecoder;
 /**
  * @author Feodor0090
  * 
@@ -42,9 +45,9 @@ public class MusicScreen extends MainScreen {
 	private String loadingStr;
 
 	public boolean playAfter;
-
+public static String q;
 	public static Thread downloaderThread;
-
+	public static Thread thread;
 	public MusicScreen() {
 		super();
 		loadingStr = TextLocal.inst.get("title.loading");
@@ -86,8 +89,10 @@ public class MusicScreen extends MainScreen {
 			public void run() {
 				try {
 					VikaTouch.loading = true;
+				//	String x = VikaUtils.music(new URLBuilder(Settings.proxyApi, "audio.get", true).addField("owner_id", oid)
+					//		.addField("album_id", albumId).addField("count", VikaTouch.muscount).addField("offset", 0).toString());
 					String x = VikaUtils.music(new URLBuilder("audio.get").addField("owner_id", oid)
-							.addField("album_id", albumId).addField("count", 500).addField("offset", 0).toString());
+							.addField("album_id", albumId).addField("count", VikaTouch.muscount).addField("offset", 0).toString());
 					// VikaTouch.sendLog(x);
 					if (x.indexOf("error") > -1) {
 						VikaTouch.error(ErrorCodes.MUSICLISTLOAD, x, false);
@@ -132,6 +137,131 @@ public class MusicScreen extends MainScreen {
 		};
 		downloaderThread.start();
 	}
+	
+	public void load(final String q) {
+	    scrolled = 0;
+	    uiItems = null;
+	    this.title = TextLocal.inst.get("music.searchresult");
+	    this.hasBackButton = true;
+	    if (downloaderThread != null && downloaderThread.isAlive())
+	      downloaderThread.interrupt(); 
+	    downloaderThread = new Thread() {
+	       
+	        
+	        
+	        
+	        public void run() {
+	          try {
+	            VikaTouch.loading = true;
+	          //  VikaTouch.inst.refreshToken();;
+	           // VikaTouch.inst.saveToken();
+	           
+	            String x = VikaUtils.music((new URLBuilder(Settings.httpsApi, "audio.search", true)).addField("q", q).addField("count", 50).addField("offset", 0).toString());
+	            if (x.indexOf("error") > -1) {
+	              VikaTouch.error(49, x, false);
+	              return;
+	            } 
+	            try {
+	              System.out.println(x);
+	              VikaTouch.loading = true;
+	              JSONObject response = (new JSONObject(x)).getJSONObject("response");
+	              JSONArray items = response.getJSONArray("items");
+	              itemsCount = (short)items.length();
+	              uiItems = new PressableUIItem[itemsCount];
+	              for (int i = 0; i < itemsCount; i++) {
+	                JSONObject item = items.getJSONObject(i);
+	                uiItems[i] = (PressableUIItem)new AudioTrackItem(item, MusicScreen.this, i);
+	                ((AudioTrackItem)uiItems[i]).parseJSON();
+	                Thread.sleep(15L);
+	              } 
+	            } catch (JSONException e) {
+	              e.printStackTrace();
+	              VikaTouch.error((Throwable)e, 48);
+	            } 
+	            VikaTouch.loading = false;
+	          } catch (InterruptedException e1) {
+	            return;
+	          } catch (Exception e) {
+	            e.printStackTrace();
+	            VikaTouch.error(e, 49);
+	          } 
+	          VikaTouch.loading = false;
+	          System.gc();
+	          if (playAfter && 
+	            MusicPlayer.inst != null) {
+	            MusicPlayer.inst.controlsBlocked = false;
+	            MusicPlayer.inst.loadTrack();
+	          } 
+	        }
+	      };
+	    downloaderThread.start();
+	  }
+	
+	
+	public void loadRecommendations(final String audio_id) {
+	    scrolled = 0;
+	    uiItems = null;
+	    this.title = TextLocal.inst.get("music.recommendations");
+	    this.hasBackButton = true;
+	    if (downloaderThread != null && downloaderThread.isAlive())
+	      downloaderThread.interrupt(); 
+	    downloaderThread = new Thread() {
+	       
+	        
+	        
+	        
+	        public void run() {
+	          try {
+	            VikaTouch.loading = true;
+	          //  VikaTouch.inst.refreshToken();;
+	           // VikaTouch.inst.saveToken();
+	            String x= "";
+	           if (audio_id.equals("")) {
+	             x = VikaUtils.music((new URLBuilder(Settings.httpsApi, "audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).toString());
+	           } else {
+	        	    x = VikaUtils.music((new URLBuilder(Settings.httpsApi, "audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).addField("targetAudio", audio_id).toString());
+	           }
+	            if (x.indexOf("error") > -1) {
+	              VikaTouch.error(49, x, false);
+	              return;
+	            } 
+	            try {
+	              System.out.println(x);
+	              VikaTouch.loading = true;
+	              JSONObject response = (new JSONObject(x)).getJSONObject("response");
+	              JSONArray items = response.getJSONArray("items");
+	              itemsCount = (short)items.length();
+	              uiItems = new PressableUIItem[itemsCount];
+	              for (int i = 0; i < itemsCount; i++) {
+	                JSONObject item = items.getJSONObject(i);
+	                uiItems[i] = (PressableUIItem)new AudioTrackItem(item, MusicScreen.this, i);
+	                ((AudioTrackItem)uiItems[i]).parseJSON();
+	                Thread.sleep(15L);
+	              } 
+	            } catch (JSONException e) {
+	              e.printStackTrace();
+	              VikaTouch.error((Throwable)e, 48);
+	            } 
+	            VikaTouch.loading = false;
+	          } catch (InterruptedException e1) {
+	            return;
+	          } catch (Exception e) {
+	            e.printStackTrace();
+	            VikaTouch.error(e, 49);
+	          } 
+	          VikaTouch.loading = false;
+	          System.gc();
+	          if (playAfter && 
+	            MusicPlayer.inst != null) {
+	            MusicPlayer.inst.controlsBlocked = false;
+	            MusicPlayer.inst.loadTrack();
+	          } 
+	        }
+	      };
+	    downloaderThread.start();
+	  }
+	
+	
 
 	public void reload(boolean playAfter) {
 		if (ownerId != 0) {
@@ -211,18 +341,44 @@ public class MusicScreen extends MainScreen {
 						pls.load(id, getMusicTitle("playlists", name, name2));
 					} else if (i == 2) {
 						VikaTouch.setDisplay(MusicPlayer.inst, 1);
-					}
+					} else if (i == 3) {
+						final MusicScreen pls = new MusicScreen();
+						if (thread != null)
+							thread.interrupt();
+						
+						thread = new Thread() {
+							public void run() {
+								q = TextEditor.inputString("Введите название композиции: ", "", 28, false);
+								
+								pls.load(q);
+								pls.repaint();
+								VikaTouch.setDisplay(pls, 1);
+								pls.repaint();
+							}
+						};
+						thread.start();
+						
+						
+						
+						// Thread.start();
+			            } else if (i == 4) {
+							MusicScreen pls = new MusicScreen();
+							VikaTouch.setDisplay(pls, 1);
+							pls.loadRecommendations("");
+						}
 				} catch (Exception e) {
 					VikaTouch.sendLog("Music open: " + e.toString());
 				}
 			}
 		};
-		OptionItem[] oi = new OptionItem[MusicPlayer.inst == null ? 2 : 3];
+		OptionItem[] oi = new OptionItem[MusicPlayer.inst == null ? 4 : 5];
 		try {
 			oi[0] = new OptionItem(m, TextLocal.inst.get("music.all"), IconsManager.MUSIC, 0, 50);
 			oi[1] = new OptionItem(m, TextLocal.inst.get("title.playlists"), IconsManager.MENU, 1, 50);
+			 oi[2] = new OptionItem(m, TextLocal.inst.get("music.search"), 12, 3, 50);
+			 oi[3] = new OptionItem(m, TextLocal.inst.get("music.recommendations"), 12, 4, 50);
 			if (MusicPlayer.inst != null) {
-				oi[2] = new OptionItem(m, MusicPlayer.inst.title == null ? "Player" : MusicPlayer.inst.title,
+				 oi[4] = new OptionItem(m, MusicPlayer.inst.title == null ? "Player" : MusicPlayer.inst.title,
 						IconsManager.PLAY, 2, 50);
 			}
 		} catch (Exception e) {

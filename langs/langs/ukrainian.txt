@@ -7,7 +7,7 @@
 
 langinfo.name=Українська
 #YYYY.MM.DD
-langinfo.version=2021.1.17
+langinfo.version=2021.6.25
 
 langinfo.hints=1
 
@@ -85,10 +85,16 @@ friend.remove=Видалити з друзів
 friend.add=Додати в друзі
 friend.accept=Прийняти запит
 friend.cancel=Запит надіслано (скасувати)
+friends.all=Всі друзі
+friends.online=Друзі онлайн
+friends.incoming=Вхідні заявки
+friends.outcoming=Вихідні заявки
 
 subscribe=Підписатися
 
 music.all=Вся музика
+music.search=Пошук музики
+music.recommendations=рекомендаціi
 
 msg=Повідомлення
 msg.online=У мережі

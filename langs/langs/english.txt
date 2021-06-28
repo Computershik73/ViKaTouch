@@ -1,14 +1,13 @@
 #English
-#
-#authors: shinovon
+#Ilya Vysotsky
 #
 #authors' vk:
-#vk.com/shinovon
+#vk.com/okabe2011
 #
 
 langinfo.name=English
 #YYYY.MM.DD
-langinfo.version=2021.1.17
+langinfo.version=2021.6.25
 
 langinfo.hints=1
 
@@ -82,10 +81,17 @@ friend.remove=Remove friend
 friend.add=Send friendship request
 friend.accept=Accept friendship request
 friend.cancel=Request sent (cancel)
+friends.all=All friends
+friends.online=Friends online
+friends.incoming=Incoming requests
+friends.outcoming=Outgoing requests
 
 subscribe=Follow
 
 music.all=All music
+music.search=Search music
+music.searchresult=Search results:
+music.recommendations=Recommendations:
 
 msg=Message
 msg.online=Online
@@ -274,12 +280,17 @@ player.accessfailed=VK doesn't allow your device to access the audio file. Try t
 player.playererror=Player error
 player.internalerror=Unknown internal error (-2)
 player.cancel=Cancel downloading?
+player.recording=Recording...
 
 wall.like=Like
 wall.unlike=Unlike
 wall.links=Links..
 wall.repost=Repost
 wall.comments=Comments
+wall.towall=Publish on wall
+wall.tofriend=Send to friend
+wall.togroup=Publish in group
+wall.tochat=Send to chat
 
 fm.noaccess=No access.
 fm.memorycard=Memory card

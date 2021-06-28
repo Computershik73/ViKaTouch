@@ -36,6 +36,7 @@ public class IconsManager {
 			logoImg = Image.createImage("/vikahead.png");
 			string = "back.png";
 			backImg = Image.createImage("/back.png");
+			//xdImg= Image.createImage("/D83DDE06.png");
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new IOException(string);
@@ -46,6 +47,7 @@ public class IconsManager {
 	public static Image acs;
 	public static Image logoImg;
 	public static Image backImg;
+//	public static Image xdImg;
 
 	public static final int FRIENDS = 0;
 	public static final int GROUPS = 1;

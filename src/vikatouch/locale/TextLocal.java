@@ -3,12 +3,15 @@ package vikatouch.locale;
 import java.io.*;
 import java.util.Hashtable;
 
+import org.json.me.JSONObject;
+
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 import vikatouch.utils.error.ErrorCodes;
+import vikatouch.utils.url.URLBuilder;
 
 /**
  * @author Shinovon
@@ -18,12 +21,28 @@ public class TextLocal {
 	public static TextLocal inst;
 	private Hashtable hashtable;
 
+
 	/**
 	 * Вызывать только после загрузки настроек!!
 	 */
 	public static void init() {
 		inst = new TextLocal();
 	}
+	
+	public static final Hashtable countries = new Hashtable() 
+	{{     put("1",      "ru");     
+	       put("2",      "ua");     
+	       put("3",     "by");     
+	       put("4",     "kz");     
+	       put("5",    "ka");     
+	       put("6",    "he");
+	       put("9",    "en");
+	       put("28",    "es");
+	       put("87",    "es");
+	       put("158",    "pt");
+	       
+	
+	}}; 
 
 	private TextLocal() {
 		hashtable = new Hashtable();
@@ -301,6 +320,27 @@ public class TextLocal {
 		}
 
 		return x;
+	}
+
+	public static String translateText(String text, String fromLang, String toLang) {
+		if (VikaTouch.mylanguage==null) {
+			return text;
+		}
+		JSONObject textjson = null;
+		try {
+			  textjson = new JSONObject(VikaUtils.download(new URLBuilder("https://translate.yandex.net:443", "api/v1.5/tr.json/translate").addField("text", text).addField("key", "trnsl.1.1.20130301T122725Z.6f5743232a86cbed.0c0062d0ba9705ca9ddb24c1c76aff54743a939d").addField("lang", fromLang+"-"+toLang)));
+			 
+			  //VikaTouch.sendLog(new URLBuilder("https://translate.yandex.net/api/v1.5/tr.json/translate?", "text="+text).addField("key", "trnsl.1.1.20130301T122725Z.6f5743232a86cbed.0c0062d0ba9705ca9ddb24c1c76aff54743a939d").addField("lang", fromLang+"-"+toLang).toString());
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			VikaTouch.sendLog(e.getMessage());
+		}
+		text = textjson.getString("text");
+		text = VikaUtils.replace(text, "[\"", "");
+		text = VikaUtils.replace(text, "\"]", "");
+		
+		//VikaTouch.sendLog(text);
+		return text;
 	}
 
 }

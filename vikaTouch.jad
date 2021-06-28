@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+VikaTouch-Edition: openbeta
+Nokia-MIDlet-Background-Event: run
+MIDlet-Version: 2.9.3
+MIDlet-Info-URL: http://vikamobile.ru
+LGE-MIDlet-TargetLCD-Width: 480
+Nokia-MIDlet-UID-1: 0xA02033e9
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Name: Vika Touch
+FlipInsensitive: True
+Nokia-MIDlet-On-Screen-Keypad: no
+MIDlet-Vendor: nnproject
+Progressive_Download: enabled
+MIDlet-Icon: vika256.png
+LGE-MIDlet-TargetLCD-Height: 800
+MicroEdition-Profile: MIDP-2.0
+MIDlet-Permissions: javax.microedition.io.Connector.http
+Nokia-MIDlet-No-Exit: true
+MIDlet-1: Vika Touch,/vika256.png,ru.nnproject.vikatouch.VikaTouchApp
+MIDlet-Jar-Size: 532721
+MIDlet-Jar-URL: vikaTouch.jar
+Nokia-MIDlet-Category: Game

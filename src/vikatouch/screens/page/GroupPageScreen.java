@@ -257,7 +257,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 			case 0:
 				FriendsScreen fs = new FriendsScreen();
 				VikaTouch.setDisplay(fs, 1);
-				fs.loadFriends(0, -id, name, name);
+				fs.loadFriends(0, -id, name, name, false);
 				break;
 			case 1:
 				VikaTouch

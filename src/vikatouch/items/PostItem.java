@@ -16,6 +16,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
+import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.Attachment;
 import vikatouch.attachments.DocumentAttachment;
@@ -24,6 +25,7 @@ import vikatouch.attachments.PhotoAttachment;
 import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
 import vikatouch.locale.TextLocal;
+import vikatouch.screens.DialogsScreen;
 import vikatouch.screens.NewsScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
@@ -52,6 +54,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	public boolean canLike;
 	public int comments;
 	private boolean liked;
+	private boolean reposted;
 	public boolean canlike;
 
 	public String copyright;
@@ -85,6 +88,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 		super.parseJSON();
 		super.parseAttachments();
 		int ec = 0;
+		//VikaTouch.sendLog(json2.toString());
 		try {
 			try {
 				if (text == null || text == "") {
@@ -125,7 +129,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			copyright = json2.optString("copyright");
 			ownerid = json2.optInt("owner_id");
 			sourceid = json2.optInt("source_id");
-			id = json2.optInt("id");
+			id = json2.optInt("post_id");
 			replyownerid = json2.optInt("reply_owner_id");
 			replypostid = json2.optInt("reply_post_id");
 			if (id == 0) {
@@ -230,6 +234,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			drawText = TextBreaker.breakText(text, Font.getFont(0, 0, 8), DisplayUtils.width - 32);
 			ec = 8;
 			getRes();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Throwable t) {
@@ -408,6 +413,9 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			if (x < repX) {
 				like(!liked);
 			}
+			if ((x>repX) && (x<comX)) {
+				repostOptions(false);
+			}
 
 		} else if (attsY0 != null) {
 			for (int i = 0; i < attachments.length; i++) {
@@ -424,13 +432,26 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 
 	private void options(boolean keys) {
 		int h = 50;
-		OptionItem[] o = new OptionItem[keys ? 3 : 2];
+		OptionItem[] o = new OptionItem[keys ? 4 : 2];
 		o[0] = new OptionItem(this, name == null ? "Page" : name, IconsManager.FRIENDS, 1, h);
 		o[1] = new OptionItem(this, TextLocal.inst.get("wall.links"), IconsManager.LINK, 2, h);
 		if (keys) {
 			o[2] = new OptionItem(this, TextLocal.inst.get(liked ? "wall.unlike" : "wall.like"),
 					liked ? IconsManager.LIKE_F : IconsManager.LIKE, 3, h);
+			o[3] = new OptionItem(this, TextLocal.inst.get("wall.repost"),
+					IconsManager.REPOST, 4, h);
 		}
+		VikaTouch.popup(new AutoContextMenu(o));
+	}
+	
+	private void repostOptions(boolean keys) {
+		int h = 50;
+		OptionItem[] o = new OptionItem[4];
+		o[0] = new OptionItem(this, TextLocal.inst.get("wall.towall"), IconsManager.NEWS, 10, h);
+		o[1] = new OptionItem(this, TextLocal.inst.get("wall.tochat"), IconsManager.MSGS, 11, h);
+		o[2] = new OptionItem(this, TextLocal.inst.get("wall.tofriend"), IconsManager.FRIENDS, 12, h);
+		o[3] = new OptionItem(this, TextLocal.inst.get("wall.togroup"), IconsManager.GROUPS, 13, h);
+		
 		VikaTouch.popup(new AutoContextMenu(o));
 	}
 
@@ -453,6 +474,10 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	public boolean getLikeStatus() {
 		return liked;
 	}
+	
+	public boolean getRepostedStatus() {
+		return reposted;
+	}
 
 	public void like(final boolean val) {
 		new Thread() {
@@ -473,6 +498,31 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error"), null));
 					}
 					liked = val;
+				} catch (InterruptedException ex) {
+					return;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				VikaTouch.loading = false;
+			}
+		}.start();
+	}
+	
+	public void repost(final boolean val) {
+		new Thread() {
+			public void run() {
+				try {
+					VikaTouch.loading = true;
+					URLBuilder url;
+						url = new URLBuilder("wall.repost");
+					url.addField("object", "wall"+String.valueOf(sourceid)+"_"+String.valueOf(id));
+					String res;
+					res = VikaUtils.download(url);
+					//VikaTouch.sendLog(res);
+					if (res == null) {
+						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error"), null));
+					}
+					reposted = true;
 				} catch (InterruptedException ex) {
 					return;
 				} catch (IOException e) {
@@ -533,6 +583,27 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			}
 		} else if (i == 3) {
 			like(!liked);
+		} else if (i == 4) {
+			repostOptions(true);
+		} else if (i == 10) {
+			repost(false);
+		} else if (i == 11) {
+			//VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
+			if (VikaTouch.dialogsScr == null)
+				VikaTouch.dialogsScr = new DialogsScreen();
+			//Dialogs.refreshDialogsList(true, false);
+			VikaTouch.resendingmid=0;
+			VikaTouch.resendingobjectid="wall"+String.valueOf(sourceid)+"_"+String.valueOf(id);
+			VikaTouch.resendingname=name;
+			VikaTouch.resendingtext=text;
+			vikatouch.screens.DialogsScreen.titleStr="Выберите диалог для пересылки:";
+			
+			VikaTouch.setDisplay(VikaTouch.dialogsScr, 0);
+			
+		} else if (i == 12) {
+			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
+		} else if (i == 13) {
+			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 		} else {
 			try {
 				String s = VikaUtils.searchLinks(text)[-i];

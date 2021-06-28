@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
 obfuscate_use_project=true
-proguard_options=-overloadaggressively -optimizationpasses 3
+proguard_keep=public class * extends javax.microedition.midlet.MIDlet|New Value
+proguard_options=-overloadaggressively -optimizationpasses 3 -libraryjars C\:\\ViKa
 proguard_use_specified=true

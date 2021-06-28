@@ -236,15 +236,17 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 		if (newsSource != 0) {
 			offset += count;
 		}
-		scrolled = 0;
-		currentItem = 0;
+		//scrolled = 0;
+		//currentItem = 0;
 		loadPosts(false);
 	}
 
 	public void onLeave() {
+		if (VikaTouch.isNotS60()) {
 		profiles = null;
 		groups = null;
 		VikaTouch.newsScr = null;
+		}
 	}
 
 }

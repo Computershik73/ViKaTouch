@@ -8,7 +8,7 @@
 
 langinfo.name=Tiếng Việt 
 # YYYY.MM.DD
-langinfo.version=2021.1.17
+langinfo.version=2021.6.25
 
 langinfo.hints=1
 
@@ -82,10 +82,16 @@ friend.remove=Xóa khỏi bạn bè
 friend.add=Thêm làm bạn
 friend.accept=Chấp nhận yêu cầu
 friend.cancel=Đã gửi yêu cầu (hủy)
+friends.all=Tất cả bạn bè
+friends.online=Bạn Bè Trực Tuyến
+friends.incoming=Đến yêu cầu
+friends.outcoming=Yêu cầu đi
 
 subscribe=Đăng ký
 
 music.all=Tất cả nhạc
+music.search=Tìm cho âm nhạc
+music.recommendations=đề nghị
 
 msg=Message
 msg.online=Online

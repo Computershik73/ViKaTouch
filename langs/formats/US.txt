@@ -1,5 +1,5 @@
 #United States
-#Authors: shinovon
+#Authors: 
 #YYYY.MM.DD
 format.version=2020.12.16
 
