@@ -291,7 +291,7 @@ public final class VikaUtils {
 							"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
 					var14 = var13.openInputStream();
 					// long var8 = var13.getLength();
-					byte[] var6 = new byte[4096];
+					byte[] var6 = new byte[VikaTouch.isNotS60()? 4096 : 524288];
 					// long var10 = 0L;
 
 					int var7;
