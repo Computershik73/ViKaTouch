@@ -789,16 +789,16 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		System.out.println("PAUSE");
 		try {
 			if (isReady) {
+				isPlaying = false;
 				try {
 					player.stop();
+					//player.deallocate();
 				} catch (Exception e) {
 					
 				}
-				try {
-					player.deallocate();
-				} catch (Exception e) {}
 				
-				isPlaying = false;
+				
+				
 			} else {
 				VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("player.cancel"), null, new Runnable() {
 					public void run() {
@@ -814,8 +814,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 	}
 
 	public void play() {
-		if (controlsBlocked)
-			return;
+		//if (controlsBlocked)
+		//	return;
 		try {
 			if (isReady) {
 				if (inSeekMode) {
