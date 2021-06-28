@@ -64,7 +64,7 @@ public class ChatScreen extends MainScreen {
 	private static final int msgYMargin = 4;
 	public String title = "dialog";
 	public String title2 = "оффлайн";
-	public String inputText = "";
+	public static String inputText = "";
 	private String[] inputedTextToDraw;
 	private boolean inputChanged;
 	private JSONObject json;
@@ -196,6 +196,7 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public ChatScreen(int peerId) {
+		VikaTouch.resendingobjectid="";
 		title2 = TextLocal.inst.get("title2.loading");
 		this.peerId = peerId;
 		//this.title = "loading";
@@ -743,14 +744,14 @@ public class ChatScreen extends MainScreen {
 						addAtt();
 					} else if (x > DisplayUtils.width - 40) {
 						// отправить
-						if ((inputText !=null) && (inputText!= "") ){
+						//if ((inputText !=null) && (inputText!= "") ){
 						send();
-						} else {
+						//} else {
 							//voicescreen
 							//inputText = TextLocal.inst.get("player.recording");
 							//VikaTouch.isRecording=true;
 							//VikaTouch.setDisplay(new V(ChatScreen.this), 1);
-						}
+						//}
 					} else if (x > DisplayUtils.width - 90) {
 						// емоци и стикеры
 						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
@@ -1043,7 +1044,8 @@ public class ChatScreen extends MainScreen {
         	        if(NokiaUIInvoker.supportsTextEditor()) {
         	            if(NokiaUIInvoker.textEditorShown()) {
         	                inputText = NokiaUIInvoker.getTextEditorContent();
-        	               // VikaTouch.sendLog(inputText);
+        	                inputChanged = true;
+        	                //VikaTouch.sendLog(inputText);
         	               // String code = TestUtils.getEmojiString("1f609");
         	               
         	            }
@@ -1063,6 +1065,8 @@ public class ChatScreen extends MainScreen {
         	            if(NokiaUIInvoker.textEditorShown()) {
         	            	e=4;
                     NokiaUIInvoker.setTextEditorContent("");
+                    inputText="";
+                    inputedLinesCount = 0;
                     e=5;
 	                inputChanged = true;
 	                e=6;
@@ -1698,12 +1702,12 @@ public class ChatScreen extends MainScreen {
 	}
 		if (canSend || (System.currentTimeMillis() % 500) < 250) {
 			if (keysMode)
-				g.drawImage((buttonSelected != 4 ? IconsManager.ico : IconsManager.selIco)[((inputedLinesCount == 0 || (NokiaUIInvoker.supportsTextEditor() && NokiaUIInvoker.getTextEditorContent()!=null)) && VikaTouch.resendingobjectid=="")
+				g.drawImage((buttonSelected != 4 ? IconsManager.ico : IconsManager.selIco)[((inputedLinesCount == 0 || (NokiaUIInvoker.supportsTextEditor() && (NokiaUIInvoker.getTextEditorContent()==null || NokiaUIInvoker.getTextEditorContent()==""))) && (VikaTouch.resendingobjectid=="" || VikaTouch.resendingobjectid==null))
 						? IconsManager.VOICE
 						: IconsManager.SEND], DisplayUtils.width - 40, DisplayUtils.height - 36, 0);
 			else
 				g.drawImage(
-						(inputedLinesCount == 0 || (NokiaUIInvoker.supportsTextEditor() && NokiaUIInvoker.getTextEditorContent()!=null)) && VikaTouch.resendingobjectid=="" ? IconsManager.ico[IconsManager.VOICE]
+						((inputedLinesCount == 0 || (NokiaUIInvoker.supportsTextEditor() && (NokiaUIInvoker.getTextEditorContent()==null || NokiaUIInvoker.getTextEditorContent()==""))) && (VikaTouch.resendingobjectid=="" || VikaTouch.resendingobjectid==null)) ? IconsManager.ico[IconsManager.VOICE]
 								: IconsManager.selIco[IconsManager.SEND],
 						DisplayUtils.width - 40, DisplayUtils.height - 36, 0);
 		}
@@ -1831,6 +1835,7 @@ public class ChatScreen extends MainScreen {
         if(NokiaUIInvoker.textEditorShown())
             NokiaUIInvoker.hideTextEditor();
         stopUpdater();
+        canSend=true;
         VikaTouch.isresending=false;
         VikaTouch.resendingmid=0;
         VikaTouch.resendingname="";

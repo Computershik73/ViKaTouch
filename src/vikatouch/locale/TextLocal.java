@@ -335,10 +335,13 @@ public class TextLocal {
 			// TODO Auto-generated catch block
 			VikaTouch.sendLog(e.getMessage());
 		}
+		if (textjson.isNull("text")) {
+			return text;
+		} else {
 		text = textjson.getString("text");
 		text = VikaUtils.replace(text, "[\"", "");
 		text = VikaUtils.replace(text, "\"]", "");
-		
+		}
 		//VikaTouch.sendLog(text);
 		return text;
 	}

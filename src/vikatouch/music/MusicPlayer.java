@@ -383,7 +383,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 					public void run() {
 						while (stop) {
 							try {
-								Thread.sleep(100);
+								Thread.sleep(10);
 							} catch (InterruptedException e) {
 								break;
 							}
@@ -391,7 +391,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						try {
 
 							try {
-								Thread.sleep(100);
+								Thread.sleep(10);
 							} catch (InterruptedException e) {
 								return;
 							}
@@ -448,7 +448,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								//if(trackSize / 1024 != 0) {
 								System.out.println("need: " + trackSize / 1024 + "K");
 								//}
-								byte[] buf = new byte[4096];
+								byte[] buf = new byte[VikaTouch.isNotS60() ? 65536 : 524288];
 								int read;
 								downloaded = 0;
 								Thread speedCount = null;
@@ -458,7 +458,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 										System.out.println("speed run");
 										try {
 											// на какоето время показывать размер песни, а потом уже скорость
-											Thread.sleep(100);
+											Thread.sleep(10);
 										} catch (InterruptedException e1) {
 											System.out.println("ne uspel");
 											return;
@@ -473,7 +473,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 												return;
 											}
 											int kilo = downloaded - i;
-											double mega = (double)kilo / 2024d / 1024d;
+											double mega = (double)kilo / 1024d / 1024d;
 											double round = 0;
 											int pow = 100;
 											double tmp = mega * pow;

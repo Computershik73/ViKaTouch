@@ -111,7 +111,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			int smilescount=0;
 			if (foreign) {
 			if (ChatScreen.peerlanguage==null) {
-				text = TextLocal.translateText(text, "en", VikaTouch.mylanguage);
+				//text = TextLocal.translateText(text, "en", VikaTouch.mylanguage);
 			} else {
 			if (!(VikaTouch.mylanguage.equals(ChatScreen.peerlanguage))) {
 				text = TextLocal.translateText(text, ChatScreen.peerlanguage, VikaTouch.mylanguage);

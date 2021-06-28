@@ -6,6 +6,7 @@ import com.nokia.mid.ui.TextEditor;
 import com.nokia.mid.ui.TextEditorListener;
 
 import ru.nnproject.vikaui.utils.ColorUtils;
+import vikatouch.screens.ChatScreen;
 
 //import shizaMobile.Global;
 
@@ -51,20 +52,23 @@ public class TextEditorInvoker {
 			 final NokiaUITextEditor editor = new NokiaUITextEditor() {
 				public String getContent() {
 					//textEditor.setCaretXY(0,8);
-					
+					ChatScreen.inputText=textEditor.getContent();
 					return textEditor.getContent();
 					//
 				}	
 			};
+			//TextEditorListener.ACTION_CONTENT_CHANGE
 			textEditor.setTextEditorListener(new TextEditorListener() {
 				public void inputAction(TextEditor textEditor, int actions) {
 					//VikaTouch.log("act: " + actions);
 					//textEditor.setCaretXY(0,8);
-					if (actions==TextEditorListener.ACTION_OPTIONS_CHANGE) {
-						textEditor.setFocus(false);
-					}
-					listener.action(editor, actions);
-					
+					//if (actions==TextEditorListener.ACTION_OPTIONS_CHANGE) {
+					//	textEditor.setFocus(false);
+					//}
+					//listener.action(editor, actions);
+					ChatScreen.inputText=textEditor.getContent();
+					ChatScreen.repaint();
+					//Thread.yield();
 				//	textEditor.setVisible(false);
 				}	
 			});
@@ -103,7 +107,7 @@ public class TextEditorInvoker {
 			return "";
 		} finally {
 			textEditor.setFocus(false);
-			//textEditor.setParent(null);
+			textEditor.setParent(null);
 			textEditor = null;
 		}
 	}

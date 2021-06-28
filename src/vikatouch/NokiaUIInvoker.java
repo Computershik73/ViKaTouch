@@ -40,9 +40,9 @@ public class NokiaUIInvoker {
 			try {
 				TextEditorInvoker.init();
 				textEditorSupported = true;
-				if (!VikaTouch.canvas.hasPointerEvents()) {
+				/*if (!VikaTouch.canvas.hasPointerEvents()) {
 				textEditorSupported = false;
-				}
+				}*/
 			} catch (NoClassDefFoundError e) {
 				textEditorSupported = false;
 			} catch (Throwable e) {
@@ -146,7 +146,8 @@ public class NokiaUIInvoker {
 		if(textEditorSupported)
 			try {
 		        return TextEditorInvoker.getContent();
-			} catch (Throwable e) {
+			} catch (Throwable e) { 
+				return null;
 			}
 		return null;
 	}
