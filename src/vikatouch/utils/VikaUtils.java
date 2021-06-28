@@ -301,6 +301,8 @@ public final class VikaUtils {
 						var4.write(var6, 0, var7);
 						var4.flush();
 					}
+				} else {
+					
 				}
 			} else {
 				var14 = var13.openInputStream();
@@ -320,8 +322,8 @@ public final class VikaUtils {
 			String str = null;
 			str = new String(var4.toByteArray(), "UTF-8");
 			return str;
-		} catch (NullPointerException e) {
-			throw new IOException(e.toString());
+		} catch (Throwable e) {
+			//throw new IOException(e.toString());
 		} finally {
 			if (var14 != null)
 				var14.close();
@@ -330,6 +332,7 @@ public final class VikaUtils {
 			if (var4 != null)
 				var4.close();
 		}
+		return null;
 	}
 
 	public static String download_old(String url) throws IOException {

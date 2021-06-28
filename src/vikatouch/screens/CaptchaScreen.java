@@ -105,7 +105,7 @@ public class CaptchaScreen extends VikaScreen {
 	private void captcha() {
 
 		try {
-			VikaTouch.inst.tokenAnswer = VikaUtils.download(new URLBuilder(VikaTouch.OAUTH, "token")
+			VikaTouch.inst.tokenAnswer = VikaUtils.download_old(new URLBuilder(VikaTouch.OAUTH, "token")
 					.addField("grant_type", "password").addField("client_id", "2685278")
 					.addField("client_secret", "lxhD8OD7dMsqtXIm5IUY").addField("username", user)
 					.addField("password", pass)

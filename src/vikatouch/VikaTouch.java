@@ -192,7 +192,7 @@ public class VikaTouch {
 			errReason = "login is invalid";
 			return false;
 		}
-		//VikaUtils.logToFile("1");
+		VikaUtils.logToFile("1");
 		try {
 			if (!Settings.proxy) {
 				Settings.proxy = false;
@@ -203,35 +203,35 @@ public class VikaTouch {
 				OAUTH = Settings.proxyOAuth;
 				API = Settings.proxyApi;
 			}
-		//	VikaUtils.logToFile("2");
-			tokenAnswer = VikaUtils.download(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
+			VikaUtils.logToFile("2");
+			tokenAnswer = VikaUtils.download_old(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 					.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
-					.addField("username", user).addField("password", pass)
+					.addField("username", user).addField("password", pass).addField("2fa_supported", "1").addField("force_sms", "1")
 					.addField("scope",
-							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline"));
-		//	VikaUtils.logToFile("3 3");
-		//	VikaUtils.logToFile("3 " + tokenAnswer);
-					//.addField("2fa_supported", 1).addField("force_sms", 1));
+							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString());
+			VikaUtils.logToFile("3 3");
+			VikaUtils.logToFile("3 " + tokenAnswer);
+					//);
 			if (tokenAnswer == null && !Settings.proxy) {
 				Settings.proxy = true;
 				Settings.https = false;
 				OAUTH = Settings.proxyOAuth;
-			//	VikaUtils.logToFile("4");
-				tokenAnswer = VikaUtils.download(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
+				VikaUtils.logToFile("4");
+				tokenAnswer = VikaUtils.download_old(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 						.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
-						.addField("username", user).addField("password", pass)
+						.addField("username", user).addField("password", pass).addField("2fa_supported", "1").addField("force_sms", "1")
 						.addField("scope",
-								"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline"));
-					//	.addField("2fa_supported", 1).addField("force_sms", 1));
-			//	VikaUtils.logToFile("4 4");
-			//	VikaUtils.logToFile("4 " + tokenAnswer);
+								"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString()
+						);
+				VikaUtils.logToFile("4 4");
+				VikaUtils.logToFile("4 " + tokenAnswer);
 			}
 			if (tokenAnswer == null) {
 				errReason = "Network error!";
-			//	VikaUtils.logToFile("Network error!");
+				VikaUtils.logToFile("Network error!");
 				return false;
 			}
-		//	VikaUtils.logToFile("5");
+			VikaUtils.logToFile("5");
 			errReason = tokenAnswer;
 			if (tokenAnswer.indexOf("error") > -1) {
 				if (tokenAnswer.indexOf("need_captcha") > -1) {
@@ -243,31 +243,31 @@ public class VikaTouch {
 				errReason = tokenAnswer;
 				return false;
 			} else {
-		//		VikaUtils.logToFile("6");
+			VikaUtils.logToFile("6");
 				JSONObject json = new JSONObject(tokenAnswer);
-		//		VikaUtils.logToFile("7");
+				VikaUtils.logToFile("7");
 				accessToken = json.getString("access_token");
-		//		VikaUtils.logToFile("8");
+				VikaUtils.logToFile("8");
 				userId = json.getString("user_id");
-		//		VikaUtils.logToFile("9");
+				VikaUtils.logToFile("9");
 				integerUserId = json.getInt("user_id");
-		//		VikaUtils.logToFile("10");
-		//		VikaUtils.logToFile("10 "+VikaTouch.mobilePlatform);
+				VikaUtils.logToFile("10");
+				VikaUtils.logToFile("10 "+VikaTouch.mobilePlatform);
 				refreshToken();
-		//		VikaUtils.logToFile("11");
+			VikaUtils.logToFile("11");
 				saveToken();
-		//		VikaUtils.logToFile("12");
+				VikaUtils.logToFile("12");
 				Settings.saveSettings();
-		//		VikaUtils.logToFile("13");
+				VikaUtils.logToFile("13");
 				VikaUtils.download(new URLBuilder("groups.join").addField("group_id", 168202266));
-		//		VikaUtils.logToFile("14");
+				VikaUtils.logToFile("14");
 				MenuScreen canvas = menuScr = new MenuScreen();
-		//		VikaUtils.logToFile("15");
+				VikaUtils.logToFile("15");
 				setDisplay(canvas, 1);
-		//		VikaUtils.logToFile("16");
+				VikaUtils.logToFile("16");
 
 				Dialogs.refreshDialogsList(true, false);
-		//		VikaUtils.logToFile("17");
+				VikaUtils.logToFile("17");
 				return true;
 			}
 		} catch (Throwable e) {
@@ -384,10 +384,10 @@ public class VikaTouch {
 		try {
 			tokenUnswer = VikaUtils.download(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 					.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
-					.addField("username", user).addField("password", pass)
+					.addField("username", user).addField("password", pass).addField("2fa_supported", 1).addField("force_sms", 1).addField("code", code)
 					.addField("scope",
 							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline")
-					.addField("2fa_supported", 1).addField("force_sms", 1).addField("code", code).toString());
+					);
 
 			if (tokenUnswer == null) {
 				errReason = "network error!";
