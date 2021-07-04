@@ -20,6 +20,10 @@ import javax.microedition.io.HttpConnection;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
+import javax.microedition.rms.RecordStore;
+import javax.microedition.rms.RecordStoreException;
+import javax.microedition.rms.RecordStoreFullException;
+import javax.microedition.rms.RecordStoreNotFoundException;
 
 import org.json.me.JSONObject;
 
@@ -33,6 +37,7 @@ import vikatouch.screens.MainScreen;
 import vikatouch.screens.page.GroupPageScreen;
 import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
+import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
 import vikatouch.utils.url.URLDecoder;
 
@@ -334,6 +339,73 @@ public final class VikaUtils {
 		}
 		return null;
 	}
+	
+	private static byte[] downloadBytes(String var1) throws IOException, InterruptedException {
+		ByteArrayOutputStream var4 = null;
+		HttpConnection var13 = null;
+		InputStream var14 = null;
+		try {
+			var4 = new ByteArrayOutputStream();
+			var13 = (HttpConnection) Connector.open(var1, Connector.READ);
+			var13.setRequestMethod("GET");
+			var13.setRequestProperty("User-Agent",
+					"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
+			int i = var13.getResponseCode();
+			if (i != 200 && i != 401) {
+				// System.out.println("not 200 and not 401");
+				if (var13.getHeaderField("Location") != null) {
+					String replacedURL = var13.getHeaderField("Location");
+					var13.close();
+					var13 = (HttpConnection) Connector.open(replacedURL, Connector.READ);
+					var13.setRequestMethod("GET");
+					var13.setRequestProperty("User-Agent",
+							"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
+					var14 = var13.openInputStream();
+					// long var8 = var13.getLength();
+					byte[] var6 = new byte[VikaTouch.isNotS60()? 4096 : 524288];
+					// long var10 = 0L;
+
+					int var7;
+
+					while ((var7 = var14.read(var6)) != -1) {
+						// var10 += (long) var7;
+						var4.write(var6, 0, var7);
+						var4.flush();
+					}
+				} else {
+					
+				}
+			} else {
+				var14 = var13.openInputStream();
+				// long var8 = var13.getLength();
+				//524288
+				byte[] var6 = new byte[VikaTouch.isNotS60()? 4096 : 524288];
+				// long var10 = 0L;
+
+				int var7;
+
+				while ((var7 = var14.read(var6)) != -1) {
+					// var10 += (long) var7;
+					var4.write(var6, 0, var7);
+					var4.flush();
+				}
+			}
+			
+			
+			return var4.toByteArray();
+		} catch (Throwable e) {
+			//throw new IOException(e.toString());
+		} finally {
+			if (var14 != null)
+				var14.close();
+			if (var13 != null)
+				var13.close();
+			if (var4 != null)
+				var4.close();
+		}
+		return null;
+	}
+	
 
 	public static String download_old(String url) throws IOException {
 		HttpConnection httpconn = null;
@@ -1195,5 +1267,122 @@ public final class VikaUtils {
 			var19.printStackTrace();
 		}
 		return var27;
+	}
+	public static Image saveOrLoadSmileToRMS(String smilename) {
+	
+		
+		RecordStore smilesRMS = null;
+		try {
+			smilesRMS = RecordStore.openRecordStore(smilename, true);
+		} catch (RecordStoreFullException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (RecordStoreNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (RecordStoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			if (smilesRMS != null) {
+				if (smilesRMS.getNumRecords() > 0) {
+					byte[] aa = smilesRMS.getRecord(1);
+				
+					Image a =  Image.createImage(aa, 0,aa.length);
+				
+					smilesRMS.closeRecordStore();
+				return a;
+				} else {
+					byte[] bytes = VikaUtils.downloadBytes("http://vikamobile.ru:80/emoji/"+smilename);
+					smilesRMS.addRecord(bytes, 0, bytes.length);
+					smilesRMS.closeRecordStore();
+					Image a =  Image.createImage(bytes, 0, bytes.length);
+					
+					smilesRMS.closeRecordStore();
+					return a;
+				}		
+			}	
+		} catch (Exception e) {	
+		}
+		return null;
+   }
+	
+/*	private boolean getToken() {
+		try {
+			tokenRMS = RecordStore.openRecordStore(TOKEN_RMS, true);
+			if (tokenRMS.getNumRecords() > 0) {
+				String s = new String(tokenRMS.getRecord(1), "UTF-8");
+				accessToken = s.substring(0, s.indexOf(";"));
+
+				// Вся эта хрень нужна для запуска в оффлайне
+				String s2 = s.substring(s.indexOf(";") + 1, s.length());
+				userId = s2.substring(0, s2.indexOf(";"));
+				tokenRMS.closeRecordStore();
+				// VikaTouch.sendLog("gettoken: "+accessToken);
+				// оптимизация
+				return true;
+			}
+			tokenRMS.closeRecordStore();
+		} catch (Exception e) {
+			VikaTouch.error(e, ErrorCodes.TOKENLOAD);
+		}
+		return false;
+	}*/
+
+	public static Image loadSmile(String smilePath) {
+		String tpath = (System.getProperty("fileconn.dir.private"));
+		Image im = null;
+		if(VikaTouch.smilestable.containsKey(smilePath)) {
+			return (Image)VikaTouch.smilestable.get(smilePath);
+		} else {
+		if (VikaTouch.isSymbian93orS40()) {
+			try {
+			im = saveOrLoadSmileToRMS(smilePath);
+		VikaTouch.smilestable.put(smilePath, im);
+		return im;
+			} catch (Throwable ee) {
+				VikaTouch.sendLog(ee.getMessage());
+				try {
+					return Image.createImage("/emoji/D83DDE00.png");	
+				} catch (IOException e1) {
+				}	
+			}
+		} else {
+			try {
+			 im = Image.createImage(tpath+"emoji/"+smilePath);
+			 VikaTouch.smilestable.put(smilePath, im);
+			 return im;
+		} catch (Throwable e) {
+			try {
+				byte[] bytes = VikaUtils.downloadBytes("http://vikamobile.ru:80/emoji/"+smilePath);
+				FileConnection outConn = (FileConnection) Connector.open(tpath+smilePath, Connector.READ_WRITE);
+				if (!(outConn.exists())) {
+					outConn.create();
+				}
+					OutputStream outStream = outConn.openOutputStream();
+					outStream.write(bytes);
+					outStream.flush();
+					outStream.close();
+				     outConn.close();
+				im = Image.createImage(bytes, 0, bytes.length);
+			VikaTouch.smilestable.put(smilePath, im);
+			return im;
+			} catch (Throwable ee) {
+				VikaTouch.sendLog(ee.getMessage());
+				try {
+					return Image.createImage("/emoji/D83DDE00.png");
+					
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+		}
+		
+		}
+		return im;
+		
 	}
 }

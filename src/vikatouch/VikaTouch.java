@@ -63,6 +63,7 @@ public class VikaTouch {
 	public static boolean DEMO_MODE = false;
 	public static final String API_VERSION = "5.126";
 	public static final String TOKEN_RMS = "vikatouchtoken";
+	public static final String SMILES_RMS = "smiles";
 	public static String API = "http://vk-api-proxy.xtrafrancyz.net:80";
 	public static String OAUTH = "https://oauth.vk.com:443";
 	public static String accessToken;
@@ -73,6 +74,7 @@ public class VikaTouch {
 	public static NewsScreen newsScr;
 	public static CaptchaScreen captchaScr;
 	public static RecordStore tokenRMS;
+	public static RecordStore smilesRMS;
 	public static Image cameraImg;
 	// public static Image camera48Img;
 	public static Thread mainThread;
@@ -101,6 +103,7 @@ public class VikaTouch {
 	public static int b;
 	public static Hashtable hash;
 	public static Hashtable hashNotifs;
+	public static Hashtable smilestable; 
 	public static SoftNotificationListener blist;
 	public static SoftNotificationListener alist;
 	public static boolean isresending;
@@ -206,7 +209,8 @@ public class VikaTouch {
 			VikaUtils.logToFile("2");
 			tokenAnswer = VikaUtils.download_old(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 					.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
-					.addField("username", user).addField("password", pass).addField("2fa_supported", "1").addField("force_sms", "1")
+					.addField("username", user).addField("password", pass)
+					//.addField("2fa_supported", "1").addField("force_sms", "1")
 					.addField("scope",
 							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString());
 			VikaUtils.logToFile("3 3");
@@ -219,7 +223,8 @@ public class VikaTouch {
 				VikaUtils.logToFile("4");
 				tokenAnswer = VikaUtils.download_old(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 						.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
-						.addField("username", user).addField("password", pass).addField("2fa_supported", "1").addField("force_sms", "1")
+						.addField("username", user).addField("password", pass)
+						//.addField("2fa_supported", "1").addField("force_sms", "1")
 						.addField("scope",
 								"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString()
 						);
@@ -1075,6 +1080,10 @@ public class VikaTouch {
 
 	public static boolean isS40() {
 		return mobilePlatform.indexOf("S60") < 0 || Runtime.getRuntime().totalMemory() / 1024 == 2048;
+	}
+	
+	public static boolean isSymbian93orS40() {
+		return mobilePlatform.indexOf("S60") < 0 || (mobilePlatform.indexOf("3.2") < 0) || Runtime.getRuntime().totalMemory() / 1024 == 2048;
 	}
 
 	public static void popup(VikaNotice popup) {

@@ -125,7 +125,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 					ii++;
 					codestext = codestext.concat(" ").concat(String.valueOf((long) text.toCharArray()[ii])).concat(" ");
 					textt+="     ";
-					smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/"+Integer.toHexString((int) text.toCharArray()[ii-1]).toUpperCase()+Integer.toHexString((int) text.toCharArray()[ii]).toUpperCase()+".png"));
+					smilesarray.addElement(new smile(ii-1+2*smilescount, Integer.toHexString((int) text.toCharArray()[ii-1]).toUpperCase()+Integer.toHexString((int) text.toCharArray()[ii]).toUpperCase()+".png"));
 					//smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/D83DDE00.png"));
 					smilescount++;
 					//Integer.toHexString((int) text.toCharArray()[ii]).toUpperCase();
@@ -596,7 +596,8 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 					//VikaTouch.sendLog(ee.getMessage());
 				}*/
 				try {
-			g.drawImage(Image.createImage(((smile)smilesarray.elementAt(li)).smilePath), ((smile)smilesarray.elementAt(li)).smileX , ((smile)smilesarray.elementAt(li)).smileY, 0);
+					g.drawImage(VikaUtils.loadSmile(((smile)smilesarray.elementAt(li)).smilePath), ((smile)smilesarray.elementAt(li)).smileX, ((smile)smilesarray.elementAt(li)).smileY, 0);
+					//g.drawImage(Image.createImage(((smile)smilesarray.elementAt(li)).smilePath), ((smile)smilesarray.elementAt(li)).smileX , ((smile)smilesarray.elementAt(li)).smileY, 0);
 				} catch (Throwable eg) {
 					
 				}

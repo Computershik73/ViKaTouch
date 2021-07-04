@@ -184,6 +184,9 @@ public class ChatScreen extends MainScreen {
 		title2 = TextLocal.inst.get("title2.loading");
 		this.title = title;
 		this.peerId = peerId;
+		if (DisplayUtils.compact) {
+			topPanelH = 30;
+		}
 		if (VikaTouch.isresending==true) {
 		//
 		//VikaTouch.isresending=false;
@@ -197,6 +200,9 @@ public class ChatScreen extends MainScreen {
 
 	public ChatScreen(int peerId) {
 		VikaTouch.resendingobjectid="";
+		if (DisplayUtils.compact) {
+			topPanelH = 30;
+		}
 		title2 = TextLocal.inst.get("title2.loading");
 		this.peerId = peerId;
 		//this.title = "loading";
@@ -1635,7 +1641,11 @@ public class ChatScreen extends MainScreen {
                 inputText = s;
             }
         }*/
-	
+		int xx=0;
+		if (DisplayUtils.compact) {
+		inputBoxH = 25;
+		xx=10;
+		}
 		if (VikaTouch.isRecording) {
 			
 		} else {
@@ -1675,11 +1685,11 @@ public class ChatScreen extends MainScreen {
 			if (buttonSelected == 2) {
 				ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 				g.setFont(Font.getFont(0, Font.STYLE_BOLD, Font.SIZE_SMALL));
-				g.drawString(enterMsgStrSel, 48, dh - 24 - font.getHeight() / 2, 0);
+				g.drawString(enterMsgStrSel, 48-2*xx, dh - 24 - font.getHeight() / 2, 0);
 				g.setFont(font);
 			} else {
 				ColorUtils.setcolor(g, ColorUtils.OUTLINE);
-				g.drawString(enterMsgStr, 48, dh - 24 - font.getHeight() / 2, 0);
+				g.drawString(enterMsgStr, 48-2*xx, dh - 24 - font.getHeight() / 2, 0);
 			}
 		} else {
 			ColorUtils.setcolor(g, buttonSelected == 2 ? ColorUtils.BUTTONCOLOR : ColorUtils.TEXT);
@@ -1695,21 +1705,21 @@ public class ChatScreen extends MainScreen {
 
 		}
         }
-		g.drawImage((buttonSelected != 1 ? IconsManager.ico : IconsManager.selIco)[IconsManager.ATTACHMENT], 12,
+		g.drawImage((buttonSelected != 1 ? IconsManager.ico : IconsManager.selIco)[IconsManager.ATTACHMENT], 12-xx,
 				DisplayUtils.height - 36, 0);
 		g.drawImage((buttonSelected != 3 ? IconsManager.ico : IconsManager.selIco)[IconsManager.STICKERS],
-				DisplayUtils.width - 86, DisplayUtils.height - 36, 0);
+				DisplayUtils.width - 86+xx, DisplayUtils.height - 36+xx, 0);
 	}
 		if (canSend || (System.currentTimeMillis() % 500) < 250) {
 			if (keysMode)
 				g.drawImage((buttonSelected != 4 ? IconsManager.ico : IconsManager.selIco)[((inputedLinesCount == 0 || (NokiaUIInvoker.supportsTextEditor() && (NokiaUIInvoker.getTextEditorContent()==null || NokiaUIInvoker.getTextEditorContent()==""))) && (VikaTouch.resendingobjectid=="" || VikaTouch.resendingobjectid==null))
 						? IconsManager.VOICE
-						: IconsManager.SEND], DisplayUtils.width - 40, DisplayUtils.height - 36, 0);
+						: IconsManager.SEND], DisplayUtils.width - 40 + xx, DisplayUtils.height - 36+xx, 0);
 			else
 				g.drawImage(
 						((inputedLinesCount == 0 || (NokiaUIInvoker.supportsTextEditor() && (NokiaUIInvoker.getTextEditorContent()==null || NokiaUIInvoker.getTextEditorContent()==""))) && (VikaTouch.resendingobjectid=="" || VikaTouch.resendingobjectid==null)) ? IconsManager.ico[IconsManager.VOICE]
 								: IconsManager.selIco[IconsManager.SEND],
-						DisplayUtils.width - 40, DisplayUtils.height - 36, 0);
+						DisplayUtils.width - 40+xx, DisplayUtils.height - 36+xx, 0);
 		}
 		if (keysMode)
 			drawKeysTips(g);
@@ -1753,26 +1763,35 @@ public class ChatScreen extends MainScreen {
 		ColorUtils.setcolor(g, -12);
 		g.fillRect(0, topPanelH - 1, DisplayUtils.width, 1);
 
-		Font font1 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
+		Font font1;
+		if (DisplayUtils.compact) {
+			font1 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
+		} else {
+		font1 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
+		}
+		int yy=0;
+		if (DisplayUtils.compact) {
+			yy=10;
+		}
 		g.setFont(font1);
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
-		g.drawString(TextBreaker.shortText(title, DisplayUtils.width - 50 - 38, font1), 50, 12, 0);
+		g.drawString(TextBreaker.shortText(title, DisplayUtils.width - 50 + yy - 38, font1), 50-yy, 12-yy, 0);
 
 		Font font2 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		g.setFont(font2);
 		ColorUtils.setcolor(g, ColorUtils.TEXT2);
 		if (!canSend) {
-			g.drawString(sendingStr, 50, 32, 0);
+			g.drawString(sendingStr, 50-yy, (int)Math.floor(32-1.3*yy), 0);
 		} else if (refreshOk) {
-			g.drawString(title2, 50, 32, 0);
+			g.drawString(title2, 50-yy, (int)Math.floor(32-1.3*yy), 0);
 		} else {
 			g.setColor(255, 0, 0);
 			g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL));
-			g.drawString(this.refreshErrorStr, 50, 30, 0);
+			g.drawString(this.refreshErrorStr, 50-yy, (int)Math.floor(30-1.3*yy), 0);
 		}
 
-		g.drawImage(IconsManager.selIco[IconsManager.BACK], 16, 16, 0);
-		g.drawImage(IconsManager.selIco[IconsManager.INFO], DisplayUtils.width - 38, 16, 0);
+		g.drawImage(IconsManager.selIco[IconsManager.BACK], 16-yy, 16-2*yy, 0);
+		g.drawImage(IconsManager.selIco[IconsManager.INFO], DisplayUtils.width - 38+yy, 16-2*yy, 0);
 		if (hasPinnedMessage) {
 
 			Font font = Font.getFont(0, 0, Font.SIZE_SMALL);

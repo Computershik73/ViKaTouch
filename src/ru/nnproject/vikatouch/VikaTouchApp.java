@@ -1,5 +1,7 @@
 package ru.nnproject.vikatouch;
 
+import java.util.Hashtable;
+
 import javax.microedition.midlet.*;
 
 import vikatouch.Dialogs;
@@ -40,7 +42,7 @@ public final class VikaTouchApp extends MIDlet implements Runnable {
 			
 			VikaTouch.a=0;
 			VikaTouch.supportsTouch=false;
-			
+			VikaTouch.smilestable=new Hashtable();
 			try {
 			started = true;
 			VikaTouch.appInst = this;
