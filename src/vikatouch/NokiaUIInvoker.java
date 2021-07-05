@@ -29,9 +29,11 @@ public class NokiaUIInvoker {
 	public static void init() {
 		try {
 			try {
+				
+				
+				textEditorSupported = false;
 				SoftNotificationInvoker.init();
 				softNotificationsSupported = true;
-				textEditorSupported = false;
 			} catch (NoClassDefFoundError e) {
 				softNotificationsSupported = false;
 			} catch (Throwable e) {
@@ -40,9 +42,10 @@ public class NokiaUIInvoker {
 			try {
 				TextEditorInvoker.init();
 				textEditorSupported = true;
-				/*if (!VikaTouch.canvas.hasPointerEvents()) {
+			
+				if (!vikatouch.VikaTouch.canvas.hasPointerEvents()) {
 				textEditorSupported = false;
-				}*/
+				}
 			} catch (NoClassDefFoundError e) {
 				textEditorSupported = false;
 			} catch (Throwable e) {

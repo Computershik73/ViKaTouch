@@ -326,8 +326,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			// VikaTouch.sendLog(url);
 			
 			if ((Settings.audioMode == Settings.AUDIO_PLAYONLINE) || (this.voice != null)) {
-				if(loader != null)
+				if(loader != null) {
+					try {
 					loader.interrupt();
+					} catch (Throwable ee) {}
+				}
 				loader = null;
 				loader = new Thread() {
 					public void run() {
@@ -500,7 +503,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 									if (stop) {
 										stop = false;
 										if (speedCount!=null) {
+											try {
 										speedCount.interrupt();
+											} catch (Throwable ee) {}
 										}
 										outStream.close();
 										outConn.close();
@@ -509,7 +514,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 										return;
 									}
 								}
+								try {
 								speedCount.interrupt();
+								} catch (Throwable ee) {}
 								System.out.println("downloaded: " + (downloaded / 1024) + "K");
 							} else {
 
@@ -918,8 +925,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			} catch (Exception e) {
 			}
 			
-			if(loader != null)
+			if(loader != null) {
+			try {
 				loader.interrupt();
+			} catch (Throwable ee) {}
+			}
 			
 			
 			if (netInStream != null) {
@@ -1612,7 +1622,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		} else if (i == 11) {
 			try {
 				if (loader != null && loader.isAlive()) {
+					try {
 					loader.interrupt();
+					} catch (Throwable ee) {}
 				}
 			} catch (Exception e) {
 			}

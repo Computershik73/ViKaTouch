@@ -330,7 +330,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 					if (attH != 0) {
 						attH += attMargin;
 					}
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					attH = 0;
 					e.printStackTrace();
 				}

@@ -101,11 +101,15 @@ public class ChatScreen extends MainScreen {
 			updater = null;
 		}
 		if (typer != null && typer.isAlive()) {
+			try {
 			typer.interrupt();
+			} catch (Throwable ee) {}
 			typer = null;
 		}
 		if (reporter != null && reporter.isAlive()) {
+			try {
 			reporter.interrupt();
+			} catch (Throwable ee) {}
 			reporter = null;
 		}
 		} catch (Throwable e) {}
@@ -258,7 +262,7 @@ public class ChatScreen extends MainScreen {
 						e.printStackTrace();
 						VikaTouch.error(-2, "x1 " + e.toString(), false);
 						ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
-					}
+					} catch (Throwable ee) {}
 				}
 			}).start();
 			errst = 14;
@@ -561,7 +565,9 @@ public class ChatScreen extends MainScreen {
 	}
 
 	private void messagesDialog() throws IOException, InterruptedException {
-
+		JSONArray json = null;
+		int jl = 0;
+		try {
 		VikaCanvasInst.msgColor = 0xffff0000;
 		// скачка сообщений
 		uiItems = new PressableUIItem[Settings.messagesPerLoad + loadSpace];
@@ -571,13 +577,14 @@ public class ChatScreen extends MainScreen {
 		// VikaTouch.sendLog("Requesting history ok");
 		VikaCanvasInst.msgColor = 0xffffff00;
 		JSONObject res = new JSONObject(x).optJSONObject("response");
-		JSONArray json = res.optJSONArray("items");
+		 json = res.optJSONArray("items");
 		if(!VikaTouch.profiles.containsKey(new IntObject(peerId)))
 			VikaTouch.profiles.put(new IntObject(peerId), new ProfileObject(localId, title, null));
 		inr = res.optJSONArray("conversations").optJSONObject(0).optInt("in_read");
 		outr = res.optJSONArray("conversations").optJSONObject(0).optInt("out_read");
-
-		for (int i = 0; i < json.length(); i++) {
+		 jl = json.length();
+		} catch (Throwable ee) {}
+		for (int i = 0; i < jl; i++) {
 			try {
 				VikaCanvasInst.msgColor = 0xff00ff00;
 				MsgItem m = new MsgItem(json.getJSONObject(i));
@@ -605,9 +612,10 @@ public class ChatScreen extends MainScreen {
 				// VikaTouch.sendLog(e.getMessage());
 			}
 		}
+		try {
 		itemsCount = (short) uiItems.length;
 		loadAtts();
-
+		} catch (Throwable eee) {}
 		ready = true;
 
 	}
@@ -625,7 +633,7 @@ public class ChatScreen extends MainScreen {
 				}
 			}
 		} catch (Throwable e) {
-			VikaTouch.popup(new InfoPopup("Attachments error, msg " + i + " exc " + e.toString(), null));
+			//VikaTouch.popup(new InfoPopup("Attachments error, msg " + i + " exc " + e.toString(), null));
 		}
 		VikaCanvasInst.msgColor = 0xff00ffff;
 		try {
@@ -651,7 +659,7 @@ public class ChatScreen extends MainScreen {
 			VikaTouch.loading = false;
 			VikaCanvasInst.msgColor = 0xff000000;
 		} catch (InterruptedException e) {
-		}
+		} catch (Throwable ee) {}
 	}
 
 	public int markMsgs(int inRead, int outRead) {
@@ -1642,7 +1650,7 @@ public class ChatScreen extends MainScreen {
             }
         }*/
 		int xx=0;
-		if (DisplayUtils.compact) {
+		if (DisplayUtils.verycompact) {
 		inputBoxH = 25;
 		xx=10;
 		}
@@ -1764,13 +1772,13 @@ public class ChatScreen extends MainScreen {
 		g.fillRect(0, topPanelH - 1, DisplayUtils.width, 1);
 
 		Font font1;
-		if (DisplayUtils.compact) {
+		if (DisplayUtils.verycompact) {
 			font1 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
 		} else {
 		font1 = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
 		}
 		int yy=0;
-		if (DisplayUtils.compact) {
+		if (DisplayUtils.verycompact) {
 			yy=10;
 		}
 		g.setFont(font1);

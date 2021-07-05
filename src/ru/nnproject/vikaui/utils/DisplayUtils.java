@@ -17,13 +17,15 @@ public class DisplayUtils {
 
 	public static boolean compact; // дисплеи <300 в высоту (е72, альбом
 									// 240х320, портреты 220 и 208.
-
+	
+	public static boolean verycompact;
 	public static void checkdisplay() {
 		if (canvas == null)
 			return;
 		width = (short) canvas.getWidth();
 		height = (short) canvas.getHeight();
 		compact = DisplayUtils.height <= 240;
+		verycompact = DisplayUtils.height <= 176;
 		if (compact)
 			ScrollableCanvas.oneitemheight = 36;
 	}

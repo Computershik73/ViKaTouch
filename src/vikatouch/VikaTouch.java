@@ -207,12 +207,22 @@ public class VikaTouch {
 				API = Settings.proxyApi;
 			}
 			VikaUtils.logToFile("2");
+			if (EmulatorDetector.emulatorType == EmulatorDetector.EM_J2L) {
 			tokenAnswer = VikaUtils.download_old(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 					.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
 					.addField("username", user).addField("password", pass)
 					//.addField("2fa_supported", "1").addField("force_sms", "1")
 					.addField("scope",
 							"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString());
+			} else {
+				tokenAnswer = VikaUtils.download_old(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
+						.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
+						.addField("username", user).addField("password", pass)
+						.addField("2fa_supported", "1").addField("force_sms", "1")
+						.addField("scope",
+								"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString());
+				
+			}
 			VikaUtils.logToFile("3 3");
 			VikaUtils.logToFile("3 " + tokenAnswer);
 					//);
@@ -221,6 +231,7 @@ public class VikaTouch {
 				Settings.https = false;
 				OAUTH = Settings.proxyOAuth;
 				VikaUtils.logToFile("4");
+				if (EmulatorDetector.emulatorType == EmulatorDetector.EM_J2L) {
 				tokenAnswer = VikaUtils.download_old(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 						.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
 						.addField("username", user).addField("password", pass)
@@ -228,6 +239,15 @@ public class VikaTouch {
 						.addField("scope",
 								"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString()
 						);
+				} else {
+					tokenAnswer = VikaUtils.download_old(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
+							.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
+							.addField("username", user).addField("password", pass)
+							.addField("2fa_supported", "1").addField("force_sms", "1")
+							.addField("scope",
+									"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString()
+							);
+				}
 				VikaUtils.logToFile("4 4");
 				VikaUtils.logToFile("4 " + tokenAnswer);
 			}
@@ -893,6 +913,7 @@ public class VikaTouch {
 		code = 3;
 		Settings.loadSettings();
 		code = 4;
+		
 		//KeyCodeAdapter.getInstance();
 		canvas = new VikaCanvasInst();
 		
@@ -900,7 +921,7 @@ public class VikaTouch {
 		setDisplay(canvas);
 		code = 6;
 		mainThread = new Thread(appInst);
-		try {
+try {
 			
             NokiaUIInvoker.init();
         } catch (Throwable e) {

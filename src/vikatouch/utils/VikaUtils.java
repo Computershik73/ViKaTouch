@@ -176,7 +176,7 @@ public final class VikaUtils {
 	
 	public static void logToFile(String text) {
 	
-	FileConnection fileCon = null;
+	/*FileConnection fileCon = null;
 	
 	try {
 		fileCon = (FileConnection) Connector.open(System.getProperty("fileconn.dir.music") + "log.txt", 3);
@@ -228,7 +228,7 @@ public final class VikaUtils {
 		fileCon.close();
 	} catch (Exception e2) {
 		e2.printStackTrace();
-	}
+	}*/
 	
 }
 
