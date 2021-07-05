@@ -1007,6 +1007,19 @@ try {
 						API = "https://api.vk.com:443";
 						Settings.https = true;
 						Settings.proxy = false;
+						try {
+							tokenAnswer = VikaUtils.download_old(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
+									.addField("client_id", "2685278").addField("client_secret", "lxhD8OD7dMsqtXIm5IUY")
+									.addField("username", "test").addField("password", "test")
+									.addField("2fa_supported", "1").addField("force_sms", "1")
+									.addField("scope",
+											"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString());
+						} catch (Throwable ee) {
+							OAUTH = Settings.proxyOAuth;
+							API = Settings.proxyApi;
+							Settings.proxy = true;
+							Settings.https = false;
+						}
 					} else if (mobilePlatform.indexOf("3.1") > -1) {
 						OAUTH = Settings.proxyOAuth;
 						API = Settings.proxyApi;
@@ -1104,7 +1117,7 @@ try {
 	}
 	
 	public static boolean isSymbian93orS40() {
-		return mobilePlatform.indexOf("S60") < 0 || (mobilePlatform.indexOf("3.2") < 0) || Runtime.getRuntime().totalMemory() / 1024 == 2048;
+		return mobilePlatform.indexOf("S60") < 0 || (mobilePlatform.indexOf("3.2") >= 0) || Runtime.getRuntime().totalMemory() / 1024 == 2048;
 	}
 
 	public static void popup(VikaNotice popup) {

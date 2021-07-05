@@ -156,7 +156,7 @@ public static String q;
 	          //  VikaTouch.inst.refreshToken();;
 	           // VikaTouch.inst.saveToken();
 	           
-	            String x = VikaUtils.music((new URLBuilder(Settings.httpsApi, "audio.search", true)).addField("q", q).addField("count", 50).addField("offset", 0).toString());
+	            String x = VikaUtils.music((new URLBuilder("audio.search", true)).addField("q", q).addField("count", 50).addField("offset", 0).toString());
 	            if (x.indexOf("error") > -1) {
 	              VikaTouch.error(49, x, false);
 	              return;
@@ -217,9 +217,9 @@ public static String q;
 	           // VikaTouch.inst.saveToken();
 	            String x= "";
 	           if (audio_id.equals("")) {
-	             x = VikaUtils.music((new URLBuilder(Settings.httpsApi, "audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).toString());
+	             x = VikaUtils.music((new URLBuilder("audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).toString());
 	           } else {
-	        	    x = VikaUtils.music((new URLBuilder(Settings.httpsApi, "audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).addField("targetAudio", audio_id).toString());
+	        	    x = VikaUtils.music((new URLBuilder("audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).addField("targetAudio", audio_id).toString());
 	           }
 	            if (x.indexOf("error") > -1) {
 	              VikaTouch.error(49, x, false);
