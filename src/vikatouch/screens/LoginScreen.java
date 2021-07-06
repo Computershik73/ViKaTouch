@@ -71,6 +71,7 @@ public class LoginScreen extends VikaScreen {
 	}
 
 	public void login() {
+		VikaTouch.needstoRedraw=true;
 		if (user != null && user.length() >= 5 && pass != null && pass.length() >= 6) {
 			if (!loginSucsess) {
 				new Thread() {
@@ -99,6 +100,7 @@ public class LoginScreen extends VikaScreen {
 	}
 
 	public final void press(int key) {
+		VikaTouch.needstoRedraw=true;
 		keysMode = true;
 		if (isLoggingInNow)
 			return;
@@ -242,6 +244,7 @@ public class LoginScreen extends VikaScreen {
 	}
 
 	public final void press(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		VikaTouch.supportsTouch=true;
 		if (isLoggingInNow)
 			return;
@@ -279,6 +282,7 @@ public class LoginScreen extends VikaScreen {
 	}
 
 	public final void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		VikaTouch.supportsTouch=true;
 		if (isLoggingInNow)
 			return;

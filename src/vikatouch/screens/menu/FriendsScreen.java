@@ -197,6 +197,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 	
 	
 	public static void open(final int id, final String name, final String name2) {
+		VikaTouch.needstoRedraw=true;
 		IMenu m = new EmptyMenu() {
 			public void onMenuItemPress(int i) {
 				try {
@@ -268,6 +269,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 	}
 
 	public final void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = uiItems[0].getDrawHeight();
@@ -287,6 +289,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 	}
 
 	public void loadNext() {
+		VikaTouch.needstoRedraw=true;
 		loadFriends(fromF + Settings.simpleListsLength, currId, whose, name2, false);
 	}
 

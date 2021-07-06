@@ -16,6 +16,7 @@ public class PhotosScreen extends MainScreen {
 	private String title;
 
 	public PhotosScreen(int owner, int album) {
+		VikaTouch.needstoRedraw=true;
 		title = TextLocal.inst.get("title.photos");
 		hasBackButton = true;
 	}

@@ -28,6 +28,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 
 	public GroupsScreen() {
 		super();
+		VikaTouch.needstoRedraw=true;
 		VikaTouch.loading = true;
 		// groupsStr = TextLocal.inst.get("title.groups");
 	}
@@ -61,6 +62,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	private String name2;
 
 	public void loadGroups(final int from, final int id, final String name1, final String name2) {
+		VikaTouch.needstoRedraw=true;
 		formattedTitle = TextLocal.inst.get("title.groups");
 		;
 		scrolled = 0;
@@ -210,6 +212,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	}
 
 	public final void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = 50;
@@ -235,6 +238,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	}
 
 	public void loadNext() {
+		VikaTouch.needstoRedraw=true;
 		loadGroups(fromG + Settings.simpleListsLength, currId, whose, name2);
 	}
 }

@@ -75,6 +75,7 @@ public static String q;
 	}
 
 	public void load(final int oid, final int albumId, String title) {
+		VikaTouch.needstoRedraw=true;
 		scrolled = 0;
 		uiItems = null;
 		this.albumId = albumId;
@@ -136,9 +137,11 @@ public static String q;
 			}
 		};
 		downloaderThread.start();
+		VikaTouch.needstoRedraw=true;
 	}
 	
 	public void load(final String q) {
+		VikaTouch.needstoRedraw=true;
 	    scrolled = 0;
 	    uiItems = null;
 	    this.title = TextLocal.inst.get("music.searchresult");
@@ -195,10 +198,12 @@ public static String q;
 	        }
 	      };
 	    downloaderThread.start();
+	    VikaTouch.needstoRedraw=true;
 	  }
 	
 	
 	public void loadRecommendations(final String audio_id) {
+		VikaTouch.needstoRedraw=true;
 	    scrolled = 0;
 	    uiItems = null;
 	    this.title = TextLocal.inst.get("music.recommendations");
@@ -259,6 +264,7 @@ public static String q;
 	        }
 	      };
 	    downloaderThread.start();
+	    VikaTouch.needstoRedraw=true;
 	  }
 	
 	
@@ -309,6 +315,7 @@ public static String q;
 	}
 
 	public final void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > 58 && y < DisplayUtils.height - oneitemheight) {
 				int h = 50;
@@ -328,8 +335,10 @@ public static String q;
 	}
 
 	public static void open(final int id, final String name, final String name2) {
+		VikaTouch.needstoRedraw=true;
 		IMenu m = new EmptyMenu() {
 			public void onMenuItemPress(int i) {
+				VikaTouch.needstoRedraw=true;
 				try {
 					if (i == 0) {
 						MusicScreen pls = new MusicScreen();
@@ -383,7 +392,7 @@ public static String q;
 			}
 		} catch (Exception e) {
 		}
-
+		VikaTouch.needstoRedraw=true;
 		VikaTouch.popup(new ContextMenu(oi));
 	}
 

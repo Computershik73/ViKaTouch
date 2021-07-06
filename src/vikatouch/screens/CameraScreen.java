@@ -42,6 +42,7 @@ public class CameraScreen extends VikaScreen {
 	private boolean autofocus;
 
 	public CameraScreen(ChatScreen chatScreen) {
+		VikaTouch.needstoRedraw=true;
 		lwidth = DisplayUtils.width;
 		this.chat = chatScreen;
 		try {

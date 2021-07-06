@@ -11,6 +11,7 @@ import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
+import vikatouch.VikaTouch;
 
 /**
  * @author Feodor0090
@@ -23,6 +24,7 @@ public class ContextMenu extends VikaNotice {
 	private boolean dragging;
 
 	public ContextMenu(OptionItem[] list) {
+		VikaTouch.needstoRedraw=true;
 		items = list;
 		if (ScrollableCanvas.keysMode)
 			items[selected].setSelected(true);
@@ -57,6 +59,7 @@ public class ContextMenu extends VikaNotice {
 	}
 
 	public void press(int key) {
+		VikaTouch.needstoRedraw=true;
 		ScrollableCanvas.keysMode = true;
 		try {
 			if (key == PressableUIItem.KEY_OK) {
@@ -83,6 +86,7 @@ public class ContextMenu extends VikaNotice {
 	}
 
 	public void press(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		lastx = x;
 		lasty = y;
 		dragging = false;
@@ -91,12 +95,14 @@ public class ContextMenu extends VikaNotice {
 	int lastx = 0, lasty = 0;
 
 	public void drag(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		if (Math.abs(x - lastx) > 3 || Math.abs(y - lasty) > 3) {
 			dragging = true;
 		}
 	}
 
 	public void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		if (dragging)
 			return;
 		int margin = 8;
