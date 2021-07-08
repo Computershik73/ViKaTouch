@@ -7,6 +7,7 @@ import javax.microedition.lcdui.game.GameCanvas;
 
 import ru.nnproject.vikaui.popup.VikaNotice;
 import ru.nnproject.vikaui.screen.VikaScreen;
+import vikatouch.VikaTouch;
 
 /**
  * @author Shinovon
@@ -39,5 +40,12 @@ public abstract class VikaCanvas extends GameCanvas {
 	protected abstract boolean drawMaxPriority();
 
 	public abstract boolean isNight();
+	
+	public void flushGraphics() {
+		if (VikaTouch.needstoRedraw==true) {
+		super.flushGraphics();
+		VikaTouch.needstoRedraw=false;
+		}
+	}
 
 }

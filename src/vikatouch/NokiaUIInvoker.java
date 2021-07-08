@@ -110,13 +110,15 @@ public class NokiaUIInvoker {
 	public static boolean supportsTextEditor() {
 		// ж2ме лоадер оказывается это поддерживает
 		// но мне такие проблемы не нужны
-		return textEditorSupported 
-				&& (VikaTouch.mobilePlatform.indexOf("SAMSUNG")<=-1) && EmulatorDetector.emulatorType != EmulatorDetector.EM_J2L ;
+		//return false; 
+				return textEditorSupported 
+				&& (VikaTouch.mobilePlatform.indexOf("SAMSUNG")<=-1) && (VikaTouch.mobilePlatform.indexOf("Samsung")<=-1) && EmulatorDetector.emulatorType != EmulatorDetector.EM_J2L ;
 	}
 	
 	public static void showTextEditor(String text, int max, int constraints, int x, int y, int w, int h, int bgColor, int textColor, final NokiaUITextEditorListener listener) {
 		if(textEditorSupported)
 			try {
+				//VikaTouch.needstoRedraw=false;
 				TextEditorInvoker.showTextEditor(text, max, constraints, x, y, w, h, bgColor, textColor, listener);
 			} catch (Throwable e) {
 			}

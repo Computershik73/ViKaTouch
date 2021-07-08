@@ -41,7 +41,14 @@ public abstract class VikaScreen {
 
 	public static void repaint() {
 		if ((DisplayUtils.canvas != null) && (VikaTouch.needstoRedraw)) {
-			DisplayUtils.canvas.draw();
+			DisplayUtils.canvas.repaint();
+			VikaTouch.needstoRedraw=false;
+		}
+	}
+	
+	public static void servicerepaints() {
+		if ((DisplayUtils.canvas != null) && (VikaTouch.needstoRedraw)) {
+			DisplayUtils.canvas.serviceRepaints();
 			VikaTouch.needstoRedraw=false;
 		}
 	}
