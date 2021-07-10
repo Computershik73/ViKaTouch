@@ -88,11 +88,11 @@ public class ContextMenu extends VikaNotice {
 	}
 
 	public void press(int x, int y) {
-		VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=false;
 		lastx = x;
 		lasty = y;
 		dragging = false;
-		VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=false;
 	}
 
 	int lastx = 0, lasty = 0;
@@ -106,7 +106,7 @@ public class ContextMenu extends VikaNotice {
 	}
 
 	public void release(int x, int y) {
-		VikaTouch.needstoRedraw=false;
+		VikaTouch.needstoRedraw=true;
 		if (dragging)
 			return;
 		int margin = 8;
