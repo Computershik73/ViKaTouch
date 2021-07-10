@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="C:/Users/User.DESKTOP-MUGMOBF/Documents/nokiaui.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="src" path="langs"/>
 	<classpathentry kind="con" path="org.elipse.mtj.JavaMEContainer/Series 40 5th Edition SDK/S40_5th_Edition_SDK"/>
-	<classpathentry kind="lib" path="kemfm1.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/User.DESKTOP-MUGMOBF/Documents/nokiaui.jar"/>
+	<classpathentry kind="lib" path="C:/ViKaTouch/kemfm1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

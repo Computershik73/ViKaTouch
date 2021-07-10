@@ -9,6 +9,7 @@ import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
+import vikatouch.VikaTouch;
 
 /**
  * @author Shinovon
@@ -65,13 +66,16 @@ public class OnOffItem implements PressableUIItem {
 	public void tap(int x, int y) {
 		bool = !bool;
 		menu.onMenuItemPress(i);
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void keyPress(int key) {
 		if (key == KEY_OK) {
 			bool = !bool;
 			menu.onMenuItemPress(i);
+			VikaTouch.needstoRedraw=true;
 		}
+		
 	}
 
 	public boolean isSelected() {
@@ -80,6 +84,7 @@ public class OnOffItem implements PressableUIItem {
 
 	public void setSelected(boolean selected) {
 		s = selected;
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void addDrawHeight(int i) {
