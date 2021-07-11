@@ -37,7 +37,7 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	public int fillW; // for context menu
 
 	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, int[] list, int curr, String info) {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		this.h = h;
 		this.optN = optN;
 		icon = ic;
@@ -51,12 +51,11 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 		help = info;
 		f = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
-		//VikaTouch.needstoRedraw=true;
 	}
 
 	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, String[] list, int curr,
 			String info) {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		this.h = h;
 		this.optN = optN;
 		icon = ic;
@@ -67,12 +66,11 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 		help = info;
 		f = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
-		//VikaTouch.needstoRedraw=true;
 	}
 
 	public SettingMenuItem(SettingsScreen s, String title, int ic, int optN, int h, String[] list, int curr,
 			String info, boolean noyesset) {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		this.h = h;
 		this.optN = optN;
 		icon = ic;
@@ -84,11 +82,10 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 		f = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
 		noyes = noyesset;
-		//VikaTouch.needstoRedraw=true;
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && s) ? ColorUtils.BUTTONCOLOR : ColorUtils.TEXT);
 		g.setFont((ScrollableCanvas.keysMode && s) ? sf : f);
 		int x = drawX + 48;
@@ -112,12 +109,12 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	}
 
 	public void tap(int x, int y) {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		keyPress(-5);
 	}
 
 	public void keyPress(int key) {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		if (key == KEY_OK) {
 			if(noyes) {
 				currentOption = currentOption == 0 ? 1 : 0;
@@ -144,7 +141,7 @@ public class SettingMenuItem implements PressableUIItem, IMenu {
 	}
 
 	public void setSelected(boolean selected) {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		s = selected;
 	}
 

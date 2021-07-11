@@ -55,14 +55,9 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	public ScrollableCanvas() {
 		super();
 		VikaTouch.needstoRedraw=true;
-		//repaint();
+		repaint();
 		VikaTouch.needstoRedraw=true;
 	}
-
-	//private void //repaint() {
-		// TODO Auto-generated method stub
-		
-	//}
 
 	public abstract void draw(Graphics g);
 
@@ -179,7 +174,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			endx = x;
 			endy = y;
 			dragging = false;
-		//	repaint();
+			repaint();
+			VikaTouch.needstoRedraw=true;
 		} catch (Throwable e) {
 
 		}
