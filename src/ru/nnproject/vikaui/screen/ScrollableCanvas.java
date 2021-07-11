@@ -56,7 +56,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 		super();
 		VikaTouch.needstoRedraw=true;
 		repaint();
-		VikaTouch.needstoRedraw=true;
 	}
 
 	public abstract void draw(Graphics g);
@@ -175,7 +174,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			endy = y;
 			dragging = false;
 			repaint();
-			VikaTouch.needstoRedraw=true;
 		} catch (Throwable e) {
 
 		}
@@ -207,7 +205,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				uiItems[currentItem].keyPress(key);
 			}
 			VikaTouch.needstoRedraw=true;
-			//repaint();
+			repaint();
 		} catch (Throwable e) {
 			// VikaTouch.sendLog("press "+ e.getMessage());
 		}
@@ -226,7 +224,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				down();
 			}
 			VikaTouch.needstoRedraw=true;
-			//repaint();
+			repaint();
 		} catch (Throwable e) {
 
 		}
@@ -344,7 +342,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				g.translate(0, scrolled);
 				return;
 			}
-			VikaTouch.needstoRedraw=true;
 			try {
 				if (!poorScrolling()) {
 					if (timer < 3200)
@@ -370,7 +367,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 					scrolled = 0;
 				}
 			}
-			VikaTouch.needstoRedraw=true;
 			if (scroll != 0) {
 				scrolled = scrolled + scroll;
 				if (scrolled > 0) {
@@ -392,7 +388,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			}
 			if (!poorScrolling())
 				scroll = 0;
-			VikaTouch.needstoRedraw=true;
 		} catch (Throwable e) {
 
 		}

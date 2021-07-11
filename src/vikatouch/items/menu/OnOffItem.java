@@ -28,7 +28,6 @@ public class OnOffItem implements PressableUIItem {
 	private boolean bool;
 
 	public OnOffItem(IMenu m, String t, int ic, int i, int h, boolean on) {
-		VikaTouch.needstoRedraw=true;
 		this.h = h;
 		this.i = i;
 		icon = ic;
@@ -40,7 +39,6 @@ public class OnOffItem implements PressableUIItem {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
-		VikaTouch.needstoRedraw=true;
 		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && s) ? ColorUtils.BUTTONCOLOR : ColorUtils.TEXT);
 		g.setFont((ScrollableCanvas.keysMode && s) ? sf : f);
 		int x = 48;
@@ -66,7 +64,6 @@ public class OnOffItem implements PressableUIItem {
 	}
 
 	public void tap(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		bool = !bool;
 		menu.onMenuItemPress(i);
 		VikaTouch.needstoRedraw=true;

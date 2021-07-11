@@ -32,7 +32,6 @@ public class ContextMenu extends VikaNotice {
 	}
 
 	public void draw(Graphics g) {
-		VikaTouch.needstoRedraw=true;
 		int itemsH = 16; // margin = 8
 		int width = Math.min(DisplayUtils.width - 8, 350);
 		int x = DisplayUtils.width / 2 - width / 2;
@@ -41,7 +40,7 @@ public class ContextMenu extends VikaNotice {
 			items[i].fillW = width - 16;
 			itemsH = itemsH + items[i].getDrawHeight();
 		}
-		VikaTouch.needstoRedraw=true;
+
 		int th = itemsH;
 		int y = DisplayUtils.height / 2 - th / 2;
 
@@ -52,14 +51,12 @@ public class ContextMenu extends VikaNotice {
 		g.setStrokeStyle(Graphics.SOLID);
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawRoundRect(x, y, width, th, 16, 16);
-		VikaTouch.needstoRedraw=true;
+
 		int cy = 8 + y;
 		for (int i = 0; i < items.length; i++) {
 			items[i].paint(g, cy, 0);
-			VikaTouch.needstoRedraw=true;
 			cy = cy + items[i].getDrawHeight();
 		}
-		VikaTouch.needstoRedraw=true;
 	}
 
 	public void press(int key) {
@@ -91,25 +88,25 @@ public class ContextMenu extends VikaNotice {
 	}
 
 	public void press(int x, int y) {
-		VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=false;
 		lastx = x;
 		lasty = y;
 		dragging = false;
-		VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=false;
 	}
 
 	int lastx = 0, lasty = 0;
 
 	public void drag(int x, int y) {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		if (Math.abs(x - lastx) > 3 || Math.abs(y - lasty) > 3) {
 			dragging = true;
 		}
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void release(int x, int y) {
-		
+		VikaTouch.needstoRedraw=true;
 		if (dragging)
 			return;
 		int margin = 8;
@@ -127,7 +124,6 @@ public class ContextMenu extends VikaNotice {
 
 		if (x < rx || x > rx + width || y < ry || y > ry + th) {
 			VikaCanvas.currentAlert = null;
-			VikaTouch.needstoRedraw=true;
 			return;
 		}
 
@@ -137,13 +133,11 @@ public class ContextMenu extends VikaNotice {
 			int h = items[i].getDrawHeight();
 			if (tapY > currY && tapY < currY + h) {
 				VikaCanvas.currentAlert = null;
-				VikaTouch.needstoRedraw=true;
 				items[i].tap(x - rx, tapY - currY);
 				return;
 			}
 			currY = currY + h;
 		}
-		VikaTouch.needstoRedraw=true;
 		//VikaTouch.needstoRedraw=true;
 	}
 
