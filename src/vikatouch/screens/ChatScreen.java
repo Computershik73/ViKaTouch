@@ -1592,7 +1592,7 @@ public class ChatScreen extends MainScreen {
                 	VikaTouch.needstoRedraw=false;
                     inputText = editor.getContent();
                    // VikaTouch.sendLog(inputText);
-                    inputChanged = true;
+                    //inputChanged = true;
                 }
             });
            // NokiaUIInvoker.getTextEditorInst().setVisible(true);

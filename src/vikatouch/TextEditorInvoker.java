@@ -19,7 +19,7 @@ public class TextEditorInvoker {
 	private static TextEditor textEditor=null;
 
 	static void showTextEditor(String text, int max, int constraints, int x, int y, int w, int h, int bgColor, int textColor, final NokiaUITextEditorListener listener) {
-		VikaTouch.needstoRedraw=false;
+		VikaTouch.needstoRedraw=true;
 		if(VikaTouch.isS40())
 			vikatouch.VikaTouch.canvas.setFullScreenMode(false);
 		try {
