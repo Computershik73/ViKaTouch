@@ -211,13 +211,17 @@ public class Settings {
 					hideBottom = is.readBoolean();
 					region = is.readUTF();
 					// 2.8.13
-					fpsLimit = is.readShort();
+					fpsLimit = 60; 
+							//is.readShort();
 					if (VikaTouch.isS40()) {
 					fpsLimit = 15;
 					}
-					doubleBufferization = is.readBoolean();
-					drawMaxPriority = is.readBoolean();
-					fastImageScaling = is.readBoolean();
+					doubleBufferization = true;
+							//is.readBoolean();
+					drawMaxPriority = true; 
+							//is.readBoolean();
+					fastImageScaling = true; 
+							//is.readBoolean();
 					//2.8.14
 					//тут должна быть настройка с старым фм, но я передумал.
 					//2.8.15

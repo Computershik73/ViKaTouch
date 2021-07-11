@@ -49,6 +49,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 
 		titleStr = TextLocal.inst.get("title.settings");
 		switchList(menuList);
+		VikaTouch.needstoRedraw=true;
 	}
 
 	private void initAllSettsList() {
@@ -223,7 +224,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 
 	public void draw(Graphics g) {
 		update(g);
-
+		VikaTouch.needstoRedraw=true;
 		int y = topPanelH;
 		if (uiItems != null) {
 			for (int i = 0; i < uiItems.length; i++) {
@@ -253,6 +254,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 						yy += uiItems[i].getDrawHeight();
 						if (y > y1 && y < y2) {
 							uiItems[i].tap(x, y - y1);
+							VikaTouch.needstoRedraw=true;
 						}
 					} catch (Exception e) {
 
@@ -266,7 +268,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		VikaTouch.needstoRedraw=true;
 		super.release(x, y);
-		VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
 	}
 
 	public void settingSet(int setIndex, int var) {
@@ -389,35 +391,44 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		switch (i) {
 		case 0: {
 			switchList(menuList);
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case -100: {
+			VikaTouch.needstoRedraw=true;
 			switchList(systemList);
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case -101: {
 			switchList(uiList);
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case -102: {
 			switchList(mediaList);
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case -103: {
 			switchList(specialAbilitiesList);
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case -104: {
 			switchList(debugList);
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case -105: {
 			switchList(msgList);
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case 99: {
 			Settings.nightTheme = !Settings.nightTheme;
 			Settings.switchLightTheme();
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case -1: {
@@ -453,7 +464,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			break;
 		}
 		case 21: {
-			VikaTouch.needstoRedraw=true;
+			//VikaTouch.needstoRedraw=true;
 			// со строками сеттинг айтем пока не умеет
 			OptionItem[] it = new OptionItem[4];
 			it[0] = new OptionItem(this, "240", IconsManager.VIDEOS, 11, oneitemheight);
@@ -461,17 +472,18 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			it[2] = new OptionItem(this, "480", IconsManager.VIDEOS, 13, oneitemheight);
 			it[3] = new OptionItem(this, "720", IconsManager.VIDEOS, 14, oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case 31: {
-			VikaTouch.needstoRedraw=true;
+			//VikaTouch.needstoRedraw=true;
 			if (VikaTouch.about == null)
 				VikaTouch.about = new AboutScreen();
 			VikaTouch.setDisplay(VikaTouch.about, 1);
 			break;
 		}
 		case 23: {
-			VikaTouch.needstoRedraw=true;
+			//VikaTouch.needstoRedraw=true;
 			OptionItem[] it = new OptionItem[6];
 			it[0] = new OptionItem(this, "English", IconsManager.EDIT, 1, oneitemheight);
 			it[1] = new OptionItem(this, "Русский", IconsManager.EDIT, 2, oneitemheight);
@@ -480,10 +492,11 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			it[4] = new OptionItem(this, "Беларускі", IconsManager.EDIT, 5, oneitemheight);
 			it[5] = new OptionItem(this, "Tiếng Việt", IconsManager.EDIT, 6, oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case 50: {
-			VikaTouch.needstoRedraw=true;
+			//VikaTouch.needstoRedraw=true;
 			OptionItem[] it = new OptionItem[6];
 			it[2] = new OptionItem(this, "Россия (RU)", IconsManager.EDIT, 32, oneitemheight);
 			it[0] = new OptionItem(this, "United States (US)", IconsManager.EDIT, 33, oneitemheight);
@@ -493,10 +506,11 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			it[5] = new OptionItem(this, "Беларусь (BY)", IconsManager.EDIT, 37, oneitemheight);
 			it[6] = new OptionItem(this, "Қазақстан (KZ)", IconsManager.EDIT, 38, oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		case 22: {
-			VikaTouch.needstoRedraw=true;
+			//VikaTouch.needstoRedraw=true;
 			OptionItem[] it = new OptionItem[4];
 			it[0] = new OptionItem(this, TextLocal.inst.get("settings.disabled"), IconsManager.EDIT, 0, oneitemheight);
 			it[1] = new OptionItem(this, TextLocal.inst.get("settings.vibro"), IconsManager.EDIT, 1,
@@ -506,25 +520,28 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			it[3] = new OptionItem(this, TextLocal.inst.get("settings.alert"), IconsManager.EDIT, 4,
 					oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		// 11-20 - разреши видео! Пока, потом я мб таки запихну это дело в SettingItem.
 		}
 		if (i >= 11 && i <= 19) {
-			VikaTouch.needstoRedraw=true;
+		//	VikaTouch.needstoRedraw=true;
 			int j = i - 11;
 			String[] res = new String[] { "240", "360", "480", "720" };
 			Settings.setted = true;
 			Settings.videoResolution = res[j];
+			VikaTouch.needstoRedraw=true;
 			// Settings.saveSettings();
 		}
 		if (i >= 1 && i <= 9) {
-			VikaTouch.needstoRedraw=true;
+		//	VikaTouch.needstoRedraw=true;
 			int j = i - 1;
 			String[] res = new String[] { "english", "russian", "spanish", "ukrainian", "belarussian", "vietnamese"};
 			Settings.setted = true;
 			Settings.language = res[j];
 			System.out.println(Settings.language);
+			VikaTouch.needstoRedraw=true;
 			/*
 			 * VikaTouch.popup(new InfoPopup("Language was changed to "+res[j]
 			 * +". The application must be restarted.", new Runnable() { public void run() {
@@ -534,7 +551,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			//VikaTouch.popup(new InfoPopup("Settings will be applied after restart", null, "", "OK"));
 		}
 		if(i >= 32 && i <= 40) {
-			VikaTouch.needstoRedraw=true;
+			//VikaTouch.needstoRedraw=true;
 			int j = i - 32;
 			String[] res = new String[] { "RU", "US", "UK", "ES", "UA", "BY", "KZ"};
 			Settings.setted = true;
@@ -556,12 +573,15 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			VikaTouch.needstoRedraw=true;
 			if(uiItems != null)
 				uiItems[currentItem].setSelected(false); // точно упадёт на старте - списка то ещё нет.
+			VikaTouch.needstoRedraw=true;
 		} catch (Throwable e) {
+			VikaTouch.needstoRedraw=true;
 		}
 		try {
 			uiItems = l;
 			itemsh = 58 + ((oneitemheight + 4) * uiItems.length);
 			itemsCount = (short) uiItems.length;
+			VikaTouch.needstoRedraw=true;
 			if (keysMode) {
 				currentItem = 0;
 				VikaTouch.needstoRedraw=true;

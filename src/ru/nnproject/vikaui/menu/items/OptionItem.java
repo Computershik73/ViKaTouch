@@ -39,9 +39,11 @@ public class OptionItem implements PressableUIItem {
 		// меня смалл был
 		f = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL);
 		sf = Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL);
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
+		//VikaTouch.needstoRedraw=true;
 		/*
 		 * if(ScrollableCanvas.keysMode && s) { ColorUtils.setcolor(g,
 		 * ColorUtils.BUTTONCOLOR); g.fillRect(drawX, y,
@@ -57,6 +59,7 @@ public class OptionItem implements PressableUIItem {
 		if (icon != -1)
 			g.drawImage(((ScrollableCanvas.keysMode && s) ? (IconsManager.selIco) : (IconsManager.ico))[icon],
 					drawX + 12, y + (h / 2 - 12), 0);
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public int getDrawHeight() {
@@ -64,12 +67,17 @@ public class OptionItem implements PressableUIItem {
 	}
 
 	public void tap(int x, int y) {
+		//VikaTouch.needstoRedraw=true;
 		menu.onMenuItemPress(i);
 	}
 
 	public void keyPress(int key) {
-		if (key == KEY_OK)
+		if (key == KEY_OK) {
+			//VikaTouch.needstoRedraw=true;
+		
 			menu.onMenuItemPress(i);
+			//VikaTouch.needstoRedraw=true;
+		}
 	}
 
 	public boolean isSelected() {
@@ -77,8 +85,9 @@ public class OptionItem implements PressableUIItem {
 	}
 
 	public void setSelected(boolean selected) {
-		VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
 		s = selected;
+		//VikaTouch.needstoRedraw=true;
 	}
 
 	public void addDrawHeight(int i) {

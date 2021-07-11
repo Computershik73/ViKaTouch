@@ -18,10 +18,11 @@ public class AutoContextMenu extends ContextMenu {
 
 	public AutoContextMenu(OptionItem[] list) {
 		super(list);
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void draw(Graphics g) {
+		VikaTouch.needstoRedraw=true;
 		int dh = DisplayUtils.height;
 		int itemsH = 16; // margin = 8
 		int width = Math.min(DisplayUtils.width - 8, 350);
@@ -62,5 +63,6 @@ public class AutoContextMenu extends ContextMenu {
 			items[i].paint(g, cy, 0);
 			cy = cy + items[i].getDrawHeight();
 		}
+		VikaTouch.needstoRedraw=true;
 	}
 }
