@@ -153,6 +153,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 		starty = y;
 		endx = -1;
 		endy = -1;
+		repaint();
 	}
 
 	public static boolean poorScrolling() {
@@ -321,6 +322,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				System.out.println(i);
 				e.printStackTrace();
 			}
+			repaint();
 		} catch (Throwable e) {
 
 		}
@@ -395,6 +397,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 
 	protected void callRefresh() {
 		VikaTouch.needstoRedraw=true;
+		repaint();
 	}
 
 	public int getItemY(int n) {

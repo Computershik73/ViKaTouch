@@ -48,8 +48,34 @@ public class TextEditorInvoker {
 			textEditor.setFocus(true);
 			//textEditor.setCaretXY(0,-8);
 			textEditor.setContent(text);
+			
+			TextEditorListener listenerr = new TextEditorListener() {
+				public String getContent() {
+					//textEditor.setCaretXY(0,8);
+					ChatScreen.inputText=textEditor.getContent();
+					VikaTouch.needstoRedraw=false;
+					return textEditor.getContent();
+					//
+				}
+
+				public void action(NokiaUITextEditor editor, int act) {
+					// TODO Auto-generated method stub
+					ChatScreen.inputText=textEditor.getContent();
+					VikaTouch.needstoRedraw=false;
+					
+				}
+
+				public void inputAction(TextEditor arg0, int arg1) {
+					// TODO Auto-generated method stub
+					ChatScreen.inputText=textEditor.getContent();
+					VikaTouch.needstoRedraw=false;
+					
+				}	
+			};
+			textEditor.setTextEditorListener(listenerr);
+			
 			//textEditor.setCaret(text.length());
-			 final NokiaUITextEditor editor = new NokiaUITextEditor() {
+			/* final NokiaUITextEditor editor = new NokiaUITextEditor() {
 				public String getContent() {
 					//textEditor.setCaretXY(0,8);
 					ChatScreen.inputText=textEditor.getContent();
@@ -71,7 +97,7 @@ public class TextEditorInvoker {
 					//Thread.yield();
 				//	textEditor.setVisible(false);
 				}	
-			});
+			});*/
 			//textEditor.setVisible(false);
 		} catch (Throwable e) {
 			VikaTouch.sendLog(e.getMessage());

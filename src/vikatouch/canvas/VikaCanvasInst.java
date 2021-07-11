@@ -74,8 +74,10 @@ public class VikaCanvasInst extends VikaCanvas {
 		}
 
 	public void draw() {
+		if (VikaTouch.needstoRedraw) {
 		if(dontBuffer()) {
 			repaint();
+			VikaTouch.needstoRedraw=false;
 			return;
 		}
 		Graphics g = getGraphics();
@@ -84,10 +86,17 @@ public class VikaCanvasInst extends VikaCanvas {
 		}
 		draw0(g);
 		if(buffer == null) {
+			VikaTouch.needstoRedraw=true;
 			flushGraphics();
+			VikaTouch.needstoRedraw=true;
 		} else {
+			VikaTouch.needstoRedraw=true;
 			repaint();
+			VikaTouch.needstoRedraw=true;
 		}
+		VikaTouch.needstoRedraw=false;
+		}
+		
 	}
 	
 	private boolean dontBuffer() {

@@ -389,30 +389,44 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		switch (i) {
 		case 0: {
 			switchList(menuList);
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case -100: {
 			switchList(systemList);
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case -101: {
 			switchList(uiList);
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case -102: {
 			switchList(mediaList);
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case -103: {
 			switchList(specialAbilitiesList);
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case -104: {
 			switchList(debugList);
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case -105: {
 			switchList(msgList);
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case 99: {
@@ -440,10 +454,14 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			break;
 		}
 		case -2: {
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case -3: {
 			VikaTouch.needstoRedraw=true;
+			this.repaint();
+			this.serviceRepaints();
 			VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("settings.reset"), null, new Runnable() {
 				public void run() {
 					Settings.loadDefaultSettings();
@@ -460,7 +478,10 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			it[1] = new OptionItem(this, "360", IconsManager.VIDEOS, 12, oneitemheight);
 			it[2] = new OptionItem(this, "480", IconsManager.VIDEOS, 13, oneitemheight);
 			it[3] = new OptionItem(this, "720", IconsManager.VIDEOS, 14, oneitemheight);
+			
 			VikaTouch.popup(new AutoContextMenu(it));
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case 31: {
@@ -468,6 +489,8 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			if (VikaTouch.about == null)
 				VikaTouch.about = new AboutScreen();
 			VikaTouch.setDisplay(VikaTouch.about, 1);
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case 23: {
@@ -479,7 +502,10 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			it[3] = new OptionItem(this, "Український", IconsManager.EDIT, 4, oneitemheight);
 			it[4] = new OptionItem(this, "Беларускі", IconsManager.EDIT, 5, oneitemheight);
 			it[5] = new OptionItem(this, "Tiếng Việt", IconsManager.EDIT, 6, oneitemheight);
+			VikaTouch.needstoRedraw=true;
 			VikaTouch.popup(new AutoContextMenu(it));
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		case 50: {
@@ -506,6 +532,8 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			it[3] = new OptionItem(this, TextLocal.inst.get("settings.alert"), IconsManager.EDIT, 4,
 					oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
+			this.repaint();
+			this.serviceRepaints();
 			break;
 		}
 		// 11-20 - разреши видео! Пока, потом я мб таки запихну это дело в SettingItem.
@@ -516,6 +544,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			String[] res = new String[] { "240", "360", "480", "720" };
 			Settings.setted = true;
 			Settings.videoResolution = res[j];
+			VikaTouch.needstoRedraw=true;
+			this.repaint();
+			this.serviceRepaints();
 			// Settings.saveSettings();
 		}
 		if (i >= 1 && i <= 9) {
@@ -525,6 +556,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			Settings.setted = true;
 			Settings.language = res[j];
 			System.out.println(Settings.language);
+			VikaTouch.needstoRedraw=true;
+			this.repaint();
+			this.serviceRepaints();
 			/*
 			 * VikaTouch.popup(new InfoPopup("Language was changed to "+res[j]
 			 * +". The application must be restarted.", new Runnable() { public void run() {
@@ -540,6 +574,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			Settings.setted = true;
 			Settings.region = res[j];
 			System.out.println(Settings.region);
+			VikaTouch.needstoRedraw=true;
+			this.repaint();
+			this.serviceRepaints();
 		}
 
 		initAllSettsList();
@@ -547,6 +584,8 @@ public class SettingsScreen extends MainScreen implements IMenu {
 
 	private void switchList(PressableUIItem[] l) {
 		VikaTouch.needstoRedraw=true;
+		this.repaint();
+		this.serviceRepaints();
 		if (l == this.menuList)
 			hasBackButton = true;
 		else
@@ -571,15 +610,22 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		VikaTouch.needstoRedraw=true;
+		this.repaint();
+		this.serviceRepaints();
 	}
 
 	public void onMenuItemOption(int i) {
 		VikaTouch.needstoRedraw=true;
+		this.repaint();
+		this.serviceRepaints();
 
 	}
 
 	public void onLeave() {
 		VikaTouch.needstoRedraw=true;
+		this.repaint();
+		this.serviceRepaints();
 		 Settings.saveSettings();
 	}
 

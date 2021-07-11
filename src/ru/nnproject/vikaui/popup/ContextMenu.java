@@ -79,6 +79,8 @@ public class ContextMenu extends VikaNotice {
 				items[selected].setSelected(true);
 			} else if (key == PressableUIItem.KEY_RFUNC) {
 				VikaCanvas.currentAlert = null;
+				repaint();
+				serviceRepaints();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,6 +122,8 @@ public class ContextMenu extends VikaNotice {
 
 		if (x < rx || x > rx + width || y < ry || y > ry + th) {
 			VikaCanvas.currentAlert = null;
+			repaint();
+			serviceRepaints();
 			return;
 		}
 

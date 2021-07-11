@@ -176,7 +176,7 @@ public final class VikaUtils {
 	
 	public static void logToFile(String text) {
 	
-	/*FileConnection fileCon = null;
+	FileConnection fileCon = null;
 	
 	try {
 		fileCon = (FileConnection) Connector.open(System.getProperty("fileconn.dir.music") + "log.txt", 3);
@@ -192,7 +192,7 @@ public final class VikaUtils {
 			e.printStackTrace();
 		}
 	} else {
-		try {
+		/*try {
 			fileCon.delete();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -203,12 +203,12 @@ public final class VikaUtils {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	OutputStream stream = null;
 	try {
-		stream = fileCon.openOutputStream();
+		stream = fileCon.openOutputStream(fileCon.fileSize());
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -228,7 +228,7 @@ public final class VikaUtils {
 		fileCon.close();
 	} catch (Exception e2) {
 		e2.printStackTrace();
-	}*/
+	}
 	
 }
 

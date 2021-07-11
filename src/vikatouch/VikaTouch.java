@@ -1130,6 +1130,9 @@ try {
 		VikaCanvas.currentAlert = popup;
 		canvas.repaint();
 		VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
+		canvas.repaint();
+		canvas.serviceRepaints();
 	}
 
 	public static void notificate(VikaNotification n) {
