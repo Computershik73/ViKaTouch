@@ -18,7 +18,7 @@ public class AutoContextMenu extends ContextMenu {
 
 	public AutoContextMenu(OptionItem[] list) {
 		super(list);
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void draw(Graphics g) {
