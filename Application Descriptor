@@ -17,3 +17,4 @@ MIDlet-1: Vika Touch,/vika256.png,ru.nnproject.vikatouch.VikaTouchApp
 MicroEdition-Profile: MIDP-1.0
 MIDlet-Permissions: javax.microedition.io.Connector.http
 MIDlet-Jar-URL: vikaTouch.jar
+Nokia-MIDlet-No-Exit: true

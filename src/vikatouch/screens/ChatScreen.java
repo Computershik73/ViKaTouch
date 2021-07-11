@@ -185,7 +185,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public ChatScreen(int peerId, String title) {
-		//VikaTouch.sendLog(String.valueOf(VikaTouch.canvas.hasRepeatEvents()));
 		VikaTouch.needstoRedraw=true;
 		title2 = TextLocal.inst.get("title2.loading");
 		this.title = title;
@@ -205,7 +204,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public ChatScreen(int peerId) {
-		//VikaTouch.sendLog(String.valueOf(VikaTouch.canvas.hasRepeatEvents()));
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.resendingobjectid="";
 		if (DisplayUtils.compact) {
@@ -628,7 +626,7 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public void loadAtts() {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		VikaCanvasInst.msgColor = 0xff0000ff;
 		VikaTouch.loading = true;
 		int i = 0;
@@ -645,12 +643,12 @@ public class ChatScreen extends MainScreen {
 		}
 		VikaCanvasInst.msgColor = 0xff00ffff;
 		try {
-		/*	forceRedraw = true;
+			forceRedraw = true;
 			repaint();
 			Thread.sleep(50);
 			repaint();
 			forceRedraw = false;
-			Thread.sleep(50);*/
+			Thread.sleep(50);
 			currentItem = markMsgs(inr, outr);
 			scrollToSelected();
 			uiItems[currentItem].setSelected(true);
@@ -661,14 +659,13 @@ public class ChatScreen extends MainScreen {
 		System.gc();
 
 		try {
-			//while (updStop)
-			//	Thread.sleep(200);
+			while (updStop)
+				Thread.sleep(200);
 			runUpdater();
 			VikaTouch.loading = false;
 			VikaCanvasInst.msgColor = 0xff000000;
-		//} catch (InterruptedException e) {
-		} 
-		catch (Throwable ee) {}
+		} catch (InterruptedException e) {
+		} catch (Throwable ee) {}
 	}
 
 	public int markMsgs(int inRead, int outRead) {
@@ -1024,9 +1021,7 @@ public class ChatScreen extends MainScreen {
 		if (key == -2) {
 			down();
 		}
-		VikaTouch.needstoRedraw=true;
 		repaint();
-		VikaTouch.needstoRedraw=true;
 	}
 
 	public boolean canSend = true;
@@ -1568,14 +1563,12 @@ public class ChatScreen extends MainScreen {
             if(NokiaUIInvoker.textEditorShown()) {
                 inputText = //NokiaUIInvoker.hideTextEditor();
                 		NokiaUIInvoker.getTextEditorContent();
-                VikaTouch.needstoRedraw=false;
                 inputChanged = true;
                // return;
             }
             new Thread() {
                 public void run() {
                     try {
-                    	VikaTouch.needstoRedraw=false;
                     	VikaUtils.download(new URLBuilder("messages.setActivity").addField("user_id", VikaTouch.userId).addField("peer_id", peerId).addField("type", "typing"));
                     } catch (Exception e) {
                     }
@@ -1589,10 +1582,9 @@ public class ChatScreen extends MainScreen {
             				, DisplayUtils.width-144, 25, ColorUtils.isNight() ? 0x000000ff : 0xffffffff, 
             				ColorUtils.isNight() ? 0xffffff00 : 0x80000000,  new NokiaUITextEditorListener() {
                 public void action(NokiaUITextEditor editor, int act) {
-                	VikaTouch.needstoRedraw=false;
                     inputText = editor.getContent();
                    // VikaTouch.sendLog(inputText);
-                    //inputChanged = true;
+                    inputChanged = true;
                 }
             });
            // NokiaUIInvoker.getTextEditorInst().setVisible(true);
@@ -1603,7 +1595,6 @@ public class ChatScreen extends MainScreen {
             typer.interrupt();
         typer = new Thread() {
             public void run() {
-            	VikaTouch.needstoRedraw=false;
                 inputText = TextEditor.inputString(TextLocal.inst.get("msg"), inputText == null ? "" : inputText, 0);
                 inputChanged = true;
             }
@@ -1614,9 +1605,8 @@ public class ChatScreen extends MainScreen {
             public void run() {
                 while (typer.isAlive()) {
                     try {
-                    	VikaTouch.needstoRedraw=false;
                     	VikaUtils.download(new URLBuilder("messages.setActivity").addField("user_id", VikaTouch.userId).addField("peer_id", peerId).addField("type", "typing"));
-                        Thread.sleep(15000);
+                        Thread.sleep(5000);
                     } catch (Exception e) {
                         return;
                     }

@@ -16,55 +16,24 @@ import vikatouch.screens.ChatScreen;
  */
 public class TextEditorInvoker {
 	
-	private static TextEditor textEditor=null;
+	private static TextEditor textEditor;
 
 	static void showTextEditor(String text, int max, int constraints, int x, int y, int w, int h, int bgColor, int textColor, final NokiaUITextEditorListener listener) {
-		VikaTouch.needstoRedraw=true;
 		if(VikaTouch.isS40())
 			vikatouch.VikaTouch.canvas.setFullScreenMode(false);
 		try {
 			if (textEditor==null) {
 			textEditor = TextEditor.createTextEditor("", max, constraints, w, h);
-			/*	textEditor = new TextEditor() {
-					public String getContent() {
-						//textEditor.setCaretXY(0,8);
-						ChatScreen.inputText=this.getContent();
-						VikaTouch.needstoRedraw=false;
-						return this.getContent();
-						//
-					}	
-				
-				public void inputAction(TextEditor textEditor, int actions) {
-					//VikaTouch.log("act: " + actions);
-					//textEditor.setCaretXY(0,8);
-					//if (actions==TextEditorListener.ACTION_OPTIONS_CHANGE) {
-					//	textEditor.setFocus(false);
-					//}
-					//listener.action(editor, actions);
-					
-					ChatScreen.inputText=textEditor.getContent();
-					//VikaTouch.needstoRedraw=true;
-					//ChatScreen.repaint();
-					//Thread.yield();
-				//	textEditor.setVisible(false);
-				}
-				};*/
-			}
-				//textEditor.setTextEditorListener(listener);
-			//textEditor.setPosition(x, y);
-			//textEditor.setSize(w, h);
-			//textEditor.setMaxSize(max);
 			
+			}
+			textEditor.setForegroundColor(textColor);
 			//if (ColorUtils.isNight()) {
 			//textEditor.setBackgroundColor(0);
 			 //} else {
-				
+				 textEditor.setBackgroundColor(bgColor);
 			 //}
 			
 			textEditor.setParent(vikatouch.VikaTouch.canvas);
-			textEditor.setConstraints(constraints);
-			 textEditor.setBackgroundColor(bgColor);
-			textEditor.setForegroundColor(textColor);
 			textEditor.setPosition(x, y);
 			textEditor.setSize(w, h);
 			
@@ -77,38 +46,19 @@ public class TextEditorInvoker {
 			 //getConstraints()
 			textEditor.setVisible(true);
 			textEditor.setFocus(true);
-			//textEditor.setTextEditorListener((TextEditorListener) listener);
-			
 			//textEditor.setCaretXY(0,-8);
-		//	textEditor.setContent(text);
-			
+			textEditor.setContent(text);
 			//textEditor.setCaret(text.length());
-			TextEditorListener listenerr = new TextEditorListener() {
+			 final NokiaUITextEditor editor = new NokiaUITextEditor() {
 				public String getContent() {
 					//textEditor.setCaretXY(0,8);
 					ChatScreen.inputText=textEditor.getContent();
-					VikaTouch.needstoRedraw=false;
 					return textEditor.getContent();
 					//
-				}
-
-				public void action(NokiaUITextEditor editor, int act) {
-					// TODO Auto-generated method stub
-					ChatScreen.inputText=textEditor.getContent();
-					VikaTouch.needstoRedraw=false;
-					
-				}
-
-				public void inputAction(TextEditor arg0, int arg1) {
-					// TODO Auto-generated method stub
-					ChatScreen.inputText=textEditor.getContent();
-					VikaTouch.needstoRedraw=false;
-					
 				}	
 			};
-			textEditor.setTextEditorListener(listenerr);
 			//TextEditorListener.ACTION_CONTENT_CHANGE
-		/*	textEditor.setTextEditorListener(new TextEditorListener() {
+			textEditor.setTextEditorListener(new TextEditorListener() {
 				public void inputAction(TextEditor textEditor, int actions) {
 					//VikaTouch.log("act: " + actions);
 					//textEditor.setCaretXY(0,8);
@@ -116,15 +66,12 @@ public class TextEditorInvoker {
 					//	textEditor.setFocus(false);
 					//}
 					//listener.action(editor, actions);
-					
 					ChatScreen.inputText=textEditor.getContent();
-					VikaTouch.needstoRedraw=false;
-					//ChatScreen.repaint();
+					ChatScreen.repaint();
 					//Thread.yield();
 				//	textEditor.setVisible(false);
 				}	
 			});
-			}*/
 			//textEditor.setVisible(false);
 		} catch (Throwable e) {
 			VikaTouch.sendLog(e.getMessage());

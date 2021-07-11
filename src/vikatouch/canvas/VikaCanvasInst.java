@@ -74,7 +74,6 @@ public class VikaCanvasInst extends VikaCanvas {
 		}
 
 	public void draw() {
-		if (VikaTouch.needstoRedraw) {
 		if(dontBuffer()) {
 			repaint();
 			return;
@@ -88,8 +87,6 @@ public class VikaCanvasInst extends VikaCanvas {
 			flushGraphics();
 		} else {
 			repaint();
-		}
-		VikaTouch.needstoRedraw=false;
 		}
 	}
 	
@@ -318,7 +315,6 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void keyPressed(int i) {
-		VikaTouch.needstoRedraw=true;
 		   i = KeyCodeAdapter.getInstance().adoptKeyCode(i);  
 		if (currentAlert != null) {
 			currentAlert.press(i);
@@ -330,7 +326,6 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void keyRepeated(int i) {
-		VikaTouch.needstoRedraw=true;
 		 i = KeyCodeAdapter.getInstance().adoptKeyCode(i);  
 		if (currentAlert != null) {
 			currentAlert.repeat(i);
@@ -342,7 +337,6 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void keyReleased(int i) {
-		VikaTouch.needstoRedraw=true;
 		 i = KeyCodeAdapter.getInstance().adoptKeyCode(i);  
 		if (currentAlert != null) {
 			currentAlert.release(i);

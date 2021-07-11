@@ -45,7 +45,7 @@ import vikatouch.utils.url.URLBuilder;
 public class MsgItem extends ChatItem implements IMenu, IMessage {
 	public MsgItem(JSONObject json) {
 		super(json);
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		smilesarray = new Vector(0, 1);
 	}
 
@@ -86,7 +86,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	}
 
 	public void parseJSON() {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		super.parseJSON();
 		msgWidth = DisplayUtils.width - (DisplayUtils.width <= 240 ? 10 : 40);
 		margin = (DisplayUtils.width <= 240 ? 0 : 10);
