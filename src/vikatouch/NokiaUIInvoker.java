@@ -111,9 +111,8 @@ public class NokiaUIInvoker {
 		// ж2ме лоадер оказывается это поддерживает
 		// но мне такие проблемы не нужны
 		//return false; 
-		VikaTouch.sendLog(String.valueOf(VikaTouch.integerUserId));
 				return textEditorSupported 
-				&& (VikaTouch.integerUserId!=18413360) && (VikaTouch.mobilePlatform.indexOf("SAMSUNG")<=-1) && (VikaTouch.mobilePlatform.indexOf("Samsung")<=-1) && EmulatorDetector.emulatorType != EmulatorDetector.EM_J2L ;
+				&& (VikaTouch.mobilePlatform.indexOf("SAMSUNG")<=-1) && (VikaTouch.mobilePlatform.indexOf("Samsung")<=-1) && EmulatorDetector.emulatorType != EmulatorDetector.EM_J2L ;
 	}
 	
 	public static void showTextEditor(String text, int max, int constraints, int x, int y, int w, int h, int bgColor, int textColor, final NokiaUITextEditorListener listener) {

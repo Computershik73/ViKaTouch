@@ -326,12 +326,10 @@ public class TextLocal {
 		if ((VikaTouch.mylanguage==null) || (VikaTouch.mylanguage==toLang) || (VikaTouch.mylanguage==fromLang) || (fromLang==toLang)) {
 			return text;
 		}
-		return text;
-	/*	JSONObject textjson = null;
+		JSONObject textjson = null;
 		try {
-			
-			  textjson = new JSONObject(VikaUtils.download(new URLBuilder("http://vikamobile.ru:80/proxy.php?https://translate.yandex.net", "api/v1.5/tr.json/translate").addField("text", text).addField("key", "trnsl.1.1.20130301T122725Z.6f5743232a86cbed.0c0062d0ba9705ca9ddb24c1c76aff54743a939d").addField("lang", fromLang+"-"+toLang)));
-			
+			  textjson = new JSONObject(VikaUtils.download(new URLBuilder("https://translate.yandex.net:443", "api/v1.5/tr.json/translate").addField("text", text).addField("key", "trnsl.1.1.20130301T122725Z.6f5743232a86cbed.0c0062d0ba9705ca9ddb24c1c76aff54743a939d").addField("lang", fromLang+"-"+toLang)));
+			 
 			  //VikaTouch.sendLog(new URLBuilder("https://translate.yandex.net/api/v1.5/tr.json/translate?", "text="+text).addField("key", "trnsl.1.1.20130301T122725Z.6f5743232a86cbed.0c0062d0ba9705ca9ddb24c1c76aff54743a939d").addField("lang", fromLang+"-"+toLang).toString());
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
@@ -345,7 +343,7 @@ public class TextLocal {
 		text = VikaUtils.replace(text, "\"]", "");
 		}
 		//VikaTouch.sendLog(text);
-		return text;*/
+		return text;
 	}
 
 }
