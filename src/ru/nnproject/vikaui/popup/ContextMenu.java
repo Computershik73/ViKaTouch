@@ -24,11 +24,11 @@ public class ContextMenu extends VikaNotice {
 	private boolean dragging;
 
 	public ContextMenu(OptionItem[] list) {
-		VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
 		items = list;
 		if (ScrollableCanvas.keysMode)
 			items[selected].setSelected(true);
-		VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
 	}
 
 	public void draw(Graphics g) {
@@ -102,14 +102,14 @@ public class ContextMenu extends VikaNotice {
 
 	public void drag(int x, int y) {
 		//VikaTouch.needstoRedraw=true;
-		if (Math.abs(x - lastx) > 3 || Math.abs(y - lasty) > 3) {
+		if (Math.abs(x - lastx) > 10 || Math.abs(y - lasty) > 10) {
 			dragging = true;
 		}
 		//VikaTouch.needstoRedraw=true;
 	}
 
 	public void release(int x, int y) {
-		
+		VikaTouch.sendLog("redraw");
 		if (dragging)
 			return;
 		int margin = 8;
@@ -127,12 +127,13 @@ public class ContextMenu extends VikaNotice {
 
 		if (x < rx || x > rx + width || y < ry || y > ry + th) {
 			VikaCanvas.currentAlert = null;
-			VikaTouch.needstoRedraw=true;
+			//VikaTouch.needstoRedraw=true;
 			return;
 		}
 
 		int tapY = y - ry;
 		int currY = margin;
+		
 		for (int i = 0; i < items.length; i++) {
 			int h = items[i].getDrawHeight();
 			if (tapY > currY && tapY < currY + h) {
@@ -143,6 +144,7 @@ public class ContextMenu extends VikaNotice {
 			}
 			currY = currY + h;
 		}
+		
 		//VikaTouch.needstoRedraw=true;
 		//VikaTouch.needstoRedraw=true;
 	}

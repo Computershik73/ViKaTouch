@@ -1126,10 +1126,10 @@ try {
 	}
 
 	public static void popup(VikaNotice popup) {
-		VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
 		VikaCanvas.currentAlert = popup;
-		canvas.repaint();
-		VikaTouch.needstoRedraw=true;
+		//canvas.repaint();
+		//VikaTouch.needstoRedraw=true;
 	}
 
 	public static void notificate(VikaNotification n) {

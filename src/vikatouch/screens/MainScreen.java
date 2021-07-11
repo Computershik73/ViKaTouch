@@ -36,6 +36,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 		} else if (deltaX > 7) {
 			VikaTouch.inst.cmdsInst.command(11, this);
 		}
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void release(int x, int y) {
@@ -68,8 +69,9 @@ public abstract class MainScreen extends ScrollableCanvas {
 				}
 			}
 		}
-
+		VikaTouch.needstoRedraw=true;
 		super.release(x, y);
+		VikaTouch.needstoRedraw=true;
 	}
 	
 	protected final void keysScroll(int dir) {
@@ -153,6 +155,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 				ye = y + uiItems[i].getDrawHeight();
 				if (y <= s && ye > s) {
 					select(i);
+					VikaTouch.needstoRedraw=true;
 					return;
 				}
 				y = ye;
@@ -163,10 +166,11 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 	
 	public void scrollToSelected() {
-		VikaTouch.needstoRedraw=true;
+		
 		try {
 			scrolled = -(getItemY(currentItem) - DisplayUtils.height / 2 + (uiItems[currentItem].getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
+			VikaTouch.needstoRedraw=true;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
