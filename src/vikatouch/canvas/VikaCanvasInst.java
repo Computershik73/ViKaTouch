@@ -157,10 +157,6 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void updateScreen(Graphics g) {
-		long csrT = 0;
-		long hudrT = 0;
-		long carT = 0;
-		if (VikaTouch.needstoRedraw) {
 		DisplayUtils.checkdisplay();
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
@@ -193,7 +189,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			e.printStackTrace();
 		}
 		*/
-		 csrT = System.currentTimeMillis();
+		long csrT = System.currentTimeMillis();
 		try {
 
 			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
@@ -214,7 +210,7 @@ public class VikaCanvasInst extends VikaCanvas {
 
 		//g.translate(-g.getTranslateX(), 0);
 
-		 hudrT = System.currentTimeMillis();
+		long hudrT = System.currentTimeMillis();
 		csrT = hudrT - csrT;
 
 		try {
@@ -233,7 +229,7 @@ public class VikaCanvasInst extends VikaCanvas {
 
 		}
 
-		 carT = System.currentTimeMillis();
+		long carT = System.currentTimeMillis();
 		hudrT = carT - hudrT;
 
 		try {
@@ -257,12 +253,9 @@ public class VikaCanvasInst extends VikaCanvas {
 			 * if(Settings.debugInfo) { if(debugString != null) { g.setColor(0xffff00);
 			 * g.drawString(debugString, 65, 2, 0); } }
 			 */
-		VikaTouch.needstoRedraw=false;
-		}
 		if (Settings.debugInfo) {
 			timingsStr = "s:" + csrT + ",a:" + carT + ",hud:" + hudrT;
 		}
-		
 	}
 
 	private void drawLoading(Graphics g) {

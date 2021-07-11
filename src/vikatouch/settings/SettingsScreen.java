@@ -591,7 +591,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		VikaTouch.needstoRedraw=true;
 	}
 
 	public void onMenuItemOption(int i) {
