@@ -28,7 +28,6 @@ import vikatouch.utils.url.URLBuilder;
 public class VideosScreen extends MainScreen implements INextLoadable {
 
 	public VideosScreen() {
-		VikaTouch.needstoRedraw=true;
 		hasBackButton = true;
 	}
 
@@ -42,7 +41,6 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 	protected String formattedTitle;
 
 	public void load(final int from, final int id, final String name1, final String name2) {
-		VikaTouch.needstoRedraw=true;
 		scrolled = 0;
 		uiItems = null;
 		final int count = Settings.simpleListsLength;
@@ -150,7 +148,6 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 	}
 
 	public final void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > 58 && y < DisplayUtils.height - oneitemheight) {
 				int h = 50;
@@ -174,7 +171,6 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 	
 
 	public void loadNext() {
-		VikaTouch.needstoRedraw=true;
 		load(fromVid + Settings.simpleListsLength, currId, whose, name2);
 	}
 

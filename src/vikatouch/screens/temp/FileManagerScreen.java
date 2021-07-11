@@ -38,25 +38,21 @@ public class FileManagerScreen extends ScrollableCanvas {
 	public static int len;
 
 	public FileManagerScreen(ChatScreen chat) {
-		VikaTouch.needstoRedraw=true;
 		this.chat = chat;
 		load();
 		currentItem = 0;
 	}
 	
 	public void load() {
-		VikaTouch.needstoRedraw=true;
 		len = 30;
 		root();
 	}
 	
 	public void press(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		super.press(x, y);
 	}
 	
 	public void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		if(y > DisplayUtils.height - 36) {
 			if(x < 36) {
 				back();
@@ -89,7 +85,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 	
 	public void press(int key) {
-		VikaTouch.needstoRedraw=true;
 		if(key == -6) {
 			if(uiItems[currentItem] != null)
 				uiItems[currentItem].keyPress(-6);
@@ -104,7 +99,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	private void back() {
-		VikaTouch.needstoRedraw=true;
 		if(root) {
 			this.invalidate();
 			VikaTouch.setDisplay(chat, -1);
@@ -114,7 +108,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	private void invalidate() {
-		VikaTouch.needstoRedraw=true;
 		if(fileconn != null) {
 			try {
 				fileconn.close();
@@ -174,7 +167,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 	
 	private void send(byte[] data) throws IOException, InterruptedException {
-		VikaTouch.needstoRedraw=true;
 		VikaUtils.sendPhoto(chat.peerId, data, chat.inputText);
 		chat.inputText = "";
 		VikaTouch.setDisplay(chat, -1);
@@ -185,7 +177,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	public void send(FileManagerItem fileManagerItem) {
-		VikaTouch.needstoRedraw=true;
 		String path = fileManagerItem.getPath();
 		if(!path.startsWith("file://")) {
 			path = "file://" + path;
@@ -205,7 +196,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	public void selected(FileManagerItem fileManagerItem) {
-		VikaTouch.needstoRedraw=true;
 		if(selectedItem != null)
 			selectedItem.setSelected(false);
 		selectedItem = fileManagerItem;
@@ -213,7 +203,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	public void root() {
-		VikaTouch.needstoRedraw=true;
 		selectedItem = null;
 		root = true;
 		folder = "main";
@@ -292,7 +281,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	public void openFolder(String path, int offset) {
-		VikaTouch.needstoRedraw=true;
 		boolean s40 = VikaTouch.needFilePermission();
 		selectedItem = null;
 		uiItems = new PressableUIItem[len];
@@ -350,15 +338,15 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	public void scrollToSelected() {
-		VikaTouch.needstoRedraw=true;
+		
 	}
 
 	public void selectCentered() {
-		VikaTouch.needstoRedraw=true;
+		
 	}
 
 	protected void keysScroll(int dir) {
-		VikaTouch.needstoRedraw=true;
+		
 	}
 
 }

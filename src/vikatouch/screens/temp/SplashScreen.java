@@ -32,7 +32,7 @@ public class SplashScreen extends MainScreen {
 
 	public SplashScreen() {
 		super();
-		VikaTouch.needstoRedraw=true;
+
 		try {
 			logo = Image.createImage("/vika256.png");
 		} catch (Exception e) {

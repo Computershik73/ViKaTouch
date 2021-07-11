@@ -115,7 +115,6 @@ public class VikaTouch {
 	public static boolean isRecording;
 	public static String mylanguage;
 	public static boolean supportsTouch;
-	public static boolean needstoRedraw=true;
 	//Вотэто очень прошу не трогать.
 	public static final boolean SIGNED = false;
 
@@ -953,12 +952,12 @@ try {
 		splash = new SplashScreen();
 		cmdsInst = new CommandsImpl();
 		setDisplay(splash, 0);
-		VikaTouch.needstoRedraw=true;
+
 		SplashScreen.currState = 1;
-		VikaTouch.needstoRedraw=true;
+
 
 		SplashScreen.currState = 2;
-		VikaTouch.needstoRedraw=true;
+
 		try {
 			TextLocal.init();
 			splash.setText();
@@ -972,7 +971,7 @@ try {
 			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("splash.emnotsupported"), null));
 
 		SplashScreen.currState = 3;
-		VikaTouch.needstoRedraw=true;
+
 		ImageStorage.init();
 		try {
 			IconsManager.Load();
@@ -994,9 +993,9 @@ try {
 			e1.printStackTrace();
 			deactivatedImg = cameraImg;
 		}
-		VikaTouch.needstoRedraw=true;
+
 		SplashScreen.currState = 4;
-		VikaTouch.needstoRedraw=true;
+
 		// Выбор сервера
 		if (!Settings.setted) {
 			if (mobilePlatform.indexOf("S60") > -1) {
@@ -1082,16 +1081,12 @@ try {
 						
 					}
 				}
-				VikaTouch.needstoRedraw=true;
 				canvas = menuScr = new MenuScreen();
-				VikaTouch.needstoRedraw=true;
 				SplashScreen.currState = 6;
 				if (accessToken != "" && !offlineMode) {
 					Dialogs.refreshDialogsList(true, false);
 				}
-				VikaTouch.needstoRedraw=true;
 				SplashScreen.currState = 7;
-				VikaTouch.needstoRedraw=true;
 			} else {
 				canvas = loginScr = new LoginScreen();
 			}
@@ -1126,10 +1121,8 @@ try {
 	}
 
 	public static void popup(VikaNotice popup) {
-		VikaTouch.needstoRedraw=true;
 		VikaCanvas.currentAlert = popup;
 		canvas.repaint();
-		VikaTouch.needstoRedraw=true;
 	}
 
 	public static void notificate(VikaNotification n) {

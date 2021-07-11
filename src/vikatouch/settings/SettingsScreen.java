@@ -40,7 +40,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 
 	public SettingsScreen() {
 		super();
-		VikaTouch.needstoRedraw=true;
 		hasBackButton = true;
 		oneitemheight = (short) (DisplayUtils.compact ? 30 : 50);
 		backItem = new OptionItem(this, TextLocal.inst.get("back"), IconsManager.BACK, 0, oneitemheight);
@@ -52,7 +51,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 	}
 
 	private void initAllSettsList() {
-		VikaTouch.needstoRedraw=true;
+
 		String[] eOd = new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") };
 		String[] dialogsRR = new String[] { eOd[0], "5", "10", "20", "30" };
 		String[] notifModes = new String[] { TextLocal.inst.get("settings.disabled"),
@@ -242,7 +241,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 	}
 
 	public final void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH && uiItems != null && !dragging) {
 				int yy = topPanelH;
@@ -264,13 +262,10 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		VikaTouch.needstoRedraw=true;
 		super.release(x, y);
-		VikaTouch.needstoRedraw=true;
 	}
 
 	public void settingSet(int setIndex, int var) {
-		VikaTouch.needstoRedraw=true;
 		Settings.setted = true;
 		switch (setIndex) {
 		case 0: {
@@ -385,7 +380,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 	}
 
 	public void onMenuItemPress(int i) {
-		VikaTouch.needstoRedraw=true;
 		switch (i) {
 		case 0: {
 			switchList(menuList);
@@ -430,7 +424,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 						} catch (Exception e) {
 
 						}
-						VikaTouch.needstoRedraw=true;
 						VikaTouch.setDisplay(new LoginScreen(), -1);
 					}
 				}, null, TextLocal.inst.get("ok"), TextLocal.inst.get("cancel")));
@@ -443,7 +436,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			break;
 		}
 		case -3: {
-			VikaTouch.needstoRedraw=true;
 			VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("settings.reset"), null, new Runnable() {
 				public void run() {
 					Settings.loadDefaultSettings();
@@ -453,7 +445,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			break;
 		}
 		case 21: {
-			VikaTouch.needstoRedraw=true;
 			// со строками сеттинг айтем пока не умеет
 			OptionItem[] it = new OptionItem[4];
 			it[0] = new OptionItem(this, "240", IconsManager.VIDEOS, 11, oneitemheight);
@@ -464,14 +455,12 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			break;
 		}
 		case 31: {
-			VikaTouch.needstoRedraw=true;
 			if (VikaTouch.about == null)
 				VikaTouch.about = new AboutScreen();
 			VikaTouch.setDisplay(VikaTouch.about, 1);
 			break;
 		}
 		case 23: {
-			VikaTouch.needstoRedraw=true;
 			OptionItem[] it = new OptionItem[6];
 			it[0] = new OptionItem(this, "English", IconsManager.EDIT, 1, oneitemheight);
 			it[1] = new OptionItem(this, "Русский", IconsManager.EDIT, 2, oneitemheight);
@@ -483,7 +472,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			break;
 		}
 		case 50: {
-			VikaTouch.needstoRedraw=true;
 			OptionItem[] it = new OptionItem[6];
 			it[2] = new OptionItem(this, "Россия (RU)", IconsManager.EDIT, 32, oneitemheight);
 			it[0] = new OptionItem(this, "United States (US)", IconsManager.EDIT, 33, oneitemheight);
@@ -496,7 +484,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			break;
 		}
 		case 22: {
-			VikaTouch.needstoRedraw=true;
 			OptionItem[] it = new OptionItem[4];
 			it[0] = new OptionItem(this, TextLocal.inst.get("settings.disabled"), IconsManager.EDIT, 0, oneitemheight);
 			it[1] = new OptionItem(this, TextLocal.inst.get("settings.vibro"), IconsManager.EDIT, 1,
@@ -511,7 +498,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		// 11-20 - разреши видео! Пока, потом я мб таки запихну это дело в SettingItem.
 		}
 		if (i >= 11 && i <= 19) {
-			VikaTouch.needstoRedraw=true;
 			int j = i - 11;
 			String[] res = new String[] { "240", "360", "480", "720" };
 			Settings.setted = true;
@@ -519,7 +505,6 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			// Settings.saveSettings();
 		}
 		if (i >= 1 && i <= 9) {
-			VikaTouch.needstoRedraw=true;
 			int j = i - 1;
 			String[] res = new String[] { "english", "russian", "spanish", "ukrainian", "belarussian", "vietnamese"};
 			Settings.setted = true;
@@ -534,7 +519,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			//VikaTouch.popup(new InfoPopup("Settings will be applied after restart", null, "", "OK"));
 		}
 		if(i >= 32 && i <= 40) {
-			VikaTouch.needstoRedraw=true;
+
 			int j = i - 32;
 			String[] res = new String[] { "RU", "US", "UK", "ES", "UA", "BY", "KZ"};
 			Settings.setted = true;
@@ -546,14 +531,11 @@ public class SettingsScreen extends MainScreen implements IMenu {
 	}
 
 	private void switchList(PressableUIItem[] l) {
-		VikaTouch.needstoRedraw=true;
 		if (l == this.menuList)
 			hasBackButton = true;
 		else
 			hasBackButton = false;
-		VikaTouch.needstoRedraw=true;
 		try {
-			VikaTouch.needstoRedraw=true;
 			if(uiItems != null)
 				uiItems[currentItem].setSelected(false); // точно упадёт на старте - списка то ещё нет.
 		} catch (Throwable e) {
@@ -564,9 +546,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			itemsCount = (short) uiItems.length;
 			if (keysMode) {
 				currentItem = 0;
-				VikaTouch.needstoRedraw=true;
 				uiItems[0].setSelected(true);
-				VikaTouch.needstoRedraw=true;
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -574,12 +554,10 @@ public class SettingsScreen extends MainScreen implements IMenu {
 	}
 
 	public void onMenuItemOption(int i) {
-		VikaTouch.needstoRedraw=true;
 
 	}
 
 	public void onLeave() {
-		VikaTouch.needstoRedraw=true;
 		 Settings.saveSettings();
 	}
 

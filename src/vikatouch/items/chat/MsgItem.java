@@ -45,7 +45,6 @@ import vikatouch.utils.url.URLBuilder;
 public class MsgItem extends ChatItem implements IMenu, IMessage {
 	public MsgItem(JSONObject json) {
 		super(json);
-		VikaTouch.needstoRedraw=true;
 		smilesarray = new Vector(0, 1);
 	}
 
@@ -77,7 +76,6 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	public Vector smilesarray = new Vector(0, 1);
 	public String codestext="";
 	public void ChangeText(String s) {
-		VikaTouch.needstoRedraw=true;
 		text = s;
 		int h1 = Font.getFont(0, 0, 8).getHeight();
 		drawText = TextBreaker.breakText(text, Font.getFont(0, 0, Font.SIZE_SMALL), msgWidth - h1);
@@ -86,7 +84,6 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	}
 
 	public void parseJSON() {
-		VikaTouch.needstoRedraw=true;
 		super.parseJSON();
 		msgWidth = DisplayUtils.width - (DisplayUtils.width <= 240 ? 10 : 40);
 		margin = (DisplayUtils.width <= 240 ? 0 : 10);
@@ -304,7 +301,6 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	}
 
 	public void loadAtts() {
-		VikaTouch.needstoRedraw=true;
 		if (attH < 0) {
 			attH = 0;
 			// prepairing attachments
@@ -790,12 +786,10 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	}
 
 	public void tap(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		keyPress(-5);
 	}
 
 	public void keyPress(int key) {
-		VikaTouch.needstoRedraw=true;
 		if (key == -5) {
 			int h = 48;
 			OptionItem[] opts = new OptionItem[6];
@@ -812,7 +806,6 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	}
 
 	public void onMenuItemPress(int i) {
-		VikaTouch.needstoRedraw=true;
 		if (i <= -100) {
 			// ссылки
 			i = -i;

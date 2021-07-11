@@ -140,7 +140,6 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void paint(Graphics g) {
-		if (VikaTouch.needstoRedraw) {
 		if(dontBuffer()) {
 			draw0(g);
 			return;
@@ -149,8 +148,6 @@ public class VikaCanvasInst extends VikaCanvas {
 			g.drawImage(image, 0, 0, 0);
 		}
 		super.paint(g);
-		VikaTouch.needstoRedraw=false;
-		}
 	}
 
 	public void updateScreen(Graphics g) {

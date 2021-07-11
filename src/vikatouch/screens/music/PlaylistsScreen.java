@@ -28,7 +28,6 @@ public class PlaylistsScreen extends MainScreen {
 
 	public PlaylistsScreen() {
 		super();
-		VikaTouch.needstoRedraw=true;
 		plStr = TextLocal.inst.get("title.playlists");
 	}
 
@@ -38,7 +37,6 @@ public class PlaylistsScreen extends MainScreen {
 	public String title = null;
 
 	public void load(final int id, final String title) {
-		VikaTouch.needstoRedraw=true;
 		this.title = title;
 		scrolled = 0;
 		uiItems = null;
@@ -94,7 +92,6 @@ public class PlaylistsScreen extends MainScreen {
 		};
 		hasBackButton = true;
 		downloaderThread.start();
-		VikaTouch.needstoRedraw=true;
 	}
 
 	public void draw(Graphics g) {
@@ -129,7 +126,6 @@ public class PlaylistsScreen extends MainScreen {
 	}
 
 	public final void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = 102;

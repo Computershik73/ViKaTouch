@@ -85,7 +85,6 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 	protected static String photosStr;
 
 	public ProfilePageScreen(int id) {
-		VikaTouch.needstoRedraw=true;
 		visitStr = "";
 		if (onlineStr == null) {
 			userStr = TextLocal.inst.get("user");
@@ -116,7 +115,6 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 	}
 
 	public void load() {
-		VikaTouch.needstoRedraw=true;
 		if (downloaderThread != null && downloaderThread.isAlive())
 			downloaderThread.interrupt();
 		System.gc();
@@ -303,7 +301,6 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 	}
 
 	public final void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		if (!dragging) {
 			if (y > 58 && y < DisplayUtils.height - 50) {
 				for (int i = 0; i < itemsCount; i++) {
@@ -320,7 +317,6 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 	}
 
 	public void onMenuItemPress(int i) {
-		VikaTouch.needstoRedraw=true;
 		switch (i) {
 			case 0:
 				if (closed) {

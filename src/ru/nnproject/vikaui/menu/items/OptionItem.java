@@ -7,7 +7,6 @@ import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
-import vikatouch.VikaTouch;
 
 /**
  * @author Feodor0090
@@ -28,7 +27,6 @@ public class OptionItem implements PressableUIItem {
 	public int fillW; // for context menu
 
 	public OptionItem(IMenu m, String t, int ic, int i, int h) {
-		VikaTouch.needstoRedraw=true;
 		this.h = h;
 		this.i = i;
 		icon = ic;
@@ -77,7 +75,6 @@ public class OptionItem implements PressableUIItem {
 	}
 
 	public void setSelected(boolean selected) {
-		VikaTouch.needstoRedraw=true;
 		s = selected;
 	}
 

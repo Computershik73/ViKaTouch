@@ -69,9 +69,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 	private int selectedBtn;
 
 	public MenuScreen() {
-		
 		super();
-		VikaTouch.needstoRedraw=true;
+		
 		selectedBtn = 1;
 		profileImg = VikaTouch.cameraImg;
 		if (VikaTouch.DEMO_MODE) {
@@ -210,7 +209,6 @@ public class MenuScreen extends MainScreen implements IMenu {
 	}
 
 	protected final void up() {
-		VikaTouch.needstoRedraw=true;
 		if (selectedBtn > 1)
 			uiItems[selectedBtn - 2].setSelected(false);
 		selectedBtn--;
@@ -222,7 +220,6 @@ public class MenuScreen extends MainScreen implements IMenu {
 	}
 
 	protected final void down() {
-		VikaTouch.needstoRedraw=true;
 		if (selectedBtn > 1)
 			uiItems[selectedBtn - 2].setSelected(false);
 		selectedBtn++;
@@ -235,7 +232,6 @@ public class MenuScreen extends MainScreen implements IMenu {
 	}
 
 	public void scrollToSelected() {
-		VikaTouch.needstoRedraw=true;
 		if (selectedBtn == 0)
 			return;
 		if (selectedBtn == 1)
@@ -246,7 +242,6 @@ public class MenuScreen extends MainScreen implements IMenu {
 	}
 
 	public final void press(int key) {
-		VikaTouch.needstoRedraw=true;
 		keysMode = true;
 		if(key == -7) {
 			
@@ -260,7 +255,6 @@ public class MenuScreen extends MainScreen implements IMenu {
 			}
 		} else
 			super.press(key);
-		VikaTouch.needstoRedraw=true;
 		repaint();
 	}
 
@@ -616,7 +610,6 @@ public class MenuScreen extends MainScreen implements IMenu {
 	 */
 
 	public final void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		VikaTouch.supportsTouch=true;
 		if (!dragging) {
 			try {
@@ -666,7 +659,6 @@ public class MenuScreen extends MainScreen implements IMenu {
 	 */
 
 	public void onMenuItemPress(int i) {
-		VikaTouch.needstoRedraw=true;
 		VikaTouch.inst.cmdsInst.command(i, this);
 	}
 

@@ -103,7 +103,7 @@ public class CaptchaScreen extends VikaScreen {
 	}
 
 	private void captcha() {
-		VikaTouch.needstoRedraw=true;
+
 		try {
 			VikaTouch.inst.tokenAnswer = VikaUtils.download_old(new URLBuilder(VikaTouch.OAUTH, "token")
 					.addField("grant_type", "password").addField("client_id", "2685278")
@@ -123,9 +123,7 @@ public class CaptchaScreen extends VikaScreen {
 			VikaTouch.userId = json.getString("user_id");
 			VikaTouch.inst.refreshToken();
 			VikaTouch.menuScr = new MenuScreen();
-			VikaTouch.needstoRedraw=true;
 			VikaTouch.setDisplay(VikaTouch.menuScr, 1);
-			VikaTouch.needstoRedraw=true;
 			VikaTouch.inst.saveToken();
 			Dialogs.refreshDialogsList(true, false);
 		} catch (Exception e) {

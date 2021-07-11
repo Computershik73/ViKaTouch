@@ -29,7 +29,6 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 
 	public DocsScreen() {
 		super();
-		VikaTouch.needstoRedraw=true;
 		isPreviewShown = false;
 		VikaTouch.loading = true;
 	}

@@ -185,7 +185,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public ChatScreen(int peerId, String title) {
-		VikaTouch.needstoRedraw=true;
 		title2 = TextLocal.inst.get("title2.loading");
 		this.title = title;
 		this.peerId = peerId;
@@ -204,7 +203,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public ChatScreen(int peerId) {
-		VikaTouch.needstoRedraw=true;
 		VikaTouch.resendingobjectid="";
 		if (DisplayUtils.compact) {
 			topPanelH = 30;
@@ -226,7 +224,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	private void parse() {
-		VikaTouch.needstoRedraw=true;
 		int errst = 0;
 		scrollWithKeys = true;
 		errst = 1;
@@ -380,7 +377,6 @@ public class ChatScreen extends MainScreen {
 	private int pinId;
 
 	private void messagesChat() throws IOException, InterruptedException {
-		VikaTouch.needstoRedraw=true;
 		try {
 			String errst = "f";
 			// VikaTouch.sendLog("Messages in chat mode");
@@ -569,7 +565,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	private void messagesDialog() throws IOException, InterruptedException {
-		VikaTouch.needstoRedraw=true;
 		JSONArray json = null;
 		int jl = 0;
 		try {
@@ -626,7 +621,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public void loadAtts() {
-		VikaTouch.needstoRedraw=true;
 		VikaCanvasInst.msgColor = 0xff0000ff;
 		VikaTouch.loading = true;
 		int i = 0;
@@ -669,7 +663,7 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public int markMsgs(int inRead, int outRead) {
-		VikaTouch.needstoRedraw=true;
+		
 		try {
 		//	return 0;
 			int l = Math.min(inRead, outRead);
@@ -743,7 +737,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public final void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		if (!dragging) {
 			if (y > DisplayUtils.height - inputBoxH
 					- (answerMsgId == 0 ? 0 : Font.getFont(0, 0, Font.SIZE_SMALL).getHeight() * 2)) {
@@ -805,11 +798,9 @@ public class ChatScreen extends MainScreen {
 			}
 		}
 		super.release(x, y);
-		VikaTouch.needstoRedraw=false;
 	}
 
 	public void press(int key) {
-		VikaTouch.needstoRedraw=true;
 		if (key != -12 && key != -20) {
 			keysMode = true;
 		}
@@ -818,19 +809,14 @@ public class ChatScreen extends MainScreen {
 		 * VikaCanvas.currentAlert.press(key); repaint(); return; }
 		 */
 		if (key == -1) {
-			VikaTouch.needstoRedraw=true;
 			up();
 		} else if (key == -2) {
-			VikaTouch.needstoRedraw=true;
 			down();
 		} else if (key == -3) {
-			VikaTouch.needstoRedraw=true;
 			up();
 		} else if (key == -4) {
-			VikaTouch.needstoRedraw=true;
 			down();
 		} else if (key == -10) {
-			VikaTouch.needstoRedraw=true;
 			if (inputedLinesCount != 0) {
 				send();
 				} else {
@@ -838,7 +824,6 @@ public class ChatScreen extends MainScreen {
 					//VikaTouch.setDisplay(new CameraScreen(ChatScreen.this), 1);
 				}
 		} else if (key == -5) { // ok
-			VikaTouch.needstoRedraw=true;
 			switch (buttonSelected) {
 			case 0:
 				uiItems[currentItem].keyPress(key);
@@ -862,23 +847,20 @@ public class ChatScreen extends MainScreen {
 				break;
 			}
 		} else if (key == -6) { // lsk
-			VikaTouch.needstoRedraw=true;
 			if (buttonSelected == 0) {
 				buttonSelected = 2;
 			} else {
 				buttonSelected = 0;
 			}
 		} else if (key == -7) { // rsk
-			VikaTouch.needstoRedraw=true;
 			stopUpdater();
 			VikaTouch.inst.cmdsInst.command(14, this);
 		}
-		VikaTouch.needstoRedraw=true;
 		repaint();
 	}
 
 	private void addAtt() {
-		VikaTouch.needstoRedraw=true;
+
 		IMenu m = new EmptyMenu() {
 			public void onMenuItemPress(int i) {
 				try {
@@ -942,7 +924,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	protected void down() {
-		VikaTouch.needstoRedraw=true;
 		if (buttonSelected == 0) {
 			keysScroll(-1);
 			/*
@@ -959,7 +940,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	protected void up() {
-		VikaTouch.needstoRedraw=true;
 		if (buttonSelected == 0) {
 			keysScroll(+1);
 			/*
@@ -973,7 +953,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public int getItemY(int n) {
-		VikaTouch.needstoRedraw=true;
 		int y = 0;
 		for (int i = 0; (i < uiItems.length && i < n); i++) {
 			if (uiItems[i] != null) {
@@ -985,7 +964,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public void selectCentered() {
-		VikaTouch.needstoRedraw=true;
 		System.out.println("select center in chat");
 		int y = MainScreen.topPanelH;
 		int ye = y;
@@ -1011,7 +989,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public void repeat(int key) {
-		VikaTouch.needstoRedraw=true;
 		if (key != -12 && key != -20) {
 			keysMode = true;
 		}
@@ -1070,7 +1047,6 @@ public class ChatScreen extends MainScreen {
 	
 	
 	private void send() {
-		VikaTouch.needstoRedraw=true;
         if (!canSend)
             return;
         canSend = false;
@@ -1370,7 +1346,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	private void runUpdater() {
-		VikaTouch.needstoRedraw=true;
 		stopUpdater();
 
 		updater = new Thread() {
@@ -1556,7 +1531,6 @@ public class ChatScreen extends MainScreen {
 	
 	
 	private void showTextBox() {
-		VikaTouch.needstoRedraw=true;
         if (!canSend)
             return;
         if(NokiaUIInvoker.supportsTextEditor()) {
@@ -1620,7 +1594,6 @@ public class ChatScreen extends MainScreen {
 	
 
 	private void msgClick(int tapY, long tapTime) {
-		VikaTouch.needstoRedraw=true;
 		tapY -= topPanelH;
 		if (uiItems == null)
 			return;
@@ -1639,7 +1612,6 @@ public class ChatScreen extends MainScreen {
 	}
 
 	private void drawDialog(Graphics g) {
-		VikaTouch.needstoRedraw=true;
 		if (uiItems == null)
 			return;
 		try {
@@ -1887,7 +1859,6 @@ public class ChatScreen extends MainScreen {
 	
 	
 	public void onLeave() {
-		VikaTouch.needstoRedraw=true;
         if(NokiaUIInvoker.textEditorShown())
             NokiaUIInvoker.hideTextEditor();
         stopUpdater();

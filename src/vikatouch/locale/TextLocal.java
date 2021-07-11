@@ -323,7 +323,7 @@ public class TextLocal {
 	}
 
 	public static String translateText(String text, String fromLang, String toLang) {
-		if ((VikaTouch.mylanguage==null) || (VikaTouch.mylanguage==toLang) || (VikaTouch.mylanguage==fromLang) || (fromLang==toLang)) {
+		if (VikaTouch.mylanguage==null) {
 			return text;
 		}
 		JSONObject textjson = null;
@@ -335,7 +335,7 @@ public class TextLocal {
 			// TODO Auto-generated catch block
 			VikaTouch.sendLog(e.getMessage());
 		}
-		if (textjson.isNull("text") || (textjson==null)) {
+		if (textjson.isNull("text")) {
 			return text;
 		} else {
 		text = textjson.getString("text");
