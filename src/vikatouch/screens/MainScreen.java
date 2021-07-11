@@ -30,6 +30,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 
 	protected void scrollHorizontally(int deltaX) {
+		VikaTouch.needstoRedraw=true;
 		if (deltaX < -7) {
 			VikaTouch.inst.cmdsInst.command(10, this);
 		} else if (deltaX > 7) {
@@ -38,6 +39,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 
 	public void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		if (!(this instanceof ChatScreen)) {
 			if (!dragging || !canScroll) {
 				int wyw = DisplayUtils.width / 4;
@@ -71,6 +73,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 	
 	protected final void keysScroll(int dir) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			int delta = DisplayUtils.height / 3;
 			int st = 0;
@@ -140,6 +143,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 	
 	public void selectCentered() {
+		VikaTouch.needstoRedraw=true;
 		try {
 			System.out.println("select center");
 			int y = MainScreen.topPanelH;
@@ -159,6 +163,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 	
 	public void scrollToSelected() {
+		VikaTouch.needstoRedraw=true;
 		try {
 			scrolled = -(getItemY(currentItem) - DisplayUtils.height / 2 + (uiItems[currentItem].getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
@@ -371,5 +376,6 @@ public abstract class MainScreen extends ScrollableCanvas {
 
 	// events
 	public void onLeave() {
+		VikaTouch.needstoRedraw=true;
 	}
 }

@@ -65,6 +65,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 	public Thread downloaderThread;
 
 	public GroupPageScreen(int id) {
+		VikaTouch.needstoRedraw=true;
 		hasBackButton = true;
 		this.id = id;
 		load();
@@ -73,6 +74,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 	}
 
 	public void load() {
+		VikaTouch.needstoRedraw=true;
 		if (downloaderThread != null && downloaderThread.isAlive())
 			downloaderThread.interrupt();
 		System.gc();
@@ -170,6 +172,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 		};
 
 		downloaderThread.start();
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void draw(Graphics g) {
@@ -233,6 +236,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 	}
 
 	public final void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		if (!dragging) {
 			if (y > 58 && y < DisplayUtils.height - 50) {
 				for (int i = 0; i < itemsCount; i++) {
@@ -250,6 +254,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 	}
 
 	public void onMenuItemPress(int i) {
+		VikaTouch.needstoRedraw=true;
 		if (isInfoShown) {
 			isInfoShown = false;
 		} else {

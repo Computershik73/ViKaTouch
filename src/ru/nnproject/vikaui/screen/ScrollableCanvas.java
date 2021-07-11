@@ -8,6 +8,7 @@ import javax.microedition.lcdui.Graphics;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.MathUtils;
+import vikatouch.VikaTouch;
 
 /**
  * @author Shinovon
@@ -29,7 +30,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	public int itemsh = itemsCount * oneitemheight;
 	protected int lastx;
 	public static short vmeshautsa = 528;
-	public static final double scrollSpeed = 1.8;
+	public static final double scrollSpeed = 2.8;
 	public PressableUIItem[] uiItems;
 	public short scrollOffset;
 	public int currentItem;
@@ -53,12 +54,14 @@ public abstract class ScrollableCanvas extends VikaScreen {
 
 	public ScrollableCanvas() {
 		super();
+		VikaTouch.needstoRedraw=true;
 		repaint();
 	}
 
 	public abstract void draw(Graphics g);
 
 	public final void drag(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		keysMode = false;
 		if (DisplayUtils.canvas.isSensorModeJ2MELoader()) {
 			if (!dragging) {
@@ -88,6 +91,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			timer = 0;
 		} else {
 			try {
+				VikaTouch.needstoRedraw=true;
 				if (!dragging) {
 					if (poorScrolling()) {
 						lastx = startx;
@@ -138,6 +142,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	protected abstract void scrollHorizontally(int deltaX);
 
 	public void press(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		timer = 0;
 		scrollingTimer = 0;
 		drift = 0;
@@ -155,6 +160,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	}
 
 	public void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		// dragged = false;
 		try {
 			if (!poorScrolling() && timer < 7) {
@@ -174,23 +180,31 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	}
 
 	public void press(int key) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			if (key != -12 && key != -20) {
 				keysMode = true;
 			}
 			if (key == -1) {
+				VikaTouch.needstoRedraw=true;
 				up();
 			} else if (key == -2) {
+				VikaTouch.needstoRedraw=true;
 				down();
 			} else if (key == -3) {
+				VikaTouch.needstoRedraw=true;
 				DisplayUtils.canvas.callCommand(10, this);
 			} else if (key == -4) {
+				VikaTouch.needstoRedraw=true;
 				DisplayUtils.canvas.callCommand(11, this);
 			} else if (key == -7) {
+				VikaTouch.needstoRedraw=true;
 				DisplayUtils.canvas.callCommand(14, this);
 			} else {
+				VikaTouch.needstoRedraw=true;
 				uiItems[currentItem].keyPress(key);
 			}
+			VikaTouch.needstoRedraw=true;
 			repaint();
 		} catch (Throwable e) {
 			// VikaTouch.sendLog("press "+ e.getMessage());
@@ -198,6 +212,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	}
 
 	public void repeat(int key) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			if (key != -12 && key != -20) {
 				keysMode = true;
@@ -208,6 +223,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			if (key == -2) {
 				down();
 			}
+			VikaTouch.needstoRedraw=true;
 			repaint();
 		} catch (Throwable e) {
 
@@ -217,6 +233,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	// private int scrolebd;
 
 	protected void down() {
+		VikaTouch.needstoRedraw=true;
 		if (scrollWithKeys) {
 			keysScroll(-1);
 			return;
@@ -254,6 +271,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	}
 
 	protected void up() {
+		VikaTouch.needstoRedraw=true;
 		if (scrollWithKeys) {
 			keysScroll(+1);
 			return;
@@ -283,6 +301,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	public abstract void selectCentered();
 
 	public void select(int i) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			System.out.println("select " + i);
 			if (i < 0)
@@ -310,10 +329,11 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	protected abstract void keysScroll(int dir);
 
 	protected final void update(Graphics g) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			if (scrollTargetActive) {
 				scroll = 0;
-				if (Math.abs(scrolled - scrollTarget) < 4) {
+				if (Math.abs(scrolled - scrollTarget) < 2) {
 					scrolled = scrollTarget;
 					scrollTargetActive = false;
 				} else {
@@ -374,7 +394,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	}
 
 	protected void callRefresh() {
-
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public int getItemY(int n) {

@@ -61,6 +61,7 @@ public class ChatMembersScreen extends MainScreen {
 	private String formattedTitle;
 
 	public ChatMembersScreen(final int id, String title, int count) {
+		VikaTouch.needstoRedraw=true;
 		formattedTitle = title;
 		scrolled = 0;
 		uiItems = null;
@@ -155,6 +156,7 @@ public class ChatMembersScreen extends MainScreen {
 	}
 
 	public final void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = uiItems[0].getDrawHeight();

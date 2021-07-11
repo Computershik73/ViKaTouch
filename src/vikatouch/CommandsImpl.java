@@ -37,8 +37,10 @@ public class CommandsImpl implements CommandListener {
 	}
 
 	public void command(final int i, final VikaScreen s) {
+		VikaTouch.needstoRedraw=true;
 		final Thread t = new Thread() {
 			public void run() {
+				VikaTouch.needstoRedraw=true;
 				try {
 					switch (i) {
 					case -1: {
@@ -189,6 +191,7 @@ public class CommandsImpl implements CommandListener {
 
 	protected void callLeaveEvent(VikaScreen s) {
 		try {
+			VikaTouch.needstoRedraw=true;
 			s.onLeave();
 		} catch (Exception e) {
 		}

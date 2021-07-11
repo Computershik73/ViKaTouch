@@ -166,6 +166,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 	}
 
 	protected final void callRefresh() {
+		VikaTouch.needstoRedraw=true;
 		if (!fromAtt)
 			loadPosts(true);
 	}
@@ -207,6 +208,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 	}
 
 	public final void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		if (!dragging) {
 			if (y > topPanelH && y < DisplayUtils.height - oneitemheight) {
 				int yy = topPanelH + 10;
@@ -242,6 +244,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 	}
 
 	public void onLeave() {
+		VikaTouch.needstoRedraw=true;
 		if (VikaTouch.isNotS60()) {
 		profiles = null;
 		groups = null;

@@ -21,6 +21,7 @@ public class VikaUpdate {
 	
 	public static VikaUpdate check()
 	{
+		VikaTouch.needstoRedraw=true;
 		int step = 0;
 		try
 		{
@@ -57,6 +58,7 @@ public class VikaUpdate {
 	
 	public void ask()
 	{
+		VikaTouch.needstoRedraw=true;
 		VikaTouch.popup(new InfoPopup(TextLocal.inst.get("update.available") + " - "+newVer+"\n"+changeLog, new Runnable() {
 			public void run () {
 				VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("update.dl"), "", new Runnable() {

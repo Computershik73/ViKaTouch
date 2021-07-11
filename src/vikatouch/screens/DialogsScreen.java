@@ -20,7 +20,7 @@ public class DialogsScreen extends MainScreen {
 
 	public DialogsScreen() {
 		super();
-
+		VikaTouch.needstoRedraw=true;
 		// VikaTouch.loading = true;
 
 		if (VikaTouch.menuScr == null) {
@@ -33,15 +33,18 @@ public class DialogsScreen extends MainScreen {
 
 	protected final void callRefresh() {
 		// VikaTouch.loading = true;
+		VikaTouch.needstoRedraw=true;
 		Dialogs.refreshDialogsList(true, false);
 		// VikaTouch.loading = false;
 	}
 
 	public final void press(int key) {
+		VikaTouch.needstoRedraw=true;
 		if (key != -12 && key != -20) {
 			keysMode = true;
 		}
 		if (key == -5) {
+			
 			Dialogs.dialogs[currentItem].keyPress(-5);
 		} else if (key == -6) {
 			callRefresh();
@@ -55,6 +58,7 @@ public class DialogsScreen extends MainScreen {
 	}
 
 	protected final void up() {
+		VikaTouch.needstoRedraw=true;
 		try {
 			Dialogs.dialogs[currentItem].setSelected(false);
 		} catch (Exception e) {
@@ -73,6 +77,7 @@ public class DialogsScreen extends MainScreen {
 	}
 
 	protected final void down() {
+		VikaTouch.needstoRedraw=true;
 		try {
 			Dialogs.dialogs[currentItem].setSelected(false);
 		} catch (Exception e) {
@@ -87,6 +92,7 @@ public class DialogsScreen extends MainScreen {
 	}
 
 	public final void scrollToSelected() {
+		VikaTouch.needstoRedraw=true;
 		int itemy = 0;
 		for (int i = 0; (i < Dialogs.dialogs.length && i < currentItem); i++) {
 			itemy += Dialogs.dialogs[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
@@ -98,6 +104,7 @@ public class DialogsScreen extends MainScreen {
 	}
 
 	public void draw(Graphics g) {
+		
 		if (Dialogs.dialogs == null) {
 			return;
 		}
@@ -140,6 +147,7 @@ public class DialogsScreen extends MainScreen {
 	}
 
 	public void unselectAll() {
+		VikaTouch.needstoRedraw=true;
 		if (Dialogs.selected) {
 			for (int i = 0; i < Dialogs.itemsCount; i++) {
 				if (Dialogs.dialogs[i] != null) {
@@ -151,6 +159,7 @@ public class DialogsScreen extends MainScreen {
 	}
 
 	public final void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		// тача больше нигде нет. Ладно.
 		try {
 			if (Dialogs.dialogs != null) {
@@ -173,6 +182,7 @@ public class DialogsScreen extends MainScreen {
 	}
 
 	public final void press(int x, int y) {
+		VikaTouch.needstoRedraw=true;
 		try {
 			if (Dialogs.dialogs != null) {
 				if (y > 58 && y < DisplayUtils.height - oneitemheight) {
