@@ -214,20 +214,26 @@ public class CommandsImpl implements CommandListener {
 		if (Settings.dontBack) {
 			if (s instanceof SettingsScreen) {
 				VikaTouch.setDisplay(null, -1);
+				VikaTouch.needstoRedraw=true;
 			} else if (s instanceof ChatScreen) {
 				VikaTouch.setDisplay(VikaTouch.dialogsScr, -1);
+				VikaTouch.needstoRedraw=true;
 			} else
 				VikaTouch.setDisplay(VikaTouch.menuScr, -1);
+			VikaTouch.needstoRedraw=true;
 		} else {
 			if (s instanceof SettingsScreen) {
 				VikaTouch.setDisplay(null, -1);
+				VikaTouch.needstoRedraw=true;
 			} else if (s instanceof MainScreen) {
 				VikaTouch.setDisplay(((MainScreen) s).backScreen, -1);
+				VikaTouch.needstoRedraw=true;
 			}
 			if (s instanceof ChatScreen) {
 				
 				VikaTouch.setDisplay(VikaTouch.dialogsScr, -1);
 				Dialogs.refreshDialogsList(true, false);
+				VikaTouch.needstoRedraw=true;
 			}
 		}
 
@@ -244,6 +250,7 @@ public class CommandsImpl implements CommandListener {
 				VikaTouch.newsScr.loadPosts();
 			}
 			VikaTouch.setDisplay(VikaTouch.newsScr, -1);
+			VikaTouch.needstoRedraw=true;
 			callLeaveEvent(s);
 		}
 	}
@@ -255,9 +262,11 @@ public class CommandsImpl implements CommandListener {
 			if (VikaTouch.dialogsScr == null)
 				VikaTouch.dialogsScr = new DialogsScreen();
 			VikaTouch.setDisplay(VikaTouch.dialogsScr, 0);
+			VikaTouch.needstoRedraw=true;
 			callLeaveEvent(s);
 		} else {
 			Dialogs.refreshDialogsList(true, false);
+			VikaTouch.needstoRedraw=true;
 		}
 	}
 
@@ -265,6 +274,7 @@ public class CommandsImpl implements CommandListener {
 		// меню должно возвращать В МЕНЮ, есть кнопка назад.
 		if (!(s instanceof MenuScreen)) {
 			VikaTouch.setDisplay(VikaTouch.menuScr, 1);
+			VikaTouch.needstoRedraw=true;
 			callLeaveEvent(s);
 		}
 		/*

@@ -143,7 +143,7 @@ public class ContextMenu extends VikaNotice {
 			}
 			currY = currY + h;
 		}
-		VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
 		//VikaTouch.needstoRedraw=true;
 	}
 

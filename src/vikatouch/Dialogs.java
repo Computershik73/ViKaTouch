@@ -45,10 +45,11 @@ public class Dialogs extends TimerTask {
 
 	protected static boolean avasLoaded;
 
-	public static void refreshDialogsList(final boolean async, final boolean sendNofs) {
-		if (downloaderThread != null && downloaderThread.isAlive())
-			downloaderThread.interrupt();
-
+		public static void refreshDialogsList(final boolean async, final boolean sendNofs) {
+			try {
+			if (downloaderThread != null && downloaderThread.isAlive())
+				downloaderThread.interrupt();
+			} catch (Throwable eee) {}
 		runnable = new Runnable() {
 			public void run() {
 				if (isUpdatingNow)
