@@ -10,6 +10,7 @@ import javax.microedition.lcdui.Image;
 import org.json.me.JSONArray;
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.popup.AutoContextMenu;
@@ -797,6 +798,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	public void keyPress(int key) {
 		VikaTouch.needstoRedraw=true;
 		if (key == -5) {
+			if (VikaCanvas.currentAlert==null) { 
 			int h = 48;
 			OptionItem[] opts = new OptionItem[6];
 			opts[0] = new OptionItem(this, TextLocal.inst.get("msg.reply"), IconsManager.ANSWER, -1, h);
@@ -808,6 +810,11 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			opts[5] = new OptionItem(this, TextLocal.inst.get("msg.attach.attachments") + "...",
 					IconsManager.ATTACHMENT, -9, h);
 			VikaTouch.popup(new AutoContextMenu(opts));
+			}
+			VikaTouch.needstoRedraw=true;
+			VikaTouch.sendLog(String.valueOf(VikaCanvas.currentAlert.getClass()));
+			//VikaTouch.sendLog(String.valueOf(VikaTouch.canvas.currentScreen.getClass()));
+			VikaTouch.canvas.currentScreen.serviceRepaints();
 		}
 	}
 

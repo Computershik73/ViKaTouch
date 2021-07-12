@@ -163,6 +163,10 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	public void updateScreen(Graphics g) {
+		long csrT = 0;
+		long hudrT = 0;
+		long carT = 0;
+		//if (VikaTouch.needstoRedraw) {
 		DisplayUtils.checkdisplay();
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
@@ -195,7 +199,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			e.printStackTrace();
 		}
 		*/
-		long csrT = System.currentTimeMillis();
+		 csrT = System.currentTimeMillis();
 		try {
 
 			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
@@ -216,7 +220,7 @@ public class VikaCanvasInst extends VikaCanvas {
 
 		//g.translate(-g.getTranslateX(), 0);
 
-		long hudrT = System.currentTimeMillis();
+		 hudrT = System.currentTimeMillis();
 		csrT = hudrT - csrT;
 
 		try {
@@ -235,13 +239,15 @@ public class VikaCanvasInst extends VikaCanvas {
 
 		}
 
-		long carT = System.currentTimeMillis();
+		 carT = System.currentTimeMillis();
 		hudrT = carT - hudrT;
 
 		try {
 			if (currentAlert != null) {
 				try {
-					if (!VikaTouch.isS40())
+					if (false
+						//	!VikaTouch.isS40()
+							)
 						vengine.GraphicUtils.darkScreen(g, DisplayUtils.width, DisplayUtils.height, 0, 0, 0, 128);
 				} catch (Exception e) {
 				}
@@ -259,6 +265,8 @@ public class VikaCanvasInst extends VikaCanvas {
 			 * if(Settings.debugInfo) { if(debugString != null) { g.setColor(0xffff00);
 			 * g.drawString(debugString, 65, 2, 0); } }
 			 */
+		VikaTouch.needstoRedraw=false;
+		//}
 		if (Settings.debugInfo) {
 			timingsStr = "s:" + csrT + ",a:" + carT + ",hud:" + hudrT;
 		}

@@ -8,6 +8,7 @@ import javax.microedition.lcdui.Graphics;
 import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
+import vikatouch.VikaTouch;
 
 /**
  * @author Feodor0090
@@ -17,6 +18,7 @@ public class AutoContextMenu extends ContextMenu {
 
 	public AutoContextMenu(OptionItem[] list) {
 		super(list);
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void draw(Graphics g) {

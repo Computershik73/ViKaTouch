@@ -69,23 +69,23 @@ public abstract class VikaScreen {
 	
 	public static void paint(Graphics g) {
 		if ((DisplayUtils.canvas != null) && (VikaTouch.needstoRedraw)) {
-			DisplayUtils.canvas.paint(g);
+			//DisplayUtils.canvas.paint(g);
 			VikaTouch.needstoRedraw=false;
 		}
 	}
 
 	public void repaint() {
-		if ((DisplayUtils.canvas != null) && (VikaTouch.needstoRedraw)) {
+		//if ((DisplayUtils.canvas != null) && (VikaTouch.needstoRedraw)) {
 			DisplayUtils.canvas.repaint();
-			VikaTouch.needstoRedraw=true;
-		}
+			//VikaTouch.needstoRedraw=true;
+		//}
 	}
 	
-	public void serviceRepaints() {
+	public  void serviceRepaints() {
 		VikaUtils.logToFile("servicerepaint");
 		//if ((DisplayUtils.canvas != null) && (VikaTouch.needstoRedraw)) {
 			DisplayUtils.canvas.serviceRepaints();
-		//	VikaTouch.needstoRedraw=true;
+			VikaTouch.needstoRedraw=true;
 		//}
 	}
 

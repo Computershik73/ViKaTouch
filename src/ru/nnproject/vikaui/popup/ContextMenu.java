@@ -28,6 +28,8 @@ public class ContextMenu extends VikaNotice {
 		items = list;
 		if (ScrollableCanvas.keysMode)
 			items[selected].setSelected(true);
+		
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void draw(Graphics g) {
@@ -79,8 +81,10 @@ public class ContextMenu extends VikaNotice {
 				items[selected].setSelected(true);
 			} else if (key == PressableUIItem.KEY_RFUNC) {
 				VikaCanvas.currentAlert = null;
+				VikaTouch.needstoRedraw=true;
 				repaint();
 				serviceRepaints();
+				VikaTouch.needstoRedraw=true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -122,8 +126,10 @@ public class ContextMenu extends VikaNotice {
 
 		if (x < rx || x > rx + width || y < ry || y > ry + th) {
 			VikaCanvas.currentAlert = null;
+			VikaTouch.needstoRedraw=true;
 			repaint();
 			serviceRepaints();
+			VikaTouch.needstoRedraw=true;
 			return;
 		}
 
@@ -133,7 +139,9 @@ public class ContextMenu extends VikaNotice {
 			int h = items[i].getDrawHeight();
 			if (tapY > currY && tapY < currY + h) {
 				VikaCanvas.currentAlert = null;
+				VikaTouch.needstoRedraw=true;
 				items[i].tap(x - rx, tapY - currY);
+				VikaTouch.needstoRedraw=true;
 				return;
 			}
 			currY = currY + h;

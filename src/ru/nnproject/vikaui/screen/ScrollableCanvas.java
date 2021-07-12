@@ -30,7 +30,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	public int itemsh = itemsCount * oneitemheight;
 	protected int lastx;
 	public static short vmeshautsa = 528;
-	public static final double scrollSpeed = 2.8;
+	public static final double scrollSpeed = 4.8;
 	public PressableUIItem[] uiItems;
 	public short scrollOffset;
 	public int currentItem;

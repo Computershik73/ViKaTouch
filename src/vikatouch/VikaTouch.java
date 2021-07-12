@@ -1126,13 +1126,14 @@ try {
 	}
 
 	public static void popup(VikaNotice popup) {
-		VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
 		VikaCanvas.currentAlert = popup;
-		canvas.repaint();
-		VikaTouch.needstoRedraw=true;
-		VikaTouch.needstoRedraw=true;
-		canvas.repaint();
-		canvas.serviceRepaints();
+		VikaTouch.canvas.serviceRepaints();
+		//canvas.repaint();
+	//	VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
+		//canvas.repaint();
+		//canvas.serviceRepaints();
 	}
 
 	public static void notificate(VikaNotification n) {

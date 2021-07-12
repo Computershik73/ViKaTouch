@@ -25,7 +25,7 @@
 			<arguments>
 				<dictionary>
 					<key>_do_obfuscation</key>
-					<value>true</value>
+					<value>false</value>
 				</dictionary>
 				<dictionary>
 					<key>_do_package</key>

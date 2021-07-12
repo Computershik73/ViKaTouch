@@ -1622,6 +1622,7 @@ public class ChatScreen extends MainScreen {
 	private void msgClick(int tapY, long tapTime) {
 		VikaTouch.needstoRedraw=true;
 		tapY -= topPanelH;
+		
 		if (uiItems == null)
 			return;
 		int y = 0;
@@ -1636,6 +1637,9 @@ public class ChatScreen extends MainScreen {
 			}
 			y = y2;
 		}
+		//VikaTouch.needstoRedraw=true;
+		
+		//serviceRepaints();
 	}
 
 	private void drawDialog(Graphics g) {

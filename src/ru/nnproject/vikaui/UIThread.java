@@ -24,7 +24,7 @@ public class UIThread extends Thread {
 	}
 
 	public void run() {
-		Thread fpsThread = new Thread("FPS-Counter") {
+		/*Thread fpsThread = new Thread("FPS-Counter") {
 			public void run() {
 				while(true) {
 					try {
@@ -37,9 +37,9 @@ public class UIThread extends Thread {
 					}
 				}
 			}
-		};
-		fpsThread.setPriority(Thread.NORM_PRIORITY);
-		fpsThread.start();
+		};*/
+		//fpsThread.setPriority(Thread.NORM_PRIORITY);
+		//fpsThread.start();
 		while (true) {
 			long wastedTime = 0;
 			try {
@@ -60,7 +60,7 @@ public class UIThread extends Thread {
 					i = 1;
 				Thread.sleep((long)i);
 			} catch (Exception e) {
-				fpsThread.interrupt();
+				//fpsThread.interrupt();
 				return;
 			}
 		}
