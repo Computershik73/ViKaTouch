@@ -51,6 +51,7 @@ public static String q;
 	public MusicScreen() {
 		super();
 		loadingStr = TextLocal.inst.get("title.loading");
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void loadAtt(AudioAttachment aa) {
@@ -83,9 +84,11 @@ public static String q;
 		this.title = title;
 		hasBackButton = true;
 
-		if (downloaderThread != null && downloaderThread.isAlive())
+		if (downloaderThread != null && downloaderThread.isAlive()) {
+			try {
 			downloaderThread.interrupt();
-
+			} catch (Throwable ee) {}
+		}
 		downloaderThread = new Thread() {
 			public void run() {
 				try {
@@ -110,6 +113,7 @@ public static String q;
 							JSONObject item = items.getJSONObject(i);
 							uiItems[i] = new AudioTrackItem(item, MusicScreen.this, i);
 							((AudioTrackItem) uiItems[i]).parseJSON();
+							VikaTouch.needstoRedraw=true;
 							Thread.sleep(15);
 							// должно не зависать
 						}
@@ -146,8 +150,11 @@ public static String q;
 	    uiItems = null;
 	    this.title = TextLocal.inst.get("music.searchresult");
 	    this.hasBackButton = true;
-	    if (downloaderThread != null && downloaderThread.isAlive())
-	      downloaderThread.interrupt(); 
+	    if (downloaderThread != null && downloaderThread.isAlive()) {
+	    	try {
+	    	downloaderThread.interrupt();
+	    	} catch (Throwable ee) {}
+	    }
 	    downloaderThread = new Thread() {
 	       
 	        
@@ -175,6 +182,7 @@ public static String q;
 	                JSONObject item = items.getJSONObject(i);
 	                uiItems[i] = (PressableUIItem)new AudioTrackItem(item, MusicScreen.this, i);
 	                ((AudioTrackItem)uiItems[i]).parseJSON();
+	            	VikaTouch.needstoRedraw=true;
 	                Thread.sleep(15L);
 	              } 
 	            } catch (JSONException e) {
@@ -208,8 +216,11 @@ public static String q;
 	    uiItems = null;
 	    this.title = TextLocal.inst.get("music.recommendations");
 	    this.hasBackButton = true;
-	    if (downloaderThread != null && downloaderThread.isAlive())
-	      downloaderThread.interrupt(); 
+	    if (downloaderThread != null && downloaderThread.isAlive()) {
+	     try {
+	    	downloaderThread.interrupt();
+	     } catch (Throwable ee) {}
+	    }
 	    downloaderThread = new Thread() {
 	       
 	        
@@ -241,6 +252,7 @@ public static String q;
 	                JSONObject item = items.getJSONObject(i);
 	                uiItems[i] = (PressableUIItem)new AudioTrackItem(item, MusicScreen.this, i);
 	                ((AudioTrackItem)uiItems[i]).parseJSON();
+	            	VikaTouch.needstoRedraw=true;
 	                Thread.sleep(15L);
 	              } 
 	            } catch (JSONException e) {

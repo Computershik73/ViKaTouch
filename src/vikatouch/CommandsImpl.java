@@ -258,6 +258,7 @@ public class CommandsImpl implements CommandListener {
 			callLeaveEvent(s);
 		} else {
 			Dialogs.refreshDialogsList(true, false);
+			VikaTouch.needstoRedraw=true;
 		}
 	}
 

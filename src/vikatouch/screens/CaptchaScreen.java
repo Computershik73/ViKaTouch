@@ -46,6 +46,8 @@ public class CaptchaScreen extends VikaScreen {
 		s = TextLocal.inst.get("title.login");
 		switcher = false;
 		input = "";
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public void draw(Graphics g) {
@@ -114,8 +116,12 @@ public class CaptchaScreen extends VikaScreen {
 					.addField("captcha_sid", obj.captchasid).addField("captcha_key", CaptchaScreen.input).toString());
 			if (VikaTouch.inst.tokenAnswer.indexOf("need_captcha") > -1) {
 				VikaTouch.inst.captcha(user, pass);
+				VikaTouch.needstoRedraw=true;
+				VikaTouch.canvas.serviceRepaints();
 			}
 			if (VikaTouch.inst.tokenAnswer.indexOf("error") > -1) {
+				VikaTouch.needstoRedraw=true;
+				VikaTouch.canvas.serviceRepaints();
 				return;
 			}
 			JSONObject json = new JSONObject(VikaTouch.inst.tokenAnswer);
@@ -126,6 +132,8 @@ public class CaptchaScreen extends VikaScreen {
 			VikaTouch.needstoRedraw=true;
 			VikaTouch.setDisplay(VikaTouch.menuScr, 1);
 			VikaTouch.needstoRedraw=true;
+			VikaTouch.needstoRedraw=true;
+			VikaTouch.canvas.serviceRepaints();
 			VikaTouch.inst.saveToken();
 			Dialogs.refreshDialogsList(true, false);
 		} catch (Exception e) {
@@ -144,6 +152,8 @@ public class CaptchaScreen extends VikaScreen {
 				thread = new Thread() {
 					public void run() {
 						input = TextEditor.inputString(captchaStr, input, 32, image);
+						VikaTouch.needstoRedraw=true;
+						VikaTouch.canvas.serviceRepaints();
 						interrupt();
 					}
 				};

@@ -50,6 +50,7 @@ public class LoginScreen extends VikaScreen {
 		 * try { vikaLogo = Image.createImage("/vikab48.jpg"); } catch (IOException e) {
 		 * }
 		 */
+		VikaTouch.needstoRedraw = true;
 		try {
 			login = Image.createImage("/login.png");
 			loginpressed = Image.createImage("/loginpressed.png");
@@ -107,23 +108,36 @@ public class LoginScreen extends VikaScreen {
 		if ((key == -5) || (key == Canvas.FIRE)) {
 			if (selectedBtn == 0) {
 				VikaTouch.inst.cmdsInst.command(13, this);
+				VikaTouch.needstoRedraw=true;
+				VikaTouch.canvas.serviceRepaints();
 			} else if (selectedBtn == 1) {
-				if (thread != null)
+				if (thread != null) {
+					try {
 					thread.interrupt();
+					} catch (Throwable ee) {}
+				}
 				thread = new Thread() {
 					public void run() {
 						user = TextEditor.inputString(loginStr, user, 28, false);
 						repaint();
+						VikaTouch.needstoRedraw=true;
+						VikaTouch.canvas.serviceRepaints();
+						
 					}
 				};
 				thread.start();
 			} else if (selectedBtn == 2) {
-				if (thread != null)
+				if (thread != null) {
+				try {
 					thread.interrupt();
+				} catch (Throwable ee) {}
+				}
 				thread = new Thread() {
 					public void run() {
 						pass = TextEditor.inputString(passwordStr, pass, 32, false);
 						repaint();
+						VikaTouch.needstoRedraw=true;
+						VikaTouch.canvas.serviceRepaints();
 					}
 				};
 				thread.start();
@@ -257,24 +271,38 @@ public class LoginScreen extends VikaScreen {
 			if (!loginSucsess)
 				repaint();
 		} else if (y > tapCoords[0] && y < tapCoords[1]) {
-			if (thread != null)
+			if (thread != null) {
+			try {
 				thread.interrupt();
+			} catch (Throwable ee) {}
+			}
 			thread = new Thread() {
 				public void run() {
 					user = TextEditor.inputString(loginStr, user, 28, false);
 					repaint();
+					VikaTouch.needstoRedraw=true;
+					VikaTouch.canvas.serviceRepaints();
+					try {
 					interrupt();
+					} catch (Throwable ee) {}
 				}
 			};
 			thread.start();
 		} else if (y > tapCoords[2] && y < tapCoords[3]) {
-			if (thread != null)
+			if (thread != null) {
+			try {
 				thread.interrupt();
+			} catch (Throwable ee) {}
+			}
 			thread = new Thread() {
 				public void run() {
 					pass = TextEditor.inputString(passwordStr, pass, 32, true);
 					repaint();
+					VikaTouch.needstoRedraw=true;
+					VikaTouch.canvas.serviceRepaints();
+					try {
 					interrupt();
+					} catch (Throwable ee) {}
 				}
 			};
 			thread.start();
@@ -293,6 +321,8 @@ public class LoginScreen extends VikaScreen {
 			} else {
 				if (!loginSucsess)
 					repaint();
+				VikaTouch.needstoRedraw=true;
+				VikaTouch.canvas.serviceRepaints();
 			}
 		}
 	}

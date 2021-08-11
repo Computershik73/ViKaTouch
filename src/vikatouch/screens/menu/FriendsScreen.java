@@ -111,7 +111,8 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 					}
 					try {
 						
-						VikaTouch.loading = true;
+						VikaTouch.needstoRedraw=true;
+						VikaTouch.canvas.serviceRepaints();
 						if (!online) {
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = response.getJSONArray("items");
@@ -270,6 +271,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 
 	public final void release(int x, int y) {
 		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = uiItems[0].getDrawHeight();
@@ -290,7 +292,10 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 
 	public void loadNext() {
 		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		loadFriends(fromF + Settings.simpleListsLength, currId, whose, name2, false);
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	

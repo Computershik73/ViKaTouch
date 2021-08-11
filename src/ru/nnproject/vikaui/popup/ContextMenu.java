@@ -21,10 +21,14 @@ public class ContextMenu extends VikaNotice {
 
 	public OptionItem[] items;
 	public int selected = 0;
-	private boolean dragging;
+	public boolean dragging;
+	private boolean opened;
 
 	public ContextMenu(OptionItem[] list) {
+		dragging=true;
+		VikaCanvas.currentAlert = this;
 		VikaTouch.needstoRedraw=true;
+		
 		items = list;
 		if (ScrollableCanvas.keysMode)
 			items[selected].setSelected(true);
@@ -33,6 +37,7 @@ public class ContextMenu extends VikaNotice {
 	}
 
 	public void draw(Graphics g) {
+		//if (VikaTouch.needstoRedraw==true) {
 		int itemsH = 16; // margin = 8
 		int width = Math.min(DisplayUtils.width - 8, 350);
 		int x = DisplayUtils.width / 2 - width / 2;
@@ -58,6 +63,8 @@ public class ContextMenu extends VikaNotice {
 			items[i].paint(g, cy, 0);
 			cy = cy + items[i].getDrawHeight();
 		}
+		//VikaTouch.needstoRedraw=false;
+		//}
 	}
 
 	public void press(int key) {
@@ -89,10 +96,17 @@ public class ContextMenu extends VikaNotice {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		VikaTouch.needstoRedraw=true;
+		this.repaint();
+		this.serviceRepaints();
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void press(int x, int y) {
-		VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
+		//this.repaint();
+		//this.serviceRepaints();
+		//VikaTouch.needstoRedraw=true;
 		lastx = x;
 		lasty = y;
 		dragging = false;
@@ -102,15 +116,17 @@ public class ContextMenu extends VikaNotice {
 
 	public void drag(int x, int y) {
 		VikaTouch.needstoRedraw=true;
-		if (Math.abs(x - lastx) > 3 || Math.abs(y - lasty) > 3) {
+		if (Math.abs(x - lastx) > 6 || Math.abs(y - lasty) > 6) {
 			dragging = true;
 		}
 	}
 
 	public void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
+		
 		if (dragging)
 			return;
+		VikaCanvas.currentAlert = this;
+		VikaTouch.needstoRedraw=true;
 		int margin = 8;
 		int itemsH = margin * 2; // margin = 8
 		int width = Math.min(DisplayUtils.width - 8, 350);
@@ -119,6 +135,11 @@ public class ContextMenu extends VikaNotice {
 			items[i].drawX = x + margin;
 			items[i].fillW = width - margin * 2;
 			itemsH = itemsH + items[i].getDrawHeight();
+			/*VikaTouch.needstoRedraw=true;
+			repaint();
+			serviceRepaints();
+			VikaTouch.needstoRedraw=true;*/
+			
 		}
 
 		int th = itemsH;
@@ -141,6 +162,8 @@ public class ContextMenu extends VikaNotice {
 				VikaCanvas.currentAlert = null;
 				VikaTouch.needstoRedraw=true;
 				items[i].tap(x - rx, tapY - currY);
+				repaint();
+				serviceRepaints();
 				VikaTouch.needstoRedraw=true;
 				return;
 			}

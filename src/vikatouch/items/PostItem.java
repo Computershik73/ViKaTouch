@@ -43,6 +43,8 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	public PostItem(JSONObject json, JSONObject ob) {
 		super(json);
 		json2 = ob;
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public int ownerid;
@@ -86,7 +88,11 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 
 	public void parseJSON() {
 		super.parseJSON();
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		super.parseAttachments();
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		int ec = 0;
 		//VikaTouch.sendLog(json2.toString());
 		try {
@@ -241,6 +247,8 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			t.printStackTrace();
 			VikaTouch.popup(new InfoPopup("post, code " + ec + " ex " + t.toString(), null));
 		}
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		System.gc();
 	}
 
@@ -487,8 +495,10 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 					URLBuilder url;
 					if (val) {
 						url = new URLBuilder("likes.add");
+						likes++;
 					} else {
 						url = new URLBuilder("likes.delete");
+						likes--;
 					}
 					url.addField("type", "post").addField("owner_id", ownerid).addField("item_id", id);
 					String res;
@@ -504,8 +514,12 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 					e.printStackTrace();
 				}
 				VikaTouch.loading = false;
+				VikaTouch.needstoRedraw=true;
+				VikaTouch.canvas.serviceRepaints();
 			}
 		}.start();
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 	
 	public void repost(final boolean val) {
@@ -529,8 +543,12 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 					e.printStackTrace();
 				}
 				VikaTouch.loading = false;
+				VikaTouch.needstoRedraw=true;
+				VikaTouch.canvas.serviceRepaints();
 			}
 		}.start();
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public void send() {

@@ -1126,9 +1126,12 @@ try {
 	}
 
 	public static void popup(VikaNotice popup) {
-		//VikaTouch.needstoRedraw=true;
+		VikaTouch.needstoRedraw=true;
 		VikaCanvas.currentAlert = popup;
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.repaint();
 		VikaTouch.canvas.serviceRepaints();
+		VikaTouch.needstoRedraw=true;
 		//canvas.repaint();
 	//	VikaTouch.needstoRedraw=true;
 		//VikaTouch.needstoRedraw=true;
@@ -1144,6 +1147,7 @@ try {
 			if(n.type == VikaNotification.NEW_MSG)
 				VikaNotification.vib();
 		}
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public static void callSystemPlayer(String file) {
@@ -1211,8 +1215,11 @@ try {
 			}
 		}
 		try {
-		if (uiThread != null && uiThread.isAlive())
+		if (uiThread != null && uiThread.isAlive()) {
+			try {
 			uiThread.interrupt();
+		} catch (Throwable ee) {}
+		}
 		} catch (Throwable e) { }
 	}
 

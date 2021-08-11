@@ -117,7 +117,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			if (ChatScreen.peerlanguage==null) {
 				//text = TextLocal.translateText(text, "en", VikaTouch.mylanguage);
 			} else {
-			if (!(VikaTouch.mylanguage.equals(ChatScreen.peerlanguage))) {
+			if (VikaTouch.mylanguage!=ChatScreen.peerlanguage) {
 				text = TextLocal.translateText(text, ChatScreen.peerlanguage, VikaTouch.mylanguage);
 			}
 			}
@@ -812,9 +812,10 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			VikaTouch.popup(new AutoContextMenu(opts));
 			}
 			VikaTouch.needstoRedraw=true;
-			VikaTouch.sendLog(String.valueOf(VikaCanvas.currentAlert.getClass()));
+			//VikaTouch.sendLog(String.valueOf(VikaCanvas.currentAlert.getClass()));
 			//VikaTouch.sendLog(String.valueOf(VikaTouch.canvas.currentScreen.getClass()));
 			VikaTouch.canvas.currentScreen.serviceRepaints();
+			VikaTouch.needstoRedraw=true;
 		}
 	}
 
@@ -836,6 +837,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				attachments[i].press();
 			} catch (Exception e) {
 			}
+			VikaTouch.needstoRedraw=true;
 			return;
 		}
 		// основная менюшка
@@ -843,6 +845,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		switch (i) {
 		case -1:
 			ChatScreen.attachAnswer(mid, name, text);
+			VikaTouch.needstoRedraw=true;
 			break; // БРЕАК НА МЕСТЕ!!11!!1!
 		case -2:
 			OptionItem[] opts1 = new OptionItem[2];
@@ -853,6 +856,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		case -4:
 			if (!foreign)
 				ChatScreen.editMsg(this);
+			VikaTouch.needstoRedraw=true;
 			break;
 		case -5:
 			try {
@@ -873,6 +877,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			VikaTouch.resendingtext=text;
 			vikatouch.screens.DialogsScreen.titleStr="Выберите диалог для пересылки:";
 			VikaTouch.setDisplay(VikaTouch.dialogsScr, -1);
+			VikaTouch.needstoRedraw=true;
 			break;
 		case -8: {
 			String[] links = searchLinks();
@@ -882,6 +887,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			}
 			if (c == 0) {
 				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error.linksnotfound"), null));
+				VikaTouch.needstoRedraw=true;
 			} else {
 				OptionItem[] opts2 = new OptionItem[c];
 				int h = DisplayUtils.height > 240 ? 50 : 30; // вот как делается
@@ -906,6 +912,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 					opts2[j] = new OptionItem(this, links[j], icon, -(j + 100), h);
 				}
 				VikaTouch.popup(new AutoContextMenu(opts2));
+				VikaTouch.needstoRedraw=true;
 			}
 		}
 			break;
@@ -942,6 +949,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			} else {
 				VikaTouch.popup(new InfoPopup("У этого сообщения нет вложений.", null));
 			}
+			VikaTouch.needstoRedraw=true;
 		}
 			break;
 		case -98:
@@ -962,6 +970,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				drawText = new String[] { text };
 				linesC = 1;
 			}
+			VikaTouch.needstoRedraw=true;
 			break;
 		}
 		}

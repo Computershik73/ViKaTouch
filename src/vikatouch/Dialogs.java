@@ -47,8 +47,9 @@ public class Dialogs extends TimerTask {
 
 	public static void refreshDialogsList(final boolean async, final boolean sendNofs) {
 		if (downloaderThread != null && downloaderThread.isAlive())
+		try {
 			downloaderThread.interrupt();
-
+		} catch (Throwable ee) {}
 		runnable = new Runnable() {
 			public void run() {
 				if (isUpdatingNow)
@@ -135,9 +136,12 @@ public class Dialogs extends TimerTask {
 							}
 							if (dialogs.length > 1 && dialogs[0] != null
 									&& !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId)) {
-								try {
-								NokiaUIInvoker.softNotification(String.valueOf(dialogs[0].lastSenderId), VikaUtils.cut(dialogs[0].title, 10));
-								} catch (Throwable ee) {}
+								VikaTouch.needstoRedraw=true;
+								if (Settings.notifmode == 4) {
+									try {
+									NokiaUIInvoker.softNotification(String.valueOf(dialogs[0].lastSenderId), VikaUtils.cut(dialogs[0].title, 10));
+									} catch (Throwable ee) {}
+								} 
 								//!!!
 								//VikaTouch.sendLog("lastsenderid = " + dialogs[0].lastSenderId);
 								//VikaTouch.sendLog("notifid = " +String.valueOf(VikaTouch.a));
@@ -146,6 +150,7 @@ public class Dialogs extends TimerTask {
 								
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,
 										VikaUtils.cut(dialogs[0].lasttext, 40), VikaTouch.dialogsScr));
+								VikaTouch.needstoRedraw=true;
 								return;
 								//if(VikaTouch.mobilePlatform.indexOf("S60") > -1 && (VikaTouch.mobilePlatform.indexOf("5.3") > -1 || VikaTouch.mobilePlatform.indexOf("5.4") > -1 || VikaTouch.mobilePlatform.indexOf("5.5") > -1)) {
 								//	VikaTouch.notifyy("type", "100058ec", "");
@@ -286,8 +291,11 @@ public class Dialogs extends TimerTask {
 
 	public static void stopUpdater() {
 		try {
-		if (updater != null && updater.isAlive())
+		if (updater != null && updater.isAlive()) {
+		try {
 			updater.interrupt();
+		} catch (Throwable ee) {}
+		}
 		} catch (Throwable ee) { }
 	}
 

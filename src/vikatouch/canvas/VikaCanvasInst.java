@@ -5,14 +5,18 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.VikaCanvas;
+import ru.nnproject.vikaui.popup.AutoContextMenu;
+import ru.nnproject.vikaui.popup.ContextMenu;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.items.VikaNotification;
+import vikatouch.music.MusicPlayer;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.temp.SplashScreen;
 import vikatouch.settings.Settings;
+import vikatouch.settings.SettingsScreen;
 import vikatouch.utils.KeyCodeAdapter;
 import vikatouch.utils.error.ErrorCodes;
 
@@ -94,7 +98,16 @@ public class VikaCanvasInst extends VikaCanvas {
 			repaint();
 			VikaTouch.needstoRedraw=true;
 		}
+		
 		VikaTouch.needstoRedraw=false;
+		if ((vikatouch.music.MusicPlayer.inst!=null) && (currentScreen != null) && (currentScreen instanceof MusicPlayer)) {
+			if (vikatouch.music.MusicPlayer.inst.isPlaying) {
+				VikaTouch.needstoRedraw=true;
+			}
+			}
+		}
+		if ((currentScreen != null) && ((currentAlert instanceof AutoContextMenu) || (currentAlert instanceof ContextMenu) || (currentScreen instanceof SettingsScreen))) {
+			VikaTouch.needstoRedraw=true;
 		}
 		
 	}

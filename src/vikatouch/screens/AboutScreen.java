@@ -40,7 +40,8 @@ public class AboutScreen extends ScrollableCanvas {
 		publisherStr = TextLocal.inst.get("about.vendor");
 
 		testersStr = TextLocal.inst.get("about.testers");
-
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		// teamStr = TextLocal.inst.get("about.team");
 	}
 
@@ -100,6 +101,8 @@ public class AboutScreen extends ScrollableCanvas {
 	public void release(int x, int y) {
 		if (x < 50 && y > DisplayUtils.height - 30) {
 			VikaTouch.setDisplay(VikaTouch.setsScr, -1);
+			VikaTouch.needstoRedraw=true;
+			VikaTouch.canvas.serviceRepaints();
 		} else
 			super.release(x, y);
 	}
@@ -107,6 +110,8 @@ public class AboutScreen extends ScrollableCanvas {
 	public void press(int key) {
 		if (key == 8 || key == -6) {
 			VikaTouch.setDisplay(VikaTouch.setsScr, -1);
+			VikaTouch.needstoRedraw=true;
+			VikaTouch.canvas.serviceRepaints();
 		} else
 			super.press(key);
 	}

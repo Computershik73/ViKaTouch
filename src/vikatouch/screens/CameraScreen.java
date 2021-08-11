@@ -43,6 +43,7 @@ public class CameraScreen extends VikaScreen {
 
 	public CameraScreen(ChatScreen chatScreen) {
 		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
 		lwidth = DisplayUtils.width;
 		this.chat = chatScreen;
 		try {
@@ -78,7 +79,8 @@ public class CameraScreen extends VikaScreen {
 					"");
 			e.printStackTrace();
 		}
-		repaint();
+		//repaint();
+		this.serviceRepaints();
 	}
 
 	private void rotateall(int rot) {

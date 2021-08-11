@@ -29,6 +29,8 @@ public class PhotoAttachment extends ImageAttachment implements ISocialable {
 
 	public PhotoAttachment() {
 		this.type = "photo";
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public void parseJSON() {
@@ -38,6 +40,8 @@ public class PhotoAttachment extends ImageAttachment implements ISocialable {
 		ownerid = json.optInt("owner_id");
 		albumid = json.optInt("album_id");
 		userid = json.optInt("user_id");
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public Image getImg(String x) throws Exception {

@@ -117,8 +117,11 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 
 	public void load() {
 		VikaTouch.needstoRedraw=true;
-		if (downloaderThread != null && downloaderThread.isAlive())
+		if (downloaderThread != null && downloaderThread.isAlive()) {
+		try {
 			downloaderThread.interrupt();
+		} catch (Throwable ee) {}
+		}
 		System.gc();
 		downloaderThread = new Thread() {
 

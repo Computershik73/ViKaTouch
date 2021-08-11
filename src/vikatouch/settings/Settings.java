@@ -150,11 +150,11 @@ public class Settings {
 	// 100/60/30/15
 	public static int fpsLimit = 30;
 
-	public static boolean doubleBufferization = false;
+	public static boolean doubleBufferization = true;
 	
-	public static boolean drawMaxPriority = false;
+	public static boolean drawMaxPriority = true;
 
-	public static boolean fastImageScaling;
+	public static boolean fastImageScaling = true;
 
 	public static boolean oldlcduiFm;
 
@@ -215,6 +215,7 @@ public class Settings {
 					if (VikaTouch.isS40()) {
 					fpsLimit = 15;
 					}
+					
 					doubleBufferization = is.readBoolean();
 					drawMaxPriority = is.readBoolean();
 					fastImageScaling = is.readBoolean();
@@ -239,6 +240,8 @@ public class Settings {
 		} catch (Exception e) {
 
 		}
+		doubleBufferization = true;
+		drawMaxPriority = true;
 		try {
 			if(isOldLang(language)) {
 				String x = language;

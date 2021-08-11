@@ -5,6 +5,7 @@ package ru.nnproject.vikaui.popup;
 
 import javax.microedition.lcdui.Graphics;
 
+import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -18,10 +19,13 @@ public class AutoContextMenu extends ContextMenu {
 
 	public AutoContextMenu(OptionItem[] list) {
 		super(list);
+		dragging=true;
+		VikaCanvas.currentAlert = this;
 		VikaTouch.needstoRedraw=true;
 	}
 
 	public void draw(Graphics g) {
+		VikaTouch.needstoRedraw=true;
 		int dh = DisplayUtils.height;
 		int itemsH = 16; // margin = 8
 		int width = Math.min(DisplayUtils.width - 8, 350);
@@ -62,5 +66,6 @@ public class AutoContextMenu extends ContextMenu {
 			items[i].paint(g, cy, 0);
 			cy = cy + items[i].getDrawHeight();
 		}
+		VikaTouch.needstoRedraw=true;
 	}
 }

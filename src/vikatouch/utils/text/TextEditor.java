@@ -41,6 +41,8 @@ public class TextEditor implements CommandListener {
 		current.addCommand(TextEditor.cancel);
 		current.setCommandListener((CommandListener) commandListener);
 		VikaTouch.setDisplay((Displayable) current);
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		while (!TextEditor.inputFinished) {
 			Thread.yield();
 			try {
@@ -74,6 +76,8 @@ public class TextEditor implements CommandListener {
 				e.printStackTrace();
 			}
 		}
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		return commandListener.str;
 	}
 
@@ -92,6 +96,8 @@ public class TextEditor implements CommandListener {
 		TextEditor.textField = null;
 		TextEditor.textBox = null;
 		TextEditor.inputFinished = true;
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	static {

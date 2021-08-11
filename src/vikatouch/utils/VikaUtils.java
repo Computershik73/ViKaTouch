@@ -926,7 +926,9 @@ public final class VikaUtils {
 			}
 			final String url = var0;
 			if (fileThread != null) {
+				try {
 				fileThread.interrupt();
+				} catch (Throwable ee) {}
 			}
 			fileThread = new Thread() {
 				public void run() {

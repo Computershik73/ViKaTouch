@@ -11,6 +11,7 @@ import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
+import vikatouch.VikaTouch;
 
 /**
  * @author Feodor0090
@@ -86,6 +87,7 @@ public class InfoPopup extends VikaNotice {
 		VikaCanvas.currentAlert = null;
 		if (ok != null)
 			new Thread(ok).start();
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void release(int x, int y) {

@@ -56,8 +56,8 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 		downloaderThread = new Thread() {
 			public void run() {
 				try {
-					VikaTouch.loading = true;
-					repaint();
+					VikaTouch.needstoRedraw=true;
+					VikaTouch.canvas.serviceRepaints();
 					String x = VikaUtils.download(new URLBuilder("video.get").addField("owner_id", id)
 							.addField("count", Settings.simpleListsLength).addField("offset", from));
 					//Thread.sleep(5000);
@@ -97,6 +97,8 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 						VikaTouch.loading = true;
 						for (int i = 0; i < itemsCount - (canLoadMore ? 1 : 0); i++) {
 							((VideoItem) uiItems[i]).loadIcon();
+							VikaTouch.needstoRedraw=true;
+							VikaTouch.canvas.serviceRepaints();
 						}
 						VikaTouch.loading = false;
 					} catch (JSONException e) {

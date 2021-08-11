@@ -97,9 +97,25 @@ public class MenuScreen extends MainScreen implements IMenu {
 			hasAva = profileobj.optInt("has_photo") == 1;
 			VikaTouch.integerUserId = profileobj.optInt("id");
 			VikaTouch.userId = "" + VikaTouch.integerUserId;
-			String mycountry =  profileobj.optJSONObject("country").optString("id");
+			String mycountry = "";
+			if (profileobj.has("country")) {
+				if (profileobj.optJSONObject("country").has("id")) {
+					 mycountry =  profileobj.optJSONObject("country").optString("id");
+				} else {
+					mycountry = null;
+				}
+			} else {
+				mycountry = null;
+			}
+			if (mycountry!=null) {
+			if (TextLocal.countries.containsKey(mycountry)) {
 			VikaTouch.mylanguage = (String) TextLocal.countries.get(mycountry);
-
+			} else {
+				VikaTouch.mylanguage = null;
+			}
+			} else {
+				VikaTouch.mylanguage = null;
+			}
 			visitStr = "";
 			if (onlineStr == null) {
 				userStr = TextLocal.inst.get("user");

@@ -47,6 +47,7 @@ public class OptionItem implements PressableUIItem {
 		 * ColorUtils.BUTTONCOLOR); g.fillRect(drawX, y,
 		 * fillW==0?DisplayUtils.width:fillW, h); }
 		 */
+		VikaTouch.needstoRedraw=true;
 		ColorUtils.setcolor(g, (ScrollableCanvas.keysMode && s) ? ColorUtils.BUTTONCOLOR : ColorUtils.TEXT);
 		g.setFont((ScrollableCanvas.keysMode && s) ? sf : f);
 		int x = drawX + 48;
@@ -57,6 +58,7 @@ public class OptionItem implements PressableUIItem {
 		if (icon != -1)
 			g.drawImage(((ScrollableCanvas.keysMode && s) ? (IconsManager.selIco) : (IconsManager.ico))[icon],
 					drawX + 12, y + (h / 2 - 12), 0);
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public int getDrawHeight() {

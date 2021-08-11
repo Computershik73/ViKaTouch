@@ -46,9 +46,12 @@ public class VikaNotification {
 		text = _text;
 		screen = _screen;
 		sendTime = System.currentTimeMillis();
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public void draw(Graphics g) {
+		VikaTouch.needstoRedraw=true;
 		if (icons == null || icons.length != 4) {
 			icons = new Image[] { IconsManager.ico[IconsManager.INFO], IconsManager.ico[IconsManager.MSGS],
 					IconsManager.ico[IconsManager.MUSIC], IconsManager.ico[IconsManager.CLOSE] };
@@ -76,11 +79,15 @@ public class VikaNotification {
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 			g.drawString(title, left + 32, y, 0);
 		}
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public void open() {
 		if (screen != null && screen != VikaTouch.canvas.currentScreen)
 			VikaTouch.setDisplay(screen, 1);
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public static void vib() {
@@ -120,5 +127,7 @@ public class VikaNotification {
 				}
 			}
 		}.start();
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 }

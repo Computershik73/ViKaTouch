@@ -125,6 +125,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			VikaTouch.notificate(new VikaNotification(VikaNotification.NEXT_TRACK, "Сейчас играет",
 					VikaUtils.cut(getC().name, 40), this));
 		}*/
+		VikaTouch.needstoRedraw=true;
 		if (player != null) {
 			if (player.getState() == 400) {
 				try {
@@ -168,6 +169,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}
+		VikaTouch.needstoRedraw=true;
 		boolean CACHETOPRIVATE = false;
 		String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private")
 				: System.getProperty("fileconn.dir.music"));
@@ -314,6 +316,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			}
 			try {
 				getCover();
+				VikaTouch.needstoRedraw=true;
 			} catch (InterruptedException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -335,12 +338,14 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				loader = new Thread() {
 					public void run() {
 						while (stop) {
+						//	VikaTouch.needstoRedraw=true;
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
 								return;
 							}
 						}
+						VikaTouch.needstoRedraw=true;
 						try {
 							time = "00:00";
 							totalTime = "--:--";
@@ -359,6 +364,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 							player.addPlayerListener(inst);
 							getCover();
 							resizeCover();
+							VikaTouch.needstoRedraw=true;
 						} catch (InterruptedException e) {
 							return;
 						} catch (Exception e) {
@@ -461,6 +467,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 										System.out.println("speed run");
 										try {
 											// на какоето время показывать размер песни, а потом уже скорость
+											VikaTouch.needstoRedraw=true;
 											Thread.sleep(10);
 										} catch (InterruptedException e1) {
 											System.out.println("ne uspel");
@@ -471,8 +478,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 											int i = downloaded;
 											try {
 												Thread.sleep(1000);
+												VikaTouch.needstoRedraw=true;
+												VikaTouch.canvas.serviceRepaints();
 											} catch (InterruptedException e) {
 												System.out.println("speed end");
+												VikaTouch.canvas.serviceRepaints();
 												return;
 											}
 											int kilo = downloaded - i;
@@ -483,6 +493,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 											round = (double) (int) ((tmp - (int) tmp) >= 0.5 ? tmp + 1 : tmp) / pow;
 											totalTime = round + " MB/s";
 											System.out.println(round + " MB/s");
+											VikaTouch.needstoRedraw=true;
+											VikaTouch.canvas.serviceRepaints();
 											yield();
 										}
 									}
@@ -498,6 +510,8 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 									//if(trackSize / 1024 != 0) {
 									i = (int)(((double)downloaded / (double)trackSize) * 100d);
 									time = i + "%";
+									VikaTouch.needstoRedraw=true;
+									VikaTouch.canvas.serviceRepaints();
 									//}
 
 									if (stop) {
@@ -614,6 +628,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								}
 								try {
 									player.start();
+									VikaTouch.canvas.serviceRepaints();
 								} catch (MediaException e) {
 									stop = false;
 									VikaTouch.popup(new InfoPopup("Player running error", null));
@@ -628,10 +643,12 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 								}
 								time = "0:00";
 								totalTime = time(player.getDuration() / 1000000L);
+								VikaTouch.needstoRedraw=true;
 								if(player.getDuration() <= 0)
 									totalTime = time(voice == null ? getC().length : voice.size);
 								try {
 									player.addPlayerListener(inst);
+									VikaTouch.canvas.serviceRepaints();
 								} catch (Throwable e) {
 									e.printStackTrace();
 								}
@@ -679,6 +696,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						aByteArray207 = new byte[var5];
 						try {
 							dis.read(aByteArray207);
+							VikaTouch.needstoRedraw=true;
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -724,6 +742,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				}
 				try {
 					((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
+					VikaTouch.needstoRedraw=true;
 				} catch (Exception e) {
 				}
 				try {
@@ -738,6 +757,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				stop = false;
 				try {
 					getCover();
+					VikaTouch.needstoRedraw=true;
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -787,6 +807,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			}
 			inStream = null;
 		}
+		VikaTouch.needstoRedraw=true;
 		System.gc();
 	}
 
@@ -798,6 +819,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			if (isReady) {
 				isPlaying = false;
 				try {
+					VikaTouch.needstoRedraw=true;
 					player.stop();
 					//player.deallocate();
 				} catch (Exception e) {
@@ -810,6 +832,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("player.cancel"), null, new Runnable() {
 					public void run() {
 						if (!isReady) {
+							VikaTouch.needstoRedraw=true;
 							stop = true;
 						}
 					}
@@ -829,9 +852,12 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 					checkSeekTime();
 					inSeekMode = false;
 					player.setMediaTime(seekTime);
+					VikaTouch.needstoRedraw=true;
 				}
 				player.start();
 				isPlaying = true;
+				VikaTouch.needstoRedraw=true;
+				VikaTouch.canvas.serviceRepaints();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -864,6 +890,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				player.start();
 				inSeekMode = false;
 				isPlaying = true;
+				VikaTouch.needstoRedraw=true;
 			}
 		} catch (Exception e) {
 			VikaTouch.popup(new InfoPopup(e.toString(), null, TextLocal.inst.get("player.playererror"), null));
@@ -875,6 +902,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			seekTime = 1L;
 		if (seekTime > (getC().length - 5) * 1000000L) {
 			seekTime = (getC().length - 5) * 1000000L;
+			VikaTouch.needstoRedraw=true;
 		}
 	}
 
@@ -886,6 +914,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		if (inSeekMode) {
 			seekTime += 5000000L;
 			checkSeekTime();
+			VikaTouch.needstoRedraw=true;
 		} else {
 			if (!isReady) {
 				stop = true;
@@ -1021,6 +1050,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			prevprevsongindex=prevsongindex;
 			prevsongindex=current;
 			loadTrack();
+			VikaTouch.needstoRedraw=true;
 		}
 	}
 
@@ -1031,6 +1061,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			return;
 		if (inSeekMode) {
 			seekTime -= 5000000L;
+			VikaTouch.needstoRedraw=true;
 		} else {
 			if (!isReady) {
 				stop = true;
@@ -1039,6 +1070,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			if (current < 0)
 				current = playlist.uiItems.length - 1;
 			loadTrack();
+			VikaTouch.needstoRedraw=true;
 		}
 	}
 
@@ -1059,16 +1091,27 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		} catch (Exception e) {
 		}
 		Settings.playerVolume = (byte) v;
+		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
 	}
 
 	public void updateDrawData() {
+		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
 		long dur = 1;
 		long curr = 0;
 		if (isReady) {
 			if (player == null)
 				return;
 			curr = inSeekMode ? seekTime : player.getMediaTime();
+			//String temptime = time(curr / 1000000L);
+			//if (time!=temptime) {
 			time = time(curr / 1000000L);
+					//temptime;
+			VikaTouch.needstoRedraw=true;
+			this.serviceRepaints();
+			VikaTouch.needstoRedraw=true;
+			//}
 			dur = Settings.audioMode == Settings.AUDIO_PLAYONLINE
 					? (voice == null ? getC().length : voice.size) * 1000000L
 					: player.getDuration();
@@ -1088,6 +1131,10 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			}
 		} catch (Exception e) {
 		}
+		VikaTouch.needstoRedraw=true;
+		//this.repaint();
+		this.serviceRepaints();
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void loadTrackInfo() {
@@ -1106,6 +1153,10 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 	public void onRotate() {
 		resizeCover();
+		VikaTouch.needstoRedraw=true;
+		this.repaint();
+		this.serviceRepaints();
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void resizeCover() {
@@ -1182,12 +1233,16 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				}
 			}
 		}
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public static String time(long t) {
 		int s = (int) (t % 60);
 		long min = t / 60;
+		
+		//VikaTouch.canvas.serviceRepaints();
 		return min + ":" + (s < 10 ? "0" : "") + s;
+	
 	}
 
 	public void options() {
@@ -1203,7 +1258,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				new OptionItem(this, TextLocal.inst.get("player.download"), IconsManager.DOWNLOAD, 4, h),
 				new OptionItem(this, TextLocal.inst.get("player.troubleshooting"), IconsManager.SETTINGS, 5, h),
 				new OptionItem(this, TextLocal.inst.get("player.hideapp"), IconsManager.CLOSE, 6, h), };
+		VikaTouch.needstoRedraw=true;
 		VikaTouch.popup(new AutoContextMenu(opts));
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void troubleOptions() {
@@ -1211,7 +1268,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		OptionItem[] opts = new OptionItem[] {
 				new OptionItem(this, TextLocal.inst.get("player.updatelinks"), IconsManager.REFRESH, 10, h),
 				new OptionItem(this, TextLocal.inst.get("player.forcedreboot"), IconsManager.CLOSE, 11, h), };
+		VikaTouch.needstoRedraw=true;
 		VikaTouch.popup(new AutoContextMenu(opts));
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public AudioTrackItem getC() {
@@ -1328,6 +1387,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 	public void draw(Graphics g) {
 		try {
+			this.serviceRepaints();
 			int dw = DisplayUtils.width;
 			int dh = DisplayUtils.height;
 			int hdw = dw / 2;
@@ -1640,13 +1700,20 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			stop = false;
 			loadTrack();
 		}
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void onMenuItemOption(int i) {
 	}
 
 	public void playerUpdate(Player pl, String event, Object data) {
-		System.out.println(event);
+		//System.out.println(event);
+		updateDrawData();
+		VikaTouch.needstoRedraw=true;
+		//VikaTouch.canvas.repaint();
+		VikaTouch.canvas.serviceRepaints();
+		//this.repaint();
+		//this.serviceRepaints();
 		if (event == END_OF_MEDIA) {
 			System.out.println("end of media");
 			if (loop) {
@@ -1664,6 +1731,10 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						player = Manager.createPlayer(Connector.openInputStream(System.getProperty("fileconn.dir.music") + "vikaMusicCache.mp3"), "audio/mpeg");
 						player.addPlayerListener(inst);
 						player.realize();
+						VikaTouch.needstoRedraw=true;
+						//VikaTouch.canvas.repaint();
+						VikaTouch.canvas.serviceRepaints();
+						//#vyfa123809!
 					} catch (Exception e) {
 						e.printStackTrace();
 						VikaTouch.popup(new InfoPopup("Player creating error", null));
@@ -1672,6 +1743,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 					try {
 						player.start();
 						((VolumeControl) player.getControl("VolumeControl")).setLevel(100);
+						VikaTouch.needstoRedraw=true;
+						//VikaTouch.canvas.repaint();
+						VikaTouch.canvas.serviceRepaints();
 					} catch (MediaException e) {
 						e.printStackTrace();
 						VikaTouch.popup(new InfoPopup("Player running error", null));
@@ -1689,6 +1763,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				
 				next();
 			}
+			VikaTouch.needstoRedraw=true;
 		} else if (event == ERROR) {
 			System.out.println("event error");
 			String err = data.toString();
@@ -1697,7 +1772,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			if (err.indexOf("-2") > -1)
 				err = TextLocal.inst.get("player.internalerror");
 			VikaTouch.popup(new InfoPopup(err, null, TextLocal.inst.get("player.playererror"), null));
+			VikaTouch.needstoRedraw=true;
 		} else {
+			VikaTouch.needstoRedraw=true;
+			//VikaTouch.canvas.repaint();
+			VikaTouch.canvas.serviceRepaints();
 			System.out.println("unknown event!! " + event + " " + data);
 		}
 	}

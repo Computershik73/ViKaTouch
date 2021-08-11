@@ -112,6 +112,8 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 						JSONObject item = items.optJSONObject(i);
 						uiItems[i] = new GroupItem(item);
 						((GroupItem) uiItems[i]).parseJSON();
+						VikaTouch.needstoRedraw=true;
+						VikaTouch.canvas.serviceRepaints();
 						/*
 						 * } catch (JSONException e) { e.printStackTrace();
 						 * VikaTouch.sendLog(String.valueOf(i)+" "+ e.getMessage());

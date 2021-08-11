@@ -35,6 +35,7 @@ public class DialogsScreen extends MainScreen {
 		// VikaTouch.loading = true;
 		VikaTouch.needstoRedraw=true;
 		Dialogs.refreshDialogsList(true, false);
+		VikaTouch.needstoRedraw=true;
 		// VikaTouch.loading = false;
 	}
 
@@ -55,6 +56,8 @@ public class DialogsScreen extends MainScreen {
 			down();
 		} else
 			super.press(key);
+		
+		VikaTouch.needstoRedraw=true;
 	}
 
 	protected final void up() {
@@ -71,6 +74,7 @@ public class DialogsScreen extends MainScreen {
 		try {
 			scrollToSelected();
 			Dialogs.dialogs[currentItem].setSelected(true);
+			VikaTouch.needstoRedraw=true;
 		} catch (Exception e) {
 
 		}
@@ -80,6 +84,7 @@ public class DialogsScreen extends MainScreen {
 		VikaTouch.needstoRedraw=true;
 		try {
 			Dialogs.dialogs[currentItem].setSelected(false);
+			VikaTouch.needstoRedraw=true;
 		} catch (Exception e) {
 
 		}
@@ -89,6 +94,7 @@ public class DialogsScreen extends MainScreen {
 		}
 		scrollToSelected();
 		Dialogs.dialogs[currentItem].setSelected(true);
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public final void scrollToSelected() {
@@ -156,6 +162,7 @@ public class DialogsScreen extends MainScreen {
 			}
 			Dialogs.selected = false;
 		}
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public final void release(int x, int y) {
@@ -178,6 +185,7 @@ public class DialogsScreen extends MainScreen {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		VikaTouch.needstoRedraw=true;
 		super.release(x, y);
 	}
 
@@ -202,6 +210,7 @@ public class DialogsScreen extends MainScreen {
 			e.printStackTrace();
 		}
 		super.press(x, y);
+		VikaTouch.needstoRedraw=true;
 	}
 
 	protected void scrollHorizontally(int deltaX) {

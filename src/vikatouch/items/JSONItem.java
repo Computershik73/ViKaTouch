@@ -3,6 +3,7 @@ package vikatouch.items;
 import org.json.me.JSONArray;
 import org.json.me.JSONObject;
 
+import vikatouch.VikaTouch;
 import vikatouch.attachments.Attachment;
 import vikatouch.json.JSONBase;
 import vikatouch.utils.VikaUtils;
@@ -31,6 +32,8 @@ public class JSONItem extends JSONBase {
 		text = fixJSONString(json.optString("text"));
 		fromid = json.optInt("from_id");
 		date = json.optLong("date");
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	protected void parseAttachments() {
@@ -52,6 +55,8 @@ public class JSONItem extends JSONBase {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public String getTime() {

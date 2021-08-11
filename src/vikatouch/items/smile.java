@@ -1,5 +1,7 @@
 package vikatouch.items;
 
+import vikatouch.VikaTouch;
+
 public class smile {
 	public int smilePos;
 	public String smilePath;
@@ -14,5 +16,7 @@ public class smile {
 		smilePath=smPath;
 		smileX=smX;
 		smileY=smY;
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 }

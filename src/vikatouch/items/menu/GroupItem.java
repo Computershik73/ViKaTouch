@@ -39,6 +39,8 @@ public class GroupItem extends JSONUIItem {
 		super(json);
 		itemDrawHeight = 50;
 		ava = VikaTouch.cameraImg;
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public void parseJSON() {
@@ -74,6 +76,8 @@ public class GroupItem extends JSONUIItem {
 		try {
 			if (!Settings.dontLoadAvas)
 				ava = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(fixJSONString(json.optString("photo_50"))));
+			VikaTouch.needstoRedraw=true;
+			VikaTouch.canvas.serviceRepaints();
 		} catch (InterruptedException e) {
 			return;
 		} catch (IOException e) {

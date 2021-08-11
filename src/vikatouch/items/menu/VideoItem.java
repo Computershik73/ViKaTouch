@@ -44,6 +44,8 @@ public class VideoItem extends JSONUIItem {
 
 	public VideoItem(JSONObject json) {
 		super(json);
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public void parseJSON() {
@@ -83,6 +85,8 @@ public class VideoItem extends JSONUIItem {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public int getDrawHeight() {
@@ -92,6 +96,8 @@ public class VideoItem extends JSONUIItem {
 	public void loadIcon() {
 		try {
 			iconImg = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(iconUrl));
+			VikaTouch.needstoRedraw=true;
+			VikaTouch.canvas.serviceRepaints();
 		} catch (Exception e) {
 		}
 	}
@@ -102,6 +108,8 @@ public class VideoItem extends JSONUIItem {
 		} else {
 			keyPress(KEY_FUNC);
 		}
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 	}
 
 	public void keyPress(int key) {

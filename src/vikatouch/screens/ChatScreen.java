@@ -137,6 +137,7 @@ public class ChatScreen extends MainScreen {
 			c.answerMsgId = id;
 			c.answerName = name;
 			c.answerText = text;
+			//VikaTouch.sendLog("id: "+String.valueOf(id)+" name: "+String.valueOf(name)+" text: "+text);
 		}
 	}
 	
@@ -1116,11 +1117,11 @@ public class ChatScreen extends MainScreen {
                     		e=8;
                        if (VikaTouch.isresending==true) {
                     	   e=9;
-                    	   url.addField("forward_messages", "" + answerMsgId);
+                    	   url.addField("forward_messages", "" + String.valueOf(answerMsgId));
                     	   e=10;
                        } else {
                     	   e=11;
-                    	url.addField("reply_to", "" + answerMsgId);
+                    	url.addField("reply_to", "" + String.valueOf(answerMsgId));
                     	e=12;
                        }
                        answerMsgId = 0;
@@ -1140,6 +1141,7 @@ public class ChatScreen extends MainScreen {
                 	}
                     
                    // VikaTouch.sendLog(url.toString());
+                    Thread.sleep(200);
                     e=19;
                     String res = VikaUtils.download(url);
                     e=20;
@@ -1228,7 +1230,9 @@ public class ChatScreen extends MainScreen {
 						Thread.sleep(20);
 					}
 					if (temp1 == null) {
+						try {
 						parser.interrupt();
+						} catch (Throwable ee) {}
 						refreshOk = false;
 						return;
 					}
@@ -1591,16 +1595,22 @@ public class ChatScreen extends MainScreen {
 	       // NokiaUIInvoker.getTextEditorInst().setFocus(true);
             return;
         }
-        if (typer != null && typer.isAlive())
-            typer.interrupt();
+        if (typer != null && typer.isAlive()) {
+         try {
+        	typer.interrupt();
+         } catch (Throwable ee) {}
+        }
         typer = new Thread() {
             public void run() {
                 inputText = TextEditor.inputString(TextLocal.inst.get("msg"), inputText == null ? "" : inputText, 0);
                 inputChanged = true;
             }
         };
-        if (reporter != null && reporter.isAlive())
-            reporter.interrupt();
+        if (reporter != null && reporter.isAlive()) {
+         try {
+        	reporter.interrupt();
+         } catch (Throwable ee) {}
+        }
         reporter = new Thread() {
             public void run() {
                 while (typer.isAlive()) {

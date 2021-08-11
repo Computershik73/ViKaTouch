@@ -541,7 +541,9 @@ public final class KeyCodeAdapter {
      * @param keycode This code is sent by platform to canvas and redirected here 
      * @return this keycode is equal to one of our constants declared in this class 
      */  
-    public int adoptKeyCode(int keycode) {  
+    public int adoptKeyCode(int keycode) { 
+    	VikaTouch.needstoRedraw=true;
+    	VikaTouch.canvas.serviceRepaints();
         switch (keycode) {  
             case Canvas.KEY_NUM0:  
                 return KEY_0;  

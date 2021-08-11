@@ -52,6 +52,8 @@ public class ConversationItem extends JSONUIItem {
 		/*
 		 * if(DisplayUtils.compact) { itemDrawHeight = 36; } else {
 		 */
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		if (DisplayUtils.width > 240)
 			ava = VikaTouch.cameraImg;
 		// }
@@ -78,6 +80,8 @@ public class ConversationItem extends JSONUIItem {
 				ava = VikaTouch.cameraImg;
 			}
 		}
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		// }
 		// avaurl = null;
 	}
@@ -302,7 +306,8 @@ public class ConversationItem extends JSONUIItem {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
 		if (title != null) {
 			int x = 150;
 			if (DisplayUtils.width <= 240)
