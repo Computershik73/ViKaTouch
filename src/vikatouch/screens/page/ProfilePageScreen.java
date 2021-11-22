@@ -329,7 +329,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 				if (closed) {
 				} // юзается как алерт, ничего не делаем.
 				if (canMsg) {
-					Dialogs.openDialog(id, name);
+					Dialogs.openDialog(id, name, 0);
 				}
 				break;
 			case 1:

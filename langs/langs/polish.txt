@@ -1,0 +1,315 @@
+﻿#Polish
+#Temmie Flakes
+#
+#authors' vk:
+#vk.com/temmieuwu
+#
+#in case of errors please contact Temmie
+
+langinfo.name=Polszczyzna
+#YYYY.MM.DD
+langinfo.version=2021.08.28
+
+langinfo.hints=1
+
+error.outofmem=Zabrakło pamięci dla aplikacji!
+error.errcode=Kod błędu
+error=Błąd
+error.additionalinfo=Dodatkowe informacje
+error.description=Opis
+error.contactdevs=Skontaktuj się z twórcami by uzyskać więcej informacji
+error.linksnotfound=Nie znaleziono linków lub wystąpił błąd
+close=Zamknij aplikację
+
+online=online
+offline=offline
+wasonlinedate=był online
+wasonlinetime=był online o
+
+menu.videos=Filmy
+menu.music=Muzyka
+menu.photos=Zdjęcia
+menu.documents=Dokumenty
+menu.friends=Znajomi
+menu.cannotwrite=[nie można pisać]
+menu.wall=Ściana
+menu.info=Informacje
+menu.grleave=Opuść
+menu.grjoin=Dołącz
+menu.groups=Grupy
+menu.quit=Wyjdź
+menu.members=Członkowie
+menu.contacts=Kontakty
+menu.website=Strona internetowa
+menu.links=Linki
+menu.writemsg=Napisz wiadomość
+menu.nowebsite=Brak strony
+menu.discussions=Dyskusje
+menu.about=O nas
+menu.loading=Ładowanie...
+menu.search=Przeszukaj
+
+about.devs=Deweloperzy
+about.vendor=Wydawca
+about.testers=Beta-testerzy
+
+group=Grupa
+group.s=Groupy
+group.descriptionempty=[Pusto]
+
+title.people=Osoby
+title.chats=Czaty
+title.newsfeed=Kanał informacyjny
+title.docs=Dokumenty
+title.docsw=%2's Dokumenty
+title.videos=Filmy
+title.videosw=%2's Filmy
+title.loading=ładowanie
+title.login=Zaloguj
+title.groups=Grupy
+title.friends=Znajomi
+title.music=Muzyka
+title.playlists=Playlisty
+title.settings=Ustawienia
+title.friendsw=%2's Znajomi
+title.documentsw=%2's Dokumenty
+title.groupsw=%2's Grupy
+title.musicw=%2's Muzyka
+title.comments=Komentarze
+title.photos=Zdjęcia
+title.photosw=%2's Zdjęcia
+
+friend.remove=Usuń znajomego
+friend.add=Wyślij zaproszenie do grona znajomych
+friend.accept=Zaakceptuj zaproszenie 
+friend.cancel=Zaproszenie wysłane (anuluj)
+
+subscribe=Śledź
+
+music.all=Cała muzyka
+music.search=Przeszukaj muzykę
+music.searchresult=Wyniki wyszukiwania:
+
+msg=Wiadomość
+msg.online=Online
+msg.offline=Offline
+msg.attach.photo=Zdjęcia
+msg.attach.audio=Plik audio
+msg.attach.voice=Wiadomość głosowa
+msg.attach.reply=Odpowiedz
+msg.attach.fwd=Wiadomość przesłana dalej
+msg.attach.attachment=Załącznik
+msg.attach.attachments=Załączniki
+msg.attach.video=Filmiki
+msg.attach.wall=Ściana
+msg.attach.doc=Dokumenty
+msg.attach.memory=Pamięć telefonu
+msg.attach.album=Z VK 
+msg.keyboard=Naciśnij OK by otworzyć edytor
+msg.entermsg=Wpisz wiadomość...
+msg.typing=Piszę...
+msg.typing2=Piszą...
+msg.sending=Wysyłanie w toku...
+msg.editing=Edytowanie
+msg.failedtoload=Nie udało się załadować historii rozmowy
+msg.failedtoload2=Nie udało się załadować historii rozmowy
+msg.sendneterror=Nie udało się wysłać z powodu błedu sieci
+msg.senderror=Nie udało się wysłać
+msg.send=Wyślij
+msg.attach=Dołącz
+msg.stickers=Naklejki
+msg.you=Ty
+msg.links=Linki
+msg.fwd=Prześlij dalej
+msg.delete=Usuń
+msg.edit=Edytuj
+msg.markasread=Oznacz jako odczytane
+msg.reply=Odpowiedz
+msg.write=Napisz
+msg.attach.camera=Kamera
+msg.attach.gift=Prezent
+msg.attach.sticker=Naklejka
+msg.action.leave=%1 Opuścił/a rozmowę
+msg.action.kick=%1 Wyrzucił/a %2
+msg.action.invite_user_by_link=%1 Dołączył do chatu używając linku
+msg.action.invite_user=%1 zaprosił %2
+msg.action.photo_update=%1 zmienił zdjęcie
+msg.action.photo_remove=%1 usunął zdjęcie
+msg.action.create=%1 stworzył chat
+msg.action.title_update=%1 zaktualizował/a tytuł
+msg.action.pin_message=%1 przypiął wiadomość
+msg.action.unpin_message=%1 odpiął wiadomość
+msg.attach.action=Akcja
+msg.remove0=Usuń u siebie
+msg.remove1=Usuń od wszystkich
+msg.removed=[usunięte]
+
+count.message=wiadomość
+count.messages=wiadomości
+count.messagesfew=wiadomości
+count.view=obejrz
+count.views=obejrzenia
+count.viewsfew=obejrzenia
+count.member=członek
+count.members=członkowie
+count.membersfew=członkowie
+count.audio=plik audio
+count.audiosfew=pliki audio
+count.audios=pliki audio
+
+video=Filmy
+video.addtosebe=Dodaj do moich filmów
+
+title2.loading=Ładowanie...
+title2.msgloadingfailed=Odświeżenie wiadomości nie udało się!
+
+login.captcharequired=Wymagane rozwiązanie Captchy!
+login.captcha=Captcha
+login.login=Nazwa użytkownika 
+login.password=Hasło
+login.warn=Nie wpisano nazwy użytkownika lub hasła!
+login.failed=Nie udało się zweryfikować
+
+profile.closed=To jest prywatny profil
+user=Użytkownik
+
+settings.system=Podstawowy
+settings.appearance=Wygląd
+settings.media=Multimedia
+settings.help=Pomoc
+settings.auto=Auto
+settings.enabled=Włączone
+settings.disabled=Wyłączone
+settings.directhttps=Bezpośredni https
+settings.proxy=Przez proxy
+settings.connection=Połączenie
+settings.sensor=Optymalizacja kontroli sensora (?)
+settings.norm=Ok
+settings.j2meloader=J2ME Loader
+settings.resistive=Resistive
+settings.kemulator=KEmulator
+settings.logout=Wyloguj
+settings.reset=Zresetuj 
+settings.clearcache=Wyczyść Cache
+settings.listslength=Podstawowa długość listy
+settings.dontloadavas=Nie ładuj obrazków
+settings.historycount=Ilość wiadomości w historii
+settings.refreshrate=Częstotliwość odświeżania wiadomości (sec)
+settings.telemetry=Wyślij używając statystyk
+settings.sendlogs=Wyślij logi i błędy
+settings.videoresolution=Rozdzielczość filmu
+settings.rtsp=Opening Metoda linków rtsp
+settings.rtspc.0=Domyślne
+settings.rtspc.1=Użyj odtwarzacza [Symbian]
+settings.rtspc.2=Uruchom "vlc.exe <MRL>" [KEmulator]
+settings.youtube=Otwieranie linków Youtube
+settings.audio=Otwieranie metod Audio
+settings.keepaudiocache=Zachowaj pliki cache Audio
+settings.apiproxy=Api Proxy
+settings.authproxy=OAuth Proxy
+settings.language=Język
+settings.audioc.0=Odtwórz online
+settings.audioc.1=Zapisz do RAM'u i odtwórz
+settings.audioc.2=Zapisz i odtwórz
+settings.audioc.3=Zapisz i otwórz
+settings.audioc.4=Zapisz i odtwórz odtwarzaczem systemowym [Symbian]
+settings.audioc.5=Odtwórz online odtwarzaczem systemowym [Symbian]
+settings.audioc.6=Odtwórz w vlc [KEmulator]
+settings.audioc.7=Pobierz plik w przeglądarce
+settings.spabilities=Specjalne umiejętności ^-^
+settings.debug=Debug
+settings.debugcrap=Debuguj informacje na ekranie
+settings.dontloadmusicwithkey=Nie używaj przycisku dostępu
+settings.itunescovers=Szukaj okładek w ITunes
+settings.loadmusicviahttp=Protokół
+settings.datafolder=Miejsce folderu z plikami
+settings.automarkasread=Automatycznie zaznaczaj wszystkie wiadomości jako przeczytane
+settings.vibontouch=Wibruj przy dotyku
+settings.dialogscount=Liczba dialogów
+settings.dialogsrefreshrate=Częstotliwość odświeżania dialogów (sec)
+settings.notificationmode=Tryb powiadomień
+settings.vibro=Wibracje
+settings.sound=Dźwięk
+settings.hidebottom=Ukryj przyciski dolne
+settings.region=Region
+settings.doublebuffer=Podwójne buforowanie
+settings.drawpriority=Maksymalny priorytet renderowania
+settings.imagescaling=Jakość skalowania obrazu 
+settings.fast=Szybko
+settings.filtered=Płynnie
+settings.night=Tryb nocny
+
+back=Wróć
+select=Wybierz
+up=Góra
+down=Dół
+options=Opcje
+keyboard=Klawiatura
+close=Zamknij
+yes=Tak
+ok=OK.
+cancel=Anuluj
+loadmore=Załaduj więcej...
+at=o
+
+splash.emnotsupported=Obecnie używany emulator nie jest wspierany, polecamy KEmulator, J2ME Loader, JBed, or SDKs. Others may have errors
+splash.title.3=Przygotowywanie plików
+splash.title.4=Uwierzytelnianie
+splash.title.5=Ładowanie informacji o profilu
+splash.title.6=Ładowanie konwersacji
+splash.title.7=Gotowe.
+splash.tip= - - - - Losowa wskazówka ----
+splash.tip.0=jeśli zamkniesz aplikację przyciskiem w menu, poinformuje Vkontakte, że jesteś offline.
+splash.tip.1=jeśli na liście dokumentów klikniesz ikonę dokumentu-zdjęcia, otworzy się jego podgląd.
+splash.tip.2=Niektóre ustawienia w nawiasach kwadratowych wskazują platformę, dla której są przeznaczone - na innych nie będą działać.
+splash.tip.3=Filmy zostaną otwarte i pobrane w rozdzielczości wybranej w Ustawieniach.
+splash.tip.4=metoda otwierania wideo jest wybierana automatycznie w zależności od platformy.
+splash.tip.5=nie odtwarzana muzyka? Spróbuj wybrać w Ustawieniach inną metodę zgodną z Twoją platformą. Mamy ich aż 8, coś i zadziała.
+splash.tip.6=będąc w dowolnym miejscu w historii korespondencji, naciśnij lewy klawisz soft, aby szybko przenieść fokus na pole wprowadzania.
+splash.tip.7=między ekranami wiadomości, wiadomości i menu można poruszać się za pomocą przycisków w lewo/w prawo.
+splash.tip.8=czy dane aplikacji zajmują zbyt dużo miejsca? Spróbuj wyczyścić pamięć podręczną zdjęć w Ustawieniach.
+splash.tip.9=możesz pobrać zdjęcie w oryginalnym rozmiarze, wybierając przycisk pobierania w podglądzie.
+splash.tip.10=otwarte zdjęcie można szybko zamknąć prawym przyciskiem myszy.
+splash.tip.11=obsługujemy odtwarzanie multimediów w KEmulator 1.0.3-zainstaluj VLC i wybierz jego otwarcie w ustawieniach aplikacji. Muzyka i wideo zostaną tam otwarte online. Jeśli oczywiście będzie chciał.
+splash.tip.12=dla J2ME Loader mamy osobistą kulę-próbę dostosowania się do lokalnego błędu czujnika. Włącz go w Ustawieniach, jeśli występują problemy z dotknięciem przycisków menu.
+splash.tip.13=Jeśli aplikacja zużywa zbyt dużo ruchu i / lub zatyka całą przepustowość - zmniejsz częstotliwość odświeżania wiadomości.
+splash.tip.14=u nas można otwierać linki z postów! Obsługiwane są http / https, ftp, smb, rtsp, wzmianki i linki do stron Vkontakte. Aby to zrobić, otwórz Opcje wiadomości i wybierz "linki".
+
+busy=Zajęty...
+
+player.playlist=Playlista
+player.loop=Zapętlaj ten utwór
+player.random=Losowa kolejność
+player.seek=Przewijanie do tyłu
+player.playagain=Odtwórz ponownie
+player.download=Pobierz
+player.hideapp=Ukryj aplikacje
+player.troubleshooting=Rozwiązywanie problemów
+player.updatelinks=Zaktualizuj linki
+player.forcedreboot=Wymuś reset odtwarzacza
+player.rewindimpossible=Z powodu limitów J2ME przewijanie do tyłu nie jest możliwe, możesz spróbować pobrać i spróbować ponownie jeśli to pilne.
+player.accessfailed=VK nie pozwala twojemu urządzeniu na dostęp. Spróbuj załadować playlistę ponownie (Opcje > Rozwiązywanie problemów > Zaktualizuj linki) albo zrestartuj aplikację.
+player.playererror=Błąd otwarzacza
+player.internalerror=Nieznany błąd wewnętrzny (-2)
+player.cancel=Anulować pobieranie??
+player.recording=Nagrywanie...
+
+wall.like=Polub to 
+wall.unlike=Nie lubię tego
+wall.links=Linki..
+wall.repost=Prześlij
+wall.comments=Komentarze
+wall.towall=Opublikuj na ścianie
+wall.tofriend=Wyślij znajomemu
+wall.togroup=Opublikuj w grupie
+wall.tochat=Wyślij na chat
+
+fm.noaccess=Brak dostępu.
+fm.memorycard=Karta pamięci
+fm.gallery=Galeria
+fm.root=Folder główny
+
+popup.unrealized=Jeszcze nie zrealizowano.
+
+update.available=Nowa aktualizacja jest dostępna
+update.dl=Pobrać?

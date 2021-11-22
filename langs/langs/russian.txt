@@ -47,6 +47,7 @@ menu.nowebsite=нет
 menu.discussions=Обсуждения
 menu.about=О программе
 menu.loading=Загрузка...
+menu.search=Поиск
 
 about.devs=Разработчики
 about.vendor=Поставщики
@@ -77,6 +78,7 @@ title.musicw=Музыка %1
 title.comments=Комментарии
 title.photos=Фотографии
 title.photosw=Фотографии %1
+title.newrequests=Новые заявки
 
 friend.remove=Удалить из друзей
 friend.add=Добавить в друзья
@@ -147,6 +149,8 @@ msg.attach.action=Действие
 msg.remove0=Удалить у себя
 msg.remove1=Удалить у всех
 msg.removed=[удалено]
+msg.yourcomment=Ваш комментарий:
+msg.restricted=Отправка сообщений ограничена
 
 count.message=сообщение
 count.messages=сообщений
@@ -254,6 +258,7 @@ yes=Да
 ok=ОК
 cancel=Отменить
 loadmore=Загрузить ещё...
+at=
 
 splash.emnotsupported=Скорее всего, ViKa Touch сейчас запущена на неподдерживаемом эмуляторе. Мы рекомендуем использовать KEmulator, J2ME Loader, JBed либо официальные эмуляторы из пакетов для разработчиков - на других возможны проблемы с отображением, функционалом и безопасностью.
 splash.title.3=Подготовка ассетов

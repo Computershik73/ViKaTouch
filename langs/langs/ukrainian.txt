@@ -7,7 +7,7 @@
 
 langinfo.name=Українська
 #YYYY.MM.DD
-langinfo.version=2021.6.25
+langinfo.version=2021.09.18
 
 langinfo.hints=1
 
@@ -80,6 +80,7 @@ title.musicw=Музика %1
 title.playlistsw=Списки відтворення %1
 title.albumsw=Альбоми %1
 title.comments=Коментарі
+title.newrequests=Нові заявки
 
 friend.remove=Видалити з друзів
 friend.add=Додати в друзі
@@ -132,6 +133,25 @@ msg.delete=Видалити
 msg.edit=Редагувати
 msg.markasread=Прочитано
 msg.reply=Відповісти
+msg.attach.camera=Камера
+msg.attach.gift=Подарунок
+msg.attach.sticker=Стікер
+msg.action.leave= % 1 вийшов
+msg.action.kick=%1 вигнав(а) %2
+msg.action.invite_user_by_link=%1 зайшов за посиланням
+msg.action.invite_user=%1 пригласил(а) %2
+msg.action.photo_update=%1 поміняв(а) фото
+msg.action.photo_remove=%1 видалив(а) фото
+msg.action.create=%1 створив(а) чат
+msg.action.title_update=%1 оновив (а) назву
+msg.action.pin_message=%1 закріпив(а) повідомлення
+msg.action.unread_message=%1 закріпив(а) повідомлення
+msg.attach.action=Дія
+msg.remove0 = Видалити у себе
+msg.remove1=Видалити у всіх
+msg.removed=[видалено]
+msg.your comment=ваш коментар:
+msg.restricted=Відправлення повідомлень обмежена
 
 count.message=повідомлення
 count.messages=повідомлень
@@ -237,6 +257,7 @@ yes=Так
 ok=Прийняти
 cancel=Скасувати
 loadmore=Завантажити ще...
+at=о
 
 splash.emnotsupported=Найімовірніше, ViKa Touch зараз запущена на непідтримуваному емуляторі. Ми рекомендуємо використовувати KEmulator, J2ME Loader, JBed або офіційні емулятори з пакетів для розробників - в інших можливі проблеми з відображенням, функціональністю та безпекою.
 splash.title.3=Підготовка ресурсів

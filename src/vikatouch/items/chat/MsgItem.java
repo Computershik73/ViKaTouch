@@ -31,6 +31,9 @@ import vikatouch.attachments.VoiceAttachment;
 import vikatouch.attachments.WallAttachment;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
+import vikatouch.screens.menu.ChatMembersScreen;
+import vikatouch.screens.page.GroupPageScreen;
+import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.updates.VikaUpdate.VEUtils;
 import vikatouch.utils.IntObject;
@@ -38,6 +41,7 @@ import vikatouch.utils.ProfileObject;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.CountUtils;
 import vikatouch.utils.url.URLBuilder;
+import vikatouch.utils.url.URLDecoder;
 
 /**
  * @author Feodor0090
@@ -77,6 +81,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	//public smiles[] smilesarray;
 	public Vector smilesarray = new Vector(0, 1);
 	public String codestext="";
+	public  int llll;
 	public void ChangeText(String s) {
 		VikaTouch.needstoRedraw=true;
 		text = s;
@@ -85,10 +90,34 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		linesC = drawText.length;
 		itemDrawHeight = h1 * (linesC + 1);
 	}
+	
+	public static final long unsignedIntToLong(byte[] b) 
+	{
+	    long l = 0;
+	    l |= b[0] & 0xFF;
+	    l <<= 8;
+	    l |= b[1] & 0xFF;
+	    l <<= 8;
+	    l |= b[2] & 0xFF;
+	    l <<= 8;
+	    l |= b[3] & 0xFF;
+	    return l;
+	}
+	
+	
+	public static final int unsignedShortToInt(byte[] b) 
+	{
+	    int i = 0;
+	    i |= b[0] & 0xFF;
+	    i <<= 8;
+	    i |= b[1] & 0xFF;
+	    return i;
+	}
 
 	public void parseJSON() {
 		VikaTouch.needstoRedraw=true;
 		super.parseJSON();
+		//VikaUtils.logToFile(json.toString());
 		msgWidth = DisplayUtils.width - (DisplayUtils.width <= 240 ? 10 : 40);
 		margin = (DisplayUtils.width <= 240 ? 0 : 10);
 		try {
@@ -114,22 +143,77 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			codestext ="";
 			int smilescount=0;
 			if (foreign) {
-			if (ChatScreen.peerlanguage==null) {
+			//if (ChatScreen.peerlanguage==null) {
 				//text = TextLocal.translateText(text, "en", VikaTouch.mylanguage);
-			} else {
-			if (VikaTouch.mylanguage!=ChatScreen.peerlanguage) {
-				text = TextLocal.translateText(text, ChatScreen.peerlanguage, VikaTouch.mylanguage);
+			//} else {
+			//if (VikaTouch.mylanguage!=ChatScreen.peerlanguage) {
+			//	text = TextLocal.translateText(text, ChatScreen.peerlanguage, VikaTouch.mylanguage);
+			//}
+			//}
 			}
+			//VikaUtils.logToFile(" "+String.valueOf((long)text.toCharArray()[0])+ " ");
+			/*int value = 0;
+			byte[] a = new byte [4];
+			a [0] =  (byte)text.toCharArray()[0];
+			a [1] = (byte)text.toCharArray()[1];
+			a [2] = (byte)text.toCharArray()[2];
+			a [3] = (byte)text.toCharArray()[3];
+			for (int j=0; j<=3; j++) {
+			    value = (value << 8) + (a[j] & 0xFF);
 			}
-			}
+			long coode = unsignedIntToLong(a);
+			int codede = unsignedShortToInt(a);*/
+			//VikaUtils.logToFile(" "+String.valueOf(value)+ " "+String.valueOf(coode)+String.valueOf(codede)+" ");
+			
+			//VikaUtils.logToFile(String.valueOf(text.length()));
 			while (ii < text.length()) {
 				
+				//ByteBuffer.wrap(bytes).getInt();
 				if (((long)text.toCharArray()[ii] >= 55350) && ((long)text.toCharArray()[ii] <= 55360)) {
 					codestext = codestext.concat(" ").concat(String.valueOf((long) text.toCharArray()[ii])).concat(" ");
 					ii++;
 					codestext = codestext.concat(" ").concat(String.valueOf((long) text.toCharArray()[ii])).concat(" ");
 					textt+="     ";
-					smilesarray.addElement(new smile(ii-1+2*smilescount, Integer.toHexString((int) text.toCharArray()[ii-1]).toUpperCase()+Integer.toHexString((int) text.toCharArray()[ii]).toUpperCase()+".png"));
+					//smilesarray.addElement(new smile(ii-1+2*smilescount, Integer.toHexString((int) text.toCharArray()[ii-1]).toUpperCase()+Integer.toHexString((int) text.toCharArray()[ii]).toUpperCase()+".png"));
+					//String hex = Integer.toHexString((int) text.toCharArray()[ii-1]);
+
+					//int parsedResult = (int) Long.parseLong(hex, 16);
+					//VikaTouch.sendLog(String.valueOf(parsedResult));
+					//Thread.sleep(500);
+					//String hex2 = Integer.toHexString((int) text.toCharArray()[ii]);
+
+					//int parsedResult2 = (int) Long.parseLong(hex2, 16);
+					//VikaTouch.sendLog(String.valueOf(parsedResult)+ " " + String.valueOf(parsedResult2));
+					//String str = String.valueOf((int)(text.toCharArray()[ii-1])) + String.valueOf((int)text.toCharArray()[ii]);
+					// String strr = new String(str.getBytes("UTF-16"), "UTF-16");
+					//VikaTouch.sendLog(
+							//VikaUtils.toUTF8Array(
+					//				URLDecoder.encode(String.valueOf(text.toCharArray()[ii-1]))+URLDecoder.encode(String.valueOf(text.toCharArray()[ii]))
+									//)
+					//);
+					String str = String.valueOf(text.toCharArray()[ii-1])+String.valueOf(text.toCharArray()[ii]);
+				/*	for (byte b : a.getBytes("UTF-8")) {
+						  sb.append(String.format("%02x", 0xff & b));
+					}
+					StringBuilder*/ 
+					//+String.valueOf(text.toCharArray()[ii]).charAt(0)).toCharArray()[0]);
+					//byte[] utfString = str.getBytes("UTF-8");
+					//str = new String(utfString,"UTF-8") ;
+					//byte[] utf8Bytes = str.getBytes();
+
+					 // String result = new String(utf8Bytes);
+					//int a = (int)text.toCharArray()[ii-1];
+					//int b = (int)text.toCharArray()[ii];
+					//VikaTouch.sendLog(String.valueOf(a)+ " "+ String.valueOf(b));
+					//String c = " "+String.valueOf((char) a) + " " + String.valueOf((char) b);
+					//VikaUtils.intToByteArray(a);
+					//VikaTouch.sendLog(VikaUtils.bytesToHex(VikaUtils.intToByteArray(a)));
+					//VikaTouch.sendLog(VikaUtils.bytesToHex(str.getBytes("UTF-8")).toLowerCase()+".png");
+					smilesarray.addElement(new smile(ii-1+2*smilescount, VikaUtils.bytesToHex(str.getBytes("UTF-8")).toLowerCase()+".png"));
+					//VikaUtils.logToFile(String.valueOf(ii-1+2*smilescount)+ " "+VikaUtils.bytesToHex(str.getBytes("UTF-8")).toLowerCase()+".png" );
+				//VikaTouch.sendLog(String.valueOf((char)((int)text.toCharArray()[ii-1]))+ String.valueOf((char)((int)text.toCharArray()[ii])));
+					//char.
+					//VikaTouch.sendLog(String.valueOf((long) text.toCharArray()[ii-1]) + " " + String.valueOf((long) text.toCharArray()[ii]) + " "+ String.valueOf((int) text.toCharArray()[ii-1]) + " " + String.valueOf((int) text.toCharArray()[ii]) + " "+ VikaUtils.decimal2hex((int) text.toCharArray()[ii-1])+ " " + VikaUtils.decimal2hex((int) text.toCharArray()[ii]));
 					//smilesarray.addElement(new smile(ii-1+2*smilescount, "/emoji/D83DDE00.png"));
 					smilescount++;
 					//Integer.toHexString((int) text.toCharArray()[ii]).toUpperCase();
@@ -190,7 +274,12 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 					}*/
 
 				} else {
+					//if (((long) text.toCharArray()[ii]) == 56841) {
+					//	
+					//} else {
 					textt += String.valueOf(text.toCharArray()[ii]);
+					//}
+					//textt+=" "+String.valueOf((long) text.toCharArray()[ii])+" ";
 					//codestext = codestext.concat(" ").concat(String.valueOf((long) text.toCharArray()[ii])).concat(" ");
 				}
 				// String.valueOf((char) 27864);
@@ -312,6 +401,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			if (!attsReady) {
 				attsReady = true;
 				try {
+					 llll = attachments.length;
 					for (int i = 0; i < attachments.length; i++) {
 						Attachment at = attachments[i];
 						if (at == null)
@@ -380,9 +470,15 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
+		if (VikaTouch.needstoRedraw==false) {
+			return;
+		}
 		try {
 			if (!ChatScreen.forceRedraw && y + scrolled + itemDrawHeight < -50)
 				return;
+			if (y + scrolled >DisplayUtils.height) {
+				return;
+			}
 			// drawing
 			Font font = Font.getFont(0, 0, 8);
 			g.setFont(font);
@@ -600,8 +696,12 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				} catch (Throwable ee) {
 					//VikaTouch.sendLog(ee.getMessage());
 				}*/
+				//smilesinfo=smilesinfo+" "+((smile)smilesarray.elementAt(li)).smilePath+" ";
 				try {
-					g.drawImage(VikaUtils.loadSmile(((smile)smilesarray.elementAt(li)).smilePath), ((smile)smilesarray.elementAt(li)).smileX, ((smile)smilesarray.elementAt(li)).smileY, 0);
+					g.drawImage(
+							VikaUtils.loadSmile(((smile)smilesarray.elementAt(li)).smilePath),
+							//Image.createImage("/emoji/D83DDE00.png"),
+							((smile)smilesarray.elementAt(li)).smileX, ((smile)smilesarray.elementAt(li)).smileY, 0);
 					//g.drawImage(Image.createImage(((smile)smilesarray.elementAt(li)).smilePath), ((smile)smilesarray.elementAt(li)).smileX , ((smile)smilesarray.elementAt(li)).smileY, 0);
 				} catch (Throwable eg) {
 					
@@ -691,6 +791,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		} catch (Throwable e) {
 			VikaTouch.sendLog(e.toString());
 		}
+		
 	}
 
 	public String[] searchLinks() {
@@ -800,7 +901,12 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		if (key == -5) {
 			if (VikaCanvas.currentAlert==null) { 
 			int h = 48;
-			OptionItem[] opts = new OptionItem[6];
+			OptionItem[] opts;
+			if (ChatScreen.peerId > ChatScreen.OFFSET_INT) {
+			 opts = new OptionItem[8];
+			} else {
+				opts = new OptionItem[7];
+			}
 			opts[0] = new OptionItem(this, TextLocal.inst.get("msg.reply"), IconsManager.ANSWER, -1, h);
 			opts[1] = foreign ? new OptionItem(this, TextLocal.inst.get("msg.markasread"), IconsManager.APPLY, -5, h)
 					: new OptionItem(this, TextLocal.inst.get("msg.edit"), IconsManager.EDIT, -4, h);
@@ -809,6 +915,12 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			opts[4] = new OptionItem(this, TextLocal.inst.get("msg.links") + "...", IconsManager.LINK, -8, h);
 			opts[5] = new OptionItem(this, TextLocal.inst.get("msg.attach.attachments") + "...",
 					IconsManager.ATTACHMENT, -9, h);
+			opts[6] = new OptionItem(this, this.name + "...",
+					IconsManager.FRIENDS, -10, h);
+			if (ChatScreen.peerId > ChatScreen.OFFSET_INT) {
+			opts[7] = new OptionItem(this, ChatScreen.title + "...",
+					IconsManager.GROUPS, -11, h);
+			}
 			VikaTouch.popup(new AutoContextMenu(opts));
 			}
 			VikaTouch.needstoRedraw=true;
@@ -834,7 +946,11 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			return;
 		} else if (i >= 0) { // прикрепы
 			try {
+				//if (i<attachments.length) {
 				attachments[i].press();
+				//} else {
+				//	forward[]
+				//}
 			} catch (Exception e) {
 			}
 			VikaTouch.needstoRedraw=true;
@@ -917,10 +1033,24 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		}
 			break;
 		case -9: {
-			int l = attachments.length;
-			OptionItem[] opts = new OptionItem[l];
+			int l = llll;
+			
+			int sum = 0;
+			
+			if (forward!=null) {
+				if (forward.length>0) {
+					for (int k = 0 ; k< forward.length; k++) {
+						
+							sum+= forward[k].attachments.length;
+						
+					}
+				}
+			}
+			
+			OptionItem[] opts = new OptionItem[l+sum];
 			int photoC = 1;
 			int h = DisplayUtils.height > 240 ? 36 : 30;
+			int jj=0;
 			for (int j = 0; j < l; j++) {
 				Attachment a = attachments[j];
 				if (a.type.equals("photo")) {
@@ -943,7 +1073,57 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				} else {
 					opts[j] = new OptionItem(this, TextLocal.inst.get("msg.attach.attachment"), IconsManager.ATTACHMENT, j, h);
 				}
+				jj++;
 			}
+			//int jj=l;
+			
+			if (forward!=null) {
+				if (forward.length>0) {
+					Attachment[] temp = new Attachment[l+sum];
+					for (int jjj=0; jjj<l; jjj++) {
+						temp[jjj]=attachments[jjj];
+					}
+					for (int k = 0 ; k< forward.length; k++) {
+						// temp = new Attachment[temp.length+forward[k].attachments.length];
+						
+						
+						for (int j = 0; j < forward[k].attachments.length; j++) {
+							Attachment a = forward[k].attachments[j];
+							temp[jj]=a;
+							
+							
+							if (a.type.equals("photo")) {
+								opts[jj] = new OptionItem(this, TextLocal.inst.get("msg.attach.photo") + " " + photoC, IconsManager.PHOTOS, jj, h);
+								a.attNumber = photoC;
+								photoC++;
+							} else if (a.type.equals("doc")) {
+								DocumentAttachment da = (DocumentAttachment) a;
+								opts[jj] = new OptionItem(this, da.name + " (" + (da.size / 1000) + "kb)", IconsManager.DOCS, jj, h);
+							} else if (a.type.equals("audio")) {
+								AudioAttachment aa = (AudioAttachment) a;
+								opts[jj] = new OptionItem(this, aa.name, IconsManager.MUSIC, jj, h);
+							} else if (a.type.equals("video")) {
+								VideoAttachment va = (VideoAttachment) a;
+								opts[jj] = new OptionItem(this, va.title, IconsManager.VIDEOS, jj, h);
+							} else if (a.type.equals("wall")) {
+								opts[jj] = new OptionItem(this, TextLocal.inst.get("msg.attach.wall"), IconsManager.NEWS, jj, h);
+							} else if (a.type.equals("audio_message")) {
+								opts[jj] = new OptionItem(this, VoiceAttachment.name, IconsManager.VOICE, jj, h);
+							} else {
+								opts[jj] = new OptionItem(this, TextLocal.inst.get("msg.attach.attachment"), IconsManager.ATTACHMENT, jj, h);
+							}
+						jj++;
+						}
+					}
+					//attachments=temp;
+					attachments=new Attachment[temp.length];
+					for (int jjj=0; jjj<temp.length; jjj++) {
+						attachments[jjj]=temp[jjj];
+					}
+				}
+				
+			}
+			
 			if (opts != null && opts.length > 0) {
 				VikaTouch.popup(new AutoContextMenu(opts));
 			} else {
@@ -953,6 +1133,26 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		}
 			break;
 		case -98:
+		case -10:
+			if (this.fromid>0) {
+				VikaTouch.setDisplay(new ProfilePageScreen(this.fromid), 1);
+			} else  {
+				VikaTouch.setDisplay(new GroupPageScreen(-(this.fromid)), 1);
+			} /*else if (ChatScreen.type == ChatScreen.TYPE_CHAT) {
+				String x2 = CountUtils.countStrMembers(ChatScreen.members);
+				VikaTouch.setDisplay(new ChatMembersScreen(ChatScreen.peerId, x2, ChatScreen.members), 1);
+			}*/
+			break;
+		case -11:
+			/*if (ChatScreen.type == ChatScreen.TYPE_USER) {
+				VikaTouch.setDisplay(new ProfilePageScreen(ChatScreen.localId), 1);
+			} else if (ChatScreen.type == ChatScreen.TYPE_GROUP) {
+				VikaTouch.setDisplay(new GroupPageScreen(ChatScreen.localId), 1);
+			} else*/ if (ChatScreen.type == ChatScreen.TYPE_CHAT) {
+				String x2 = CountUtils.countStrMembers(ChatScreen.members);
+				VikaTouch.setDisplay(new ChatMembersScreen(ChatScreen.peerId, x2, ChatScreen.members), 1);
+			}
+			break;
 		case -99: {
 			boolean ok = false;
 			try {

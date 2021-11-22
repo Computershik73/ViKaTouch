@@ -6,6 +6,7 @@ import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
+import vikatouch.items.chat.CommentItem;
 import vikatouch.items.chat.MsgItem;
 import vikatouch.popup.ImagePreview;
 import vikatouch.utils.VikaUtils;
@@ -88,8 +89,10 @@ public class PhotoAttachment extends ImageAttachment implements ISocialable {
 	// имеющиеся методы для идиотов. Точнее я не уверен что вот то будет работать, и
 	// мне проще написать это чем 2 часа ловить баги. Потом втюхаю в I.
 	public PhotoSize getMessageImage() {
-		return PhotoSize.searchSmallerSize(sizes,
-				Math.min((int) (DisplayUtils.width * 0.6), MsgItem.msgWidth - MsgItem.attMargin * 2));
+		//return PhotoSize.searchSmallerSize(sizes,
+			//	Math.min((int) (DisplayUtils.width * 0.6), MsgItem.msgWidth - MsgItem.attMargin * 2));
+		return PhotoSize.searchNearestSize(sizes,
+				Math.min((int) (DisplayUtils.width), MsgItem.msgWidth - MsgItem.attMargin * 2));
 	}
 
 	// Загружает картинку
@@ -109,6 +112,30 @@ public class PhotoAttachment extends ImageAttachment implements ISocialable {
 			e.printStackTrace();
 		}
 	}
+	
+	public PhotoSize getCommentImage() {
+		return PhotoSize.searchSmallerSize(sizes,
+				Math.min((int) (DisplayUtils.width * 0.6), CommentItem.msgWidth - CommentItem.attMargin * 2));
+	}
+
+	// Загружает картинку
+	public void loadForComment() {
+		try {
+			PhotoSize ps = getMessageImage();
+			Image i = VikaUtils.downloadImage(ps.url);
+			int w = Math.min((int) (DisplayUtils.width * 0.6), CommentItem.msgWidth - CommentItem.attMargin * 2);
+			if (ps.width > w) {
+				i = VikaUtils.resize(i, w, -1);
+			}
+
+			renderH = i.getHeight();
+			renderW = i.getWidth();
+			renderImg = i;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	public void loadForNews() {
 		try {

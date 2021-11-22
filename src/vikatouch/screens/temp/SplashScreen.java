@@ -75,10 +75,11 @@ public class SplashScreen extends MainScreen {
 								Graphics.TOP | Graphics.HCENTER);
 					}
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		} else {
+			try {
 			if (logo != null)
 				g.drawImage(logo, hdw - 128, dh / 2 - 128, 0);
 			ColorUtils.setcolor(g, ColorUtils.COLOR1);
@@ -87,6 +88,7 @@ public class SplashScreen extends MainScreen {
 			g.fillRect(42, dh - 16, dw - 84, 12);
 			ColorUtils.setcolor(g, ColorUtils.COLOR1);
 			g.fillRect(43, dh - 15, (dw - 86) * statesProgress[currState] / 100, 10);
+			} catch (Throwable ee) {}
 		}
 	}
 
@@ -102,7 +104,7 @@ public class SplashScreen extends MainScreen {
 			tip = TextBreaker.breakText(TextLocal.inst.get("splash.tip." + i), Font.getFont(0, 0, Font.SIZE_SMALL),
 					DisplayUtils.width - 40);
 			tipL = tip.length;
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}

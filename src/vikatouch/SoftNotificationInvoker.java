@@ -4,6 +4,7 @@ import com.nokia.mid.ui.SoftNotification;
 import com.nokia.mid.ui.SoftNotificationException;
 import com.nokia.mid.ui.SoftNotificationListener;
 
+
 /**
  * @author Shinovon
  *

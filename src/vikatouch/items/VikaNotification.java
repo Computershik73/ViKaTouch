@@ -13,6 +13,7 @@ import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
+import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.VikaTouch;
 import vikatouch.settings.Settings;
 
@@ -52,6 +53,9 @@ public class VikaNotification {
 
 	public void draw(Graphics g) {
 		VikaTouch.needstoRedraw=true;
+		
+		VikaTouch.canvas.serviceRepaints();
+		VikaTouch.needstoRedraw=true;
 		if (icons == null || icons.length != 4) {
 			icons = new Image[] { IconsManager.ico[IconsManager.INFO], IconsManager.ico[IconsManager.MSGS],
 					IconsManager.ico[IconsManager.MUSIC], IconsManager.ico[IconsManager.CLOSE] };
@@ -74,10 +78,10 @@ public class VikaNotification {
 			ColorUtils.setcolor(g, ColorUtils.TEXT);
 			g.drawRect(left, y, DisplayUtils.width - left * 2, fh * 2);
 			g.drawImage(icons[type], left + 4, y + fh - 12, 0);
-
-			g.drawString(text, left + 32, y + fh, 0);
+			//text = TextBreaker.shortText(text, DisplayUtils.width - x, Font.getFont(0, 0, 8));
+			g.drawString(TextBreaker.shortText(text, DisplayUtils.width - left - 55, Font.getFont(0, 0, 8)), left + 32, y + fh, 0);
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
-			g.drawString(title, left + 32, y, 0);
+			g.drawString(TextBreaker.shortText(title, DisplayUtils.width - left - 55, Font.getFont(0, 0, 8)), left + 32, y, 0);
 		}
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.canvas.serviceRepaints();

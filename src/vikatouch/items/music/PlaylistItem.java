@@ -31,6 +31,16 @@ public class PlaylistItem extends JSONUIItem {
 		super(json);
 		setDrawHeight();
 	}
+	
+	public PlaylistItem(String namee, int sizee, int ownerid, int idd, String iconUrll, String bigCoverUrll) {
+		name = namee;
+		size = sizee;
+		owner_id = ownerid;
+		id = idd;
+		iconUrl = iconUrll;
+		bigCoverUrl = bigCoverUrll;
+		setDrawHeight();
+	}
 
 	public void parseJSON() {
 		System.out.println(json.toString());
@@ -69,12 +79,13 @@ public class PlaylistItem extends JSONUIItem {
 		ColorUtils.setcolor(g, ColorUtils.OUTLINE);
 		g.setFont(Font.getFont(0, 0, Font.SIZE_SMALL));
 		g.drawString(size + " аудиозаписей", 102, y + 46, 0);
+		VikaTouch.needstoRedraw=true;
 	}
 
 	private Image getIcon() {
 		Image img = null;
 		try {
-			if (!Settings.dontLoadAvas)
+			if ((!Settings.dontLoadAvas) && (iconUrl!=null))
 				img = VikaUtils.resize(VikaUtils.downloadImage(iconUrl), 100, 100);
 		} catch (Exception e) {
 
@@ -87,6 +98,7 @@ public class PlaylistItem extends JSONUIItem {
 	}
 
 	public void open() {
+		//VikaTouch.sendLog(String.valueOf(id));
 		MusicScreen pls = new MusicScreen();
 		pls.load(owner_id, id, name);
 		pls.coverUrl = bigCoverUrl;

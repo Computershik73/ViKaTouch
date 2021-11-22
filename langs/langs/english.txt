@@ -46,6 +46,7 @@ menu.nowebsite=no website
 menu.discussions=Discussions
 menu.about=About
 menu.loading=Loading...
+menu.search=Search
 
 about.devs=Developers
 about.vendor=Vendor
@@ -76,6 +77,7 @@ title.musicw=%2's Music
 title.comments=Comments
 title.photos=Photos
 title.photosw=%2's Photos
+title.newrequests=New requests
 
 friend.remove=Remove friend
 friend.add=Send friendship request
@@ -146,6 +148,8 @@ msg.attach.action=Action
 msg.remove0=Delete at home
 msg.remove1=Delete from everyone
 msg.removed=[deleted]
+msg.yourcomment=Your comment:
+msg.restricted=Sending messages is limited
 
 count.message=message
 count.messages=messages
@@ -253,6 +257,7 @@ yes=Yes
 ok=OK.
 cancel=Cancel
 loadmore=Load more...
+at=at
 
 splash.emnotsupported=Current using emulator is not supported. We recommend using KEmulator, J2ME Loader, JBed, or SDKs. Others may have errors
 splash.title.3=Preparing assets

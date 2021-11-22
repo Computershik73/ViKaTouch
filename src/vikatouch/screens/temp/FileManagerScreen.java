@@ -15,6 +15,7 @@ import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
+import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
 import vikatouch.items.fm.FileItem;
 import vikatouch.items.fm.FileManagerItem;
@@ -22,6 +23,7 @@ import vikatouch.items.fm.FolderItem;
 import vikatouch.items.fm.FolderLoadNextItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
+import vikatouch.screens.MainScreen;
 import vikatouch.utils.VikaUtils;
 
 /**
@@ -351,6 +353,15 @@ public class FileManagerScreen extends ScrollableCanvas {
 
 	public void scrollToSelected() {
 		VikaTouch.needstoRedraw=true;
+		int itemy = 0;
+		for (int i = 0; (i < itemsCount && i < currentItem); i++) {
+			itemy += uiItems[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
+		}
+		if (uiItems[currentItem] != null) {
+			scrolled = -(itemy - DisplayUtils.height / 2 + (uiItems[currentItem].getDrawHeight() / 2)
+					+ MainScreen.topPanelH);
+			
+		}
 	}
 
 	public void selectCentered() {

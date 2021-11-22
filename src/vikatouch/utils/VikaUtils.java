@@ -1,5 +1,6 @@
 package vikatouch.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -20,6 +21,11 @@ import javax.microedition.io.HttpConnection;
 import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
+import javax.microedition.media.Manager;
+import javax.microedition.media.MediaException;
+import javax.microedition.media.Player;
+import javax.microedition.media.control.VolumeControl;
+import javax.microedition.media.protocol.DataSource;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreFullException;
@@ -38,8 +44,11 @@ import vikatouch.screens.page.GroupPageScreen;
 import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.error.ErrorCodes;
+import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
 import vikatouch.utils.url.URLDecoder;
+
+
 
 /**
  * @author Shinovon
@@ -49,7 +58,29 @@ import vikatouch.utils.url.URLDecoder;
 public final class VikaUtils {
 	private static Thread fileThread;
 	private static Object downloadLock = new Object();
-
+	public static Thread pronouncer;
+	public static Player playertext;
+	
+	public static long TimeOffset() {
+		long diff = 0;
+		//https://api.vk.com/method/utils.getServerTime?access_token=a4ffbd174de&v=5.130
+			try {
+				String x = VikaUtils.download(VikaTouch.API + "/method/utils.getServerTime?access_token="
+						+ VikaTouch.accessToken + "&v=" + VikaTouch.API_VERSION);
+				long timest = new JSONObject(x).getLong("response")*1000;
+				diff = System.currentTimeMillis() - timest;
+				//VikaTouch.sendLog(String.valueOf(timest)+ " " + String.valueOf(System.currentTimeMillis())+ " " + String.valueOf(diff));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return diff;
+		
+	}
+	
 	public static String parseShortTime(final long paramLong) {
 		final Calendar cal = Calendar.getInstance();
 
@@ -60,26 +91,47 @@ public final class VikaUtils {
 		final int day = cal.get(Calendar.DAY_OF_MONTH);
 		final int year = cal.get(Calendar.YEAR);
 		final int month = cal.get(Calendar.MONTH);
+		
 
 		cal.setTime(currentDate);
+		final int curday = cal.get(Calendar.DAY_OF_MONTH);
 		final int currentYear = cal.get(Calendar.YEAR);
 
 		final String time = time(date);
 
-		final long dayDelta = (paramLong / 60L / 60L / 24L) - (System.currentTimeMillis() / 1000L / 60L / 60L / 24L);
+		final long dayDelta = (long) (Math.floor((System.currentTimeMillis() / 1000L / 60L / 60L / 24L)) - (long) (Math.floor(paramLong / 60L / 60L / 24L)));
 
 		String result = "Давно";
 
 		parsing: {
 			if (dayDelta == 0) {
+				if (curday==day) {
 				result = time;
 				break parsing;
+				} else {
+					//if (System.currentTimeMillis()-paramLong * 1000L<=14400000)
+					result = TextLocal.inst.get("date.yesterday");
+					break parsing;
+				}
 			} else if (dayDelta == 1) {
+				if (curday==day+1) {
 				result = TextLocal.inst.get("date.yesterday");
 				break parsing;
+				} else {
+					//result = "pizdec" + String.valueOf(curday) +  " " + String.valueOf(day);
+					result = time;
+					break parsing;
+				}
+				
 			} else if (currentYear == year) {
-				result = TextLocal.inst.formatChatDate(day, month);
-				break parsing;
+				if (curday==day+1) { 
+					result = TextLocal.inst.get("date.yesterday");
+					break parsing;
+				} else {
+					result = TextLocal.inst.formatChatDate(day, month);
+					break parsing;
+				}
+				
 			} else {
 				result = TextLocal.inst.formatChatDate(day, month, year);
 				break parsing;
@@ -101,28 +153,49 @@ public final class VikaUtils {
 		final int month = cal.get(Calendar.MONTH);
 
 		cal.setTime(currentDate);
+		final int curday = cal.get(Calendar.DAY_OF_MONTH);
 		final int currentYear = cal.get(Calendar.YEAR);
 
 		final String time = time(date);
 
-		final long dayDelta = (paramLong / 60L / 60L / 24L) - (System.currentTimeMillis() / 1000L / 60L / 60L / 24L);
+		final long dayDelta = (long) (Math.floor((System.currentTimeMillis() / 1000L / 60L / 60L / 24L))) - ((long)Math.floor((paramLong / 60L / 60L / 24L)));
 
 		String result;
 
 		parsing: {
 			if (dayDelta == 0) {
+				if (curday==day) {
 				result = TextLocal.inst.get("date.todayat");
 				result += " " + time;
 				break parsing;
+				} else {
+					result = TextLocal.inst.get("date.yesterday");
+					result += " " + time;
+					break parsing;
+				}
 			} else if (dayDelta == 1) {
+				if (curday==day+1) {
 				result = TextLocal.inst.get("date.yesterday");
 				result += " " + time;
 				break parsing;
+				} else {
+					result = TextLocal.inst.get("date.todayat");
+					result += " " + time;
+					break parsing;
+				}
 			} else if (currentYear == year) {
+				if (curday==day+1) { 
+					result = TextLocal.inst.get("date.yesterday");
+					result += " " + time;
+					break parsing;
+				} else {
 				result = TextLocal.inst.formatShortDate(day, month);
+				result += " " + time;
 				break parsing;
+				}
 			} else {
 				result = TextLocal.inst.formatDate(day, month, year);
+				result += " " + time;
 				break parsing;
 			}
 		}
@@ -175,8 +248,8 @@ public final class VikaUtils {
 	}
 	
 	public static void logToFile(String text) {
-	return;
-	/*FileConnection fileCon = null;
+	//return;
+	FileConnection fileCon = null;
 	
 	try {
 		fileCon = (FileConnection) Connector.open(System.getProperty("fileconn.dir.music") + "log.txt", 3);
@@ -191,7 +264,7 @@ public final class VikaUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	} else {*/
+	} else {
 		/*try {
 			fileCon.delete();
 		} catch (IOException e) {
@@ -204,7 +277,7 @@ public final class VikaUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-	/*}
+	}
 
 	OutputStream stream = null;
 	try {
@@ -214,7 +287,7 @@ public final class VikaUtils {
 		e.printStackTrace();
 	}
 	try {
-		stream.write(text.getBytes("UTF-8"));
+		stream.write(text.getBytes());
 	} catch (UnsupportedEncodingException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -228,7 +301,7 @@ public final class VikaUtils {
 		fileCon.close();
 	} catch (Exception e2) {
 		e2.printStackTrace();
-	}*/
+	}
 	
 }
 
@@ -250,8 +323,204 @@ public final class VikaUtils {
 				return download0(url);
 			}
 		} else {
+			VikaTouch.isdownloading=1;
 			return download0(url);
 		}
+	}
+	
+	
+	//http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&textlen=32&client=tw-ob&q=Test&tl=En-gb
+	public static void pronounceText(final String text) throws IOException {
+		
+		/*if (pronouncer != null)
+		{
+				if (pronouncer.isAlive()) {
+					return;
+					//pronouncer.interrupt();
+				}	
+			}*/
+			
+		//new Thread() {
+			//public void run() {
+				String textt = text;
+				textt=textt.replace(':', ' ');
+				textt=textt.replace('/', ' ');
+				String url="http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&textlen=99232&client=tw-ob&q="+URLDecoder.encode(textt)+"&tl=Ru-ru";
+				//VikaTouch.sendLog(url);
+				byte[] file = null;
+				ByteArrayOutputStream var4 = null;
+				HttpConnection var13 = null;
+				InputStream var14 = null;
+				try {
+					var4 = new ByteArrayOutputStream();
+					var13 = (HttpConnection) Connector.open(url, Connector.READ);
+					var13.setRequestMethod("GET");
+					var13.setRequestProperty("User-Agent",
+							"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36");
+					int i = var13.getResponseCode();
+					if (i != 200 && i != 401) {
+						// System.out.println("not 200 and not 401");
+						if (var13.getHeaderField("Location") != null) {
+							String replacedURL = var13.getHeaderField("Location");
+							var13.close();
+							var13 = (HttpConnection) Connector.open(replacedURL, Connector.READ);
+							var13.setRequestMethod("GET");
+							var13.setRequestProperty("User-Agent",
+									"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36");
+							var14 = var13.openInputStream();
+							// long var8 = var13.getLength();
+							byte[] var6 = new byte[VikaTouch.isNotS60()? 4096 : 10000];
+							// long var10 = 0L;
+
+							int var7;
+
+							while ((var7 = var14.read(var6)) != -1) {
+								// var10 += (long) var7;
+								var4.write(var6, 0, var7);
+								var4.flush();
+							}
+						} else {
+							
+						}
+					} else {
+						var14 = var13.openInputStream();
+						// long var8 = var13.getLength();
+						//524288
+						byte[] var6 = new byte[VikaTouch.isNotS60()? 4096 : 10000];
+						// long var10 = 0L;
+
+						int var7;
+
+						while ((var7 = var14.read(var6)) != -1) {
+							// var10 += (long) var7;
+							var4.write(var6, 0, var7);
+							var4.flush();
+						}
+					}
+					
+					
+					file = var4.toByteArray();
+				} catch (Throwable e) {
+					//throw new IOException(e.toString());
+				} finally {
+					if (var14 != null)
+						try {
+							var14.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					if (var13 != null)
+						try {
+							var13.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					if (var4 != null)
+						try {
+							var4.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				}
+				ByteArrayInputStream bis = new ByteArrayInputStream(file);
+				//source.read(file);
+				/*FileConnection fileCon = null ;
+				try {
+					fileCon = (FileConnection) Connector.open(System.getProperty("fileconn.dir.music") + "temp.mp3", Connector.READ_WRITE);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (!fileCon.exists()) {
+					try {
+						fileCon.create();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						fileCon.delete();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					try {
+						fileCon.create();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				OutputStream stream = null;
+				try {
+					stream = fileCon.openOutputStream(fileCon.fileSize());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					stream.write(file);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					stream.flush();
+					stream.close();
+					fileCon.close();
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+				
+				
+				*/
+				
+				try {
+					//playertext = Manager.createPlayer(System.getProperty("fileconn.dir.music") + "temp.mp3");
+					playertext = Manager.createPlayer(bis, "audio/mpeg");
+					playertext.realize();
+					playertext.prefetch();
+					((VolumeControl) playertext.getControl("VolumeControl"))
+					.setLevel(100);
+					playertext.start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (MediaException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			//}
+		//};
+		//pronouncer.start();
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	public static String getRedirUrl(String oldurl) throws IOException, InterruptedException  {
@@ -278,14 +547,17 @@ public final class VikaUtils {
 		ByteArrayOutputStream var4 = null;
 		HttpConnection var13 = null;
 		InputStream var14 = null;
+		VikaTouch.isdownloading=1;
 		try {
 			var4 = new ByteArrayOutputStream();
 			var13 = (HttpConnection) Connector.open(var1, Connector.READ);
 			var13.setRequestMethod("GET");
 			var13.setRequestProperty("User-Agent",
-					"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
+					//"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)"
+					"com.vk.vkclient/12 (unknown, iPhone OS 9.3.5, iPhone, Scale/2.000000)"
+					);
 			int i = var13.getResponseCode();
-			if (i != 200 && i != 401) {
+			if (i != 200 && i != 401 && i!= 403) {
 				// System.out.println("not 200 and not 401");
 				if (var13.getHeaderField("Location") != null) {
 					String replacedURL = var13.getHeaderField("Location");
@@ -293,7 +565,9 @@ public final class VikaUtils {
 					var13 = (HttpConnection) Connector.open(replacedURL, Connector.READ);
 					var13.setRequestMethod("GET");
 					var13.setRequestProperty("User-Agent",
-							"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
+							//"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)"
+							"com.vk.vkclient/12 (unknown, iPhone OS 9.3.5, iPhone, Scale/2.000000)"
+							);
 					var14 = var13.openInputStream();
 					// long var8 = var13.getLength();
 					byte[] var6 = new byte[VikaTouch.isNotS60()? 4096 : 524288];
@@ -324,11 +598,26 @@ public final class VikaUtils {
 					var4.flush();
 				}
 			}
+			
 			String str = null;
-			str = new String(var4.toByteArray(), "UTF-8");
+			//if (var1.indexOf("getHistory")>0) {
+				//VikaUtils.logToFile(new String(var4.toByteArray()));
+				//, "UTF-8");)
+			//str = toUTF8(var4.toByteArray());
+			//} else {
+				str = new String(var4.toByteArray()
+				, "UTF-8");
+			//}
+					//new String(var4.toByteArray());
+					//, "UTF-8");
+			//str = bytesToStringUTFCustom(var4.toByteArray());
+				VikaTouch.isdownloading=0;
+				VikaTouch.needstoRedraw=true;
 			return str;
 		} catch (Throwable e) {
-			//throw new IOException(e.toString());
+			VikaTouch.isdownloading=2;
+			VikaTouch.needstoRedraw=true;
+			throw new IOException(e.toString());
 		} finally {
 			if (var14 != null)
 				var14.close();
@@ -337,7 +626,102 @@ public final class VikaUtils {
 			if (var4 != null)
 				var4.close();
 		}
-		return null;
+	}
+	
+	
+	public static String bytesToStringUTFCustom(byte[] bytes) {
+		 char[] buffer = new char[bytes.length >> 1];
+		 for(int i = 0; i < buffer.length; i++) {
+		  int bpos = i << 1;
+		  char c = (char)(((bytes[bpos]&0x00FF)<<8) + (bytes[bpos+1]&0x00FF));
+		  buffer[i] = c;
+		 }
+		 return new String(buffer);
+		}
+	
+	public static String toUTF8(byte [] textarr) {
+		String sum="";
+		String codes="";
+		int start=0;
+		int i = 0;
+		int length = textarr.length;
+		int smilesize = 4;
+		//for (int i=0; i<textarr.length; i++) {
+		//	codes+=(String.valueOf(textarr[i])+ " ");
+		while (i<length) {
+		try {
+			
+			if (((textarr[i])==-16) && ((textarr[i+1])==-97)) {
+				//VikaUtils.logToFile("smiledetected at "+String.valueOf(i)+ " textarr length is " + String.valueOf(length));
+				start = i;
+				//codes+=(String.valueOf(textarr[i])+ " ");
+				//byte [] temp = new byte [10];
+				//System.arraycopy(textarr, start, temp, 0, 10);
+				byte [] before = new byte [start];
+				System.arraycopy(textarr, 0, before, 0, start);
+				try {
+					String befst = new String(before, "UTF-8");
+					for (int j =0; j<before.length; j++) {
+						codes+=(String.valueOf(before[j])+ " ");
+					}
+				//	VikaUtils.logToFile("befstring: "+ codes + " " + befst+"\n");
+					codes="";
+					sum+=befst;
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				byte [] temp = new byte [smilesize];
+				System.arraycopy(textarr, start, temp, 0, smilesize);
+				sum+=new String (temp);
+				length = length-start-smilesize;
+				System.arraycopy(textarr, start+smilesize, textarr, 0, length);
+				
+				i++;
+				//VikaUtils.logToFile("successfully extracted, new textarr size is: "+String.valueOf(length));
+			} else {
+				i++;
+			}
+		} catch (Throwable eee ) {}
+			//i++;
+			
+		}
+		
+		//if (start==0) {
+			try {
+				sum+=new String (textarr, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		//}
+		//codes+="\n";
+		
+		/*try {
+			byte [] aa = VikaUtils.downloadBytes("http://vikamobile.ru:80/smile.php");
+			codes+="smile ";
+			for (int i=0; i<aa.length; i++) {
+				//if ((((char)textarr[i])==240) || (((char)textarr[i])==159)) {
+					codes+=(String.valueOf(aa[i])+ " ");
+				//}
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+	//	codes+="\n";
+		//VikaUtils.logToFile(sum);
+		/*try {
+			sum = new String(textarr, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		//VikaUtils.logToFile(codes);
+		return sum;
 	}
 	
 	private static byte[] downloadBytes(String var1) throws IOException, InterruptedException {
@@ -415,7 +799,8 @@ public final class VikaUtils {
 		Connection conn = Connector.open(url, Connector.READ);
 		httpconn = (HttpConnection) conn;
 		httpconn.setRequestMethod("GET");
-		httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+		httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/78.1 lite-500 (Android 11; SDK 30; arm64-v8a; Xiaomi POCO X3 NFC; ru)"); 
+				//"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 
 		StringBuffer sb = new StringBuffer();
 		char[] buffer;
@@ -428,8 +813,8 @@ public final class VikaUtils {
 				httpconn.close();
 				httpconn = (HttpConnection) Connector.open(replacedURL, Connector.READ);
 				httpconn.setRequestMethod("GET");
-				httpconn.setRequestProperty("User-Agent",
-						"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
+				httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/78.1 lite-500 (Android 11; SDK 30; arm64-v8a; Xiaomi POCO X3 NFC; ru)");
+						//"KateMobileAndroid/51.1 lite-442 (Symbian; SDK 17; x86; Nokia; ru)");
 				is = httpconn.openInputStream();
 				isr = new InputStreamReader(is, "UTF-8");
 				sb = new StringBuffer();
@@ -535,17 +920,36 @@ public final class VikaUtils {
 	}
 
 	public static Image downloadImage(String url) throws IOException, InterruptedException {
+		//if (ImageStorage.has(url)) {
+		//	return ImageStorage.get(url);
+		//}
+		Image i;
+		VikaTouch.isdownloading=1;
 		if (VikaTouch.isS40()) {
 			synchronized (downloadLock) {
-				return downloadImage0(url);
+			i = downloadImage0(url);
+			//ImageStorage.save(url, i);
+			
+				return i;
 			}
 		} else {
-			return downloadImage0(url);
+			i = downloadImage0(url);
+			//ImageStorage.save(url, i);
+			return i;
 		}
+	}
+	
+	public static void freeMemoryLow() {
+		//tokenRMS = null;
+		VikaTouch.newsScr = null;
+		VikaTouch.loginScr = null;
+		VikaTouch.splash = null;
+		System.gc();
 	}
 
 	private static Image downloadImage0(String url) throws IOException, InterruptedException {
 		try {
+			VikaTouch.isdownloading=1;
 			if (!Settings.https)
 				// url = replace(url, "https:", "http:");
 				// if (vkApi != "https://api.vk.com:443") {
@@ -555,7 +959,7 @@ public final class VikaUtils {
 						"https://sun", "http://vk-api-proxy.xtrafrancyz.net/_/sun");
 			// url = replace(url, )
 			// кеширование картинок включается если запрос http
-			boolean caching = false;
+			boolean caching = true;
 			// !startsWith(url, "file") && Settings.cacheImages;
 			if (url.indexOf("camera_50") > -1 || url.indexOf("camera_100") > -1) {
 				return VikaTouch.cameraImg;
@@ -585,8 +989,13 @@ public final class VikaUtils {
 						"com", "");
 
 				// System.out.println(filename+" ||| "+url);
-
-				Image image = ImageStorage.get(filename);
+				
+				Image image = null;
+				if (ImageStorage.has(filename)) {     
+					image = ImageStorage.get(filename);
+					VikaUtils.logToFile("get image: "+filename+"\n");
+				}
+				
 				if (image != null) {
 					return image;
 				}
@@ -599,7 +1008,8 @@ public final class VikaUtils {
 				HttpConnection var2 = (HttpConnection) con;
 				var2.setRequestMethod("GET");
 				var2.setRequestProperty("User-Agent",
-						"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
+						"KateMobileAndroid/78.1 lite-500 (Android 11; SDK 30; arm64-v8a; Xiaomi POCO X3 NFC; ru)");
+						//"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
 				int respcode = var2.getResponseCode();
 				if (respcode != 200 && respcode != 401) {
 					if (var2.getHeaderField("Location") != null) {
@@ -619,13 +1029,17 @@ public final class VikaUtils {
 				try {
 					fcon = (FileConnection) Connector.open(url, Connector.READ);
 					dis = fcon.openDataInputStream();
-
+					//image = Image.createImage(dis);
+					VikaTouch.isdownloading=0;
+					VikaTouch.needstoRedraw=true;
+					System.gc();
 					return Image.createImage(dis);
 				} finally {
 					if (fcon != null)
 						fcon.close();
 					if (dis != null)
 						dis.close();
+					
 				}
 
 				/*
@@ -655,7 +1069,10 @@ public final class VikaUtils {
 				Image image = Image.createImage(cin);
 				if (image != null && caching) {
 					ImageStorage.save(filename, image);
+					VikaUtils.logToFile("save image: " + filename+ "\n");
 				}
+				VikaTouch.isdownloading=0;
+				VikaTouch.needstoRedraw=true;
 				return image;
 			} finally {
 				if (ccon != null)
@@ -665,6 +1082,8 @@ public final class VikaUtils {
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
+			VikaTouch.isdownloading=2;
+			VikaTouch.needstoRedraw=true;
 			return VikaTouch.cameraImg;
 		}
 		/*
@@ -716,12 +1135,16 @@ public final class VikaUtils {
 
 	public static void makereq(String url) throws IOException {
 		HttpConnection httpconn = null;
+		VikaTouch.isdownloading=1;
+		VikaTouch.needstoRedraw=true;
 		Connection conn = Connector.open(url, Connector.READ);
 		httpconn = (HttpConnection) conn;
 		httpconn.setRequestMethod("GET");
 		httpconn.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
 		httpconn.openInputStream();
 		httpconn.close();
+		VikaTouch.isdownloading=0;
+		VikaTouch.needstoRedraw=true;
 	}
 
 	// функция адаптированна* из вика мобиле
@@ -1272,40 +1695,50 @@ public final class VikaUtils {
 	}
 	public static Image saveOrLoadSmileToRMS(String smilename) {
 	
-		
+		String er="0";
 		RecordStore smilesRMS = null;
 		try {
 			smilesRMS = RecordStore.openRecordStore(smilename, true);
-		} catch (RecordStoreFullException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (RecordStoreNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (RecordStoreException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (Throwable e1) {
+		//	VikaTouch.sendLog("errr");
+			//
 		}
+		er="1";
 		try {
 			if (smilesRMS != null) {
 				if (smilesRMS.getNumRecords() > 0) {
-					byte[] aa = smilesRMS.getRecord(1);
-				
+					try {
+					byte[] aa = smilesRMS.enumerateRecords(null, null, true).nextRecord();
+					
 					Image a =  Image.createImage(aa, 0,aa.length);
-				
 					smilesRMS.closeRecordStore();
-				return a;
+					return a;
+					} catch (Throwable aaa) {
+						/*VikaTouch.sendLog(aaa.toString());
+						byte[] bytes = VikaUtils.downloadBytes("http://vikamobile.ru:80/emoji/"+smilename);
+						VikaTouch.sendLog("ff "+String.valueOf(bytes.length));
+						smilesRMS.setRecord(1, bytes, 0, bytes.length);
+						smilesRMS.closeRecordStore();
+						Image a =  Image.createImage(bytes, 0, bytes.length);
+						return a;*/
+					}
+					
 				} else {
-					byte[] bytes = VikaUtils.downloadBytes("http://vikamobile.ru:80/emoji/"+smilename);
+					byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.xtrafrancyz.net:80/_/vk.com/emoji/e/"
+							//"http://vk-api-proxy.xtrafrancyz.net:80/_/vk.com/images/emoji/"
+						//	"http://vikamobile.ru:80/emoji/"
+					+smilename);
+					//VikaTouch.sendLog("fff "+String.valueOf(bytes.length));
 					smilesRMS.addRecord(bytes, 0, bytes.length);
 					smilesRMS.closeRecordStore();
 					Image a =  Image.createImage(bytes, 0, bytes.length);
 					
-					smilesRMS.closeRecordStore();
+					//smilesRMS.closeRecordStore();
 					return a;
 				}		
 			}	
-		} catch (Exception e) {	
+		} catch (Throwable e) {	
+			VikaTouch.sendLog(e.getMessage());
 		}
 		return null;
    }
@@ -1331,23 +1764,121 @@ public final class VikaUtils {
 		}
 		return false;
 	}*/
+	public static String decimal2hex(int d) {
+	    String digits = "0123456789ABCDEF";
+	    if (d <= 0) return "0";
+	    int base = 16;   // flexible to change in any base under 16
+	    String hex = "";
+	    while (d > 0) {
+	        int digit = d % base;              // rightmost digit
+	        hex = digits.charAt(digit) + hex;  // string concatenation
+	        d = d / base;
+	    }
+	    return hex;
+	}
+	
+	public static final byte[] intToByteArray(int value) {
+	    return new byte[] {
+	            (byte)(value >>> 24),
+	            (byte)(value >>> 16),
+	            (byte)(value >>> 8),
+	            (byte)value};
+	}
+	
+	
+	public static String bytesToHex(byte[] bytes) {
+		final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+	    char[] hexChars = new char[bytes.length * 2];
+	    for (int j = 0; j < bytes.length; j++) {
+	        int v = bytes[j] & 0xFF;
+	        hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+	        hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+	    }
+	    return new String(hexChars);
+	}
+	
+	
+    
 
+public String HexOfString(String str) {
+   byte[] utfString = null;
+try {
+	utfString = str.getBytes("UTF-8");
+} catch (UnsupportedEncodingException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+}
+   return bytesToHex(utfString);
+}
+	
+	public static String toUTF8Array(String str) {
+	    Vector utf8 = new Vector(str.length(), 1);
+	    for (int i=0; i < str.length(); i++) {
+	        int charcode = str.charAt(i);
+	        if (charcode < 0x80) utf8.addElement(new Integer(charcode));
+	        else if (charcode < 0x800) {
+	        	utf8.addElement(new Integer(0xc0 | (charcode >> 6))); 
+	        	utf8.addElement(new Integer( 0x80 | (charcode & 0x3f)));
+	        }
+	        else if (charcode < 0xd800 || charcode >= 0xe000) {
+	        	utf8.addElement(new Integer(0xe0 | (charcode >> 12))); 
+	        	utf8.addElement(new Integer(0x80 | ((charcode>>6) & 0x3f))); 
+	        	utf8.addElement(new Integer(0x80 | (charcode & 0x3f)));
+	        }
+	        // surrogate pair
+	        else {
+	            i++;
+	            // UTF-16 encodes 0x10000-0x10FFFF by
+	            // subtracting 0x10000 and splitting the
+	            // 20 bits of 0x0-0xFFFFF into two halves
+	            charcode = (char) (0x10000 + (((charcode & 0x3ff)<<10)
+	                      | (str.charAt(i) & 0x3ff)));
+	            utf8.addElement(new Integer(0xf0 | (charcode >>18))); 
+	            utf8.addElement(new Integer(0x80 | ((charcode>>12) & 0x3f))); 
+	            utf8.addElement( new Integer(      0x80 | ((charcode>>6) & 0x3f))); 
+	            utf8.addElement( new Integer(          0x80 | (charcode & 0x3f)));
+	        }
+	    }
+	    //String[] array = utf8.toArray(new String[utf8.size()]);
+	    
+	    //Displaying Array Elements
+	    System.out.println("String Array Elements :");
+	    String a = "";
+	    for(int i=0; i < utf8.capacity(); i++){
+	       a+=utf8.elementAt(i);
+	    }
+		return a;
+	}
+	
+	
+	
 	public static Image loadSmile(String smilePath) {
+		String err="0";
 		String tpath = (System.getProperty("fileconn.dir.private"));
 		Image im = null;
 		if(VikaTouch.smilestable.containsKey(smilePath)) {
 			return (Image)VikaTouch.smilestable.get(smilePath);
 		} else {
-		if (VikaTouch.isSymbian93orS40()) {
+		if (true)
+		//(VikaTouch.isSymbian93orS40()) 
+		{
+			err="1";
 			try {
+				err="2";
 			im = saveOrLoadSmileToRMS(smilePath);
+			err="3";
+			if (im==null) {
+				err="nulll";
+			}
 		VikaTouch.smilestable.put(smilePath, im);
+		err="4";
 		return im;
 			} catch (Throwable ee) {
-				VikaTouch.sendLog(ee.getMessage());
+				//VikaTouch.sendLog(err);
 				try {
 					return Image.createImage("/emoji/D83DDE00.png");	
 				} catch (IOException e1) {
+					//VikaTouch.sendLog(err);
 				}	
 			}
 		} else {
@@ -1357,7 +1888,10 @@ public final class VikaUtils {
 			 return im;
 		} catch (Throwable e) {
 			try {
-				byte[] bytes = VikaUtils.downloadBytes("http://vikamobile.ru:80/emoji/"+smilePath);
+				byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.xtrafrancyz.net:80/_/vk.com/emoji/e/"
+						//"http://vk-api-proxy.xtrafrancyz.net:80/_/vk.com/images/emoji/"
+				//		"http://vikamobile.ru:80/emoji/"
+				+smilePath);
 				FileConnection outConn = (FileConnection) Connector.open(tpath+smilePath, Connector.READ_WRITE);
 				if (!(outConn.exists())) {
 					outConn.create();
@@ -1371,13 +1905,14 @@ public final class VikaUtils {
 			VikaTouch.smilestable.put(smilePath, im);
 			return im;
 			} catch (Throwable ee) {
-				VikaTouch.sendLog(ee.getMessage());
+				//VikaTouch.sendLog("end" + ee.getMessage());
 				try {
 					return Image.createImage("/emoji/D83DDE00.png");
 					
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					//VikaTouch.sendLog(e1.getMessage());
 				}
 			}
 		}

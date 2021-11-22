@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.microedition.lcdui.Font;
 
 import ru.nnproject.vikaui.menu.items.UIItem;
+import vikatouch.VikaTouch;
 
 /**
  * @author Shinovon
@@ -106,20 +107,30 @@ public class TextBreaker {
 
 	// взято из виэна
 	public static String[] breakText(String text, Font font, int maxWidth) {
+		try {
 		if (text == null || text.length() == 0 || (text.length() == 1 && text.charAt(0) == ' ')) {
 			return new String[0];
 		}
+		} catch (Throwable ee) {}
+		//String logg = "";
 		Vector v = new Vector(5, 3);
 		char[] chars = text.toCharArray();
-		if (font.stringWidth(text) > maxWidth) {
+		//for (int a = 0; a<chars.length; a++) {
+		//	vikatouch.utils.VikaUtils.logToFile((long)chars[a]+" ");
+		//}
+		//if (font.stringWidth(text) < maxWidth) { 
+			//v.addElement(text);
+		//} else {
 			int i1 = 0;
-			for (int i2 = 0; i2 < text.length(); i2++) {
-				if (chars[i2] == '\n') {
+			for (int i2 = 0; i2 < chars.length; i2++) {
+				if ((chars[i2] == '\n') || (((long)chars[i2])==10)) {
+					
 					v.addElement(text.substring(i1, i2));
 					i2 = i1 = i2 + 1;
 				} else {
-					if (text.length() - i2 <= 1) {
-						v.addElement(text.substring(i1, text.length()));
+					
+					if (chars.length - i2 <= 1) {
+						v.addElement(text.substring(i1, chars.length));
 						break;
 					} else if (font.substringWidth(text, i1, i2 - i1) >= maxWidth) {
 						boolean f = false;
@@ -131,7 +142,7 @@ public class TextBreaker {
 								i2 = i1 = j + 1;
 								break;
 							}
-						}
+						} 
 						if (!f) {
 							i2 = i2 - 2;
 							v.addElement(text.substring(i1, i2));
@@ -140,11 +151,24 @@ public class TextBreaker {
 					}
 				}
 			}
-		} else {
-			v.addElement(text);
+		//}
+		//} else {
+			/*int i1 = 0;
+			for (int i2 = 0; i2 < text.length(); i2++) {
+			 if ((long)chars[i2])==10)) {
+				 
+			 }
+			}*/
+		//	v.addElement(text);
+		//}
+			try {
+		if (((long)chars[chars.length-2])==10) {
+			v.addElement(text.substring(chars.length-1, chars.length));
 		}
+			} catch (Throwable ee) {}
 		String[] r = new String[v.size()];
 		v.copyInto(r);
+		//VikaTouch.sendLog(logg);
 		return r;
 	}
 

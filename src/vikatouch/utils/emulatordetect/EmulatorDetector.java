@@ -13,6 +13,8 @@ public class EmulatorDetector {
 	public static boolean supportsHttps;
 	private static String version;
 
+	public static int numericversion;
+
 	public static final int EM_KEM = 1;
 
 	public static final int EM_JBED = 18;
@@ -35,7 +37,7 @@ public class EmulatorDetector {
 
 	public static final int EM_PC = 10;
 
-	public static final int EM_KEMMOD = 11;
+	public static final int EM_KEMNNMOD = 11;
 
 	public static final int EM_JAVA_SDK = 12;
 
@@ -73,20 +75,29 @@ public class EmulatorDetector {
 			} else if (platform.endsWith("/KEmulatorMod")) {
 				emulatorNotSupported = false;
 				isEmulator = true;
-				emulatorType = EM_KEMMOD;
+				emulatorType = EM_KEMNNMOD;
 				supportsHttps = true;
 				version = "v1-v3";
+				numericversion = 3;
 				if(System.getProperty("kemulator.notificationapi.version") != null) {
 					version = "v5";
+					numericversion = 5;
 				}
 				if(System.getProperty("fileconn.dir.memorycard") != null) {
 					version = "v6";
+					numericversion = 6;
 				}
 				if(System.getProperty("microedition.hostname") != null) {
 					version = "v7";
+					numericversion = 7;
 				}
 				if(System.getProperty("kemulator.mod.version") != null) {
 					version = System.getProperty("kemulator.mod.version");
+					try {
+						numericversion = Integer.parseInt(System.getProperty("kemulator.mod.versionint"));
+					} catch (Exception e) {
+						
+					}
 				}
 			} else if (platform.indexOf("03.xx") > -1) {
 				isEmulator = true;
@@ -175,7 +186,7 @@ public class EmulatorDetector {
 		case EM_PC:
 			return false;
 
-		case EM_KEMMOD:
+		case EM_KEMNNMOD:
 			return true;
 
 		case EM_J2L:

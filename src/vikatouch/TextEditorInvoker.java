@@ -54,6 +54,7 @@ public class TextEditorInvoker {
 					//textEditor.setCaretXY(0,8);
 					ChatScreen.inputText=textEditor.getContent();
 					VikaTouch.needstoRedraw=false;
+					ChatScreen.inputChanged=true;
 					return textEditor.getContent();
 					//
 				}
@@ -62,13 +63,14 @@ public class TextEditorInvoker {
 					// TODO Auto-generated method stub
 					ChatScreen.inputText=textEditor.getContent();
 					VikaTouch.needstoRedraw=false;
-					
+					ChatScreen.inputChanged=true;
 				}
 
 				public void inputAction(TextEditor arg0, int arg1) {
 					// TODO Auto-generated method stub
 					ChatScreen.inputText=textEditor.getContent();
 					VikaTouch.needstoRedraw=false;
+					ChatScreen.inputChanged=true;
 					
 				}	
 			};
@@ -112,6 +114,38 @@ public class TextEditorInvoker {
    }
 
 	static void init() {
+		try {
+		TextEditor textEditorr = TextEditor.createTextEditor("", 10, 10, 10, 10);
+		TextEditorListener listenerrr = new TextEditorListener() {
+			public String getContent() {
+				//textEditor.setCaretXY(0,8);
+				//ChatScreen.inputText=textEditor.getContent();
+				VikaTouch.needstoRedraw=false;
+				//ChatScreen.inputChanged = true;
+				return textEditor.getContent();
+				//
+			}
+
+			public void action(NokiaUITextEditor editor, int act) {
+				// TODO Auto-generated method stub
+				//ChatScreen.inputText=textEditor.getContent();
+				VikaTouch.needstoRedraw=false;
+				ChatScreen.inputChanged = true;
+			}
+
+			public void inputAction(TextEditor arg0, int arg1) {
+				// TODO Auto-generated method stub
+				ChatScreen.inputText=textEditor.getContent();
+				VikaTouch.needstoRedraw=false;
+				ChatScreen.inputChanged = true;
+				
+			}	
+		};
+		textEditorr.setTextEditorListener(listenerrr);
+		} catch (Throwable eee) {
+			VikaTouch.sendLog(eee.toString());
+			VikaTouch.sendLog(eee.getMessage());
+		}
 	}
 	
 	static void setTextEditorPosition(int x, int y) {

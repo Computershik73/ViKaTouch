@@ -62,6 +62,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 				VikaTouch.loading = true;
 
 				int step = 0;
+				int ii=0;
 				try {
 					URLBuilder url;
 					fromAtt = false;
@@ -83,6 +84,8 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 
 					step = 1;
 					final String s = VikaUtils.download(url);
+					//VikaTouch.sendLog(s);
+					//VikaUtils.logToFile(s);
 					// VikaTouch.sendLog(url.toString());
 					// VikaTouch.sendLog(newsSource+" "+(s.length()>210?s.substring(0, 200):s));
 					VikaTouch.loading = true;
@@ -108,6 +111,8 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 
 					itemsh = 0;
 					for (int i = 0; i < itemsCount; i++) {
+						ii=i;
+						try {
 						VikaTouch.loading = true;
 						JSONObject item = items.getJSONObject(i);
 						JSONObject itemCopy;
@@ -118,7 +123,9 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 						}
 						uiItems[i] = new PostItem(itemCopy, item);
 						((PostItem) uiItems[i]).parseJSON();
+						} catch (Throwable ee) {}
 						Thread.sleep(20);
+						
 					}
 					itemsCount++;
 				} catch (InterruptedException e) {
@@ -145,6 +152,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 		try {
 			hasBackButton = true;
 			VikaTouch.loading = true;
+			
 			uiItems = new PostItem[1];
 
 			itemsh = 0;
@@ -152,13 +160,16 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 			JSONObject item = att.json;
 			JSONObject itemCopy;
 			try {
-				itemCopy = item.getJSONArray("copy_history").getJSONObject(0);
+				//VikaTouch.sendLog(item.toString());
+				itemCopy = item.getJSONArray("wall"
+						//"copy_history"
+						).getJSONObject(0);
 			} catch (Exception e) {
 				itemCopy = item;
 			}
 			uiItems[0] = new PostItem(itemCopy, item);
 			((PostItem) uiItems[0]).parseJSON();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			VikaTouch.error(e, -ErrorCodes.NEWSPARSE);
 			e.printStackTrace();
 		}
@@ -172,35 +183,39 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 	}
 
 	public void draw(Graphics g) {
-		try {
+		//try {
 
 			update(g);
 
 			int y = topPanelH + 10;
-			try {
+			//try {
 				if (uiItems != null) {
 					for (int i = 0; i < uiItems.length; i++) {
+						try {
 						if (uiItems[i] != null) {
 							if (y + scrolled < DisplayUtils.height)
 								uiItems[i].paint(g, y, scrolled);
 							y += uiItems[i].getDrawHeight();
 						}
+						} catch (Throwable eee) {
+							y += 200;
+						}
 					}
 
 					itemsh = y + 50;
 				}
-			} catch (Exception e) {
-				VikaTouch.error(e, ErrorCodes.NEWSPOSTSDRAW);
-			}
+			//} catch (Exception e) {
+			//	VikaTouch.error(e, ErrorCodes.NEWSPOSTSDRAW);
+			//}
 			g.translate(0, -g.getTranslateY());
 			/*
 			 * g.setColor(0, 0, 0); g.fillRect(0, 60, 300, 25); g.setColor(200, 200, 200);
 			 * g.drawString(scrlDbg, 0, 60, 0);
 			 */
-		} catch (Exception e) {
-			VikaTouch.error(e, ErrorCodes.NEWSDRAW);
-			e.printStackTrace();
-		}
+		//} catch (Exception e) {
+		//	VikaTouch.error(e, ErrorCodes.NEWSDRAW);
+		//	e.printStackTrace();
+		//}
 	}
 
 	public final void drawHUD(Graphics g) {

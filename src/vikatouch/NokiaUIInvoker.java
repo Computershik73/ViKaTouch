@@ -1,11 +1,12 @@
 package vikatouch;
 
-import javax.microedition.lcdui.Canvas;
+
 import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.game.GameCanvas;
 
-import com.nokia.mid.ui.TextEditor;
 
+
+
+//import DirectUtilsInvoker;
 import vikatouch.settings.Settings;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
 
@@ -24,22 +25,28 @@ public class NokiaUIInvoker {
 	public static final int NOT_SUPPORTED = -1002;
 	
 	private static boolean softNotificationsSupported;
-	private static boolean textEditorSupported;
-
+	public static boolean textEditorSupported;
+	private static boolean directUtilsSupported;
+	
 	public static void init() {
 		try {
 			try {
 				
-				
-				textEditorSupported = false;
+				softNotificationsSupported = false;
+				textEditorSupported = true;
+				//Class.forName("com.nokia.mid.ui.SoftNotification"); 
+				{
 				SoftNotificationInvoker.init();
 				softNotificationsSupported = true;
+				}
+				
 			} catch (NoClassDefFoundError e) {
 				softNotificationsSupported = false;
 			} catch (Throwable e) {
 				softNotificationsSupported = false;
 			}
 			try {
+				//Class.forName("com.nokia.mid.ui.TextEditor");
 				TextEditorInvoker.init();
 				textEditorSupported = true;
 			
@@ -51,9 +58,26 @@ public class NokiaUIInvoker {
 			} catch (Throwable e) {
 				textEditorSupported = false;
 			}
+			try {
+				Class.forName("com.nokia.mid.ui.DirectUtils");
+				
+			} catch (NoClassDefFoundError e) {
+				directUtilsSupported = false;
+			} catch (Exception e) {
+				directUtilsSupported = false;
+			} catch (Error e) {
+				directUtilsSupported = false;
+			} catch (Throwable ee) {
+				directUtilsSupported = false;
+			}
+			if (directUtilsSupported == true) {
+				DirectUtilsInvoker.init();
+				directUtilsSupported = true;
+			}
 		} catch (Throwable e) {
 			softNotificationsSupported = false;
 			textEditorSupported = false;
+			directUtilsSupported = false;
 			e.printStackTrace();
 		}
 	}
@@ -179,6 +203,32 @@ public class NokiaUIInvoker {
 			}
 	}
 
-	
+	public static Font getFont(int face, int style, int height, int size) {
+		//костыль
+		if(directUtilsSupported)
+			try {
+				Font f = DirectUtilsInvoker.getFont(face, style, height);
+				if(f != null)
+					return f;
+			} catch (Throwable e) {
+				return Font.getFont(face, style, size);
+			}
+		return Font.getFont(face, style, size);
+	}
+
+	public static Font getFont(int face, int style, int height, int heightEm, int size) {
+		//костыль
+		if(directUtilsSupported)
+			try {
+				boolean b = EmulatorDetector.isEmulator 
+						&& !(EmulatorDetector.emulatorType == EmulatorDetector.EM_KEMNNMOD && EmulatorDetector.numericversion >= 8);
+				Font f = DirectUtilsInvoker.getFont(face, style, b
+						? heightEm : height);
+				if(f != null)
+					return f;
+			} catch (Throwable e) {
+			}
+		return Font.getFont(face, style, size);
+	}
 	
 }

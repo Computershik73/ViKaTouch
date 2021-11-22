@@ -253,6 +253,7 @@ yes=Vâng
 ok=được.
 cancel=Hủy bỏ
 loadmore=Đang tải thêm ...
+at=lúc
 
 splash.emnotsupported=Nhiều khả năng ViKa Touch hiện đang chạy trên một trình giả lập không được hỗ trợ. Chúng tôi khuyên bạn nên sử dụng kemulator, J2ME Loader, JBed hoặc các trình giả lập gói chính thức cho các nhà phát triển; ở những người khác, có thể có vấn đề về hiển thị, chức năng và bảo mật.
 splash.title.3=Chuẩn bị tài sản

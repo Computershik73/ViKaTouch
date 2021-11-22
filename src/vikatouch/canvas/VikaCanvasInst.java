@@ -137,6 +137,27 @@ public class VikaCanvasInst extends VikaCanvas {
 			System.gc();
 		gcT = System.currentTimeMillis() - gcT;
 
+		if (VikaTouch.isdownloading==1) {
+			//if ((VikaTouch.integerUserId==3225000) || (VikaTouch.integerUserId==310674350)) {
+				g.setColor(255,120,120);
+				g.fillRect(DisplayUtils.width-10, 0, 10, 10);
+				//VikaTouch.needstoRedraw=true;
+			/*} else {
+			g.setColor(255,216,0);
+			g.fillRect(0, 0, 5, 5);
+			VikaTouch.needstoRedraw=true;
+			}*/
+		} else {
+			if (VikaTouch.isdownloading==2) {
+				g.setColor(255,0,0);
+				g.fillRect(0, 0, 10, 10);
+			} else {
+				if (VikaTouch.isdownloading==0) {
+					VikaTouch.needstoRedraw=true;
+				}
+			}
+		}
+		
 		{
 
 			if (Settings.debugInfo) {
@@ -248,7 +269,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			if (currentNof != null) {
 				currentNof.draw(g);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 
 		}
 
@@ -266,7 +287,7 @@ public class VikaCanvasInst extends VikaCanvas {
 				}
 				currentAlert.draw(g);
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 
 		}
 
@@ -286,8 +307,8 @@ public class VikaCanvasInst extends VikaCanvas {
 	}
 
 	private void drawLoading(Graphics g) {
-		ColorUtils.setcolor(g, ColorUtils.TEXT);
-		g.drawString(busyStr, DisplayUtils.width / 2, DisplayUtils.height - 80, Graphics.TOP | Graphics.HCENTER);
+		//ColorUtils.setcolor(g, ColorUtils.TEXT);
+		//g.drawString(busyStr, DisplayUtils.width / 2, DisplayUtils.height - 80, Graphics.TOP | Graphics.HCENTER);
 	}
 
 	public void pointerPressed(int x, int y) {

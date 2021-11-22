@@ -33,6 +33,7 @@ public class ColorUtils {
 	public static final int TITLEPANELCOLOR = -99;
 	public static final int MSGTEXT = -50;
 	public static final int MUSICCOLOR = -49;
+	public static final int UNREAD_MSG_COLOR = -52;
 
 	public static boolean isNight() {
 		return DisplayUtils.canvas.isNight();
@@ -149,6 +150,15 @@ public class ColorUtils {
 				g.setGrayScale(249);
 			break;
 		}
+		case UNREAD_MSG_COLOR: {
+			if (isNight())
+				g.setColor(0);
+			else
+				g.setColor(243,244,246);
+			break;
+		}
+		
+		
 		case -4: {
 			if (isNight())
 				g.setGrayScale(9);

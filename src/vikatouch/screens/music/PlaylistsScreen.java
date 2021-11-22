@@ -54,17 +54,34 @@ public class PlaylistsScreen extends MainScreen {
 					VikaTouch.loading = true;
 					String x = VikaUtils.music(new URLBuilder("audio.getPlaylists").addField("owner_id", id)
 							.addField("count", 100).addField("offset", 0).toString());
+					//VikaTouch.sendLog(x);
 					try {
-						System.out.println(x);
+						//System.out.println(x);
 						VikaTouch.loading = true;
 						JSONObject response = new JSONObject(x).getJSONObject("response");
-						JSONArray items = response.getJSONArray("items");
-						itemsCount = (short) items.length();
+						JSONArray items = null;
+						if (response.has("items")) {
+						 items = response.optJSONArray("items");
+						itemsCount = (short) (response.optInt("count")+6);
+								//(short) items.length();
+						} else {
+							itemsCount=6;
+						}
 						uiItems = new PressableUIItem[itemsCount];
-						for (int i = 0; i < itemsCount; i++) {
+						uiItems[0]= new PlaylistItem("Для вас", 100, id, -21, null, null);
+						uiItems[1]= new PlaylistItem("Плейлист дня 1", 100, id, -25, null, null);
+						uiItems[2]= new PlaylistItem("Плейлист дня 2", 100, id, -26, null, null);
+						uiItems[3]= new PlaylistItem("Плейлист дня 3", 100, id, -27, null, null);
+						uiItems[4]= new PlaylistItem("Плейлист недели", 100, id, -22, null, null);
+						uiItems[5]= new PlaylistItem("Плейлист месяца", 100, id, -23, null, null);
+						VikaTouch.needstoRedraw=true;
+						repaint();
+						VikaTouch.needstoRedraw=true;
+						for (int i = 0; i < itemsCount-6; i++) {
 							JSONObject item = items.getJSONObject(i);
-							uiItems[i] = new PlaylistItem(item);
-							((PlaylistItem) uiItems[i]).parseJSON();
+							uiItems[i+6] = new PlaylistItem(item);
+							((PlaylistItem) uiItems[i+6]).parseJSON();
+							VikaTouch.needstoRedraw=true;
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -81,6 +98,7 @@ public class PlaylistsScreen extends MainScreen {
 						}
 						VikaTouch.loading = true;
 						((PlaylistItem) uiItems[i]).loadIcon();
+						VikaTouch.needstoRedraw=true;
 					}
 					VikaTouch.loading = false;
 				} catch (InterruptedException e) {

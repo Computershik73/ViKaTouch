@@ -51,7 +51,7 @@ public class VikaUpdate {
 		catch (Throwable t)
 		{
 			t.printStackTrace();
-			VikaTouch.sendLog("Updates check: "+t.toString()+" step"+step);
+			//VikaTouch.sendLog("Updates check: "+t.toString()+" step"+step);
 			return null;
 		}
 	}

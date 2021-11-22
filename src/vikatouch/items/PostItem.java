@@ -6,6 +6,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import org.json.me.JSONArray;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.menu.IMenu;
@@ -25,11 +26,14 @@ import vikatouch.attachments.PhotoAttachment;
 import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
 import vikatouch.locale.TextLocal;
+import vikatouch.screens.ChatScreen;
+import vikatouch.screens.CommentsScreen;
 import vikatouch.screens.DialogsScreen;
 import vikatouch.screens.NewsScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
+import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
 
 /**
@@ -48,6 +52,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	}
 
 	public int ownerid;
+	public int from_id;
 	public int id;
 
 	public int views;
@@ -55,6 +60,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	public int likes;
 	public boolean canLike;
 	public int comments;
+	
 	private boolean liked;
 	private boolean reposted;
 	public boolean canlike;
@@ -85,6 +91,8 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	int[] attsY0;
 
 	int attH = 0;
+	private Thread typer;
+	public int scrolled;
 
 	public void parseJSON() {
 		super.parseJSON();
@@ -108,19 +116,24 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			ec = 1;
 			try {
 				likes = json2.optJSONObject("likes").optInt("count");
+				comments = json2.optJSONObject("comments").optInt("count");
 				liked = json2.optJSONObject("likes").optInt("user_likes") == 1;
 				canlike = json2.optJSONObject("likes").optInt("can_like") == 1;
 				reposts = json2.optJSONObject("reposts").optInt("count");
-				views = json2.optJSONObject("views").optInt("count");
-				comments = json2.optJSONObject("comments").optInt("count");
-			} catch (Exception e) {
+				
+				
+			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-
 			try {
-				JSONObject postSource = json2.getJSONObject("post_source");
+			views = json2.optJSONObject("views").optInt("count");
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+			try {
+				JSONObject postSource = json2.optJSONObject("post_source");
 				data = postSource.optString("data");
-			} catch (Exception e) {
+			} catch (Throwable e) {
 
 			}
 			ec = 2;
@@ -134,6 +147,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			ec = 3;
 			copyright = json2.optString("copyright");
 			ownerid = json2.optInt("owner_id");
+			from_id = json2.optInt("from_id");
 			sourceid = json2.optInt("source_id");
 			id = json2.optInt("post_id");
 			replyownerid = json2.optInt("reply_owner_id");
@@ -149,14 +163,47 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			// itemDrawHeight = 82;
 			isreply = replypostid != 0;
 			itemDrawHeight = 72;
-			xx = 0;
+		/*	xx = 0;
 			xx = replyownerid;
 			if (xx == 0)
+				xx = ownerid;
+			if (xx < 0)
 				xx = fromid;
 			if (xx == 0)
-				xx = ownerid;
-			if (xx == 0)
-				xx = sourceid;
+				xx = sourceid;*/
+			if (ownerid==from_id) {
+				if (ownerid==0) {
+					xx = sourceid;
+				} else {
+				xx = from_id;
+				}
+			}  else {
+				if (json2.has("copy_history")) {
+					
+					JSONObject copy_history = json2.getJSONArray("copy_history").getJSONObject(0);
+					ownerid = copy_history.optInt("owner_id");
+					from_id = copy_history.optInt("from_id");
+					if (ownerid==from_id) {
+						if (ownerid==0) {
+							xx = sourceid;
+						} else {
+						xx = from_id;
+						}
+					}
+					
+					id = copy_history.optInt("id");
+				} else {
+					
+						
+							
+						
+						xx = from_id;
+						
+					
+				}
+			}
+			
+			//VikaTouch.sendLog(String.valueOf(xx));
 			ec = 4;
 			labelgetnameandphoto: {
 				if (xx < 0) {
@@ -253,6 +300,12 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
+		if (VikaTouch.needstoRedraw==false) {
+			return;
+		}
+		if (y + scrolled >DisplayUtils.height) {
+			return;
+		}
 		if (y + scrolled + itemDrawHeight < -50)
 			return;
 		Font f = Font.getFont(0, 0, 8);
@@ -357,6 +410,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			ColorUtils.setcolor(g, ColorUtils.COLOR1);
 			g.fillRect(0, y, 3, cy);
 		}
+		
 	}
 
 	public void loadAtts() {
@@ -391,6 +445,10 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			}
 		}
 	}
+	
+	
+	
+	
 
 	public void getRes() {
 		// (new Thread() {
@@ -424,6 +482,18 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			if ((x>repX) && (x<comX)) {
 				repostOptions(false);
 			}
+			
+			if ((x>comX) && (x<comX+45)) {
+				CommentsScreen commentsscr;
+				if (sourceid==0) {
+					 commentsscr = new CommentsScreen(ownerid, this.id);
+					} else {
+						 commentsscr = new CommentsScreen(sourceid, this.id);
+					}
+				VikaTouch.needstoRedraw=true;
+				VikaTouch.setDisplay(commentsscr, 0);
+				VikaTouch.needstoRedraw=true;
+			}
 
 		} else if (attsY0 != null) {
 			for (int i = 0; i < attachments.length; i++) {
@@ -440,7 +510,12 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 
 	private void options(boolean keys) {
 		int h = 50;
-		OptionItem[] o = new OptionItem[keys ? 4 : 2];
+		OptionItem[] o;
+		if (xx == VikaTouch.integerUserId) {
+		o = new OptionItem[keys ? 7 : 4];
+		} else {
+			o = new OptionItem[keys ? 6 : 2];
+		}
 		o[0] = new OptionItem(this, name == null ? "Page" : name, IconsManager.FRIENDS, 1, h);
 		o[1] = new OptionItem(this, TextLocal.inst.get("wall.links"), IconsManager.LINK, 2, h);
 		if (keys) {
@@ -448,6 +523,21 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 					liked ? IconsManager.LIKE_F : IconsManager.LIKE, 3, h);
 			o[3] = new OptionItem(this, TextLocal.inst.get("wall.repost"),
 					IconsManager.REPOST, 4, h);
+			o[4] = new OptionItem(this, TextLocal.inst.get("wall.comment"),
+					IconsManager.COMMENTS, 6, h);
+			o[5] = new OptionItem(this, TextLocal.inst.get("wall.opencomments"),
+					IconsManager.COMMENTS, 7, h);
+			if (xx == VikaTouch.integerUserId) {
+				o[6] = new OptionItem(this, TextLocal.inst.get("wall.edit"),
+						IconsManager.EDIT, 5, h);
+			}
+		} else {
+			if (xx == VikaTouch.integerUserId) {
+				o[2] = new OptionItem(this, TextLocal.inst.get("wall.comment"),
+						IconsManager.COMMENTS, 6, h);
+				o[3] = new OptionItem(this, TextLocal.inst.get("wall.edit"),
+						IconsManager.EDIT, 5, h);
+			}
 		}
 		VikaTouch.popup(new AutoContextMenu(o));
 	}
@@ -601,6 +691,20 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			}
 		} else if (i == 3) {
 			like(!liked);
+		} else if (i == 6) {
+			comment();
+			VikaTouch.needstoRedraw=true;
+			
+		} else if (i == 7) {
+			CommentsScreen commentsscr;
+			if (sourceid==0) {
+			 commentsscr = new CommentsScreen(ownerid, this.id);
+			} else {
+				 commentsscr = new CommentsScreen(sourceid, this.id);
+			}
+			VikaTouch.needstoRedraw=true;
+			VikaTouch.setDisplay(commentsscr, 0);
+			VikaTouch.needstoRedraw=true;
 		} else if (i == 4) {
 			repostOptions(true);
 		} else if (i == 10) {
@@ -611,7 +715,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 				VikaTouch.dialogsScr = new DialogsScreen();
 			//Dialogs.refreshDialogsList(true, false);
 			VikaTouch.resendingmid=0;
-			VikaTouch.resendingobjectid="wall"+String.valueOf(sourceid)+"_"+String.valueOf(id);
+			VikaTouch.resendingobjectid="wall"+String.valueOf(xx)+"_"+String.valueOf(id);
 			VikaTouch.resendingname=name;
 			VikaTouch.resendingtext=text;
 			vikatouch.screens.DialogsScreen.titleStr="Выберите диалог для пересылки:";
@@ -630,6 +734,138 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			}
 		}
 	}
+	
+	
+	public void comment() {
+		
+			
+			if (typer != null)
+			{
+					if (typer.isAlive()) {
+						typer.interrupt();
+					}	
+				}
+				
+			typer = new Thread() {
+				public void run() {
+					String commentText = TextEditor.inputString("msg.yourcomment", "", 2000);
+					if (commentText!=null) {
+						if ((commentText=="") || (commentText.length()<=0) ) {
+							return;
+						}
+					} else {
+						return;
+					}
+					URLBuilder url;
+					url = new URLBuilder("wall.createComment");
+					
+					if (sourceid==0) {
+					url.addField("owner_id", String.valueOf(ownerid));
+					} else {
+						url.addField("owner_id", String.valueOf(sourceid));
+					}
+					url.addField("post_id", String.valueOf(id));
+					url.addField("message", commentText);
+					//if (c.type == TYPE_CHAT) {
+					//	url = url.addField("conversation_message_id", "" + msg.getMessageId());
+					//} else {
+						//url = url.addField("message_id", "" + msg.getMessageId());
+					//}
+					/* String res = */
+					try {
+						
+						String answer = VikaUtils.download(url);
+						//VikaTouch.sendLog(answer);
+						
+					} catch (InterruptedException e) {
+						return;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			typer.start();
+		
+	}
+
+	public void edit() {
+		
+		
+		if (typer != null)
+		{
+				if (typer.isAlive()) {
+					typer.interrupt();
+				}	
+			}
+			
+		typer = new Thread() {
+			public void run() {
+				String commentText = TextEditor.inputString("msg.yourcomment", text, 250);
+				if (commentText!=null) {
+					if ((commentText=="") || (commentText.length()<=0) ) {
+						return;
+					}
+				} else {
+					return;
+				}
+				URLBuilder url;
+				url = new URLBuilder("wall.createComment");
+				url.addField("owner_id", String.valueOf(xx));
+				url.addField("post_id", String.valueOf(id));
+				url.addField("message", commentText);
+				//if (c.type == TYPE_CHAT) {
+				//	url = url.addField("conversation_message_id", "" + msg.getMessageId());
+				//} else {
+					//url = url.addField("message_id", "" + msg.getMessageId());
+				//}
+				/* String res = */
+				try {
+					
+					String answer = VikaUtils.download(url);
+					//VikaTouch.sendLog(answer);
+					
+				} catch (InterruptedException e) {
+					return;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		typer.start();
+	
+}
+	
+	/*private void comment(String commenttext) {
+		new Thread() {
+			public void run() {
+				try {
+					VikaTouch.loading = true;
+					URLBuilder url;
+						url = new URLBuilder("wall.createComment");
+					url.addField("owner_id", String.valueOf(sourceid));
+					url.addField("post_id", String.valueOf(id));
+					String res;
+					res = VikaUtils.download(url);
+					VikaTouch.sendLog(res);
+					if (res == null) {
+						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error"), null));
+					}
+					VikaTouch.popup(new InfoPopup("Commented!", null));
+					//reposted = true;
+				} catch (InterruptedException ex) {
+					return;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				VikaTouch.loading = false;
+				VikaTouch.needstoRedraw=true;
+				VikaTouch.canvas.serviceRepaints();
+			}
+		}.start();
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.serviceRepaints();
+		
+	}*/
 
 	public void onMenuItemOption(int i) {
 

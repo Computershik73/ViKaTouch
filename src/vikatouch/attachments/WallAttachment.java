@@ -27,6 +27,8 @@ public class WallAttachment extends Attachment {
 
 	public void press() {
 		NewsScreen ns = new NewsScreen();
+		ns.scrollWithKeys=true;
+		//ns.newsSource = VikaTouch.integerUserId;
 		ns.loadAtt(this);
 		VikaTouch.setDisplay(ns, 1);
 	}

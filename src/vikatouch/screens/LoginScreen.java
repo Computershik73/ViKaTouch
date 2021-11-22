@@ -14,6 +14,7 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
+import vikatouch.updates.VikaUpdate;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.TextEditor;
 
@@ -50,7 +51,7 @@ public class LoginScreen extends VikaScreen {
 		 * try { vikaLogo = Image.createImage("/vikab48.jpg"); } catch (IOException e) {
 		 * }
 		 */
-		VikaTouch.needstoRedraw = true;
+		//VikaTouch.needstoRedraw = true;
 		try {
 			login = Image.createImage("/login.png");
 			loginpressed = Image.createImage("/loginpressed.png");
@@ -68,10 +69,27 @@ public class LoginScreen extends VikaScreen {
 		failedStr = TextLocal.inst.get("login.failed");
 		selectedBtn = 1;
 		keysMode = true;
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.currentScreen.serviceRepaints();
+		VikaTouch.needstoRedraw=true;
+		(new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					return;
+				}
+				VikaUpdate vu = VikaUpdate.check();
+				if (vu != null)
+					vu.ask();
+			}
+		}).start();
 		//VikaUtils.logToFile("login screen start");
 	}
 
 	public void login() {
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.currentScreen.serviceRepaints();
 		VikaTouch.needstoRedraw=true;
 		if (user != null && user.length() >= 5 && pass != null && pass.length() >= 6) {
 			if (!loginSucsess) {
@@ -168,6 +186,7 @@ public class LoginScreen extends VikaScreen {
 					pass = pass.substring(0, pass.length() - 1);
 			}
 		} else {
+			if (key!=254) {
 			String s = VikaTouch.canvas.getKeyName(key);
 			if (s.length() == 1) {
 				if (selectedBtn == 1) {
@@ -177,6 +196,7 @@ public class LoginScreen extends VikaScreen {
 				} else if (selectedBtn == 2) {
 					pass += s;
 				}
+			}
 			}
 		}
 	}
@@ -259,6 +279,8 @@ public class LoginScreen extends VikaScreen {
 
 	public final void press(int x, int y) {
 		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.currentScreen.serviceRepaints();
+		VikaTouch.needstoRedraw=true;
 		VikaTouch.supportsTouch=true;
 		if (isLoggingInNow)
 			return;
@@ -276,6 +298,7 @@ public class LoginScreen extends VikaScreen {
 				thread.interrupt();
 			} catch (Throwable ee) {}
 			}
+			selectedBtn = 1;
 			thread = new Thread() {
 				public void run() {
 					user = TextEditor.inputString(loginStr, user, 28, false);
@@ -294,6 +317,7 @@ public class LoginScreen extends VikaScreen {
 				thread.interrupt();
 			} catch (Throwable ee) {}
 			}
+			selectedBtn = 2;
 			thread = new Thread() {
 				public void run() {
 					pass = TextEditor.inputString(passwordStr, pass, 32, true);
@@ -306,10 +330,14 @@ public class LoginScreen extends VikaScreen {
 				}
 			};
 			thread.start();
+		} else {
+			selectedBtn = 0;
 		}
 	}
 
 	public final void release(int x, int y) {
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.currentScreen.serviceRepaints();
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.supportsTouch=true;
 		if (isLoggingInNow)

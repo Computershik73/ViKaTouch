@@ -81,6 +81,9 @@ public class VideoItem extends JSONUIItem {
 					if (file != null)
 						file = fixJSONString(file);
 				}
+				if ((file.indexOf("vkuser")>0) && (file.indexOf("proxy")<0)) {
+					file=VikaUtils.replace(file, "https:", "http://vk-api-proxy.xtrafrancyz.net/_/");
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

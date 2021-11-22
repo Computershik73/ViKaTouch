@@ -44,6 +44,7 @@ menu.nowebsite=Няма
 menu.discussions=Абмеркаванні
 menu.about=Пра
 menu.loading=Загрузка ...
+menu.search=Пошук
 
 about.devs=Распрацоўшчыкі
 about.vendor=Уладальнік
@@ -247,6 +248,7 @@ yes=Ды
 ок=ок
 cancel=Адмена
 loadmore=Загрузіць яшчэ...
+at=у
 
 splash.emnotsupported=Хутчэй за ўсё ViKa Touch зараз працуе на непадтрымоўваным эмулятары. Мы рэкамендуем выкарыстоўваць распрацоўшчыкам kemulator, J2ME Loader, JBed або афіцыйныя эмулятары пакетаў; у іншых могуць узнікнуць праблемы з дысплеем, функцыянальнасцю і бяспекай.
 splash.title.3=Падрыхтоўка актываў

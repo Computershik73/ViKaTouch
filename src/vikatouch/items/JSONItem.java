@@ -20,7 +20,7 @@ public class JSONItem extends JSONBase {
 	public JSONItem() {
 	}
 
-	public Attachment[] attachments = new Attachment[5];
+	public Attachment[] attachments = new Attachment[15];
 
 	public int fromid;
 	public String text;

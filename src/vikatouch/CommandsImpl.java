@@ -4,7 +4,9 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 
+import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.screen.VikaScreen;
+import vikatouch.locale.TextLocal;
 import vikatouch.screens.AboutScreen;
 import vikatouch.screens.ChatScreen;
 import vikatouch.screens.DialogsScreen;
@@ -177,6 +179,23 @@ public class CommandsImpl implements CommandListener {
 						VikaTouch.setDisplay(new ProfilePageScreen(VikaTouch.integerUserId), 1);
 						break;
 					}
+					case 17: {
+						// Открыть плеер
+						VikaTouch.setDisplay(vikatouch.music.MusicPlayer.inst, 1);
+						break;
+					} case 18: {
+						NewsScreen newsScr = new NewsScreen();
+						newsScr.newsSource = VikaTouch.integerUserId;
+						newsScr.titleStr = TextLocal.inst.get("menu.wall");
+						VikaTouch.setDisplay(newsScr, 1);
+						newsScr.loadPosts();
+						break;
+					} case 19: {
+						VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
+						break;
+						
+					}
+					
 					default: {
 						break;
 					}

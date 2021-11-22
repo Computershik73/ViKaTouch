@@ -12,6 +12,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.popup.ImagePreview;
 import vikatouch.screens.temp.FileManagerScreen;
 
 /**
@@ -105,11 +106,12 @@ public abstract class FileManagerItem implements PressableUIItem {
 	}
 
 	protected void preview() {
-		try {
-			VikaTouch.appInst.platformRequest(this.path);
-		} catch (ConnectionNotFoundException e) {
-			e.printStackTrace();
-		}
+		
+		VikaTouch.popup(new ImagePreview(this.path, "Фото: "));
+		VikaTouch.needstoRedraw=true;
+		VikaTouch.canvas.repaint();
+		
+		//VikaTouch.appInst.platformRequest(this.path);
 	}
 
 	public boolean isSelected() {

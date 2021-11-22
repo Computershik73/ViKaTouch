@@ -23,6 +23,7 @@ import vikatouch.attachments.AudioAttachment;
 import vikatouch.items.music.AudioTrackItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.music.MusicPlayer;
+import vikatouch.screens.LoginScreen;
 import vikatouch.screens.MainScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
@@ -95,12 +96,44 @@ public static String q;
 					VikaTouch.loading = true;
 				//	String x = VikaUtils.music(new URLBuilder(Settings.proxyApi, "audio.get", true).addField("owner_id", oid)
 					//		.addField("album_id", albumId).addField("count", VikaTouch.muscount).addField("offset", 0).toString());
-					String x = VikaUtils.music(new URLBuilder("audio.get").addField("owner_id", oid)
-							.addField("album_id", albumId).addField("count", VikaTouch.muscount).addField("offset", 0).toString());
+				//	String x = VikaUtils.download(VikaTouch.API + "/method/audio.get?access_token="
+				//			+ VikaTouch.accessToken + "&count="+VikaTouch.muscount+"&owner_id=" + oid + "&v=5.91");
+					String x = "";
+					//VikaTouch.sendLog(String.valueOf(albumId));
+					if (albumId==0) {
+						String musurl = VikaTouch.API + "/method/audio.get?access_token="
+								+ VikaTouch.accessToken + "&count="+String.valueOf(VikaTouch.muscount)+"&owner_id=" + String.valueOf(oid) + "&v=5.91";
+						//VikaTouch.sendLog(musurl);
+						x = VikaUtils.music(musurl);
+					} else {
+						//VikaUtils.music(new URLBuilder(Settings.proxyApi, "audio.get", true).addField("owner_id", oid)
+							//			.addField("album_id", albumId).addField("count", VikaTouch.muscount).addField("offset", 0).toString());
+						String musurl = VikaTouch.API + "/method/audio.get?album_id="+String.valueOf(albumId)+"&access_token="
+								+ VikaTouch.accessToken + "&count="+
+								String.valueOf(VikaTouch.muscount)+
+								"&offset=0&owner_id=" + String.valueOf(oid) + "&v=5.91";
+						//VikaTouch.sendLog(musurl);
+						x = VikaUtils.music(musurl);
+						//VikaTouch.sendLog(musurl);
+					}
 					// VikaTouch.sendLog(x);
 					if (x.indexOf("error") > -1) {
-						VikaTouch.error(ErrorCodes.MUSICLISTLOAD, x, false);
-						return;
+						//if (x.indexOf("deprecated")>-1) {
+							try {
+								VikaTouch.logout();
+								VikaTouch.gc();
+							} catch (Exception e) {
+
+							}
+							VikaTouch.error(ErrorCodes.MUSICLISTLOAD, "Для работы музыки после обновления приложения перелогиньтесь!", false);
+							
+							VikaTouch.needstoRedraw=true;
+							VikaTouch.setDisplay(new LoginScreen(), -1);
+							return;
+						//} else {
+						//VikaTouch.error(ErrorCodes.MUSICLISTLOAD, x, false);
+						//return;
+						//}
 					}
 					try {
 						System.out.println(x);
@@ -166,11 +199,27 @@ public static String q;
 	          //  VikaTouch.inst.refreshToken();;
 	           // VikaTouch.inst.saveToken();
 	           
-	            String x = VikaUtils.music((new URLBuilder("audio.search", true)).addField("q", q).addField("count", 50).addField("offset", 0).toString());
+	           // String x = VikaUtils.music((new URLBuilder("audio.search", true)).addField().addField("count", 50).addField("offset", 0).toString());
+	            String x = VikaUtils.music(VikaTouch.API + "/method/audio.search?offset=0&count=50&v=5.91"+"&access_token="
+						+ VikaTouch.accessToken + "&q="+URLDecoder.encodeFull(q));
 	            if (x.indexOf("error") > -1) {
-	              VikaTouch.error(49, x, false);
-	              return;
-	            } 
+					if (x.indexOf("deprecated")>-1) {
+						try {
+							VikaTouch.logout();
+							VikaTouch.gc();
+						} catch (Exception e) {
+
+						}
+						VikaTouch.error(ErrorCodes.MUSICLISTLOAD, "Для работы музыки после обновления приложения перелогиньтесь!", false);
+						
+						VikaTouch.needstoRedraw=true;
+						VikaTouch.setDisplay(new LoginScreen(), -1);
+						return;
+					} else {
+					VikaTouch.error(ErrorCodes.MUSICLISTLOAD, x, false);
+					return;
+					}
+				}
 	            try {
 	              System.out.println(x);
 	              VikaTouch.loading = true;
@@ -233,14 +282,38 @@ public static String q;
 	           // VikaTouch.inst.saveToken();
 	            String x= "";
 	           if (audio_id.equals("")) {
-	             x = VikaUtils.music((new URLBuilder("audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).toString());
+	        	   // x = VikaUtils.download(VikaTouch.API + "/method/audio.getRecommendations?access_token="
+					//		+ VikaTouch.accessToken+"&offset=0&count=50&v=5.91");
+	        	  // x = VikaUtils.music((new URLBuilder("audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).toString());
+	        	   x = VikaUtils.music(VikaTouch.API + "/method/audio.getRecommendations?access_token="
+	   							+ VikaTouch.accessToken+"&offset=0&count=50&v=5.91");
+		           
 	           } else {
-	        	    x = VikaUtils.music((new URLBuilder("audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).addField("targetAudio", audio_id).toString());
+	        	  // x = VikaUtils.download(VikaTouch.API + "/method/audio.getRecommendations?access_token="
+					//		+ VikaTouch.accessToken+"&offset=0&count=50&v=5.91&target_audio="+audio_id);
+	        	   //x = VikaUtils.music((new URLBuilder("audio.getRecommendations", true)).addField("count", 50).addField("offset", 0).addField("targetAudio", audio_id).toString());
+	        	   x = VikaUtils.music(VikaTouch.API + "/method/audio.getRecommendations?access_token="
+  							+ VikaTouch.accessToken+"&offset=0&count=50&v=5.91");
+	 	          
 	           }
-	            if (x.indexOf("error") > -1) {
-	              VikaTouch.error(49, x, false);
-	              return;
-	            } 
+	           if (x.indexOf("error") > -1) {
+					if (x.indexOf("deprecated")>-1) {
+						try {
+							VikaTouch.logout();
+							VikaTouch.gc();
+						} catch (Exception e) {
+
+						}
+						VikaTouch.error(ErrorCodes.MUSICLISTLOAD, "Для работы музыки после обновления приложения перелогиньтесь!", false);
+						
+						VikaTouch.needstoRedraw=true;
+						VikaTouch.setDisplay(new LoginScreen(), -1);
+						return;
+					} else {
+					VikaTouch.error(ErrorCodes.MUSICLISTLOAD, x, false);
+					return;
+					}
+				}
 	            try {
 	              System.out.println(x);
 	              VikaTouch.loading = true;
@@ -329,20 +402,22 @@ public static String q;
 	public final void release(int x, int y) {
 		VikaTouch.needstoRedraw=true;
 		try {
-			if (y > 58 && y < DisplayUtils.height - oneitemheight) {
+			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH && !dragging) {
 				int h = 50;
-				int yy1 = y - (scrolled + 58);
+				int yy1 = y - (scrolled + topPanelH);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
-				if (!dragging) {
+				//if (!dragging) {
 					uiItems[i].tap(x, yy1 - (h * i));
-				}
+				//}
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
 		super.release(x, y);
 	}
 

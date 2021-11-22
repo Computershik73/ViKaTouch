@@ -15,6 +15,7 @@ import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
 import vikatouch.items.JSONUIItem;
 import vikatouch.locale.TextLocal;
+import vikatouch.screens.MainScreen;
 import vikatouch.settings.Settings;
 import vikatouch.utils.IntObject;
 import vikatouch.utils.ProfileObject;
@@ -27,6 +28,7 @@ import vikatouch.utils.VikaUtils;
  */
 public class ConversationItem extends JSONUIItem {
 	public String text;
+	public String fulltext;
 	public String title;
 	public long chatid;
 	public boolean ls;
@@ -35,6 +37,7 @@ public class ConversationItem extends JSONUIItem {
 	public boolean mention;
 	public boolean isMuted;
 	public String avaurl;
+	public String online;
 	private String time;
 	private String type;
 	private boolean isGroup;
@@ -42,6 +45,10 @@ public class ConversationItem extends JSONUIItem {
 	public int peerId;
 	public int lastSenderId;
 	private Image ava;
+	public int inread;
+	public int outread;
+	public int last_message_id;
+	public boolean unanswered;
 	// private static Image deleteImg;
 	// private static Image unreadImg;
 	public String lasttext;
@@ -54,14 +61,16 @@ public class ConversationItem extends JSONUIItem {
 		 */
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.canvas.serviceRepaints();
-		if (DisplayUtils.width > 240)
+		//if (DisplayUtils.width > 240)
 			ava = VikaTouch.cameraImg;
 		// }
 	}
+	
+	
 
 	public void getAva() {
 
-		// if(!DisplayUtils.compact)
+		// if(!DisplayUtils.compact)	
 		// {
 		if (DisplayUtils.width > 240 && (ava == null || ava == VikaTouch.cameraImg)) {
 			ava = VikaTouch.cameraImg;
@@ -95,9 +104,23 @@ public class ConversationItem extends JSONUIItem {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
+		int h = itemDrawHeight;
 		Font font = Font.getFont(0, 0, 8);
+		int hfh = font.getHeight() / 2;
+		int tx = 73;
+		if (DisplayUtils.width <= 240)
+			tx = 4;
+		if (unread > 0) {
+			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
+			g.fillRect(0, y - 1, DisplayUtils.width, itemDrawHeight + 1);
+		}
+		if (unanswered) {
+			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
+			g.fillRect(tx - 2 , (int)(y + h * 3 / 4 - hfh), DisplayUtils.width-5 - tx + 2, hfh * 2 + 3);
+		}
+		
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
-
+		
 		if (selected) {
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
 			g.fillRect(0, y - 1, DisplayUtils.width, itemDrawHeight + 1);
@@ -108,11 +131,7 @@ public class ConversationItem extends JSONUIItem {
 		/*
 		 * if(DisplayUtils.compact) { } else {
 		 */
-		int h = itemDrawHeight;
-		int hfh = font.getHeight() / 2;
-		int tx = 73;
-		if (DisplayUtils.width <= 240)
-			tx = 4;
+		
 		if (title != null) {
 			g.drawString(title, tx, y + h / 4 - hfh, 0);
 		}
@@ -136,7 +155,16 @@ public class ConversationItem extends JSONUIItem {
 			if (IconsManager.ac == null) {
 				System.out.print("F");
 			} else // а что, бывало что оно не загрузилось? лол))
-				g.drawImage(selected ? IconsManager.acs : IconsManager.ac, 14, y + 8, 0); // и
+				if (selected) {
+					g.drawImage(IconsManager.acs, 14, y + 8, 0);
+				} else {
+					if (unread > 0) {
+						g.drawImage(IconsManager.acsh, 14, y + 8, 0);
+					} else {
+						g.drawImage(IconsManager.ac, 14, y + 8, 0);
+					}
+				}
+				//g.drawImage(selected ? IconsManager.acs : IconsManager.ac, 14, y + 8, 0); // и
 																							// вообще,
 																							// ACS
 																							// проверить
@@ -161,6 +189,16 @@ public class ConversationItem extends JSONUIItem {
 			g.setGrayScale(255);
 			g.drawString(s, DisplayUtils.width - 16 - font.stringWidth(s) - hm, y + h * 3 / 4 - hfh, 0);
 		}
+		if (online!=null) {
+			if (online.equals("1")) {
+				ColorUtils.setcolor(g, ColorUtils.ONLINE);
+				g.fillArc(50, y + 46, 12, 12, 0, 360);
+				//g.drawImage(IconsManager.onlineimg, 38, y + 32, 0);
+			}
+		}
+		//if ((y<DisplayUtils.height - MainScreen.bottomPanelH) && (y>DisplayUtils.height - MainScreen.bottomPanelH - itemDrawHeight) && (Dialogs.isUpdatingNow==false)) {
+			
+		//}
 		// }
 	}
 
@@ -185,8 +223,19 @@ public class ConversationItem extends JSONUIItem {
 
 				// if(e instanceof InterruptedException) throw e;
 			}
-
+			try {
 			unread = conv.optInt("unread_count");
+			inread = conv.optInt("in_read");
+			outread = conv.optInt("out_read");
+			last_message_id = conv.optInt("last_message_id");
+			unanswered=false;
+			if ((inread!=0) && (outread!=0) && (last_message_id!=0)) {
+				
+				if ((last_message_id>outread)) {
+					unanswered=true;
+				}
+			}
+			} catch (Throwable er ) {}
 			mention = conv.has("mentions");
 
 			type = fixJSONString(peer.optString("type"));
@@ -200,6 +249,7 @@ public class ConversationItem extends JSONUIItem {
 				ProfileObject p = ((ProfileObject) VikaTouch.profiles.get(new IntObject(peerId)));
 				title = p.getName();
 				avaurl = p.getUrl();
+				online = p.getOnline();
 			}
 		} catch (Throwable e) {
 			// VikaTouch.error(e, ErrorCodes.CONVERPARSE);
@@ -210,7 +260,7 @@ public class ConversationItem extends JSONUIItem {
 			JSONObject msg = json.optJSONObject("last_message");
 
 			date = msg.optLong("date");
-
+			
 			lasttext = text = fixJSONString(msg.optString("text"));
 
 			time = getTime();
@@ -302,6 +352,7 @@ public class ConversationItem extends JSONUIItem {
 			int x = 100;
 			if (DisplayUtils.width <= 240)
 				x = 32;
+			fulltext=text;
 			text = TextBreaker.shortText(text, DisplayUtils.width - x, Font.getFont(0, 0, 8));
 		} catch (Throwable e) {
 			e.printStackTrace();

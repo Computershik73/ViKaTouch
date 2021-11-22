@@ -1,6 +1,11 @@
 package vikatouch.popup;
 
+import java.io.DataInputStream;
+import java.io.InputStream;
+
 import javax.microedition.io.ConnectionNotFoundException;
+import javax.microedition.io.Connector;
+import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -75,7 +80,23 @@ public class ImagePreview extends VikaNotice {
 			public void run() {
 				try {
 					// System.out.println("Начато скачивание превью");
-					Image dimg = VikaUtils.downloadImage(imgUrl);
+					Image dimg = null;
+					//VikaTouch.sendLog(imgUrl);
+					if (imgUrl.indexOf("/")==0) {
+						FileConnection fcon = (FileConnection) Connector.open("file://"+imgUrl, Connector.READ);
+						try {
+						InputStream dis = fcon.openInputStream();
+						dimg = Image.createImage(dis);
+						dis.close();
+						} catch (Throwable eee) {
+							System.gc();
+							VikaTouch.appInst.platformRequest("file://"+imgUrl);
+							return;
+						}
+						fcon.close();
+					} else {
+					 dimg = VikaUtils.downloadImage(imgUrl);
+					}
 					// System.out.println("Ресайз превью: исходное
 					// "+img.getWidth()+"х"+img.getHeight());
 
@@ -94,6 +115,7 @@ public class ImagePreview extends VikaNotice {
 					drX = (DisplayUtils.width - w) / 2;
 					drY = (DisplayUtils.height - h) / 2;
 					img = VikaUtils.resize(dimg, w, h);
+					System.gc();
 				} catch (Exception e) {
 					VikaTouch.error(e, ErrorCodes.DOCPREVIEWLOAD);
 				}
@@ -148,8 +170,21 @@ public class ImagePreview extends VikaNotice {
 	}
 
 	public void press(int key) {
-		if ((key == PressableUIItem.KEY_OK || key == PressableUIItem.KEY_RFUNC)) {
+		switch (key) {
+		case PressableUIItem.KEY_RFUNC: 
 			VikaCanvas.currentAlert = null;
+			break;
+		case PressableUIItem.KEY_OK: 
+			if (img == null)
+				return;
+			try {
+				VikaTouch.appInst.platformRequest(downloadUrl);
+			} catch (ConnectionNotFoundException e) {
+				VikaTouch.popup(new InfoPopup(
+						"Не удалось открыть. Возможно, произошла ошибка при обработке адреса либо ваше устройство не может открыть этот документ.",
+						null));
+			}
+			return;	
 		}
 	}
 

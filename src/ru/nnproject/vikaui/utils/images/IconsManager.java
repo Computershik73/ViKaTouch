@@ -32,6 +32,8 @@ public class IconsManager {
 			ac = Image.createImage("/ava.png");
 			string = "avas.png";
 			acs = Image.createImage("/avas.png");
+			string = "avash.png";
+			acsh = Image.createImage("/avash.png");
 			string = "vikahead.png";
 			logoImg = Image.createImage("/vikahead.png");
 			string = "back.png";
@@ -45,8 +47,10 @@ public class IconsManager {
 
 	public static Image ac;
 	public static Image acs;
+	public static Image acsh;
 	public static Image logoImg;
 	public static Image backImg;
+	public static Image onlineimg;
 //	public static Image xdImg;
 
 	public static final int FRIENDS = 0;

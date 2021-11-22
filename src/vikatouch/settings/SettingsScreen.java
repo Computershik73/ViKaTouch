@@ -22,9 +22,10 @@ import vikatouch.screens.MainScreen;
  */
 public class SettingsScreen extends MainScreen implements IMenu {
 
-	static int[] countVals = new int[] { 10, 20, 30, 50, 80, 100 };
+	static int[] countVals = new int[] {1, 2, 3, 5, 8, 10, 15, 20, 30, 50, 80, 100, 150, 200};
+	static String[] musicpathVals = new String[] {Settings.diskC, Settings.diskE, Settings.diskF, Settings.diskEMMC, Settings.diskMaemoDocs};
 	static int countValDef = 1;
-	static int[] refreshVals = new int[] { 0, 2, 5, 8, 10, 15 };
+	static int[] refreshVals = new int[] { 0, 2, 5, 8, 10, 15, 200 };
 	static int refreshValDef = 3;
 	static int[] fpsVals = new int[] { 100, 60, 30, 15};
 	private static String titleStr;
@@ -46,7 +47,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		backItem = new OptionItem(this, TextLocal.inst.get("back"), IconsManager.BACK, 0, oneitemheight);
 
 		initAllSettsList();
-
+		
 		titleStr = TextLocal.inst.get("title.settings");
 		switchList(menuList);
 	}
@@ -66,11 +67,11 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		if (rr == -1) {
 			rr = refreshValDef;
-			Settings.messagesPerLoad = refreshVals[rr];
+			//Settings.messagesPerLoad = refreshVals[rr];
 		}
 		if (rr == -1) {
 			rr = refreshValDef;
-			Settings.messagesPerLoad = refreshVals[rr];
+			//Settings.messagesPerLoad = refreshVals[rr];
 		}
 		// сообщения за раз
 		int mc = -1;
@@ -108,6 +109,14 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			if (fpsVals[i] == Settings.fpsLimit)
 				fc = i;
 		}
+		
+		//Settings.mpc = -1;
+		for (int i = 0; i < musicpathVals.length; i++) {
+			if (musicpathVals[i].equals(Settings.musicpath))
+				Settings.mpc = i;
+		}
+		
+		
 		menuList = new PressableUIItem[] {
 				new OptionItem(this, TextLocal.inst.get("settings.system"), IconsManager.DEVICE, -100, oneitemheight),
 				new OptionItem(this, TextLocal.inst.get("settings.appearance"), IconsManager.MENU, -101, oneitemheight),
@@ -149,7 +158,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		};
 		msgList = new PressableUIItem[] { backItem,
 				new SettingMenuItem(this, TextLocal.inst.get("settings.historycount"), IconsManager.MSGS, 6,
-						oneitemheight, countVals, j, null),
+						oneitemheight, countVals, mc, null),
 				new SettingMenuItem(this, TextLocal.inst.get("settings.refreshrate"), IconsManager.REFRESH, 7,
 						oneitemheight, refreshVals, rr, null),
 				// блять я тебя захуярю
@@ -186,7 +195,14 @@ public class SettingsScreen extends MainScreen implements IMenu {
 				new SettingMenuItem(this, TextLocal.inst.get("settings.itunescovers"), IconsManager.PHOTOS, 17,
 						oneitemheight, eOd, Settings.loadITunesCovers ? 1 : 0, null, true),
 				new SettingMenuItem(this, TextLocal.inst.get("settings.youtube"), IconsManager.PLAY, 14, oneitemheight,
-						new String[] { "m.youtube.com", "SymTube" }, Settings.https ? 1 : 0, null), };
+						new String[] { "m.youtube.com", "SymTube" }, Settings.https ? 1 : 0, null),
+				new SettingMenuItem(this, TextLocal.inst.get("settings.musicpath"), IconsManager.MUSIC, 64, oneitemheight,
+						new String[] { TextLocal.inst.get("Settings.diskC"), TextLocal.inst.get("Settings.diskE"),
+								TextLocal.inst.get("Settings.diskF"), TextLocal.inst.get("Settings.diskEMMC"), Settings.diskMaemoDocs },
+						Settings.mpc, null)	
+				
+		
+		};
 		specialAbilitiesList = new PressableUIItem[] { backItem, new SettingMenuItem(this,
 				TextLocal.inst.get("settings.sensor"), IconsManager.DEVICE, 4, oneitemheight,
 				new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.j2meloader"),
@@ -194,7 +210,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 				Settings.sensorMode, TextLocal.inst.get("settings.sensorInfo")),
 
 				new SettingMenuItem(this, TextLocal.inst.get("settings.dontloadavas"), IconsManager.PHOTOS, 2,
-						oneitemheight, eOd, Settings.dontLoadAvas ? 1 : 0, null, true), };
+						oneitemheight, eOd, Settings.dontLoadAvas ? 1 : 0, null, true), 
+				new OnOffItem(this, TextLocal.inst.get("settings.showpics"), IconsManager.SETTINGS, 98, oneitemheight, Settings.showpics),		
+		};
 
 		debugList = new PressableUIItem[] { backItem,
 				// new OptionItem(this, TextLocal.inst.get("settings.clearсache"),
@@ -286,8 +304,10 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			break;
 		}
 		case 3: {
-			Settings.https = var == 1; // TODO real switching
-			Settings.proxy = var != 1;
+			Settings.https = !(var == 0); // TODO real switching
+			Settings.proxy = (var == 0);
+			VikaTouch.OAUTH = ((var == 1) ? Settings.httpsOAuth : Settings.proxyOAuth);
+			VikaTouch.API = ((var == 1) ? Settings.httpsApi : Settings.proxyApi);
 			break;
 		}
 		case 4: {
@@ -375,6 +395,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case 63: {
 			Settings.fastImageScaling = var == 0;
+		} 
+		case 64 : {
+			Settings.musicpath = musicpathVals[var];
 		}
 		}
 		initAllSettsList();
@@ -442,6 +465,13 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			VikaTouch.needstoRedraw=true;
 			break;
 		}
+		
+		case 98: {
+			Settings.showpics = !Settings.showpics;
+			VikaTouch.needstoRedraw=true;
+			break;
+		}
+		
 		case -1: {
 			if (VikaTouch.accessToken != null && VikaTouch.accessToken != "") {
 				VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("settings.logout") + "?", null, new Runnable() {
@@ -473,7 +503,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			this.serviceRepaints();
 			VikaTouch.popup(new ConfirmBox(TextLocal.inst.get("settings.reset"), null, new Runnable() {
 				public void run() {
-					Settings.loadDefaultSettings();
+					Settings.loadSettings();
 					Settings.setted = true;
 				}
 			}, null, TextLocal.inst.get("ok"), TextLocal.inst.get("cancel")));
@@ -507,13 +537,14 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case 23: {
 			VikaTouch.needstoRedraw=true;
-			OptionItem[] it = new OptionItem[6];
+			OptionItem[] it = new OptionItem[7];
 			it[0] = new OptionItem(this, "English", IconsManager.EDIT, 1, oneitemheight);
 			it[1] = new OptionItem(this, "Русский", IconsManager.EDIT, 2, oneitemheight);
 			it[2] = new OptionItem(this, "Español", IconsManager.EDIT, 3, oneitemheight);
 			it[3] = new OptionItem(this, "Український", IconsManager.EDIT, 4, oneitemheight);
 			it[4] = new OptionItem(this, "Беларускі", IconsManager.EDIT, 5, oneitemheight);
 			it[5] = new OptionItem(this, "Tiếng Việt", IconsManager.EDIT, 6, oneitemheight);
+			it[6] = new OptionItem(this, "Polszczyzna", IconsManager.EDIT, 7, oneitemheight);
 			VikaTouch.needstoRedraw=true;
 			VikaTouch.popup(new AutoContextMenu(it));
 			VikaTouch.needstoRedraw=true;
@@ -525,7 +556,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case 50: {
 			VikaTouch.needstoRedraw=true;
-			OptionItem[] it = new OptionItem[6];
+			OptionItem[] it = new OptionItem[8];
 			it[2] = new OptionItem(this, "Россия (RU)", IconsManager.EDIT, 32, oneitemheight);
 			it[0] = new OptionItem(this, "United States (US)", IconsManager.EDIT, 33, oneitemheight);
 			it[1] = new OptionItem(this, "United Kingdom (UK)", IconsManager.EDIT, 34, oneitemheight);
@@ -533,6 +564,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			it[4] = new OptionItem(this, "Україна (UA)", IconsManager.EDIT, 36, oneitemheight);
 			it[5] = new OptionItem(this, "Беларусь (BY)", IconsManager.EDIT, 37, oneitemheight);
 			it[6] = new OptionItem(this, "Қазақстан (KZ)", IconsManager.EDIT, 38, oneitemheight);
+			it[7] = new OptionItem(this, "Polska (PL)", IconsManager.EDIT, 39, oneitemheight);
 			VikaTouch.popup(new AutoContextMenu(it));
 			VikaTouch.needstoRedraw=true;
 			break;
@@ -572,7 +604,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		if (i >= 1 && i <= 9) {
 			VikaTouch.needstoRedraw=true;
 			int j = i - 1;
-			String[] res = new String[] { "english", "russian", "spanish", "ukrainian", "belarussian", "vietnamese"};
+			String[] res = new String[] { "english", "russian", "spanish", "ukrainian", "belarussian", "vietnamese", "polish"};
 			Settings.setted = true;
 			Settings.language = res[j];
 			System.out.println(Settings.language);
@@ -592,7 +624,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		if(i >= 32 && i <= 40) {
 			VikaTouch.needstoRedraw=true;
 			int j = i - 32;
-			String[] res = new String[] { "RU", "US", "UK", "ES", "UA", "BY", "KZ"};
+			String[] res = new String[] { "RU", "US", "UK", "ES", "UA", "BY", "KZ", "PL"};
 			Settings.setted = true;
 			Settings.region = res[j];
 			System.out.println(Settings.region);

@@ -13,14 +13,20 @@ import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
+import vikatouch.Dialogs;
+import vikatouch.NokiaUIInvoker;
 import vikatouch.VikaTouch;
+import vikatouch.items.chat.ConversationItem;
 import vikatouch.items.music.MusicMenuItem;
 import vikatouch.json.JSONBase;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.ChatScreen;
+import vikatouch.screens.DialogsScreen;
 import vikatouch.screens.LoginScreen;
 import vikatouch.screens.MainScreen;
+import vikatouch.screens.NewsScreen;
 import vikatouch.settings.Settings;
+import vikatouch.settings.SettingsScreen;
 import vikatouch.updates.VikaUpdate;
 import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
@@ -52,7 +58,9 @@ public class MenuScreen extends MainScreen implements IMenu {
 	protected static String wasOnlineJustNowStr;
 	protected static String minutesAgoStr;
 	protected static String hoursAgoStr;
-
+	public static String frreqStr;
+	public static String notifStr;
+	int uiih;
 	
 	
 	// public static String avaurl;
@@ -71,6 +79,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 	public MenuScreen() {
 		
 		super();
+		//VikaTouch.diff = VikaUtils.TimeOffset();
 		VikaTouch.needstoRedraw=true;
 		selectedBtn = 1;
 		profileImg = VikaTouch.cameraImg;
@@ -84,10 +93,12 @@ public class MenuScreen extends MainScreen implements IMenu {
 		}
 		/* if (VikaTouch.userId != null) { */
 		String x = null;
+		String xy = null;
 		try {
 			String avaurl;
 			x = VikaUtils.download(new URLBuilder("users.get")/* .addField("user_ids", VikaTouch.userId) */
 					.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
+			
 			System.out.println(x);
 			JSONObject profileobj = new JSONObject(x).getJSONArray("response").getJSONObject(0);
 			name = profileobj.optString("first_name");
@@ -97,7 +108,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 			hasAva = profileobj.optInt("has_photo") == 1;
 			VikaTouch.integerUserId = profileobj.optInt("id");
 			VikaTouch.userId = "" + VikaTouch.integerUserId;
-			String mycountry = "";
+			/*String mycountry = "";
 			if (profileobj.has("country")) {
 				if (profileobj.optJSONObject("country").has("id")) {
 					 mycountry =  profileobj.optJSONObject("country").optString("id");
@@ -115,7 +126,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 			}
 			} else {
 				VikaTouch.mylanguage = null;
-			}
+			}*/
 			visitStr = "";
 			if (onlineStr == null) {
 				userStr = TextLocal.inst.get("user");
@@ -129,8 +140,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 			
 			
 			try {
-				lastSeen = profileobj.getJSONObject("last_seen").optInt("time");
-			} catch (Exception e) {
+				lastSeen = profileobj.optJSONObject("last_seen").optInt("time");
+			} catch (Throwable e) {
 			}
 			online = profileobj.optInt("online") == 1;
 
@@ -178,6 +189,22 @@ public class MenuScreen extends MainScreen implements IMenu {
 			VikaTouch.sendLog("Menu profile info: " + a.toString() + " uid:" + VikaTouch.userId);
 			a.printStackTrace();
 		}
+		frreqStr="";
+		notifStr="";
+		try {
+			xy = VikaUtils.download(new URLBuilder("account.getCounters"));
+			
+			JSONObject stats = new JSONObject(xy).getJSONObject("response");
+			if (stats.has("friends")) {
+			frreqStr = String.valueOf(stats.optInt("friends"));
+			}
+			if (stats.has("notifications")) {
+				notifStr = String.valueOf(stats.optInt("notifications"));
+			}
+		} catch (Throwable eee) {
+			frreqStr="";
+			notifStr="";
+		}
 		/*
 		 * } else { VikaTouch.error(ErrorCodes.MENUNOUSERID, false); }
 		 */
@@ -195,22 +222,41 @@ public class MenuScreen extends MainScreen implements IMenu {
 		 * 
 		 * }
 		 */
-		int uiih = DisplayUtils.compact ? 30 : 50; // е72, ландшафт 240, СЕ портрет
-		uiItems = new OptionItem[7];
-		uiItems[0] = new OptionItem(this, TextLocal.inst.get("menu.friends"), IconsManager.FRIENDS, 4, uiih);
-		uiItems[1] = new OptionItem(this, TextLocal.inst.get("menu.groups"), IconsManager.GROUPS, 5, uiih);
-		uiItems[2] = new MusicMenuItem(this, TextLocal.inst.get("menu.music"), IconsManager.MUSIC, 6, uiih);
-		uiItems[3] = new OptionItem(this, TextLocal.inst.get("menu.videos"), IconsManager.VIDEOS, 7, uiih);
-		uiItems[4] = new OptionItem(this, TextLocal.inst.get("menu.photos"), IconsManager.CAMERA, 8, uiih);
-		uiItems[5] = new OptionItem(this, TextLocal.inst.get("menu.documents"), IconsManager.DOCS, 9, uiih);
-		uiItems[6] = new OptionItem(this, TextLocal.inst.get("menu.quit"), IconsManager.CLOSE, -1, uiih);
+		 uiih = DisplayUtils.compact ? 30 : 50; // е72, ландшафт 240, СЕ портрет
+		uiItems = new OptionItem[10];
+		uiItems[0] = new OptionItem(this, TextLocal.inst.get("menu.wall"), IconsManager.NEWS, 18, uiih);
+		uiItems[1] = new OptionItem(this, TextLocal.inst.get("menu.friends"), IconsManager.FRIENDS, 4, uiih);
+		uiItems[2] = new OptionItem(this, TextLocal.inst.get("menu.groups"), IconsManager.GROUPS, 5, uiih);
+		uiItems[3] = new MusicMenuItem(this, TextLocal.inst.get("menu.music"), IconsManager.MUSIC, 6, uiih);
+		uiItems[4] = new OptionItem(this, TextLocal.inst.get("menu.videos"), IconsManager.VIDEOS, 7, uiih);
+		uiItems[5] = new OptionItem(this, TextLocal.inst.get("menu.photos"), IconsManager.CAMERA, 8, uiih);
+		uiItems[6] = new OptionItem(this, TextLocal.inst.get("menu.documents"), IconsManager.DOCS, 9, uiih);
+		uiItems[7] = new OptionItem(this, TextLocal.inst.get("menu.search"), IconsManager.SEARCH, 19, uiih);
+		uiItems[8] = new OptionItem(this, TextLocal.inst.get("menu.notifs"), IconsManager.INFO, 19, uiih);
+		uiItems[9] = new OptionItem(this, TextLocal.inst.get("menu.quit"), IconsManager.CLOSE, -1, uiih);
 
-		itemsCount = 7;
+		itemsCount = 10;
 		itemsh = 140 + uiih * itemsCount;
 
 		// sending stats
 		VikaTouch.sendStats();
-		
+		Dialogs.itemsCount = Settings.dialogsLength;
+		//if (Dialogs.dialogs!=null) {
+		//if ((Dialogs.dialogs.length != Settings.dialogsLength) || (Dialogs.dialogs.length<=1))
+			//Dialogs.dialogs = new ConversationItem[0];
+			//Dialogs.dialogs = new ConversationItem[50];
+			//Dialogs.dialogs = new ConversationItem[200];
+		//} else {
+			//Dialogs.dialogs = new ConversationItem[0];
+			//Dialogs.dialogs = new ConversationItem[50];
+			//Dialogs.dialogs = new ConversationItem[200];
+		//}
+		/*try {
+			VikaUtils.pronounceText("Тест");
+		} catch (Throwable e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
 		(new Thread() {
 			public void run() {
 				try {
@@ -218,9 +264,13 @@ public class MenuScreen extends MainScreen implements IMenu {
 				} catch (InterruptedException e) {
 					return;
 				}
+				try {
 				VikaUpdate vu = VikaUpdate.check();
 				if (vu != null)
 					vu.ask();
+				} catch (Throwable eeee) {
+					return;
+				}
 			}
 		}).start();
 	}
@@ -242,8 +292,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 		if (selectedBtn > 1)
 			uiItems[selectedBtn - 2].setSelected(false);
 		selectedBtn++;
-		if (selectedBtn > 8)
-			selectedBtn = 8;
+		if (selectedBtn > 11)
+			selectedBtn = 11;
 		
 		if (selectedBtn > 1)
 			uiItems[selectedBtn - 2].setSelected(true);
@@ -320,6 +370,20 @@ public class MenuScreen extends MainScreen implements IMenu {
 
 			ColorUtils.setcolor(g, -3);
 			// g.drawRect(0, 140, DisplayUtils.width, 50);
+			try {
+			if (uiItems[1].isSelected()) {
+				uiItems[1] = new OptionItem(this, TextLocal.inst.get("menu.friends") + (!frreqStr.equals("") ? " (+"+frreqStr+")" : ""), IconsManager.FRIENDS, 4, uiih);	
+				uiItems[1].setSelected(true);
+			} else {
+				uiItems[1] = new OptionItem(this, TextLocal.inst.get("menu.friends") + (!frreqStr.equals("") ? " (+"+frreqStr+")" : ""), IconsManager.FRIENDS, 4, uiih);
+			}
+			if (uiItems[8].isSelected()) {
+			uiItems[8] = new OptionItem(this, TextLocal.inst.get("menu.notifs") + (!notifStr.equals("") ? " (+"+notifStr+")" : ""), IconsManager.INFO, 19, uiih);
+			uiItems[8].setSelected(true);
+			} else {
+				uiItems[8] = new OptionItem(this, TextLocal.inst.get("menu.notifs") + (!notifStr.equals("") ? " (+"+notifStr+")" : ""), IconsManager.INFO, 19, uiih);
+			}
+			} catch (Throwable eee ) {}
 			if (uiItems != null) {
 				for (int i = 0; i < uiItems.length; i++) {
 					if (uiItems[i] != null) {
@@ -354,6 +418,47 @@ public class MenuScreen extends MainScreen implements IMenu {
 		} else {
 			g.drawImage(IconsManager.selIco[IconsManager.TOPBAR], DisplayUtils.width - 35,
 					DisplayUtils.compact ? 0 : 18, 0);
+		}
+		
+		if (keysMode) {
+			ColorUtils.setcolor(g, ColorUtils.BOTTOMPANELCOLOR);
+			//if (showBottomPanel)
+				g.fillRect(0, DisplayUtils.height - bottomPanelH, DisplayUtils.width, bottomPanelH);
+			
+			int bpiy = DisplayUtils.height - bottomPanelH2 / 2 - 12;
+		g.drawImage((IconsManager.ico)[IconsManager.NEWS],
+				DisplayUtils.width / 6 - 12, bpiy, 0);
+		g.drawImage((IconsManager.ico)[IconsManager.MSGS],
+				DisplayUtils.width / 2 - 12, bpiy, 0);
+		g.drawImage((IconsManager.selIco)[IconsManager.MENU],
+				DisplayUtils.width - DisplayUtils.width / 6 - 12, bpiy, 0);
+
+		// unread count
+		if (VikaTouch.unreadCount > 0) {
+			String s = "" + VikaTouch.unreadCount;
+			int d2 = 16;
+			int d3 = 2;
+			boolean roundrect = false;
+			if (VikaTouch.unreadCount > 9) {
+				s = "9+";
+				d2 = 24;
+				d3 = 2 - ((d2 - 16) / 2);
+				roundrect = true;
+			}
+			Font f = NokiaUIInvoker.getFont(0, 0, 18, 8);
+			g.setFont(f);
+			int d = 16;
+			int fh = f.getHeight();
+
+			g.setColor(225, 73, 73);
+			if (roundrect) {
+				g.fillRoundRect(DisplayUtils.width / 2 + d3, bpiy - 5, d2, d, 8, 8);
+			} else {
+				g.fillArc(DisplayUtils.width / 2 + d3, bpiy - 5, d2, d, 0, 360);
+			}
+			g.setGrayScale(255);
+			g.drawString(s, DisplayUtils.width / 2 + 2 + (d - f.stringWidth(s)) / 2, bpiy - 5 + (d - fh) / 2 + 1, 0);
+		}
 		}
 	}
 	/*

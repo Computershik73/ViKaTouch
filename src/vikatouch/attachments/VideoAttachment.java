@@ -7,6 +7,7 @@ import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
+import vikatouch.items.chat.CommentItem;
 import vikatouch.items.chat.MsgItem;
 import vikatouch.items.menu.VideoItem;
 import vikatouch.utils.VikaUtils;
@@ -59,6 +60,28 @@ public class VideoAttachment extends ImageAttachment {
 			PhotoSize ps = getMessageImage();
 			Image i = VikaUtils.downloadImage(ps.url);
 			int w = Math.min((int) (DisplayUtils.width * 0.6), MsgItem.msgWidth - MsgItem.attMargin * 2);
+			if (ps.width > w) {
+				i = VikaUtils.resize(i, w, -1);
+			}
+
+			renderH = i.getHeight();
+			renderW = i.getWidth();
+			renderImg = i;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public PhotoSize getCommentImage() {
+		return PhotoSize.searchSmallerSize(sizes,
+				Math.min((int) (DisplayUtils.width * 0.6), CommentItem.msgWidth - CommentItem.attMargin * 2));
+	}
+
+	public void loadForComment() {
+		try {
+			PhotoSize ps = getMessageImage();
+			Image i = VikaUtils.downloadImage(ps.url);
+			int w = Math.min((int) (DisplayUtils.width * 0.6), CommentItem.msgWidth - CommentItem.attMargin * 2);
 			if (ps.width > w) {
 				i = VikaUtils.resize(i, w, -1);
 			}

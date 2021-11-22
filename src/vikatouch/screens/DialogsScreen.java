@@ -3,12 +3,24 @@ package vikatouch.screens;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
+import org.json.me.JSONArray;
+import org.json.me.JSONObject;
+
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
+
 import vikatouch.Dialogs;
+import vikatouch.NokiaUIInvoker;
 import vikatouch.VikaTouch;
+import vikatouch.items.VikaNotification;
+import vikatouch.items.chat.ConversationItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.menu.MenuScreen;
+import vikatouch.settings.Settings;
+import vikatouch.utils.IntObject;
+import vikatouch.utils.ProfileObject;
+import vikatouch.utils.VikaUtils;
+import vikatouch.utils.url.URLBuilder;
 
 /**
  * @author Shinovon
@@ -17,7 +29,8 @@ import vikatouch.screens.menu.MenuScreen;
 public class DialogsScreen extends MainScreen {
 
 	public static String titleStr;
-
+	private int cw;
+	
 	public DialogsScreen() {
 		super();
 		VikaTouch.needstoRedraw=true;
@@ -69,7 +82,8 @@ public class DialogsScreen extends MainScreen {
 		}
 		currentItem--;
 		if (currentItem < 0) {
-			currentItem = Dialogs.itemsCount--;
+			currentItem = 0;
+					//Dialogs.itemsCount--;
 		}
 		try {
 			scrollToSelected();
@@ -89,13 +103,28 @@ public class DialogsScreen extends MainScreen {
 
 		}
 		currentItem++;
-		if (currentItem >= Dialogs.itemsCount) {
-			currentItem = 0;
+		if (currentItem >= Dialogs.itemsCount-1) {
+			currentItem = Dialogs.itemsCount-1;
+			
 		}
+		/*if (currentItem >= Dialogs.itemsCount-1) {
+			currentItem = Dialogs.itemsCount-2;
+			VikaTouch.needstoRedraw=true;
+			Dialogs.itemsCount+=10;
+			//Settings.dialogsLength=Dialogs.itemsCount;
+			Dialogs.loadMore();
+			VikaTouch.needstoRedraw=true;
+		}*/
+		try {
 		scrollToSelected();
 		Dialogs.dialogs[currentItem].setSelected(true);
+		} catch (Throwable eee) {
+			
+		} 
 		VikaTouch.needstoRedraw=true;
 	}
+
+	
 
 	public final void scrollToSelected() {
 		VikaTouch.needstoRedraw=true;
@@ -106,6 +135,7 @@ public class DialogsScreen extends MainScreen {
 		if (Dialogs.dialogs[currentItem] != null) {
 			scrolled = -(itemy - DisplayUtils.height / 2 + (Dialogs.dialogs[currentItem].getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
+			//if (scrolled>)
 		}
 	}
 
@@ -122,23 +152,46 @@ public class DialogsScreen extends MainScreen {
 		int w = (int) ww;
 		// try
 		// {
+		try {
 		update(g);
+		} catch (Throwable eee) {}
 		int y = oneitemheight + w;
-
+		
 		if (Dialogs.dialogs != null) {
-			for (int i = 0; i < Dialogs.itemsCount; i++) {
+			int i=0;
+			String coords= "";
+			while (true) {
+			//for (int i = 0; i < Dialogs.itemsCount; i++) {
+				if (i>Dialogs.itemsCount-1) {
+					break;
+				}
 				try {
+					
 					if (Dialogs.dialogs[i] != null) {
 						Dialogs.dialogs[i].paint(g, y, scrolled);
+						coords+=" , i: "+String.valueOf(i)+", y+g.getTranslateY(): "+String.valueOf(y+g.getTranslateY());
+						cw = Dialogs.dialogs[i].itemDrawHeight;
+						if ((y+g.getTranslateY()<DisplayUtils.height - MainScreen.bottomPanelH) && (y+g.getTranslateY()>=DisplayUtils.height - MainScreen.bottomPanelH - cw-10)  && (i>=Dialogs.itemsCount-1) && (Dialogs.isUpdatingNow==false)) {
+							coords.concat(", loaded more"+String.valueOf(itemsCount)+ " items , ");
+							Dialogs.itemsCount+=10;
+							Dialogs.loadMore();
+						}
 						y += Dialogs.dialogs[i].itemDrawHeight;
+						
+						
 					}
 				} catch (Throwable e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 					// VikaTouch.error(e, ErrorCodes.DIALOGSITEMDRAW);
+					coords+=e.getMessage();
+					break;
 				}
+				i++;
 			}
+			coords+=" DisplayUtils.height-MainScreen.bottomPanelH = "+String.valueOf(DisplayUtils.height - MainScreen.bottomPanelH) + " DisplayUtils.height-MainScreen.bottomPanelH-cw-10 ="+String.valueOf(DisplayUtils.height - MainScreen.bottomPanelH- cw-10);
+			//VikaTouch.sendLog(coords);
 		}
-
+		
 		g.translate(0, -g.getTranslateY());
 
 		/*
@@ -170,14 +223,16 @@ public class DialogsScreen extends MainScreen {
 		// тача больше нигде нет. Ладно.
 		try {
 			if (Dialogs.dialogs != null) {
-				if (y > 58 && y < DisplayUtils.height - oneitemheight) {
-					int yy1 = (y - 58) - scrolled;
-					int i = yy1 / 63;
+				if (y > MainScreen.topPanelH && y < DisplayUtils.height - MainScreen.bottomPanelH) {
+					int yy1 = (y - MainScreen.topPanelH) - scrolled;
+					int i = yy1 / cw;
 					if (i < 0)
 						i = 0;
 					unselectAll();
 					if (!dragging) {
 						Dialogs.dialogs[i].tap(x, yy1 - (63 * i));
+					} else {
+						//if ((yy1-(63*i))>DisplayUtils.height - MainScreen.bottomPanelH-cw) 
 					}
 					Dialogs.dialogs[i].released(dragging);
 				}
@@ -193,10 +248,9 @@ public class DialogsScreen extends MainScreen {
 		VikaTouch.needstoRedraw=true;
 		try {
 			if (Dialogs.dialogs != null) {
-				if (y > 58 && y < DisplayUtils.height - oneitemheight) {
-
-					int yy1 = (y - 58) - scrolled;
-					int i = yy1 / 63;
+				if (y > MainScreen.topPanelH && y < DisplayUtils.height - MainScreen.bottomPanelH) {
+					int yy1 = (y - MainScreen.topPanelH) - scrolled;
+					int i = yy1 / cw;
 					if (i < 0)
 						i = 0;
 					unselectAll();

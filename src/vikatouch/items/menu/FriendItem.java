@@ -55,7 +55,7 @@ public class FriendItem extends JSONUIItem {
 			 */
 			try {
 				city = json.getJSONObject("city").optString("title");
-			} catch (JSONException e) {
+			} catch (Throwable e) {
 
 			}
 			online = json.optInt("online") == 1;
@@ -69,7 +69,7 @@ public class FriendItem extends JSONUIItem {
 			 * System.out.println("Юзер "+link+": ошибка аватарки");
 			 * //System.out.println(json.toString()); }
 			 */
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			VikaTouch.error(e, ErrorCodes.FRIENDPARSE);
 		}

@@ -2,12 +2,19 @@ package vikatouch.screens;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.MathUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
+
+//import shizaMobile.Global;
+//import VikaTouch.screens.DialogsScreen;
+//import shizaMobile.screens.NewsScreen;
+import vikatouch.music.MusicPlayer;
+import vikatouch.NokiaUIInvoker;
 import vikatouch.VikaTouch;
 import vikatouch.screens.menu.MenuScreen;
 import vikatouch.settings.Settings;
@@ -21,7 +28,8 @@ public abstract class MainScreen extends ScrollableCanvas {
 
 	protected boolean hasBackButton; // кст, почему не статик?
 	public MainScreen backScreen;
-
+	public int bottomPanelH2;
+	private static Image[] miniplayerButtons;
 	public static int topPanelH = 58;
 	public static int bottomPanelH = 50;
 
@@ -39,7 +47,6 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 
 	public void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
 		if (!(this instanceof ChatScreen)) {
 			if (!dragging || !canScroll) {
 				int wyw = DisplayUtils.width / 4;
@@ -52,7 +59,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 					if (this instanceof MenuScreen && x > DisplayUtils.width - oneitemheight) {
 						VikaTouch.inst.cmdsInst.command(13, this);
 					}
-				} else if (!(this instanceof SettingsScreen) && y >= DisplayUtils.height - bottomPanelH && showBottomPanel) {
+				} else if (!(this instanceof SettingsScreen) && y >= DisplayUtils.height - bottomPanelH2 && showBottomPanel) {
 					int acenter = (DisplayUtils.width - wyw) / 2;
 					if (x < wyw) {
 						VikaTouch.inst.cmdsInst.command(0, this);
@@ -65,6 +72,21 @@ public abstract class MainScreen extends ScrollableCanvas {
 					if (x > acenter && x < acenter + wyw) {
 						VikaTouch.inst.cmdsInst.command(1, this);
 					}
+				} else if (!(this instanceof SettingsScreen) && y >= DisplayUtils.height - bottomPanelH && showBottomPanel) {
+					if (x < 50 && MusicPlayer.inst != null) {
+						if(MusicPlayer.inst.isPlaying) {
+							MusicPlayer.inst.pause();
+						} else {
+							MusicPlayer.inst.play();
+						}
+					} else if (x > DisplayUtils.width - 50 && MusicPlayer.inst != null) {
+						if(MusicPlayer.inst.isPlaying) {
+							MusicPlayer.inst.next();
+						} else {
+							MusicPlayer.inst.destroy();
+							MusicPlayer.inst = null;
+						}
+					} else VikaTouch.inst.cmdsInst.command(17, this);
 				}
 			}
 		}
@@ -81,6 +103,9 @@ public abstract class MainScreen extends ScrollableCanvas {
 			int topItemY = getItemY(currentItem - 1);
 			int downItemY = thisItemY + 50;
 			int down2ItemY = downItemY + 50;
+			if (currentItem + 1>=uiItems.length) {
+				return;
+			}
 			try {
 				downItemY = thisItemY + uiItems[currentItem].getDrawHeight();
 				down2ItemY = downItemY + 50;
@@ -171,11 +196,28 @@ public abstract class MainScreen extends ScrollableCanvas {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	public void scrollToTop() {
+		VikaTouch.needstoRedraw=true;
+		scrolled = -1000;//getItemY(currentItem);
+		VikaTouch.needstoRedraw=true;
+		
+	}
 
 	protected void drawHUD(Graphics g, String title) {
 		// vars
+		boolean musicHUDShown = !DisplayUtils.compact && DisplayUtils.height > 320 && vikatouch.music.MusicPlayer.inst != null && !keysMode;
+		int musichud = musicHUDShown ? 32 : 0;
+		boolean smallTop = DisplayUtils.compact || (DisplayUtils.height <= 320 && !(this instanceof MenuScreen));
+		
 		topPanelH = DisplayUtils.compact ? 24 : 58;
-		bottomPanelH = DisplayUtils.compact ? 24 : 50;
+		
+		boolean smallBottom = DisplayUtils.compact || DisplayUtils.height < 640;
+		bottomPanelH2 = Settings.hideBottom ? 0 : (smallBottom ? 36 : (musicHUDShown ? 42 : 50));
+		
+		bottomPanelH = Settings.hideBottom ? musichud : ((smallBottom ? 36 : (musicHUDShown ? 42 : 50)) + musichud);
 		int dw = DisplayUtils.width;
 		boolean showBottomPanel = !Settings.hideBottom && VikaTouch.accessToken != null && !DisplayUtils.compact
 				&& (!(this instanceof SettingsScreen));
@@ -189,29 +231,46 @@ public abstract class MainScreen extends ScrollableCanvas {
 		if (!DisplayUtils.compact) {
 			// header & icon
 			if (hasBackButton && !keysMode) {
-				g.drawImage(IconsManager.backImg, 6, topPanelH / 2 - IconsManager.backImg.getHeight() / 2, 0);
+				g.drawImage(IconsManager.backImg, 6, topPanelH / 2 - 24, 0);
 			} else if (this instanceof MenuScreen)
-				g.drawImage(IconsManager.logoImg, 16, topPanelH / 2 - IconsManager.logoImg.getHeight() / 2, 0);
+				g.drawImage(IconsManager.logoImg, 16, topPanelH / 2 - 25, 0);
 			// Такое себе, согласен. Ну хоть что-то.
 
-		} else if (this instanceof MenuScreen) {
+		}  else if (this instanceof MenuScreen) {
 			title = "ViKa touch";
 		}
 		g.setFont(Font.getFont(0, 0, Font.SIZE_LARGE));
 		g.setGrayScale(255);
-		if (title != null) {
+		/*if (title != null) {
 			if (DisplayUtils.compact || !hasBackButton || keysMode) {
 				g.drawString(title, 10, topPanelH / 2 - g.getFont().getHeight() / 2, 0);
 			} else {
 				g.drawString(title, 72, topPanelH / 2 - g.getFont().getHeight() / 2, 0);
 			}
+		}*/
+		if (title != null) {
+			
+			g.drawString(title, DisplayUtils.compact || !hasBackButton || keysMode ? 24 : smallTop ? 56 : 64, topPanelH / 2 - g.getFont().getHeight() / 2, 0);
 		}
-		Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
+		//Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
+		Font f = NokiaUIInvoker.getFont(0, 0, 18, 8);
 		g.setFont(f);
 
 		if (showBottomPanel) {
+			if(miniplayerButtons == null && musicHUDShown)
+
+				try {
+					Image sheet = Image.createImage("/miniplayer.png");
+					miniplayerButtons = new Image[3];
+					for (int i = 0; i < 3; i++) {
+						miniplayerButtons[i] = Image.createImage(sheet, i * 24, 0, 24, 19, 0);
+					}
+				} catch (Exception e) {
+
+				}
+			
 			// bottom icons
-			int bpiy = DisplayUtils.height - bottomPanelH / 2 - 12;
+			int bpiy = DisplayUtils.height - bottomPanelH2 / 2 - 12;
 			g.drawImage(((this == VikaTouch.newsScr) ? IconsManager.selIco : IconsManager.ico)[IconsManager.NEWS],
 					dw / 6 - 12, bpiy, 0);
 			g.drawImage(((this instanceof DialogsScreen) ? IconsManager.selIco : IconsManager.ico)[IconsManager.MSGS],
@@ -242,6 +301,19 @@ public abstract class MainScreen extends ScrollableCanvas {
 				}
 				g.setGrayScale(255);
 				g.drawString(s, dw / 2 + 2 + (d - f.stringWidth(s)) / 2, bpiy - 5 + (d - fh) / 2 + 1, 0);
+			}
+			
+			if(musicHUDShown) {
+				g.drawImage(MusicPlayer.inst.isPlaying ? miniplayerButtons[0] : miniplayerButtons[1], 10, DisplayUtils.height - bottomPanelH + 4, 0);
+				g.drawImage(MusicPlayer.inst.isPlaying ? miniplayerButtons[2] : IconsManager.ico[IconsManager.CLOSE], dw - 32, DisplayUtils.height - bottomPanelH + 4, 0);
+				//g.setFont(f);
+				g.setFont(vikatouch.NokiaUIInvoker.getFont(0, 0, 12, 8));
+				ColorUtils.setcolor(g, ColorUtils.TEXT);
+				String s1 = MusicPlayer.inst.title;
+				String s2 = MusicPlayer.inst.artist;
+				g.drawString(s1, (dw - g.getFont().stringWidth(s1)) / 2, DisplayUtils.height - bottomPanelH + 4, 0);
+				ColorUtils.setcolor(g, ColorUtils.TEXT2);
+				g.drawString(s2, (dw - g.getFont().stringWidth(s2)) / 2, DisplayUtils.height - bottomPanelH + 18, 0);
 			}
 		}
 

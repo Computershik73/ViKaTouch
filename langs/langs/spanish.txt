@@ -47,6 +47,7 @@ menu.nowebsite=Ninguno
 menu.discussions=Discusiones
 menu.about=Acerca de
 menu.loading=Cargando...
+menu.search=Buscar
 
 about.devs=Desarrolladores
 about.vendor=Dueño
@@ -77,6 +78,7 @@ title.musicw=%2 Música
 title.comments=Comentarios
 title.photos=Fotos
 title.photosw=%2 Fotos
+title.newrequests=Nuevas solicitudes
 
 friend.remove=Eliminar de amigos
 friend.add=Agregar como amigo
@@ -254,6 +256,7 @@ yes=Si
 ok=Aceptar
 cancel=Cancelar
 loadmore=Cargando más...
+at=a
 
 splash.emnotsupported=Lo más probable es que ViKa Touch se esté ejecutando actualmente en un emulador no compatible. Recomendamos el uso de kemulator, J2ME Loader, JBed o emuladores oficiales de paquetes para desarrolladores; en otros, puede haber problemas de visualización, funcionalidad y seguridad.
 splash.title.3=Preparación de assets

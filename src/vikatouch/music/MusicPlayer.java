@@ -67,7 +67,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 	// кэш для рисования 
 	public String title = "Track name";
-	private String artist = "track artist";
+	public String artist = "track artist";
 	private int titleW, artistW;
 	private int currTx, currAx;
 	// private String totalNumber;
@@ -170,21 +170,33 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			//e.printStackTrace();
 		}
 		VikaTouch.needstoRedraw=true;
-		boolean CACHETOPRIVATE = false;
-		String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private")
+		//boolean CACHETOPRIVATE = false;
+		/*String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private")
 				: System.getProperty("fileconn.dir.music"));
+		if ((VikaTouch.mobilePlatform.indexOf("NokiaN91")>-1) || (VikaTouch.mobilePlatform.indexOf("NokiaN8")>-1) || (VikaTouch.mobilePlatform.indexOf("Nokia808")>-1)) {
+			tpath="file:///E:/Sounds/";
+		}
 		String jver = System.getProperty("java.version");
-		if (jver == null)
+		if (jver == null) {
 			jver = "-";
+		} else {
 		if (jver.indexOf("phoneme")<0) {
 			if (tpath == null)
 				tpath = System.getProperty("fileconn.dir.photos");
 			if (tpath == null)
-				tpath = "file:///C:/";
+				tpath = "C:/Users/ilmoh/Downloads/";
 			} else {
 				tpath = "file:///"+"MyDocs/.sounds/";
 			}
-		final String path = tpath +  String.valueOf(current) +"vikaMusicCache.mp3";
+		}*/
+		String tpath = Settings.musicpath;
+		final String path = tpath + 
+				//((tpath.indexOf("C:")>-1) ?
+				//String.valueOf(current) :
+				String.valueOf(getC().id)
+		//)
+				+"vikaMusicCache.mp3";
+		System.out.println(path);
 		//for (int i=0; i<99; i++) 
 		if (prevprevsongindex!=-1) 
 		{
@@ -295,8 +307,25 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		}
 		try {
 			if (outConn.exists()) {
-				outConn.delete();
-				outConn.create();
+				//outConn.delete();
+				//outConn.create();
+				player = Manager.createPlayer(
+						//Connector.openInputStream(url)
+						outConn.openInputStream()
+						, "audio/mpeg");
+				player.realize();
+
+				player.start();
+				isReady = true;
+				isPlaying = true;
+				try {
+					((VolumeControl) player.getControl("VolumeControl")).setLevel(Settings.playerVolume);
+				} catch (Exception e) {
+				}
+				totalTime = time(voice == null ? getC().length : voice.size);
+				stop = false;
+				player.addPlayerListener(inst);
+				return;
 			} else {
 				outConn.create();
 			}
@@ -1285,12 +1314,12 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		String turl = "";
 		if (voice != null) {
 			String s = voice.musUrl;
-			if (VikaTouch.mobilePlatform.indexOf("NokiaN97") > 1) {
+			//if (VikaTouch.mobilePlatform.indexOf("NokiaN97") > 1) {
 				turl = s;
-			} else {
+			//} else {
 				// обычно УРЛ голоса в обработке не нуждается.
-				return s;
-			}
+				//return s;
+			//}
 		} else {
 			turl = getC().mp3;
 		}
@@ -1719,6 +1748,9 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			if (loop) {
 				try {
 					player.stop();
+					player.close();
+					player.deallocate();
+					
 				} catch (MediaException e) {
 				}
 				if (Settings.audioMode == Settings.AUDIO_LOADANDPLAY) {
