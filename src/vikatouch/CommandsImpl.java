@@ -91,6 +91,7 @@ public class CommandsImpl implements CommandListener {
 					case 5: {
 						// Группы
 						if (s instanceof MenuScreen) {
+							//GroupsScreen.open(VikaTouch.integerUserId, null, null);
 							GroupsScreen grScr = new GroupsScreen();
 							grScr.loadGroups(0, VikaTouch.integerUserId, null, null);
 							VikaTouch.setDisplay(grScr, 1);

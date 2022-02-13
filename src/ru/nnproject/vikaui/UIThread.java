@@ -3,6 +3,16 @@
 
 package ru.nnproject.vikaui;
 
+import java.io.IOException;
+
+import javax.microedition.lcdui.Display;
+import javax.microedition.media.Manager;
+import javax.microedition.media.MediaException;
+import javax.microedition.media.Player;
+
+import vikatouch.VikaTouch;
+import vikatouch.utils.VikaUtils;
+
 /**
  * @author Shinovon
  * 
@@ -41,6 +51,48 @@ public class UIThread extends Thread {
 		//fpsThread.setPriority(Thread.NORM_PRIORITY);
 		//fpsThread.start();
 		while (true) {
+			
+			if (System.currentTimeMillis() - VikaTouch.lastsuccessfullupdatetime>120000) {
+				//VikaTouch.needstoRedraw=true;
+				VikaTouch.istimeout=true;
+				//VikaTouch.silenterror("Сети нет более 16 секунд!", false);
+				//Display d = Display.getDisplay(VikaTouch.appInst);
+				VikaTouch.needstoRedraw=true;
+				//d.vibrate(500);
+				
+				
+			/*	 try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 d.vibrate(1000);
+				 try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 d.vibrate(1000);*/
+				
+				/*Player notifplayer;
+				try {
+					notifplayer = Manager.createPlayer("device://tone");
+					notifplayer.realize();
+					notifplayer.start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (MediaException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+				
+				
+			} else {
+				VikaTouch.istimeout=false;
+			}
 			long wastedTime = 0;
 			try {
 				long i = System.currentTimeMillis();
@@ -52,7 +104,7 @@ public class UIThread extends Thread {
 			} catch (Throwable e) {
 				
 			}
-			// Thread.yield();
+			 Thread.yield();
 			try {
 				double i = (1000d / (double)canvas.getFPSLimit());
 				i -= wastedTime;

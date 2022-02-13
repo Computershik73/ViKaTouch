@@ -1,6 +1,7 @@
 package vikatouch.screens.page;
 
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
@@ -9,6 +10,7 @@ import javax.microedition.lcdui.Image;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.popup.ConfirmBox;
@@ -120,41 +122,41 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 						}
 						itemsCount = 13;
 						int h = oneitemheight = (short) (DisplayUtils.compact ? 30 : 50);
-						uiItems = new OptionItem[13];
-						uiItems[0] = new OptionItem(GroupPageScreen.this,
+						uiItems = new Vector(13);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this,
 								TextLocal.inst.get("menu.members") + " (" + membersCount + ")", IconsManager.GROUPS, 0,
-								h);
-						uiItems[1] = new OptionItem(GroupPageScreen.this,
+								h), 0);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this,
 								isMember ? TextLocal.inst.get("menu.grleave") : TextLocal.inst.get("menu.grjoin"),
-								isMember ? IconsManager.CLOSE : IconsManager.ADD, 1, h);
-						uiItems[2] = new OptionItem(GroupPageScreen.this,
+								isMember ? IconsManager.CLOSE : IconsManager.ADD, 1, h), 1);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this,
 								canMsg ? TextLocal.inst.get("menu.writemsg") : TextLocal.inst.get("menu.cannotwrite"),
-								IconsManager.MSGS, 2, h);
-						uiItems[3] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.wall"),
-								IconsManager.NEWS, 3, h);
-						uiItems[4] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.info"),
-								IconsManager.INFO, 4, h);
-						uiItems[5] = new OptionItem(GroupPageScreen.this,
-								TextLocal.inst.get("menu.photos") + " (" + photos + ")", IconsManager.PHOTOS, 5, h);
-						uiItems[6] = new OptionItem(GroupPageScreen.this,
-								TextLocal.inst.get("menu.music") + " (" + music + ")", IconsManager.MUSIC, 6, h);
-						uiItems[7] = new OptionItem(GroupPageScreen.this,
-								TextLocal.inst.get("menu.videos") + " (" + videos + ")", IconsManager.VIDEOS, 7, h);
-						uiItems[8] = new OptionItem(GroupPageScreen.this,
-								TextLocal.inst.get("menu.documents") + " (" + docs + ")", IconsManager.DOCS, 8, h);
-						uiItems[9] = new OptionItem(GroupPageScreen.this,
+								IconsManager.MSGS, 2, h), 2);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.wall"),
+								IconsManager.NEWS, 3, h), 3);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.info"),
+								IconsManager.INFO, 4, h), 4);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this,
+								TextLocal.inst.get("menu.photos") + " (" + photos + ")", IconsManager.PHOTOS, 5, h), 5);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this,
+								TextLocal.inst.get("menu.music") + " (" + music + ")", IconsManager.MUSIC, 6, h), 6);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this,
+								TextLocal.inst.get("menu.videos") + " (" + videos + ")", IconsManager.VIDEOS, 7, h), 7);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this,
+								TextLocal.inst.get("menu.documents") + " (" + docs + ")", IconsManager.DOCS, 8, h), 8);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this,
 								TextLocal.inst.get("menu.discussions") + " (" + topics + ")", IconsManager.COMMENTS, 9,
-								h);
-						uiItems[10] = new OptionItem(GroupPageScreen.this,
+								h), 9);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this,
 								(site == null || site.length() < 5)
 										? TextLocal.inst.get("menu.website") + ": "
 												+ TextLocal.inst.get("menu.nowebsite")
 										: TextLocal.inst.get("menu.website") + ": " + site,
-								IconsManager.LINK, 10, h);
-						uiItems[11] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.links"),
-								IconsManager.LINK, 11, h);
-						uiItems[12] = new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.contacts"),
-								IconsManager.GROUPS, 11, h);
+								IconsManager.LINK, 10, h), 10);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.links"),
+								IconsManager.LINK, 11, h), 11);
+						uiItems.setElementAt(new OptionItem(GroupPageScreen.this, TextLocal.inst.get("menu.contacts"),
+								IconsManager.GROUPS, 11, h), 12);
 					} catch (JSONException e) {
 						e.printStackTrace();
 						VikaTouch.error(e, ErrorCodes.GROUPPAGEPARSE);
@@ -209,7 +211,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 		if (isInfoShown) {
 			if (description == null) {
 				isInfoShown = false;
-				((OptionItem) uiItems[4]).text = descEmptyStr;
+				((OptionItem) uiItems.elementAt(4)).text = descEmptyStr;
 			}
 			Font df = Font.getFont(0, 0, 8);
 			g.setFont(df);
@@ -223,10 +225,10 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 			}
 		} else {
 			if (uiItems != null) {
-				for (int i = 0; i < uiItems.length; i++) {
-					if (uiItems[i] != null) {
-						uiItems[i].paint(g, y, scrolled);
-						y += uiItems[i].getDrawHeight();
+				for (int i = 0; i < uiItems.size(); i++) {
+					if (((PressableUIItem) uiItems.elementAt(i)) != null) {
+						((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+						y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 					}
 				}
 			}
@@ -246,7 +248,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 					int y1 = scrolled + 140 + (i * oneitemheight);
 					int y2 = y1 + oneitemheight;
 					if (y > y1 && y < y2) {
-						uiItems[i].tap(x, y - y1);
+						((PressableUIItem) uiItems.elementAt(i)).tap(x, y - y1);
 						break;
 					}
 

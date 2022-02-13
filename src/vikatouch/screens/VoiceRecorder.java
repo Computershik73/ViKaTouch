@@ -14,6 +14,7 @@ import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
 import vikatouch.locale.TextLocal;
+import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.url.URLBuilder;
 
@@ -21,7 +22,10 @@ import vikatouch.utils.url.URLBuilder;
  * @author Feodor0090
  * 
  */
-public class VoiceRecorder extends MainScreen {
+
+
+
+/*public class VoiceRecorder extends MainScreen {
 
 	public Player pl;
 	public RecordControl rec;
@@ -130,5 +134,90 @@ public class VoiceRecorder extends MainScreen {
 	public void onLeave() {
 		if (isRec)
 			cancelRecord();
+	}
+}*/
+
+
+
+final class VoiceRecorder implements Runnable {
+
+	/*public Player pl;
+	public RecordControl rec;
+	public boolean isRec = false;
+	public boolean isRecRunning = false;
+	public ByteArrayOutputStream output;
+
+	public int peerId;
+	public String uploadUrl;
+
+	public String title;
+	public String status = "...";*/
+	
+	
+	VoiceRecorder() {
+	}
+
+	public final void run() {
+		String var1 = null;
+		//VikaUtils.logToFile("1");
+		try {
+			var1 = VikaUtils.download(VikaTouch.API + "/method/docs.getUploadServer?access_token="
+					+ VikaTouch.accessToken + "&type=audio_message&v=5.81");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//VikaUtils.logToFile("2");
+		ChatScreen.uploadUrl = var1.substring(var1.indexOf("upload_url") + 13, var1.length() - 3);
+		//VikaUtils.logToFile("3");
+
+		try {
+			if (!VikaTouch.isS40()) {
+				ChatScreen.pl = Manager.createPlayer("capture://audio?encoding=pcm");
+			} else {
+				ChatScreen.pl = Manager.createPlayer("capture://audio?encoding=pcm&rate=8000&bits=16");
+			}
+			//VikaUtils.logToFile("4");
+			
+		} catch (IOException var6) {
+			var6.printStackTrace();
+		} catch (MediaException var7) {
+			var7.printStackTrace();
+		}
+		//VikaUtils.logToFile("5");
+		try {
+			ChatScreen.pl.realize();
+		//	VikaUtils.logToFile("6");
+			ChatScreen.pl.prefetch();
+		//	VikaUtils.logToFile("7");
+			
+		} catch (MediaException var4) {
+			var4.printStackTrace();
+		} catch (NullPointerException var5) {
+		//	System.out.println("fuckkk");
+		}
+	//	VikaUtils.logToFile("8");
+		ChatScreen.rec = (RecordControl) ChatScreen.pl
+				.getControl("RecordControl");
+		
+		ChatScreen.output = new ByteArrayOutputStream();
+		//VikaUtils.logToFile("9");
+
+		try {
+			ChatScreen.pl.start();
+		} catch (MediaException var3) {
+			var3.printStackTrace();
+		}
+		//VikaUtils.logToFile("10");
+		ChatScreen.rec.setRecordStream(ChatScreen.output);
+		ChatScreen.rec.startRecord();
+	//	VikaUtils.logToFile("11");
+
+		
+
+		
 	}
 }

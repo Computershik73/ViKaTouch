@@ -257,7 +257,8 @@ public class DialogsScreen extends MainScreen {
 					if (Dialogs.dialogs[i] != null) {
 						Dialogs.dialogs[i].pressed();
 					}
-					repaint();
+					this.serviceRepaints();
+					VikaTouch.needstoRedraw=true;
 				}
 			}
 		} catch (Throwable e) {

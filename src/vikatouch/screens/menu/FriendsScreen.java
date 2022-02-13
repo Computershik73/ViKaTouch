@@ -1,5 +1,7 @@
 package vikatouch.screens.menu;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
@@ -16,6 +18,7 @@ import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
+
 import vikatouch.VikaTouch;
 import vikatouch.items.LoadMoreButtonItem;
 import vikatouch.items.menu.FriendItem;
@@ -121,21 +124,23 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						totalItems = response.getInt("count");
 						itemsCount = (short) items.length();
 						canLoadMore = totalItems > from + Settings.simpleListsLength;
-						uiItems = new PressableUIItem[itemsCount + (canLoadMore ? 1 : 0)];
+						uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 						for (int i = 0; i < itemsCount; i++) {
 							VikaTouch.loading = true;
 							JSONObject item = items.getJSONObject(i);
-							uiItems[i] = new FriendItem(item);
-							((FriendItem) uiItems[i]).parseJSON();
+							FriendItem fi = new FriendItem(item);
+							uiItems.addElement(fi);
+							fi.parseJSON();
+							Thread.yield();
 						}
 						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 						if (canLoadMore) {
-							uiItems[itemsCount] = new LoadMoreButtonItem(FriendsScreen.this);
+							uiItems.addElement(new LoadMoreButtonItem(FriendsScreen.this));
 							itemsCount++;
 						}
 						if (keysMode) {
 							currentItem = 0;
-							uiItems[0].setSelected(true);
+							((PressableUIItem) uiItems.elementAt(0)).setSelected(true);
 						}
 						VikaTouch.loading = true;
 						String name = name1;
@@ -165,7 +170,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 									// цикл будет продолжаться пока он не закончится.
 								}
 								VikaTouch.loading = true;
-								((FriendItem) uiItems[i]).getAva();
+								((FriendItem) uiItems.elementAt(i)).getAva();
 							}
 						}
 						} else {
@@ -178,22 +183,24 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 							totalItems = response.getInt("count");
 							itemsCount = (short) items.length();
 							canLoadMore = totalItems > from + Settings.simpleListsLength;
-							uiItems = new PressableUIItem[itemsCount + (canLoadMore ? 1 : 0)];
+							uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 							
 							for (int i = 0; i < itemsCount; i++) {
 								VikaTouch.loading = true;
 								JSONObject item = items.getJSONObject(i);
-								uiItems[i] = new FriendItem(item);
-								((FriendItem) uiItems[i]).parseJSON();
+								FriendItem fi = new FriendItem(item);
+								uiItems.addElement(fi);
+								fi.parseJSON();
+								Thread.yield();
 							}
 							range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 							if (canLoadMore) {
-								uiItems[itemsCount] = new LoadMoreButtonItem(FriendsScreen.this);
+								uiItems.addElement(new LoadMoreButtonItem(FriendsScreen.this));
 								itemsCount++;
 							}
 							if (keysMode) {
 								currentItem = 0;
-								uiItems[0].setSelected(true);
+								((PressableUIItem) uiItems.elementAt(0)).setSelected(true);
 							}
 							VikaTouch.loading = true;
 							String name = name1;
@@ -223,7 +230,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 										// цикл будет продолжаться пока он не закончится.
 									}
 									VikaTouch.loading = true;
-									((FriendItem) uiItems[i]).getAva();
+									((FriendItem) uiItems.elementAt(i)).getAva();
 								}
 							}
 							
@@ -284,22 +291,24 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						totalItems = response.getInt("requests");
 						itemsCount = (short) items.length();
 						canLoadMore = totalItems > from + Settings.simpleListsLength;
-						uiItems = new PressableUIItem[itemsCount + (canLoadMore ? 1 : 0)];
+						uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 						if (itemsCount>0) {
 						for (int i = 0; i < itemsCount; i++) {
 							VikaTouch.loading = true;
 							JSONObject item = items.getJSONObject(i);
-							uiItems[i] = new FriendItem(item);
-							((FriendItem) uiItems[i]).parseJSON();
+							FriendItem fi = new FriendItem(item);
+							uiItems.addElement(fi);
+							fi.parseJSON();
+							Thread.yield();
 						}
 						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 						if (canLoadMore) {
-							uiItems[itemsCount] = new LoadMoreButtonItem(FriendsScreen.this);
+							uiItems.addElement(new LoadMoreButtonItem(FriendsScreen.this));
 							itemsCount++;
 						}
 						if (keysMode) {
 							currentItem = 0;
-							uiItems[0].setSelected(true);
+							((PressableUIItem) uiItems.elementAt(0)).setSelected(true);
 						}
 						VikaTouch.loading = true;
 						
@@ -324,7 +333,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 									// цикл будет продолжаться пока он не закончится.
 								}
 								VikaTouch.loading = true;
-								((FriendItem) uiItems[i]).getAva();
+								((FriendItem) uiItems.elementAt(i)).getAva();
 							}
 						}
 						} else {
@@ -411,10 +420,11 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 			try {
 				if (uiItems != null) {
 					for (int i = 0; i < itemsCount; i++) {
-						if (uiItems[i] != null) {
-							uiItems[i].paint(g, y, scrolled);
-							y += uiItems[i].getDrawHeight();
+						if (((PressableUIItem) uiItems.elementAt(i)) != null) {
+							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						}
+						Thread.yield();
 					}
 				}
 			} catch (Exception e) {
@@ -439,13 +449,13 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 		VikaTouch.canvas.serviceRepaints();
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
-				int h = uiItems[0].getDrawHeight();
+				int h = ((PressableUIItem) uiItems.elementAt(0)).getDrawHeight();
 				int yy1 = y - (scrolled + topPanelH);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
 				if (!dragging) {
-					uiItems[i].tap(x, yy1 - (h * i));
+					((PressableUIItem) uiItems.elementAt(i)).tap(x, yy1 - (h * i));
 				}
 			}
 

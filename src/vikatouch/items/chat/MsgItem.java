@@ -71,7 +71,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	private boolean hasReply;
 	public String replyName;
 	public String replyText;
-	private boolean attsReady;
+	public boolean attsReady;
 
 	private boolean isRead = true;
 	public MsgItem[] forward;
@@ -89,6 +89,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		drawText = TextBreaker.breakText(text, Font.getFont(0, 0, Font.SIZE_SMALL), msgWidth - h1);
 		linesC = drawText.length;
 		itemDrawHeight = h1 * (linesC + 1);
+		
 	}
 	
 	public static final long unsignedIntToLong(byte[] b) 
@@ -304,7 +305,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 
 			linesC = drawText.length;
 
-			itemDrawHeight = h1 * (linesC + 1);
+		//	itemDrawHeight = h1 * (linesC + 1);
 
 			JSONObject reply = json.optJSONObject("reply_message");
 			JSONArray fwds = json.optJSONArray("fwd_messages");
@@ -408,6 +409,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 							continue;
 						if (at instanceof PhotoAttachment && !Settings.isLiteOrSomething) {
 							((PhotoAttachment) at).loadForMessage();
+							attH += at.getDrawHeight();
 						}
 						if (at instanceof VideoAttachment && !Settings.isLiteOrSomething) {
 							((VideoAttachment) at).loadForMessage();
@@ -419,8 +421,14 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 							int stickerH = DisplayUtils.width > 250 ? 128 : 64;
 							attH += stickerH + attMargin;
 						} else {
-							attH += at.getDrawHeight() + attMargin;
+							//attH += at.getDrawHeight() + attMargin;
 						}
+						if (at instanceof WallAttachment) {
+							//((WallAttachment) at).loadForMessage();
+							attH += at.getDrawHeight() +  attMargin;;
+						} 
+						
+						
 					}
 					if (attH != 0) {
 						attH += attMargin;
@@ -431,6 +439,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				}
 			}
 		}
+		
 	}
 
 	public VoiceAttachment findVoice() {
@@ -470,21 +479,23 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
-		if (VikaTouch.needstoRedraw==false) {
-			return;
-		}
+		Font font = Font.getFont(0, 0, 8);
+		g.setFont(font);
+		
+		//if (VikaTouch.needstoRedraw==false) {
+		//	return;
+		//}
 		try {
-			if (!ChatScreen.forceRedraw && y + scrolled + itemDrawHeight < -50)
-				return;
-			if (y + scrolled >DisplayUtils.height) {
-				return;
-			}
+			//if (!ChatScreen.forceRedraw && y + scrolled + itemDrawHeight < -50)
+				//return;
+			//if (y + scrolled >DisplayUtils.height) {
+				//return;
+			//}
 			// drawing
-			Font font = Font.getFont(0, 0, 8);
-			g.setFont(font);
 			int h1 = font.getHeight();
 			int attY = h1 * (linesC + 1 + (showName ? 1 : 0) + (hasReply ? 2 : 0));
 			int th = attY + attH + fwdH;
+			//VikaUtils.logToFile(" h: "+String.valueOf(attY)+" "+String.valueOf(attH)+" "+String.valueOf(fwdH));
 			itemDrawHeight = th;
 			int textX = 0;
 			int radius = 16;
@@ -772,7 +783,9 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 						g.drawImage(((StickerAttachment) at).getImage(stickerW), rx, y + attY, 0);
 					}
 
-					attY += at.getDrawHeight() + attMargin;
+					attY += 
+							at.getDrawHeight() + 
+							attMargin;
 				}
 			}
 
@@ -788,10 +801,13 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				}
 			} catch (RuntimeException e) {
 			}
+			//th = attY  + attH + fwdH;
+			//itemDrawHeight = th;
 		} catch (Throwable e) {
 			VikaTouch.sendLog(e.toString());
 		}
-		
+		//th = attY + attH + fwdH;
+		//itemDrawHeight = th;
 	}
 
 	public String[] searchLinks() {
@@ -903,9 +919,17 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			int h = 48;
 			OptionItem[] opts;
 			if (ChatScreen.peerId > ChatScreen.OFFSET_INT) {
-			 opts = new OptionItem[8];
+				if (foreign) {
+			 opts = new OptionItem[9];
+				} else {
+					 opts = new OptionItem[8];
+				}
 			} else {
-				opts = new OptionItem[7];
+				if (foreign) {
+				opts = new OptionItem[8];
+				} else {
+					opts = new OptionItem[7];
+				}
 			}
 			opts[0] = new OptionItem(this, TextLocal.inst.get("msg.reply"), IconsManager.ANSWER, -1, h);
 			opts[1] = foreign ? new OptionItem(this, TextLocal.inst.get("msg.markasread"), IconsManager.APPLY, -5, h)
@@ -920,7 +944,17 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			if (ChatScreen.peerId > ChatScreen.OFFSET_INT) {
 			opts[7] = new OptionItem(this, ChatScreen.title + "...",
 					IconsManager.GROUPS, -11, h);
+			if (foreign) {
+				opts[8] = new OptionItem(this, TextLocal.inst.get("msg.copy"), IconsManager.EDIT, -4, h);
+				
 			}
+			} else {
+				if (foreign) {
+					opts[7] = new OptionItem(this, TextLocal.inst.get("msg.copy"), IconsManager.EDIT, -4, h);
+					
+				}
+			}
+			
 			VikaTouch.popup(new AutoContextMenu(opts));
 			}
 			VikaTouch.needstoRedraw=true;
@@ -970,7 +1004,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			VikaTouch.popup(new AutoContextMenu(opts1));
 			break;
 		case -4:
-			if (!foreign)
+			//if (!foreign)
 				ChatScreen.editMsg(this);
 			VikaTouch.needstoRedraw=true;
 			break;
@@ -978,9 +1012,15 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			try {
 				if (VikaTouch.canvas.currentScreen instanceof ChatScreen) {
 					ChatScreen c = (ChatScreen) VikaTouch.canvas.currentScreen;
+					VikaTouch.needstoRedraw=true;
+					c.serviceRepaints();
 					URLBuilder url = new URLBuilder("messages.markAsRead").addField("start_message_id", "" + mid)
-							.addField("peer_id", c.peerId);
+							.addField("peer_id", ChatScreen.peerId);
+					VikaTouch.needstoRedraw=true;
+					c.serviceRepaints();
 					VikaUtils.download(url);
+					VikaTouch.needstoRedraw=true;
+					c.serviceRepaints();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

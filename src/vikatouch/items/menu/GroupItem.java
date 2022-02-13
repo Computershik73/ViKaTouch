@@ -12,6 +12,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.items.JSONItem;
 import vikatouch.items.JSONUIItem;
 import vikatouch.screens.menu.GroupsScreen;
 import vikatouch.screens.page.GroupPageScreen;
@@ -24,7 +25,7 @@ import vikatouch.utils.error.ErrorCodes;
  * @author Shinovon
  * 
  */
-public class GroupItem extends JSONUIItem {
+public class GroupItem extends JSONItem {
 
 	private String name;
 	// private String link;
@@ -41,6 +42,10 @@ public class GroupItem extends JSONUIItem {
 		ava = VikaTouch.cameraImg;
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.canvas.serviceRepaints();
+		name = "";
+		id = 0;
+		isAdmin = false;
+		members = 0;
 	}
 
 	public void parseJSON() {
@@ -50,7 +55,7 @@ public class GroupItem extends JSONUIItem {
 			id = json.optInt("id");
 			isAdmin = json.optInt("is_admin") == 1;
 			members = json.optInt("members_count");
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			VikaTouch.error(e, ErrorCodes.GROUPPARSE);
 		}
@@ -86,6 +91,7 @@ public class GroupItem extends JSONUIItem {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
+		try {
 		int tx = 4;
 		if (ava != null) {
 			g.drawImage(ava, 14, y + BORDER, 0);
@@ -105,6 +111,9 @@ public class GroupItem extends JSONUIItem {
 		String descrS = (isAdmin ? "Администрирование, " : "")
 				+ (members > 9999 ? ((members / 1000) + "K участников") : (members + " участников"));
 		g.drawString(descrS, tx, y + 24, 0);
+		} catch (Throwable e) {
+
+		}
 
 	}
 

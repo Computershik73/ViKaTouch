@@ -13,6 +13,7 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
 import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
+import vikatouch.items.JSONItem;
 import vikatouch.items.JSONUIItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
@@ -26,7 +27,7 @@ import vikatouch.utils.VikaUtils;
  * @author Shinovon
  * 
  */
-public class ConversationItem extends JSONUIItem {
+public class ConversationItem extends JSONItem {
 	public String text;
 	public String fulltext;
 	public String title;
@@ -106,20 +107,23 @@ public class ConversationItem extends JSONUIItem {
 	public void paint(Graphics g, int y, int scrolled) {
 		int h = itemDrawHeight;
 		Font font = Font.getFont(0, 0, 8);
+		Font boldfont = Font.getFont(0, Font.STYLE_BOLD, 8);
 		int hfh = font.getHeight() / 2;
 		int tx = 73;
 		if (DisplayUtils.width <= 240)
 			tx = 4;
 		if (unread > 0) {
+			
 			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
 			g.fillRect(0, y - 1, DisplayUtils.width, itemDrawHeight + 1);
+			
 		}
 		if (unanswered) {
 			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
 			g.fillRect(tx - 2 , (int)(y + h * 3 / 4 - hfh), DisplayUtils.width-5 - tx + 2, hfh * 2 + 3);
 		}
 		
-		ColorUtils.setcolor(g, ColorUtils.TEXT);
+		
 		
 		if (selected) {
 			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
@@ -131,17 +135,26 @@ public class ConversationItem extends JSONUIItem {
 		/*
 		 * if(DisplayUtils.compact) { } else {
 		 */
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		
+		g.setFont(boldfont);
 		if (title != null) {
 			g.drawString(title, tx, y + h / 4 - hfh, 0);
 		}
-
+		g.setFont(font);
 		if (!selected) {
 			ColorUtils.setcolor(g, ColorUtils.OUTLINE);
 		}
-
+		
+		if (VikaTouch.userId.equals("3225000")) {
+			ColorUtils.setcolor(g, 0);
+		}
 		g.drawString(text == null ? TextLocal.inst.get("msg") : text, tx, y + h * 3 / 4 - hfh, 0);
-
+		if (VikaTouch.userId.equals("3225000")) {
+			ColorUtils.setcolor(g, ColorUtils.TEXT);
+		}
+		
+		
 		if (!selected) {
 			ColorUtils.setcolor(g, 7);
 		}
@@ -153,7 +166,7 @@ public class ConversationItem extends JSONUIItem {
 		if (DisplayUtils.width > 240 && ava != null) {
 			g.drawImage(ava, 14, y + 8, 0);
 			if (IconsManager.ac == null) {
-				System.out.print("F");
+				//System.out.print("F");
 			} else // а что, бывало что оно не загрузилось? лол))
 				if (selected) {
 					g.drawImage(IconsManager.acs, 14, y + 8, 0);
@@ -175,9 +188,10 @@ public class ConversationItem extends JSONUIItem {
 
 		if (!selected) {
 			ColorUtils.setcolor(g, -5);
-			g.fillRect(72, y + itemDrawHeight, DisplayUtils.width - 72, 1);
+			g.fillRect(0, y + itemDrawHeight, DisplayUtils.width, 1);
 		}
 		if (unread > 0) {
+			g.setFont(boldfont);
 			int rh = hfh * 2;
 			int hm = 4;
 			String s = (mention ? "@ " : "") + unread;
@@ -188,6 +202,7 @@ public class ConversationItem extends JSONUIItem {
 
 			g.setGrayScale(255);
 			g.drawString(s, DisplayUtils.width - 16 - font.stringWidth(s) - hm, y + h * 3 / 4 - hfh, 0);
+			g.setFont(font);
 		}
 		if (online!=null) {
 			if (online.equals("1")) {

@@ -7,12 +7,14 @@ import javax.microedition.lcdui.Image;
 import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.popup.AutoContextMenu;
 import ru.nnproject.vikaui.popup.ContextMenu;
+import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.items.VikaNotification;
 import vikatouch.music.MusicPlayer;
+import vikatouch.screens.ChatScreen;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.temp.SplashScreen;
 import vikatouch.settings.Settings;
@@ -34,7 +36,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	//public double slide;
 	public VikaScreen oldScreen;
 	public static String busyStr;
-
+	public Graphics gg;
 	public static int netColor = 0;
 	public static int updColor = 0;
 	public static int msgColor = 0;
@@ -50,7 +52,7 @@ public class VikaCanvasInst extends VikaCanvas {
 	public VikaCanvasInst() {
 		super();
 		this.setFullScreenMode(true);
-
+        gg = this.getGraphics();
 		DisplayUtils.canvas = this;
 		//slide = 0.0d;
 		busyStr = "Busy...";
@@ -62,6 +64,10 @@ public class VikaCanvasInst extends VikaCanvas {
 			}
 		}
 		 
+	}
+	
+	public Graphics getG() {
+		return this.getGraphics();
 	}
 	
 	
@@ -110,6 +116,10 @@ public class VikaCanvasInst extends VikaCanvas {
 			VikaTouch.needstoRedraw=true;
 		}
 		
+		if (ChatScreen.isRecRunning) {
+			VikaTouch.needstoRedraw=true;
+		}
+		
 	}
 	
 	private boolean dontBuffer() {
@@ -141,7 +151,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			//if ((VikaTouch.integerUserId==3225000) || (VikaTouch.integerUserId==310674350)) {
 				g.setColor(255,120,120);
 				g.fillRect(DisplayUtils.width-10, 0, 10, 10);
-				//VikaTouch.needstoRedraw=true;
+				VikaTouch.needstoRedraw=true;
 			/*} else {
 			g.setColor(255,216,0);
 			g.fillRect(0, 0, 5, 5);
@@ -151,12 +161,31 @@ public class VikaCanvasInst extends VikaCanvas {
 			if (VikaTouch.isdownloading==2) {
 				g.setColor(255,0,0);
 				g.fillRect(0, 0, 10, 10);
+				VikaTouch.needstoRedraw=true;
 			} else {
 				if (VikaTouch.isdownloading==0) {
 					VikaTouch.needstoRedraw=true;
-				}
-			}
+				} 
+				
+			} 
 		}
+		
+		if (VikaTouch.istimeout==true) {
+			g.setColor(255,0,255);
+			if (VikaTouch.integerUserId!=3225000) {
+			g.fillRect(getWidth()/2-2, 0, 5, 5);
+			} else {
+				g.fillRect(getWidth()/2-2, 0, 5, 55);
+			}
+			VikaTouch.needstoRedraw=true;
+		}
+		try {
+		/*if (VikaTouch.isscrolling==true) {
+			g.setColor(0,0,255);
+			g.fillRect((getWidth()/2+3), 0, 5, 5);
+			VikaTouch.needstoRedraw=true;
+		}*/
+		} catch (Throwable eeee) {}
 		
 		{
 

@@ -1,5 +1,7 @@
 package vikatouch.screens.music;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
@@ -67,20 +69,21 @@ public class PlaylistsScreen extends MainScreen {
 						} else {
 							itemsCount=6;
 						}
-						uiItems = new PressableUIItem[itemsCount];
-						uiItems[0]= new PlaylistItem("Для вас", 100, id, -21, null, null);
-						uiItems[1]= new PlaylistItem("Плейлист дня 1", 100, id, -25, null, null);
-						uiItems[2]= new PlaylistItem("Плейлист дня 2", 100, id, -26, null, null);
-						uiItems[3]= new PlaylistItem("Плейлист дня 3", 100, id, -27, null, null);
-						uiItems[4]= new PlaylistItem("Плейлист недели", 100, id, -22, null, null);
-						uiItems[5]= new PlaylistItem("Плейлист месяца", 100, id, -23, null, null);
+						uiItems = new Vector(itemsCount);
+						uiItems.setElementAt(new PlaylistItem("Для вас", 100, id, -21, null, null), 0);
+						uiItems.setElementAt(new PlaylistItem("Плейлист дня 1", 100, id, -25, null, null), 1);
+						uiItems.setElementAt(new PlaylistItem("Плейлист дня 2", 100, id, -26, null, null), 2);
+						uiItems.setElementAt(new PlaylistItem("Плейлист дня 3", 100, id, -27, null, null), 3);
+						uiItems.setElementAt(new PlaylistItem("Плейлист недели", 100, id, -22, null, null), 4);
+						uiItems.setElementAt(new PlaylistItem("Плейлист месяца", 100, id, -23, null, null), 5);
 						VikaTouch.needstoRedraw=true;
 						repaint();
 						VikaTouch.needstoRedraw=true;
 						for (int i = 0; i < itemsCount-6; i++) {
 							JSONObject item = items.getJSONObject(i);
-							uiItems[i+6] = new PlaylistItem(item);
-							((PlaylistItem) uiItems[i+6]).parseJSON();
+							PlaylistItem pl = new PlaylistItem(item);
+							uiItems.setElementAt(pl, i+6);
+							pl.parseJSON();
 							VikaTouch.needstoRedraw=true;
 						}
 					} catch (JSONException e) {
@@ -97,7 +100,7 @@ public class PlaylistsScreen extends MainScreen {
 							return;
 						}
 						VikaTouch.loading = true;
-						((PlaylistItem) uiItems[i]).loadIcon();
+						((PlaylistItem) uiItems.elementAt(i)).loadIcon();
 						VikaTouch.needstoRedraw=true;
 					}
 					VikaTouch.loading = false;
@@ -124,9 +127,9 @@ public class PlaylistsScreen extends MainScreen {
 			try {
 				if (uiItems != null) {
 					for (int i = 0; i < itemsCount; i++) {
-						if (uiItems[i] != null) {
-							uiItems[i].paint(g, y, scrolled);
-							y += uiItems[i].getDrawHeight();
+						if (uiItems.elementAt(i) != null) {
+							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						}
 					}
 					itemsh = y + 100;
@@ -160,7 +163,7 @@ public class PlaylistsScreen extends MainScreen {
 						downloaderThread.interrupt();
 					}
 					downloaderThread = null;
-					uiItems[i].tap(x, yy1 - (h * i));
+					((PressableUIItem) uiItems.elementAt(i)).tap(x, yy1 - (h * i));
 				}
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {

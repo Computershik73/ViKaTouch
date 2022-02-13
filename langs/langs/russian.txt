@@ -25,6 +25,7 @@ online=онлайн
 offline=оффлайн
 wasonlinedate=был в сети 
 wasonlinetime=был в сети в
+femalewasonlinedate=была в сети в
 
 menu.videos=Видео
 menu.music=Музыка
@@ -228,7 +229,7 @@ settings.spabilities=Специальные возможности
 settings.debug=Отладка
 settings.debugcrap=Отладочная информация на экране
 settings.dontloadmusicwithkey=Не использовать ключ доступа
-settings.itunescovers=Искать обложки в ITunes
+settings.itunescovers=Искать обложки в iTunes
 settings.loadmusicviahttp=Протокол
 settings.datafolder=Папка для хранения данных
 settings.automarkasread=Помечать сообщения как прочитанные
@@ -311,6 +312,8 @@ wall.towall=Опубликовать на стене
 wall.tofriend=Отправить другу
 wall.togroup=Опубликовать в группе
 wall.tochat=Переслать в чат
+wall.updatedprofilephoto=обновил фотографию на странице
+wall.updatedprofilephotofemale=обновила фотографию на странице
 
 fm.noaccess=Нет доступа
 fm.memorycard=Карта памяти

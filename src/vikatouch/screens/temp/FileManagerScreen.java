@@ -1,8 +1,10 @@
 package vikatouch.screens.temp;
 
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.file.FileConnection;
@@ -66,7 +68,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 				if(selectedItem != null && selectedItem.isImage()) {
 					selectedItem.keyPress(-6);
 				}
-			} else if(x > (DisplayUtils.width - 36) / 2 && x < (DisplayUtils.width - 36) / 2 + 18) {
+			} else if(x > (DisplayUtils.width - 36) / 2 && x < (DisplayUtils.width - 36) / 2 + 36) {
 				if(selectedItem != null && selectedItem.isImage()) {
 					send(selectedItem);
 				}
@@ -74,13 +76,13 @@ public class FileManagerScreen extends ScrollableCanvas {
 		}
 		try {
 			if (y > 24 && y < DisplayUtils.height - 24) {
-				int h = uiItems[0].getDrawHeight();
+				int h = ((PressableUIItem) uiItems.elementAt(0)).getDrawHeight();
 				int yy1 = y - (scrolled + 24);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
 				if (!dragging) {
-					uiItems[i].tap(x, yy1 - (h * i));
+					((PressableUIItem) uiItems.elementAt(i)).tap(x, yy1 - (h * i));
 				}
 			}
 
@@ -93,13 +95,13 @@ public class FileManagerScreen extends ScrollableCanvas {
 	public void press(int key) {
 		VikaTouch.needstoRedraw=true;
 		if(key == -6) {
-			if(uiItems[currentItem] != null)
-				uiItems[currentItem].keyPress(-6);
+			if(uiItems.elementAt(currentItem) != null)
+				((PressableUIItem) uiItems.elementAt(currentItem)).keyPress(-6);
 		} else if(key == -7) {
 			back();
 		} else if(key == -5) {
-			if(uiItems[currentItem] != null)
-				uiItems[currentItem].keyPress(-5);
+			if(uiItems.elementAt(currentItem) != null)
+				((PressableUIItem) uiItems.elementAt(currentItem)).keyPress(-5);
 		} else {
 			super.press(key);
 		}
@@ -136,10 +138,10 @@ public class FileManagerScreen extends ScrollableCanvas {
 		g.setFont(Font.getFont(0, 0, 8));
 		int y = 24;
 		try {
-			for(int i = 0; i < itemsCount; i++) {
-				if(uiItems[i] != null) {
-					uiItems[i].paint(g, y, scrolled);
-					y += uiItems[i].getDrawHeight();
+			for(int i = 0; i < uiItems.size(); i++) {
+				if(uiItems.elementAt(i) != null) {
+					((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+					y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 				}
 			}
 		} catch (Exception e) {
@@ -155,10 +157,10 @@ public class FileManagerScreen extends ScrollableCanvas {
 			g.fillRect(0, DisplayUtils.height - 24, DisplayUtils.width, 24);
 			g.setColor(0x505050);
 			g.drawString(TextLocal.inst.get("back"), DisplayUtils.width - 2 - g.getFont().stringWidth(TextLocal.inst.get("back")), DisplayUtils.height - 18, 0);
-			if(uiItems[currentItem] != null && ((FileManagerItem) uiItems[currentItem]).isImage()) {
+			if(uiItems.elementAt(currentItem)  != null && ((FileManagerItem) uiItems.elementAt(currentItem) ).isImage()) {
 				g.drawString(TextLocal.inst.get("msg.send"), (DisplayUtils.width - g.getFont().stringWidth(TextLocal.inst.get("msg.send"))) / 2, DisplayUtils.height - 18, 0);
 				g.drawString(TextLocal.inst.get("count.view"), 2, DisplayUtils.height - 18, 0);
-			} else if(uiItems[currentItem] != null && ((FileManagerItem) uiItems[currentItem]).isDirectory()) {
+			} else if(uiItems.elementAt(currentItem)  != null && ((FileManagerItem) uiItems.elementAt(currentItem) ).isDirectory()) {
 				g.drawString(TextLocal.inst.get("select"), 0, DisplayUtils.height - 18, 0);
 			}
 		} else {
@@ -258,46 +260,49 @@ public class FileManagerScreen extends ScrollableCanvas {
 		if(hasroot) {
 			len++;
 		}
-		uiItems = new PressableUIItem[len];
+		uiItems = new Vector(len);
 		currentItem = 0;
-		for(int i = 0; i < len; i++) {
+		//for(int i = 0; i < len; i++) {
 			if(hasc) {
-				uiItems[i] = new FolderItem(this, c, "C:");
+				uiItems.addElement(new FolderItem(this, c, "C:"));
 				hasc = false;
-				continue;
+				//continue;
 			}
 			if(hasdiske) {
-				uiItems[i] = new FolderItem(this, e, "E:");
+				uiItems.addElement(new FolderItem(this, e, "E:"));
 				hasdiske = false;
-				continue;
+				//continue;
 			}
 			if(hascard) {
-				uiItems[i] = new FolderItem(this, memcard, TextLocal.inst.get("fm.memorycard"));
+				uiItems.addElement(new FolderItem(this, memcard, TextLocal.inst.get("fm.memorycard")));
 				hascard = false;
-				continue;
+				//continue;
 			}
 			if(hasgallery) {
-				uiItems[i] = new FolderItem(this, gallery, TextLocal.inst.get("fm.gallery"));
+				uiItems.addElement(new FolderItem(this, gallery, TextLocal.inst.get("fm.gallery")));
 				hasgallery = false;
-				continue;
+				//continue;
 			}
 			if(hasroot) {
-				uiItems[i] = new FolderItem(this, root, TextLocal.inst.get("fm.root"));
+				uiItems.addElement(new FolderItem(this, root, TextLocal.inst.get("fm.root")));
 				hasroot = false;
-				continue;
+				//continue;
 			}
-		}
+		//}
 		itemsCount = (short) len;
 
-		if(keysMode && uiItems[0] != null)
-			uiItems[0].setSelected(true);
+		if(keysMode && uiItems.elementAt(0) != null)
+			((PressableUIItem) uiItems.elementAt(0)).setSelected(true);
+		
+		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
 	}
 
 	public void openFolder(String path, int offset) {
 		VikaTouch.needstoRedraw=true;
 		boolean s40 = VikaTouch.needFilePermission();
 		selectedItem = null;
-		uiItems = new PressableUIItem[len];
+		uiItems = new Vector(len);
 		currentItem = 0;
 		root = false;
 		if(path.startsWith("file://"))
@@ -315,14 +320,14 @@ public class FileManagerScreen extends ScrollableCanvas {
 				long var5;
 				FileConnection fc = null;
 				if(var4.endsWith("/")) {
-					uiItems[i] = new FolderItem(this, path + var4, var4.substring(0, var4.length() - 1));
+					uiItems.addElement(new FolderItem(this, path + var4, var4.substring(0, var4.length() - 1)));
 				} else if(s40) {
-					uiItems[i] = new FileItem(this, path + var4, var4, 0);
+					uiItems.addElement(new FileItem(this, path + var4, var4, 0));
 				} else if ((fc = (FileConnection) Connector.open("file://" + path + var4, Connector.READ)).isDirectory()) {
-					uiItems[i] = new FolderItem(this, path + var4, var4.substring(0, var4.length() - 1));
+					uiItems.addElement(new FolderItem(this, path + var4, var4.substring(0, var4.length() - 1)));
 				} else {
 					var5 = fc.fileSize();
-					uiItems[i] = new FileItem(this, path + var4, var4, (int)var5);
+					uiItems.addElement(new FileItem(this, path + var4, var4, (int)var5));
 				}
 				if(fc != null) {
 					fc.close();
@@ -333,7 +338,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 				}
 			}
 			if(loadnext) {
-				uiItems[len - 1] = new FolderLoadNextItem(this, path);
+				uiItems.setElementAt(new FolderLoadNextItem(this, path), len - 1);
 				itemsCount = (short) len;
 			} else {
 				itemsCount = (short) (i - offset);
@@ -347,18 +352,18 @@ public class FileManagerScreen extends ScrollableCanvas {
 				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error") + "!\n" + TextLocal.inst.get("error.additionalinfo") + ":\n" + e.toString(), null));
 			}
 		}
-		if(keysMode && uiItems[0] != null)
-			uiItems[0].setSelected(true);
+		if(keysMode && uiItems.elementAt(0) != null)
+			((PressableUIItem) uiItems.elementAt(0)).setSelected(true);
 	}
 
 	public void scrollToSelected() {
 		VikaTouch.needstoRedraw=true;
 		int itemy = 0;
 		for (int i = 0; (i < itemsCount && i < currentItem); i++) {
-			itemy += uiItems[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
+			itemy += ((PressableUIItem)uiItems.elementAt(i)).getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
 		}
-		if (uiItems[currentItem] != null) {
-			scrolled = -(itemy - DisplayUtils.height / 2 + (uiItems[currentItem].getDrawHeight() / 2)
+		if (uiItems.elementAt(currentItem) != null) {
+			scrolled = -(itemy - DisplayUtils.height / 2 + (((PressableUIItem)uiItems.elementAt(currentItem)).getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
 			
 		}

@@ -33,6 +33,7 @@ public class ResizeUtils {
 	}
 
 	public static Image resizeChatAva(Image img) {
+		
 		short h = (short) img.getHeight();
 		short need = h;
 		/*

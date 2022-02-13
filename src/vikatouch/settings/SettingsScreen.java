@@ -1,6 +1,9 @@
 package vikatouch.settings;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.Graphics;
+
 
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.OptionItem;
@@ -57,7 +60,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		String[] eOd = new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") };
 		String[] dialogsRR = new String[] { eOd[0], "5", "10", "20", "30" };
 		String[] notifModes = new String[] { TextLocal.inst.get("settings.disabled"),
-				TextLocal.inst.get("settings.vibro"), TextLocal.inst.get("settings.sound"), TextLocal.inst.get("settings.tone"), TextLocal.inst.get("settings.alert") };
+				TextLocal.inst.get("settings.vibro"), TextLocal.inst.get("settings.sound"), TextLocal.inst.get("settings.tone"), TextLocal.inst.get("settings.alert"), TextLocal.inst.get("settings.pronouncetext"), TextLocal.inst.get("settings.vibro") +" + "+ TextLocal.inst.get("settings.sound") };
 
 		// частота обновления
 		int rr = -1;
@@ -244,10 +247,10 @@ public class SettingsScreen extends MainScreen implements IMenu {
 
 		int y = topPanelH;
 		if (uiItems != null) {
-			for (int i = 0; i < uiItems.length; i++) {
-				if (uiItems[i] != null) {
-					uiItems[i].paint(g, y, scrolled);
-					y += uiItems[i].getDrawHeight();
+			for (int i = 0; i < uiItems.size(); i++) {
+				if (((PressableUIItem) uiItems.elementAt(i)) != null) {
+					((PressableUIItem) uiItems.elementAt(i)).paint(g, y, this.scrolled);
+					y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 				}
 			}
 		}
@@ -261,7 +264,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 
 	public final void release(int x, int y) {
 		VikaTouch.needstoRedraw=true;
-		try {
+		/*try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH && uiItems != null && !dragging) {
 				int yy = topPanelH;
 				for (int i = 0; i < uiItems.length; i++) {
@@ -281,7 +284,29 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		} catch (ArrayIndexOutOfBoundsException e) {
 		} catch (Exception e) {
 			e.printStackTrace();
+		}*/
+		try {
+			if ((y > MainScreen.topPanelH) && (y < DisplayUtils.height - MainScreen.bottomPanelH)
+					&& (this.uiItems != null) && (!this.dragging)) {
+				int yy = MainScreen.topPanelH;
+				for (int i = 0; i < this.uiItems.size(); i++) {
+					try {
+						int y1 = this.scrolled + yy;
+						int y2 = y1 + ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+						yy += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+						if ((y > y1) && (y < y2)) {
+							((PressableUIItem) uiItems.elementAt(i)).tap(x, y - y1);
+						}
+					} catch (Exception localException1) {
+					}
+				}
+			}
+		} catch (ArrayIndexOutOfBoundsException localArrayIndexOutOfBoundsException) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		//super.release(x, y);
+	
 		VikaTouch.needstoRedraw=true;
 		super.release(x, y);
 		VikaTouch.needstoRedraw=true;
@@ -380,24 +405,30 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case 22: {
 			Settings.notifmode = var;
+			break;
 		}
 		case 24: {
 			Settings.hideBottom = var == 1;
 		}
 		case 60: {
 			Settings.fpsLimit = fpsVals[var];
+			break;
 		}
 		case 61: {
 			Settings.doubleBufferization = var == 1;
+			break;
 		}
 		case 62: {
 			Settings.drawMaxPriority = var == 1;
+			break;
 		}
 		case 63: {
 			Settings.fastImageScaling = var == 0;
+			break;
 		} 
 		case 64 : {
 			Settings.musicpath = musicpathVals[var];
+			break;
 		}
 		}
 		initAllSettsList();
@@ -651,20 +682,23 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		VikaTouch.needstoRedraw=true;
 		try {
 			VikaTouch.needstoRedraw=true;
-			if(uiItems != null)
-				uiItems[currentItem].setSelected(false); // точно упадёт на старте - списка то ещё нет.
+			if (this.uiItems != null) {
+				((PressableUIItem) uiItems.elementAt(currentItem)).setSelected(false);
+			}	// точно упадёт на старте - списка то ещё нет.
 		} catch (Throwable e) {
 		}
 		try {
-			uiItems = l;
-			itemsh = 58 + ((oneitemheight + 4) * uiItems.length);
-			itemsCount = (short) uiItems.length;
-			if (keysMode) {
-				currentItem = 0;
-				VikaTouch.needstoRedraw=true;
-				uiItems[0].setSelected(true);
-				VikaTouch.needstoRedraw=true;
+			this.uiItems = new Vector(l.length);
+			for(int i = 0; i < l.length; i++) {
+				uiItems.addElement(l[i]);
 			}
+			this.itemsh = (58 + (oneitemheight + 4) * this.uiItems.size());
+			this.itemsCount = ((short) this.uiItems.size());
+			if (keysMode) {
+				this.currentItem = 0;
+				((PressableUIItem) uiItems.elementAt(0)).setSelected(true);
+			}
+			VikaTouch.needstoRedraw=true;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

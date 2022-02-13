@@ -40,7 +40,7 @@ import vikatouch.utils.url.URLBuilder;
  * @author Shinovon
  * 
  */
-public class PostItem extends JSONUIItem implements ISocialable, IMenu {
+public class PostItem extends JSONItem implements ISocialable, IMenu {
 
 	private JSONObject json2;
 
@@ -72,6 +72,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 	private String avaurl;
 	private String[] drawText;
 	public String name = "";
+	public int gender = 0;
 	public Image ava;
 
 	public boolean isreply;
@@ -108,8 +109,8 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 				if (text == null || text == "") {
 					text = fixJSONString(json2.optString("text"));
 				}
-			} catch (Exception e) {
-				VikaTouch.error(e, ErrorCodes.POSTTEXT);
+			} catch (Throwable e) {
+				//VikaTouch.error(e, ErrorCodes.POSTTEXT);
 				e.printStackTrace();
 				text = "";
 			}
@@ -140,7 +141,7 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			try {
 				date = json2.optLong("date");
 				dateS = VikaUtils.parseTime(date);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 			}
 
 			//type = json2.optString("type");
@@ -217,17 +218,19 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 									avaurl = fixJSONString(group.optString("photo_50"));
 									break labelgetnameandphoto;
 								}
-							} catch (Exception e) {
-								VikaTouch.error(e, ErrorCodes.POSTAVAGROUPS);
+							} catch (Throwable e) {
+								//VikaTouch.error(e, ErrorCodes.POSTAVAGROUPS);
 								e.printStackTrace();
 							}
 						}
 					} else {
+						try {
 						JSONObject jo2 = new JSONObject(
 								VikaUtils.download(new URLBuilder("groups.getById").addField("group_id", -xx)))
 										.getJSONArray("response").getJSONObject(0);
 						avaurl = fixJSONString(jo2.optString("photo_50"));
 						name = jo2.optString("name", "");
+						} catch (Throwable e) {}
 					}
 				}
 			}
@@ -259,28 +262,35 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 												.addField("fields", "photo_50"))).getJSONArray("response")
 														.getJSONObject(0);
 								avaurl = fixJSONString(jo2.optString("photo_50"));
+								gender = jo2.optInt("sex");
 							}
 							if (b1 && b2) {
 								break;
 							}
-						} catch (Exception e) {
-							VikaTouch.error(e, ErrorCodes.POSTAVAPROFILES);
+						} catch (Throwable e) {
+							//VikaTouch.error(e, ErrorCodes.POSTAVAPROFILES);
 							e.printStackTrace();
 						}
 					}
 				} else {
+					try {
 					JSONObject u = new JSONObject(VikaUtils.download(
 							new URLBuilder("users.get").addField("user_ids", xx).addField("fields", "photo_50")))
 									.getJSONArray("response").getJSONObject(0);
 					avaurl = fixJSONString(u.optString("photo_50"));
 					name = u.optString("first_name") + " " + u.optString("last_name");
+					gender = u.optInt("sex");
+					} catch (Throwable e) {
+						avaurl=null;
+						name = "";
+					}
 				}
 			}
 			ec = 6;
 			itemDrawHeight = 100;
 
 			if (data != null && data.equalsIgnoreCase("profile_photo")) {
-				text = "обновил фотографию на странице";
+				text = gender==1 ? TextLocal.inst.get("wall.updatedprofilephotofemale") : TextLocal.inst.get("wall.updatedprofilephoto");
 			}
 			ec = 7;
 
@@ -288,8 +298,6 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			ec = 8;
 			getRes();
 			
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Throwable t) {
 			t.printStackTrace();
 			VikaTouch.popup(new InfoPopup("post, code " + ec + " ex " + t.toString(), null));
@@ -439,9 +447,9 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 				if (attH != 0) {
 					attH += 5;
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				attH = 0;
-				VikaTouch.sendLog(e.toString());
+				//VikaTouch.sendLog(e.toString());
 			}
 		}
 	}
@@ -709,6 +717,8 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			repostOptions(true);
 		} else if (i == 10) {
 			repost(false);
+		} else if (i == 5) {
+			edit();
 		} else if (i == 11) {
 			//VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 			if (VikaTouch.dialogsScr == null)
@@ -800,25 +810,24 @@ public class PostItem extends JSONUIItem implements ISocialable, IMenu {
 			
 		typer = new Thread() {
 			public void run() {
-				String commentText = TextEditor.inputString("msg.yourcomment", text, 250);
-				if (commentText!=null) {
-					if ((commentText=="") || (commentText.length()<=0) ) {
+				String postText = TextEditor.inputString("msg.newtext", text, 250);
+				if (postText!=null) {
+					if ((postText=="") || (postText.length()<=0) ) {
 						return;
 					}
 				} else {
 					return;
 				}
 				URLBuilder url;
-				url = new URLBuilder("wall.createComment");
-				url.addField("owner_id", String.valueOf(xx));
+				url = new URLBuilder("wall.edit");
+				if (sourceid==0) {
+					url.addField("owner_id", String.valueOf(ownerid));
+					} else {
+						url.addField("owner_id", String.valueOf(sourceid));
+					}
 				url.addField("post_id", String.valueOf(id));
-				url.addField("message", commentText);
-				//if (c.type == TYPE_CHAT) {
-				//	url = url.addField("conversation_message_id", "" + msg.getMessageId());
-				//} else {
-					//url = url.addField("message_id", "" + msg.getMessageId());
-				//}
-				/* String res = */
+				url.addField("message", postText);
+				
 				try {
 					
 					String answer = VikaUtils.download(url);

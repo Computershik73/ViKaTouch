@@ -33,7 +33,9 @@ public class VikaNotification {
 	public static final int NEW_MSG = 1;
 	public static final int NEXT_TRACK = 2;
 	public static final int ERROR = 3;
-
+	public static final int EVENT = 4;
+	public static final int NEWFRIEND = 5;
+	
 	public static Image[] icons;
 
 	public boolean active = true;
@@ -94,7 +96,7 @@ public class VikaNotification {
 		VikaTouch.canvas.serviceRepaints();
 	}
 
-	public static void vib() {
+	public static void vib(final int type2) {
 		if(Settings.notifmode == 0) {
 			return;
 		}
@@ -104,17 +106,25 @@ public class VikaNotification {
 					if (Settings.notifmode == 1) {
 						Display d = Display.getDisplay(VikaTouch.appInst);
 						d.vibrate(1000);
-
+						
 						// Thread.sleep(100);
 						// d.vibrate(1000);
 						// Thread.sleep(100);
 						// d.vibrate(1000);
 					} else if (Settings.notifmode == 2) {
-						Player notifplayer;
-						if(Settings.qualityNotif)
+						Player notifplayer = null;
+						/*if(Settings.qualityNotif)
 							notifplayer = Manager.createPlayer(Connector.openInputStream("http://vikamobile.ru:80/music/bb2.mp3"), "audio/mpeg");
-						else
+						else*/
+						if (type2 == VikaNotification.NEW_MSG) {
 							notifplayer = Manager.createPlayer(getClass().getResourceAsStream("/c.mp3"), "audio/mpeg");
+						} else {
+						if (type2 == VikaNotification.NEWFRIEND) {
+							notifplayer = Manager.createPlayer(getClass().getResourceAsStream("/b1.mp3"), "audio/mpeg");
+						} else if (type2 == VikaNotification.EVENT) {
+							notifplayer = Manager.createPlayer(getClass().getResourceAsStream("/b1.mp3"), "audio/mpeg");
+						}
+						}
 						notifplayer.realize();
 						try {
 							((VolumeControl) notifplayer.getControl("VolumeControl")).setLevel(100);
@@ -126,7 +136,31 @@ public class VikaNotification {
 						Player notifplayer = Manager.createPlayer("device://tone");
 						notifplayer.realize();
 						notifplayer.start();
-					} 
+					} else if (Settings.notifmode == 6) {
+						Display d = Display.getDisplay(VikaTouch.appInst);
+						d.vibrate(1000);
+						Player notifplayer = null;
+						/*if(Settings.qualityNotif)
+							notifplayer = Manager.createPlayer(Connector.openInputStream("http://vikamobile.ru:80/music/bb2.mp3"), "audio/mpeg");
+						else*/
+						if (type2 == VikaNotification.NEW_MSG) {
+							notifplayer = Manager.createPlayer(getClass().getResourceAsStream("/c.mp3"), "audio/mpeg");
+						} else {
+						if (type2 == VikaNotification.NEWFRIEND) {
+							notifplayer = Manager.createPlayer(getClass().getResourceAsStream("/b1.mp3"), "audio/mpeg");
+						} else if (type2 == VikaNotification.EVENT) {
+							notifplayer = Manager.createPlayer(getClass().getResourceAsStream("/b1.mp3"), "audio/mpeg");
+						}
+						}
+						notifplayer.realize();
+						try {
+							((VolumeControl) notifplayer.getControl("VolumeControl")).setLevel(100);
+						} catch (Throwable e) {
+						}
+
+						notifplayer.start();
+						
+					}
 				} catch (Exception e) {
 				}
 			}

@@ -43,6 +43,8 @@ public class PhotoAttachment extends ImageAttachment implements ISocialable {
 		userid = json.optInt("user_id");
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.canvas.serviceRepaints();
+		this.drawHeight=getMessageImage().height;
+		renderH=this.drawHeight;
 	}
 
 	public Image getImg(String x) throws Exception {

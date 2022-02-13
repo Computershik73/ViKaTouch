@@ -14,6 +14,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.items.JSONItem;
 import vikatouch.items.JSONUIItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.settings.Settings;
@@ -26,7 +27,7 @@ import vikatouch.utils.url.URLDecoder;
  * @author Feodor0090
  * 
  */
-public class VideoItem extends JSONUIItem {
+public class VideoItem extends JSONItem {
 	public int id;
 	public int owner;
 	public String title;
@@ -54,8 +55,9 @@ public class VideoItem extends JSONUIItem {
 		title = json.optString("title");
 		descr = json.optString("description");
 		try {
-			iconUrl = fixJSONString(json.getJSONArray("image").getJSONObject(0).optString("url"));
-		} catch (JSONException e) {
+			iconUrl = fixJSONString(json.optString("photo_130"));
+					//json.getJSONArray("image").getJSONObject(0).optString("url"));
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		length = json.optInt("duration");

@@ -12,6 +12,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.items.JSONItem;
 import vikatouch.items.JSONUIItem;
 import vikatouch.music.MusicPlayer;
 import vikatouch.screens.music.MusicScreen;
@@ -20,7 +21,7 @@ import vikatouch.screens.music.MusicScreen;
  * @author Feodor0090
  * 
  */
-public class AudioTrackItem extends JSONUIItem implements UIItem {
+public class AudioTrackItem extends JSONItem implements UIItem {
 	public int id;
 	public int owner_id;
 	public String name;

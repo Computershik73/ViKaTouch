@@ -1,5 +1,7 @@
 package vikatouch.screens;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.Graphics;
 
 import org.json.me.JSONArray;
@@ -9,6 +11,7 @@ import org.json.me.JSONObject;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.DisplayUtils;
+
 import vikatouch.VikaTouch;
 import vikatouch.attachments.WallAttachment;
 import vikatouch.items.LoadMoreButtonItem;
@@ -100,9 +103,9 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 					JSONArray items = response.getJSONArray("items");
 					step = 3;
 					int itemsCount = items.length();
-					uiItems = new PressableUIItem[itemsCount + 1];
+					uiItems = new Vector(itemsCount + 1);
 					step = 4;
-					uiItems[itemsCount] = new LoadMoreButtonItem(NewsScreen.this);
+					
 					step = 5;
 					profiles = response.getJSONArray("profiles");
 					groups = response.getJSONArray("groups");
@@ -121,22 +124,25 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 						} catch (RuntimeException e) {
 							itemCopy = item;
 						}
-						uiItems[i] = new PostItem(itemCopy, item);
-						((PostItem) uiItems[i]).parseJSON();
+						PostItem post = new PostItem(itemCopy, item);
+						post.parseJSON();
+						uiItems.addElement(post);
+						
 						} catch (Throwable ee) {}
 						Thread.sleep(20);
 						
 					}
 					itemsCount++;
+					uiItems.addElement(new LoadMoreButtonItem(NewsScreen.this));
 				} catch (InterruptedException e) {
 					return;
 				} catch (Exception e) {
 					VikaTouch.sendLog("news fail step " + step);
 					VikaTouch.error(e, ErrorCodes.NEWSPARSE);
 				} catch (OutOfMemoryError me) {
-					uiItems[0] = null;
+					//uiItems[0] = null;
 					System.gc();
-					VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error.outofmem"), null));
+					//VikaTouch.popup(new InfoPopup(TextLocal.inst.get("error.outofmem"), null));
 				}
 				// другим ошибкам разрешаем выпасть из потока
 				VikaTouch.loading = false;
@@ -153,7 +159,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 			hasBackButton = true;
 			VikaTouch.loading = true;
 			
-			uiItems = new PostItem[1];
+			uiItems = new Vector();
 
 			itemsh = 0;
 			VikaTouch.loading = true;
@@ -167,8 +173,12 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 			} catch (Exception e) {
 				itemCopy = item;
 			}
-			uiItems[0] = new PostItem(itemCopy, item);
-			((PostItem) uiItems[0]).parseJSON();
+			PostItem post = new PostItem(itemCopy, item);
+			
+			uiItems.addElement(post);
+			post.parseJSON();
+			
+			
 		} catch (Throwable e) {
 			VikaTouch.error(e, -ErrorCodes.NEWSPARSE);
 			e.printStackTrace();
@@ -190,12 +200,12 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 			int y = topPanelH + 10;
 			//try {
 				if (uiItems != null) {
-					for (int i = 0; i < uiItems.length; i++) {
+					for (int i = 0; i < uiItems.size(); i++) {
 						try {
-						if (uiItems[i] != null) {
+						if (uiItems.elementAt(i) != null) {
 							if (y + scrolled < DisplayUtils.height)
-								uiItems[i].paint(g, y, scrolled);
-							y += uiItems[i].getDrawHeight();
+								((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+							y += 	((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						}
 						} catch (Throwable eee) {
 							y += 200;
@@ -227,14 +237,14 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 		if (!dragging) {
 			if (y > topPanelH && y < DisplayUtils.height - oneitemheight) {
 				int yy = topPanelH + 10;
-				for (int i = 0; i < uiItems.length; i++) {
+				for (int i = 0; i < uiItems.size(); i++) {
 					try {
 						int y1 = scrolled + yy;
-						int y2 = y1 + uiItems[i].getDrawHeight();
-						yy += uiItems[i].getDrawHeight();
+						int y2 = y1 + 	((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+						yy += 	((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						if (y > y1 && y < y2) {
 							// VikaTouch.sendLog(i+" x"+x+" y"+(y1-y));
-							uiItems[i].tap(x, y - y1);
+							((PressableUIItem) uiItems.elementAt(i)).tap(x, y - y1);
 						}
 					} catch (Exception e) {
 

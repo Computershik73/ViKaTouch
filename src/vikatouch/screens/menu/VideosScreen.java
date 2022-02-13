@@ -1,5 +1,7 @@
 package vikatouch.screens.menu;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
@@ -10,6 +12,7 @@ import org.json.me.JSONObject;
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
+
 import vikatouch.VikaTouch;
 import vikatouch.items.LoadMoreButtonItem;
 import vikatouch.items.menu.VideoItem;
@@ -73,15 +76,17 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 						if (totalVids <= from + count) {
 							canLoadMore = false;
 						}
-						uiItems = new PressableUIItem[itemsCount + (canLoadMore ? 1 : 0)];
+						uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 						for (int i = 0; i < itemsCount; i++) {
 							JSONObject item = items.getJSONObject(i);
-							uiItems[i] = new VideoItem(item);
-							((VideoItem) uiItems[i]).parseJSON();
+							VideoItem vi = new VideoItem(item);
+							uiItems.addElement(vi);
+							vi.parseJSON();
+							Thread.yield();
 						}
 						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 						if (canLoadMore) {
-							uiItems[itemsCount] = new LoadMoreButtonItem(VideosScreen.this);
+							uiItems.addElement(new LoadMoreButtonItem(VideosScreen.this));
 							itemsCount++;
 						}
 						VikaTouch.loading = true;
@@ -96,7 +101,8 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 						Thread.sleep(500);
 						VikaTouch.loading = true;
 						for (int i = 0; i < itemsCount - (canLoadMore ? 1 : 0); i++) {
-							((VideoItem) uiItems[i]).loadIcon();
+							((VideoItem) uiItems.elementAt(i)).loadIcon();
+							Thread.yield();
 							VikaTouch.needstoRedraw=true;
 							VikaTouch.canvas.serviceRepaints();
 						}
@@ -130,10 +136,12 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 			try {
 				if (uiItems != null) {
 					for (int i = 0; i < itemsCount; i++) {
-						if (uiItems[i] != null) {
-							uiItems[i].paint(g, y, scrolled);
-							y += uiItems[i].getDrawHeight();
+						if (((PressableUIItem) uiItems.elementAt(i)) != null) {
+							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						}
+						Thread.yield();
+						
 
 					}
 				}
@@ -161,7 +169,7 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 				if (i < 0)
 					i = 0;
 				if (!dragging) {
-					uiItems[i].tap(x, yy1 - (h * i));
+					((PressableUIItem) uiItems.elementAt(i)).tap(x, yy1 - (h * i));
 				}
 			//	return;
 			}

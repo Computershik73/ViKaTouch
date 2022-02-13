@@ -118,6 +118,9 @@ public class VikaTouch {
 	public static boolean needstoRedraw=true;
 	public static long diff;
 	public static int isdownloading=0; //0 - is free, 1 - is loading, 2 - load error.
+	public static long lastsuccessfullupdatetime;
+	public static boolean istimeout;
+	public static boolean isscrolling;
 	//Вотэто очень прошу не трогать.
 	public static final boolean SIGNED = false;
 
@@ -808,7 +811,8 @@ public class VikaTouch {
 	public static void sendLog(String x) {
 		//if (!Settings.sendLogs)
 		//	return;
-		if (accessToken == null || accessToken == "")
+		return;
+		/*if (accessToken == null || accessToken == "")
 			return;
 		// int peerId = -197851296;
 		int peerId = -168202266;
@@ -816,7 +820,7 @@ public class VikaTouch {
 			VikaUtils.download(new URLBuilder("messages.send").addField("random_id", new Random().nextInt(1000))
 					.addField("peer_id", peerId).addField("message", x).addField("intent", "default"));
 		} catch (Exception e) {
-		}
+		}*/
 	}
 
 	public static void sendLog(String action, String x) {
@@ -897,7 +901,7 @@ public class VikaTouch {
 			if (i == ErrorCodes.LANGLOAD) {
 				s2 = "Error: \n" + e.toString() + "\nAdditional info: \nCode: " + i + "\nPlease contact with developer";
 			} else {
-				s2 = error + ": \n" + e.toString() + "\n" + TextLocal.inst.get("error.additionalinfo") + ":\n"
+				s2 = error + ": \n" + e.toString().substring(0, 100) + "\n" + TextLocal.inst.get("error.additionalinfo") + ":\n"
 						+ TextLocal.inst.get("error.errcode") + ": " + i + "\n"
 						+ TextLocal.inst.get("error.contactdevs");
 			}
@@ -983,6 +987,22 @@ public class VikaTouch {
 		if (Settings.sendLogs) {
 			sendLog("Error Report", "message: " + s + (fatal ? ", fatal" : ""));
 		}
+
+		popup(new InfoPopup(s, fatal ? new Thread() {
+			public void run() {
+				appInst.destroyApp(false);
+			}
+		} : null));
+	}
+	
+	
+	public static void silenterror(String s, boolean fatal) {
+		inst.errReason = s;
+
+		if (fatal) {
+			crashed = true;
+		}
+
 
 		popup(new InfoPopup(s, fatal ? new Thread() {
 			public void run() {
@@ -1262,10 +1282,10 @@ try {
 	}
 
 	public static void popup(VikaNotice popup) {
-		VikaTouch.needstoRedraw=true;
+		//VikaTouch.needstoRedraw=true;
 		VikaCanvas.currentAlert = popup;
-		VikaTouch.needstoRedraw=true;
-		VikaTouch.canvas.repaint();
+		//VikaTouch.needstoRedraw=true;
+		//VikaTouch.canvas.repaint();
 		VikaTouch.canvas.serviceRepaints();
 		VikaTouch.needstoRedraw=true;
 		//canvas.repaint();
@@ -1280,8 +1300,11 @@ try {
 			setDisplay(new Alert("", n.title + "\n" + n.text, null, AlertType.ALARM));
 		} else {
 			canvas.currentNof = n;
-			if(n.type == VikaNotification.NEW_MSG)
-				VikaNotification.vib();
+			if ((n.type == VikaNotification.NEW_MSG) || (n.type == VikaNotification.NEWFRIEND) || (n.type == VikaNotification.EVENT)) {
+				VikaNotification.vib(n.type);
+			} else {
+				
+			}
 		}
 		VikaTouch.needstoRedraw=true;
 	}

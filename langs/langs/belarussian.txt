@@ -22,6 +22,7 @@ online=Падключаны
 offline=Па-за лінія
 wasonlinedate=быў у Інтэрнэце
 wasonlinetime=быў у сетцы Інтэрнэт
+wasonlinedatefemale = была онлайн ў
 
 menu.videos=Відэа
 menu.music=Музыка

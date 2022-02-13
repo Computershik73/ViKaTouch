@@ -39,7 +39,7 @@ public final class VikaTouchApp extends MIDlet implements Runnable {
 		}*/
 			//}
 		if (!started) {
-			
+			VikaTouch.lastsuccessfullupdatetime=System.currentTimeMillis();
 			VikaTouch.a=0;
 			VikaTouch.supportsTouch=false;
 			VikaTouch.smilestable=new Hashtable();

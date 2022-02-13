@@ -950,10 +950,10 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			}
 			if (random) {
 				Random r = new Random();
-				current = r.nextInt(playlist.uiItems.length);
+				current = r.nextInt(playlist.uiItems.size());
 			} else {
 				current++;
-				if (current >= playlist.uiItems.length)
+				if (current >= playlist.uiItems.size())
 					current = 0;
 			}
 			
@@ -1021,7 +1021,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			outStream.close();
 			} catch (Exception e1) {}
 			try {
+				if (!isReady) {
+				outConn.delete();
+				}
 			outConn.close();
+			
 			
 		} catch (Exception e1) {}
 			try {
@@ -1030,7 +1034,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			try {
 			inConn.close();
 } catch (Exception e1) {}
-			boolean CACHETOPRIVATE = false;
+			/*boolean CACHETOPRIVATE = false;
 			String tpath = (CACHETOPRIVATE ? System.getProperty("fileconn.dir.private")
 					: System.getProperty("fileconn.dir.music"));
 			String jver = System.getProperty("java.version");
@@ -1077,7 +1081,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 				//printStackTrace();
 			} 
 			prevprevsongindex=prevsongindex;
-			prevsongindex=current;
+			prevsongindex=current;*/
 			loadTrack();
 			VikaTouch.needstoRedraw=true;
 		}
@@ -1095,9 +1099,96 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			if (!isReady) {
 				stop = true;
 			}
+			
+			if (player != null) {
+				if (player.getState() == 400) {
+					try {
+						player.stop();
+					} catch (MediaException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				if (player.getState() == 300) {
+					player.deallocate();
+				}
+
+				if (player.getState() == 200 || player.getState() == 100) {
+					player.close();
+				}
+			}
+			try {
+				player.stop();
+			} catch (Exception e) {
+			}
+			
+			if(loader != null) {
+			try {
+				loader.interrupt();
+			} catch (Throwable ee) {}
+			}
+			
+			
+			if (netInStream != null) {
+				try {
+					netInStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (inConn != null) {
+				try {
+					inConn.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (outStream != null) {
+				try {
+					outStream.close();
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			stop = false;
+			try {
+			//speedCount.interrupt();
+			outStream.close();
+			} catch (Exception e1) {}
+			try {
+				if (!isReady) {
+				outConn.delete();
+				}
+				outConn.close();
+			
+			
+			} catch (Exception e1) {}
+			try {
+				netInStream.close();
+			} catch (Exception e1) {}
+			try {
+				inConn.close();
+			} catch (Exception e1) {}
+			
+			
+			
+			if (!isReady) {
+				try {
+					outConn.delete();
+					outConn.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				}
 			current--;
 			if (current < 0)
-				current = playlist.uiItems.length - 1;
+				current = playlist.uiItems.size() - 1;
 			loadTrack();
 			VikaTouch.needstoRedraw=true;
 		}
@@ -1304,7 +1395,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 	public AudioTrackItem getC() {
 		try {
-			return ((AudioTrackItem) playlist.uiItems[current]);
+			return ((AudioTrackItem) playlist.uiItems.elementAt(currentItem));
 		} catch (RuntimeException e) {
 			return new AudioTrackItem(); // fake item
 		}
@@ -1376,7 +1467,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 		try {
 			switch (Settings.audioMode) {
 			case Settings.AUDIO_VLC:
-				String mrl = ((AudioTrackItem) list.uiItems[track]).mp3;
+				String mrl = ((AudioTrackItem) list.uiItems.elementAt(track)).mp3;
 				System.out.println(mrl);
 				if (mrl.indexOf("xtrafrancyz") > -1) {
 					mrl = "https://" + mrl.substring("http://vk-api-proxy.xtrafrancyz.net/_/".length());
@@ -1396,7 +1487,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 						);
 				break;
 			case Settings.AUDIO_SYSTEMPLAYER:
-				VikaTouch.callSystemPlayer(((AudioTrackItem) list.uiItems[track]).mp3);
+				VikaTouch.callSystemPlayer(((AudioTrackItem) list.uiItems.elementAt(track)).mp3);
 				break;
 			default:
 				MusicPlayer mp = new MusicPlayer();

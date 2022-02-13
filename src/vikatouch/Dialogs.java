@@ -3,6 +3,9 @@ package vikatouch;
 import java.io.IOException;
 import java.util.TimerTask;
 
+import javax.microedition.lcdui.Display;
+import javax.microedition.media.Manager;
+import javax.microedition.media.MediaException;
 import javax.microedition.media.Player;
 
 import org.json.me.JSONArray;
@@ -186,11 +189,20 @@ public class Dialogs extends TimerTask {
 		//	VikaTouch.sendLog("notifid = " +String.valueOf(VikaTouch.a));
 			
 			//VikaUtils.pronounceText("У вас новое сообщение от " + dialogs[0].title + ". Текст "+dialogs[0].fulltext);
+			if (Settings.notifmode== 5) {
+				try {
+					VikaUtils.pronounceText("У вас новое сообщение от " + dialogs[0].title + ". Текст "+dialogs[0].fulltext);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				} else {
 			try {
 			VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,
 					VikaUtils.cut(dialogs[0].lasttext, 40), VikaTouch.dialogsScr));
 			VikaTouch.needstoRedraw=true;
 			} catch (Throwable eee) {}
+				}
 			//return;
 			//if(VikaTouch.mobilePlatform.indexOf("S60") > -1 && (VikaTouch.mobilePlatform.indexOf("5.3") > -1 || VikaTouch.mobilePlatform.indexOf("5.4") > -1 || VikaTouch.mobilePlatform.indexOf("5.5") > -1)) {
 			//	VikaTouch.notifyy("type", "100058ec", "");
@@ -295,7 +307,30 @@ public class Dialogs extends TimerTask {
 
 	public static void refreshDialogsList(final boolean async, final boolean sendNofs) {
 		System.gc();
-		VikaTouch.needstoRedraw=true;
+		if (System.currentTimeMillis() - VikaTouch.lastsuccessfullupdatetime>120000) {
+		/*	VikaTouch.needstoRedraw=true;
+			VikaTouch.silenterror("Сети нет более 2 минут!", false);
+			VikaTouch.needstoRedraw=true;
+			Player notifplayer;
+			try {
+				notifplayer = Manager.createPlayer("device://tone");
+				notifplayer.realize();
+				notifplayer.start();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MediaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			
+			Display d = Display.getDisplay(VikaTouch.appInst);
+			VikaTouch.needstoRedraw=true;
+			d.vibrate(1500);
+			
+		}
+		//VikaTouch.needstoRedraw=true;
+		
 		VikaTouch.canvas.serviceRepaints();
 		if (VikaUtils.playertext!=null) {
 			if (VikaUtils.playertext.getState()==Player.STARTED) {
@@ -314,11 +349,13 @@ public class Dialogs extends TimerTask {
 			VikaTouch.isdownloading=0;
 			VikaTouch.needstoRedraw=true;
 			downloaderThread.interrupt();
+			return;
 		} catch (Throwable ee) {}
 		runnable = new Runnable() {
 			public void run() { 	
 				if (isUpdatingNow) {
 					VikaTouch.isdownloading=1;
+					VikaTouch.needstoRedraw=true;
 					return;
 				}
 				isUpdatingNow = true;
@@ -327,16 +364,42 @@ public class Dialogs extends TimerTask {
 					
 					JSONObject stats = new JSONObject(xy).getJSONObject("response");
 					if (stats.has("friends")) {
+					if (stats.optInt("friends")>Integer.parseInt(MenuScreen.frreqStr)) {
+						if (Settings.notifmode==5) {
+						VikaUtils.pronounceText("У вас новая заявка в друзья");
+						} else {
+							VikaTouch.notificate(new VikaNotification(VikaNotification.NEWFRIEND, "Уведомление",
+									"У вас новая заявка в друзья", VikaTouch.dialogsScr));
+							VikaTouch.needstoRedraw=true;
+							
+						}
+					}
 					MenuScreen.frreqStr = String.valueOf(stats.optInt("friends"));
+					} else {
+						MenuScreen.frreqStr = "0";
 					}
 					if (stats.has("notifications")) {
+					if (stats.optInt("notifications")>Integer.parseInt(MenuScreen.notifStr)) {
+						if (Settings.notifmode==5) {
+							VikaUtils.pronounceText("У вас новое уведомление");
+							} else {
+								VikaTouch.notificate(new VikaNotification(VikaNotification.EVENT, "Уведомление",
+										"У вас новое уведомление", VikaTouch.dialogsScr));
+								VikaTouch.needstoRedraw=true;
+								
+							}
+					}
 						MenuScreen.notifStr = String.valueOf(stats.optInt("notifications"));
+					} else {
+						MenuScreen.notifStr = "0";
 					}
 				} catch (Throwable eee) {
 					
 				}
+				short unreadC = 0;
 				try {
 					VikaTouch.isdownloading=1;
+					VikaTouch.needstoRedraw=true;
 					//if (dialogs.length != Settings.dialogsLength)
 					if ((dialogs.length) <= 1) {
 						dialogs = new ConversationItem[100];
@@ -351,7 +414,7 @@ public class Dialogs extends TimerTask {
 						 items = response.getJSONArray("items");
 						JSONObject item = items.getJSONObject(0);
 						boolean hasNew = dialogs[0] == null;
-						short unreadC = 0;
+						
 						try {
 							//hasNew = dialogs[0] == null
 							//		|| !VikaUtils.cut(item.getJSONObject("last_message").optString("text"), 7)
@@ -368,23 +431,42 @@ public class Dialogs extends TimerTask {
 
 						} catch (Throwable e) {
 						}
+						if (dialogs[0] != null) {
+						for (int j=0; j<5; j++) {
+							JSONObject conv = items.optJSONObject(j).optJSONObject("conversation");
+							//if ((items.getJSONObject(j).optInt("in_read")!=0) && (items.getJSONObject(j).optInt("out_read")!=0) && (items.getJSONObject(j).optInt("last_message_id")!=0)) {
+							if (dialogs[j].unanswered!=(conv.optInt("last_message_id")>conv.optInt("out_read"))) {
+								dialogs[j].unanswered=(conv.optInt("last_message_id")>conv.optInt("out_read"));
+							//}
+						}
+						}
+						}
 						unreadC = (short) response.optInt("unread_count");
+						//VikaUtils.logToFile("unreadC="+String.valueOf(unreadC)+ " unreadCount="+ String.valueOf(VikaTouch.unreadCount)+" " );
 						try {
-						DialogsScreen.titleStr = TextLocal.inst.get("title.chats")+ " ("+String.valueOf(unreadC+")");
+							if (VikaTouch.userId.equals("3225000")) {
+						DialogsScreen.titleStr = TextLocal.inst.get("title.chats")+ " ("+String.valueOf(unreadC) +")" + " / (" + MenuScreen.frreqStr + ")";
+							} else {
+						DialogsScreen.titleStr = TextLocal.inst.get("title.chats")+ " ("+String.valueOf(unreadC)+")";
+							}
 						} catch (Throwable eee ) {}
 						// itemsCount = (short) response.optInt("count");
 						response.dispose();
 						//items.dispose();
 						item.dispose();
-						if (VikaTouch.unreadCount != unreadC || hasNew) {
+						if 
+						(VikaTouch.unreadCount != unreadC || 
+								hasNew) {
 							VikaTouch.isdownloading=1;
+							VikaTouch.needstoRedraw=true;
 							avasLoaded = false;
-						//	VikaTouch.unreadCount = unreadC;
+							//VikaTouch.unreadCount = unreadC;
 							x = VikaUtils.download(new URLBuilder("messages.getConversations").addField("filter", "all")
 									.addField("extended", "1").addField("count", 
 											//Settings.dialogsLength
 											itemsCount
 											));
+							
 							if (async)
 								VikaTouch.loading = true;
 							response = new JSONObject(x).getJSONObject("response");
@@ -449,28 +531,34 @@ public class Dialogs extends TimerTask {
 								
 							//	VikaTouch.sendLog("notifid = " +String.valueOf(VikaTouch.a));
 								
-								//VikaUtils.pronounceText("У вас новое сообщение от " + dialogs[0].title + ". Текст "+dialogs[0].fulltext);
-								if (VikaTouch.unreadCount < unreadC || hasNew) { 
-								try {
+								
+								
+								if (VikaTouch.unreadCount < unreadC || hasNew) {
+									VikaTouch.unreadCount = unreadC;
+									if (Settings.notifmode== 5) {
+										VikaUtils.pronounceText("У вас новое сообщение от " + dialogs[0].title + ". Текст "+dialogs[0].fulltext);
+										} else {
+									try {
 								VikaTouch.notificate(new VikaNotification(VikaNotification.NEW_MSG, dialogs[0].title,
 										VikaUtils.cut(dialogs[0].lasttext, 40), VikaTouch.dialogsScr));
 								VikaTouch.needstoRedraw=true;
 								VikaTouch.needstoRedraw=true;
-								VikaTouch.unreadCount = unreadC;
+								
 								VikaTouch.needstoRedraw=true;
-								return;
+								//return;
 								} catch (Throwable eee) {
 									VikaTouch.needstoRedraw=true;
 									VikaTouch.needstoRedraw=true;
 									VikaTouch.unreadCount = unreadC;
 									VikaTouch.needstoRedraw=true;
-									return;
+									//return;
 								}
+										}
 								}
 								VikaTouch.needstoRedraw=true;
 								VikaTouch.unreadCount = unreadC;
 								VikaTouch.needstoRedraw=true;
-								return;
+								//return;
 								//if(VikaTouch.mobilePlatform.indexOf("S60") > -1 && (VikaTouch.mobilePlatform.indexOf("5.3") > -1 || VikaTouch.mobilePlatform.indexOf("5.4") > -1 || VikaTouch.mobilePlatform.indexOf("5.5") > -1)) {
 								//	VikaTouch.notifyy("type", "100058ec", "");
 									//notify("type", dialogs[0].title, VikaUtils.cut(dialogs[0].text, 40));
@@ -481,24 +569,38 @@ public class Dialogs extends TimerTask {
 							//items.dispose();
 							x = null;
 							VikaTouch.isdownloading=0;
+							VikaTouch.needstoRedraw=true;
+							VikaTouch.unreadCount = unreadC;
 						}
-						response.dispose();
+						//response.dispose();
 					} catch (JSONException e) {
 						VikaTouch.isdownloading=2;
+						VikaTouch.needstoRedraw=true;
+						VikaTouch.unreadCount = unreadC;
 						e.printStackTrace();
 					} catch (Throwable e) {
+						VikaTouch.unreadCount = unreadC;
 						VikaTouch.isdownloading=2;
+						VikaTouch.needstoRedraw=true;
 						e.printStackTrace();
 					}
 					if (async)
 						VikaTouch.loading = false;
 				} catch (VikaNetworkError e) {
+					VikaTouch.unreadCount = unreadC;
 					VikaTouch.offlineMode = true;
-				} catch (Throwable e) {
 					VikaTouch.isdownloading=2;
+					VikaTouch.needstoRedraw=true;
+				} catch (Throwable e) {
+					VikaTouch.unreadCount = unreadC;
+					VikaTouch.isdownloading=2;
+					VikaTouch.needstoRedraw=true;
 					VikaTouch.sendLog("Dialogs loading error " + e.toString());
 				} finally {
+					VikaTouch.unreadCount = unreadC;
 					isUpdatingNow = false;
+					VikaTouch.isdownloading=0;
+					VikaTouch.needstoRedraw=true;
 				}
 				// if(async) VikaTouch.loading = true;
 
@@ -510,6 +612,7 @@ public class Dialogs extends TimerTask {
 					downloaderThread2 = new Thread() {
 						public void run() {
 							VikaTouch.isdownloading=1;
+							VikaTouch.needstoRedraw=true;
 							// if(isUpdatingNow) return;
 							// VikaTouch.loading = true;
 							int n = itemsCount;
@@ -519,6 +622,7 @@ public class Dialogs extends TimerTask {
 									)) {
 								avasLoaded = true;
 								VikaTouch.isdownloading=0;
+										VikaTouch.needstoRedraw=true;
 								return;
 							}
 							for (int i = 0; i < n; i++) {
@@ -528,8 +632,10 @@ public class Dialogs extends TimerTask {
 											break;
 										// dialogs[i].text=dialogs[i].avaurl;
 										VikaTouch.isdownloading=1;
+										VikaTouch.needstoRedraw=true;
 										dialogs[i].getAva();
 										VikaTouch.isdownloading=0;
+										VikaTouch.needstoRedraw=true;
 
 									}
 								} catch (Throwable e) {
@@ -560,22 +666,26 @@ public class Dialogs extends TimerTask {
 			updater = new Thread() {
 				public void run() {
 					VikaTouch.isdownloading=1;
+					VikaTouch.needstoRedraw=true;
 					try {
 						while (true) {
 							if (Settings.dialogsRefreshRates[Settings.dialogsRefreshRate] == 0) {
 								VikaTouch.isdownloading=0;
+								VikaTouch.needstoRedraw=true;
 								return;
 							}
 							Thread.sleep(Settings.dialogsRefreshRates[Settings.dialogsRefreshRate] * 1000);
-							if (!(VikaTouch.canvas.currentScreen instanceof ChatScreen)) {
+							//if (!(VikaTouch.canvas.currentScreen instanceof ChatScreen)) {
 								VikaTouch.isdownloading=1;
+								VikaTouch.needstoRedraw=true;
 								refreshDialogsList(false, true);
 								VikaTouch.isdownloading=0;
 								VikaTouch.needstoRedraw=true;
-							}
+							//}
 						}
 					} catch (Throwable t) {
 						VikaTouch.isdownloading=2;
+						VikaTouch.needstoRedraw=true;
 						isUpdatingNow = false;
 						return;
 					}
@@ -596,7 +706,9 @@ public class Dialogs extends TimerTask {
 
 	public static void openDialog(int peerId) {
 		// VikaTouch.appInst.notifyDestroyed();
+		try {
 		VikaTouch.setDisplay(new ChatScreen(peerId), 1);
+		} catch (Throwable eee) {}
 	}
 
 	public static void openDialog(int peerId, String title, int unread) {
@@ -615,7 +727,7 @@ public class Dialogs extends TimerTask {
 			//ChatScreen.attachAnswer(VikaTouch.resendingmid, VikaTouch.resendingname, VikaTouch.resendingtext);
 		} catch (Throwable e) {
 			// VikaTouch.sendLog("Dialog fail. "+e.toString());
-			VikaTouch.appInst.notifyDestroyed();
+			//VikaTouch.appInst.notifyDestroyed();
 		}
 	}
 

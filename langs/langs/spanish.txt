@@ -25,6 +25,7 @@ online=En linea
 offline=Desconectado
 wasonlinedate=Estaba en línea
 wasonlinetime=Estaba en línea a las
+wasonlinedatefemale=Estaba en línea
 
 menu.videos=Videos
 menu.music=Música

@@ -1,5 +1,7 @@
 package vikatouch.screens.music;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -18,6 +20,7 @@ import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
+
 import vikatouch.VikaTouch;
 import vikatouch.attachments.AudioAttachment;
 import vikatouch.items.music.AudioTrackItem;
@@ -62,7 +65,7 @@ public static String q;
 		ownerId = 0;
 		this.title = TextLocal.inst.get("attachment");
 		hasBackButton = true;
-		uiItems = new PressableUIItem[1];
+		uiItems = new Vector(1);
 		AudioTrackItem ati = new AudioTrackItem(null, this, 0);
 		ati.name = aa.name;
 		ati.artist = "";
@@ -71,7 +74,7 @@ public static String q;
 		ati.length = aa.size;
 		ati.lengthS = (ati.length / 60) + ":" + (ati.length % 60 < 10 ? "0" : "") + (ati.length % 60);
 		ati.mp3 = aa.musUrl;
-		uiItems[0] = ati;
+		uiItems.addElement(ati);
 		VikaTouch.loading = false;
 		System.gc();
 	}
@@ -118,8 +121,9 @@ public static String q;
 					}
 					// VikaTouch.sendLog(x);
 					if (x.indexOf("error") > -1) {
+						VikaTouch.sendLog(x);
 						//if (x.indexOf("deprecated")>-1) {
-							try {
+						/*	try {
 								VikaTouch.logout();
 								VikaTouch.gc();
 							} catch (Exception e) {
@@ -133,7 +137,7 @@ public static String q;
 						//} else {
 						//VikaTouch.error(ErrorCodes.MUSICLISTLOAD, x, false);
 						//return;
-						//}
+						//}*/
 					}
 					try {
 						System.out.println(x);
@@ -141,11 +145,13 @@ public static String q;
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = response.getJSONArray("items");
 						itemsCount = (short) items.length();
-						uiItems = new PressableUIItem[itemsCount];
+						uiItems = new Vector(itemsCount);
 						for (int i = 0; i < itemsCount; i++) {
 							JSONObject item = items.getJSONObject(i);
-							uiItems[i] = new AudioTrackItem(item, MusicScreen.this, i);
-							((AudioTrackItem) uiItems[i]).parseJSON();
+							AudioTrackItem ati = new AudioTrackItem(item, MusicScreen.this, i);
+							ati.parseJSON();
+							uiItems.addElement(ati);
+							
 							VikaTouch.needstoRedraw=true;
 							Thread.sleep(15);
 							// должно не зависать
@@ -156,7 +162,7 @@ public static String q;
 					}
 					VikaTouch.loading = false;
 				} catch (InterruptedException e1) {
-					return;
+					//return;
 				} catch (Exception e) {
 					e.printStackTrace();
 					VikaTouch.error(e, ErrorCodes.MUSICLISTLOAD);
@@ -226,13 +232,14 @@ public static String q;
 	              JSONObject response = (new JSONObject(x)).getJSONObject("response");
 	              JSONArray items = response.getJSONArray("items");
 	              itemsCount = (short)items.length();
-	              uiItems = new PressableUIItem[itemsCount];
+	          	uiItems = new Vector(itemsCount);
 	              for (int i = 0; i < itemsCount; i++) {
 	                JSONObject item = items.getJSONObject(i);
-	                uiItems[i] = (PressableUIItem)new AudioTrackItem(item, MusicScreen.this, i);
-	                ((AudioTrackItem)uiItems[i]).parseJSON();
+	                AudioTrackItem ati = new AudioTrackItem(item, MusicScreen.this, i);
+					uiItems.addElement(ati);
+					ati.parseJSON();
 	            	VikaTouch.needstoRedraw=true;
-	                Thread.sleep(15L);
+	               // Thread.sleep(15L);
 	              } 
 	            } catch (JSONException e) {
 	              e.printStackTrace();
@@ -320,13 +327,14 @@ public static String q;
 	              JSONObject response = (new JSONObject(x)).getJSONObject("response");
 	              JSONArray items = response.getJSONArray("items");
 	              itemsCount = (short)items.length();
-	              uiItems = new PressableUIItem[itemsCount];
+	              uiItems = new Vector(itemsCount);
 	              for (int i = 0; i < itemsCount; i++) {
 	                JSONObject item = items.getJSONObject(i);
-	                uiItems[i] = (PressableUIItem)new AudioTrackItem(item, MusicScreen.this, i);
-	                ((AudioTrackItem)uiItems[i]).parseJSON();
+	                AudioTrackItem ati = new AudioTrackItem(item, MusicScreen.this, i);
+					uiItems.addElement(ati);
+					ati.parseJSON();
 	            	VikaTouch.needstoRedraw=true;
-	                Thread.sleep(15L);
+	                //Thread.sleep(15L);
 	              } 
 	            } catch (JSONException e) {
 	              e.printStackTrace();
@@ -375,11 +383,11 @@ public static String q;
 			try {
 				if (uiItems != null) {
 					for (int i = 0; i < itemsCount; i++) {
-						if (uiItems[i] != null) {
+						if (((PressableUIItem) uiItems.elementAt(i)) != null) {
 							if (y + scrolled > DisplayUtils.height)
 								break;
-							uiItems[i].paint(g, y, scrolled);
-							y += uiItems[i].getDrawHeight();
+							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						}
 						itemsh = y + 60;
 					}
@@ -409,7 +417,7 @@ public static String q;
 				if (i < 0)
 					i = 0;
 				//if (!dragging) {
-					uiItems[i].tap(x, yy1 - (h * i));
+				((PressableUIItem) uiItems.elementAt(i)).tap(x, yy1 - (h * i));
 				//}
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {

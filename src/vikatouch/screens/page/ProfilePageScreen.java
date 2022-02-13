@@ -1,6 +1,7 @@
 package vikatouch.screens.page;
 
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
@@ -9,6 +10,7 @@ import javax.microedition.lcdui.Image;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
@@ -83,6 +85,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 	protected static String musicStr;
 	protected static String videosStr;
 	protected static String photosStr;
+	public static int sex = 2;
 
 	public ProfilePageScreen(int id) {
 		VikaTouch.needstoRedraw=true;
@@ -109,6 +112,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 			hoursAgoStr = TextLocal.inst.get("date.hoursago");
 			wasOnlineStr = TextLocal.inst.get("wasonlinedate");
 			wasOnlineJustNowStr = wasOnlineStr + " " + TextLocal.inst.get("date.justnow");
+			//sex = 2;
 		}
 		hasBackButton = true;
 		this.id = id;
@@ -130,13 +134,13 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 					VikaTouch.loading = true;
 					String x = VikaUtils.download(new URLBuilder("users.get").addField("user_ids", id).addField(
 							"fields",
-							"photo_50,online,domain,status,last_seen,common_count,can_write_private_message,can_send_friend_request,is_friend,friend_status,counters"));
+							"photo_50,online,domain,status,last_seen,common_count,sex,can_write_private_message,can_send_friend_request,is_friend,friend_status,counters"));
 					try {
 						VikaTouch.loading = true;
 						JSONObject res = new JSONObject(x).getJSONArray("response").getJSONObject(0);
 
 						closed = res.optInt("can_access_closed") == 1;
-
+						sex = res.optInt("sex");
 						name = res.optString("first_name") + " " + res.optString("last_name");
 						link = res.optString("domain");
 						status = res.optString("status");
@@ -159,6 +163,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 						} else {
 							int now = (int) (System.currentTimeMillis() / 1000);
 							int r = now - lastSeen;
+							wasOnlineStr = (sex==1) ? TextLocal.inst.get("femalewasonlinedate") : TextLocal.inst.get("wasonlinedate");
 							if (r < 90) {
 								visitStr = wasOnlineJustNowStr;
 							} else if (r < 60 * 60) {
@@ -187,50 +192,50 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 						int h = oneitemheight = (short) (DisplayUtils.compact ? 30 : 50);
 						if (id == VikaTouch.integerUserId) {
 							itemsCount = 7;
-							uiItems = new OptionItem[7];
-							uiItems[0] = new OptionItem(ProfilePageScreen.this, friendsStr + " (" + friends + ")",
-									IconsManager.FRIENDS, 2, h);
-							uiItems[1] = new OptionItem(ProfilePageScreen.this, wallStr, IconsManager.NEWS, 3, h);
-							uiItems[2] = new OptionItem(ProfilePageScreen.this, groupsStr + " (" + groups + ")",
-									IconsManager.GROUPS, 4, h);
-							uiItems[3] = new OptionItem(ProfilePageScreen.this, photosStr + " (" + photos + ")",
-									IconsManager.PHOTOS, 5, h);
-							uiItems[4] = new OptionItem(ProfilePageScreen.this, musicStr + " (" + music + ")",
-									IconsManager.MUSIC, 6, h);
-							uiItems[5] = new OptionItem(ProfilePageScreen.this, videosStr + " (" + videos + ")",
-									IconsManager.VIDEOS, 7, h);
-							uiItems[6] = new OptionItem(ProfilePageScreen.this, docsStr + " (" + docs + ")",
-									IconsManager.DOCS, 8, h);
+							uiItems = new Vector(7);
+							uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, friendsStr + " (" + friends + ")",
+									IconsManager.FRIENDS, 2, h), 0);
+							uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, wallStr, IconsManager.NEWS, 3, h), 1);
+							uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, groupsStr + " (" + groups + ")",
+									IconsManager.GROUPS, 4, h), 2);
+							uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, photosStr + " (" + photos + ")",
+									IconsManager.PHOTOS, 5, h), 3);
+							uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, musicStr + " (" + music + ")",
+									IconsManager.MUSIC, 6, h), 4);
+							uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, videosStr + " (" + videos + ")",
+									IconsManager.VIDEOS, 7, h), 5);
+							uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, docsStr + " (" + docs + ")",
+									IconsManager.DOCS, 8, h), 6);
 						} else {
 							if (closed) {
 								itemsCount = 2;
-								uiItems = new OptionItem[2];
-								uiItems[0] = new OptionItem(ProfilePageScreen.this, closedStr, IconsManager.INFO, 0,
-										50);
+								uiItems = new Vector(2);
+								uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, closedStr, IconsManager.INFO, 0,
+										50), 0);
 							} else {
 								itemsCount = 9;
-								uiItems = new OptionItem[9];
-								uiItems[0] = new OptionItem(ProfilePageScreen.this,
-										canMsg ? writeMessageStr : cannotWriteStr, IconsManager.MSGS, 0, h);
+								uiItems = new Vector(9);
+								uiItems.setElementAt(new OptionItem(ProfilePageScreen.this,
+										canMsg ? writeMessageStr : cannotWriteStr, IconsManager.MSGS, 0, h), 0);
 
-								uiItems[2] = new OptionItem(ProfilePageScreen.this, friendsStr + " (" + friends + ")",
-										IconsManager.FRIENDS, 2, h);
-								uiItems[3] = new OptionItem(ProfilePageScreen.this, wallStr, IconsManager.NEWS, 3, h);
-								uiItems[4] = new OptionItem(ProfilePageScreen.this, groupsStr + " (" + groups + ")",
-										IconsManager.GROUPS, 4, h);
-								uiItems[5] = new OptionItem(ProfilePageScreen.this, photosStr + " (" + photos + ")",
-										IconsManager.PHOTOS, 5, h);
-								uiItems[6] = new OptionItem(ProfilePageScreen.this, musicStr + " (" + music + ")",
-										IconsManager.MUSIC, 6, h);
-								uiItems[7] = new OptionItem(ProfilePageScreen.this, videosStr + " (" + videos + ")",
-										IconsManager.VIDEOS, 7, h);
-								uiItems[8] = new OptionItem(ProfilePageScreen.this, docsStr + " (" + docs + ")",
-										IconsManager.DOCS, 8, h);
+								uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, friendsStr + " (" + friends + ")",
+										IconsManager.FRIENDS, 2, h), 2);
+								uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, wallStr, IconsManager.NEWS, 3, h), 3);
+								uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, groupsStr + " (" + groups + ")",
+										IconsManager.GROUPS, 4, h), 4);
+								uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, photosStr + " (" + photos + ")",
+										IconsManager.PHOTOS, 5, h), 5);
+								uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, musicStr + " (" + music + ")",
+										IconsManager.MUSIC, 6, h), 6);
+								uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, videosStr + " (" + videos + ")",
+										IconsManager.VIDEOS, 7, h), 7);
+								uiItems.setElementAt(new OptionItem(ProfilePageScreen.this, docsStr + " (" + docs + ")",
+										IconsManager.DOCS, 8, h), 8);
 							}
-							uiItems[1] = new OptionItem(ProfilePageScreen.this,
+							uiItems.setElementAt(new OptionItem(ProfilePageScreen.this,
 									(new String[] { addStr, cancelStr, acceptStr, removeStr })[friendState],
 									(friendState == 3 || friendState == 1) ? IconsManager.CLOSE : IconsManager.ADD, 1,
-									h);
+									h), 1);
 						}
 						try {
 							String x2 = VikaUtils.download(
@@ -281,8 +286,10 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 		if (ava != null) {
 			g.drawImage(ava, 16, topPanelH + 13, 0);
 			g.drawImage(IconsManager.ac, 16, topPanelH + 13, 0);
+			if (online) {
 			ColorUtils.setcolor(g, ColorUtils.ONLINE);
 			g.fillArc(16 + 38, topPanelH + 13 + 38, 12, 12, 0, 360);
+			}
 		}
 		itemsh = itemsCount * oneitemheight + y;
 		g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM));
@@ -290,15 +297,21 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 		//drawString(name + " " + lastname, 74, topPanelH + 12, 0);
 		g.drawString(name == null ? loadingStr + "..." : name, 74, topPanelH + 12, 0);
 		g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL));
-		g.drawString(status == null ? visitStr : status, 74, topPanelH + 36, 0);
-
+		//g.drawString(status == null ? visitStr : status, 74, topPanelH + 36, 0);
+		if (status!=null) {
+			g.drawString(status, 74, topPanelH + 30, 0);
+			g.drawString(visitStr, 74, topPanelH + 48, 0);
+			} else {
+				g.drawString(visitStr, 74, topPanelH + 36, 0);
+			}
+		
 		ColorUtils.setcolor(g, -3);
 		g.drawRect(0, 140, DisplayUtils.width, 50);
 		if (uiItems != null) {
-			for (int i = 0; i < uiItems.length; i++) {
-				if (uiItems[i] != null) {
-					uiItems[i].paint(g, y, scrolled);
-					y += uiItems[i].getDrawHeight();
+			for (int i = 0; i < uiItems.size(); i++) {
+				if (((PressableUIItem) uiItems.elementAt(i)) != null) {
+					((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+					y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 				}
 			}
 		}
@@ -366,8 +379,9 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 				break;
 			case 4:
 				GroupsScreen gs = new GroupsScreen();
-				VikaTouch.setDisplay(gs, 1);
+				
 				gs.loadGroups(0, id, wname, name2);
+				VikaTouch.setDisplay(gs, 1);
 				break;
 			case 6:
 				MusicScreen.open(id, wname, name2);

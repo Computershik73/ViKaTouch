@@ -608,7 +608,7 @@ public final class KeyCodeAdapter {
         //#if debug  
         //# return keycode;  
         //#else  
-        return NOT_DEFINED_KEY;  
+        return keycode;  
         //#endif  
     }  
   

@@ -8,6 +8,7 @@ import java.io.DataOutputStream;
 import javax.microedition.lcdui.Image;
 import javax.microedition.rms.RecordStore;
 
+import org.json.me.JSONArray;
 import org.json.me.JSONObject;
 
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -182,6 +183,16 @@ public class Settings {
 	public static String musicpath;
 
 	public static int mpc;
+	
+	public class Message {
+		public int id;
+		public int peerid;
+		public int ownerid;
+		public int text;
+		public int url;
+	}
+	
+	public static JSONArray unsentmsgs;
 
 	static {
 		loadSettings();
@@ -498,7 +509,12 @@ public class Settings {
 					}
 					
 
-				
+					if (settingsjson.has("unsentmsgs")) {
+						unsentmsgs = new JSONArray(settingsjson.optString("unsentmsgs"));
+						
+						} else {
+							unsentmsgs = null;
+						}
 					
 					
 					/*animateTransition = is.readBoolean();

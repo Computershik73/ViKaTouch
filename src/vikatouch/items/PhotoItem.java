@@ -6,7 +6,7 @@ import javax.microedition.lcdui.Graphics;
  * @author Shinovon
  * 
  */
-public class PhotoItem extends JSONUIItem {
+/*public class PhotoItem extends JSONItem {
 	/*
 	public int itemDrawWidth = 50;
 	private String iconUrl;
@@ -20,7 +20,7 @@ public class PhotoItem extends JSONUIItem {
 		}
 	}
 */
-	public void paint(Graphics g, int y, int scrolled) {
+/*	public void paint(Graphics g, int y, int scrolled) {
 
 	}
 
@@ -32,4 +32,4 @@ public class PhotoItem extends JSONUIItem {
 
 	}
 
-}
+}*/

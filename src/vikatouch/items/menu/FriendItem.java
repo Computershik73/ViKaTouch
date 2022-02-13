@@ -13,6 +13,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
+import vikatouch.items.JSONItem;
 import vikatouch.items.JSONUIItem;
 import vikatouch.screens.page.ProfilePageScreen;
 import vikatouch.settings.Settings;
@@ -24,7 +25,7 @@ import vikatouch.utils.error.ErrorCodes;
  * @author Shinovon
  * 
  */
-public class FriendItem extends JSONUIItem {
+public class FriendItem extends JSONItem {
 	private String name;
 	// private String link;
 	private int id;

@@ -1,6 +1,6 @@
 package vikatouch;
 
-import vikatouch.screens.ChatScreen;
+
 
 /**
  * @author Shinovon

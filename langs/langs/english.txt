@@ -24,6 +24,7 @@ online=online
 offline=offline
 wasonlinedate=was online
 wasonlinetime=was online at
+wasonlinedatefemale=she was online at
 
 menu.videos=Videos
 menu.music=Music
@@ -296,6 +297,8 @@ wall.towall=Publish on wall
 wall.tofriend=Send to friend
 wall.togroup=Publish in group
 wall.tochat=Send to chat
+wall.updatedprofilephoto=updated profile photo
+wall.updatedprofilephotofemale=updated profile photo
 
 fm.noaccess=No access.
 fm.memorycard=Memory card

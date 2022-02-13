@@ -1,11 +1,14 @@
 package vikatouch.screens.menu;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
+
 
 import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
@@ -81,23 +84,29 @@ public class ChatMembersScreen extends MainScreen {
 						JSONArray profiles = response.getJSONArray("profiles");
 						JSONArray groups = response.optJSONArray("groups");
 						itemsCount = (short) items.length();
-						uiItems = new PressableUIItem[itemsCount];
+						uiItems = new Vector(itemsCount);
 						for (int i = 0; i < itemsCount; i++) {
 
 							JSONObject item = items.getJSONObject(i);
-							uiItems[i] = new MemberItem(item.getInt("member_id"), profiles, groups);
-							((MemberItem) uiItems[i]).parseJSON();
+							//uiItems[i] = new MemberItem(item.getInt("member_id"), profiles, groups);
+						//((MemberItem) uiItems[i]).parseJSON();
+							
+							MemberItem mi = new MemberItem(item.getInt("member_id"), profiles, groups);
+							uiItems.addElement(mi);
+							mi.parseJSON();
+							Thread.yield();
 
 						}
 						if (keysMode) {
 							currentItem = 0;
-							uiItems[0].setSelected(true);
+							((PressableUIItem) uiItems.elementAt(0)).setSelected(true);
 						}
 
 						repaint();
 						if (!Settings.dontLoadAvas) {
-							for (int i = 0; i < itemsCount; i++) {
-								((MemberItem) uiItems[i]).getAva();
+							for (int i = 0; i < uiItems.size(); i++) {
+								((MemberItem) ((PressableUIItem) uiItems.elementAt(i))).getAva();
+								Thread.yield();
 							}
 						}
 					} catch (JSONException e) {
@@ -131,10 +140,10 @@ public class ChatMembersScreen extends MainScreen {
 			int y = topPanelH;
 			try {
 				if (uiItems != null) {
-					for (int i = 0; i < itemsCount; i++) {
-						if (uiItems[i] != null) {
-							uiItems[i].paint(g, y, scrolled);
-							y += uiItems[i].getDrawHeight();
+					for (int i = 0; i < uiItems.size(); i++) {
+						if (((PressableUIItem) uiItems.elementAt(i)) != null) {
+							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						}
 					}
 				}
@@ -159,13 +168,13 @@ public class ChatMembersScreen extends MainScreen {
 		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
-				int h = uiItems[0].getDrawHeight();
+				int h = ((PressableUIItem) uiItems.elementAt(0)).getDrawHeight();
 				int yy1 = y - (scrolled + topPanelH);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
 				if (!dragging) {
-					uiItems[i].tap(x, yy1 - (h * i));
+					((PressableUIItem) uiItems.elementAt(i)).tap(x, yy1 - (h * i));
 				}
 			}
 

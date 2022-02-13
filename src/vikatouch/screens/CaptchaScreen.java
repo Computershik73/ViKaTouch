@@ -85,8 +85,11 @@ public class CaptchaScreen extends VikaScreen {
 
 	public final void press(int x, int y) {
 		if (y > 100 && y < 140 && x < 240) {
-			if (thread != null)
+			if (thread != null) {
+			try {
 				thread.interrupt();
+			} catch (Throwable eee) {}
+			}
 			thread = new Thread() {
 				public void run() {
 					input = TextEditor.inputString(captchaStr, input, 32, image);

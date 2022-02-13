@@ -42,10 +42,12 @@ public abstract class VikaCanvas extends GameCanvas {
 	public abstract boolean isNight();
 	
 	public void flushGraphics() {
+		try {
 		if (VikaTouch.needstoRedraw==true) {
 		super.flushGraphics();
 		VikaTouch.needstoRedraw=false;
 		}
+		} catch (Throwable e) {}
 	}
 
 }

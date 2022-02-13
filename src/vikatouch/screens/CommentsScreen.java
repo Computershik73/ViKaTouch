@@ -36,11 +36,13 @@ public class CommentsScreen extends MainScreen {
 	private int loadSpace = 20;
 	private int hasSpace = loadSpace;
 	private boolean lastcommentloaded=false;
+	private int commentscount;
 	private static final int msgYMargin = 4;
 	public static CommentItem[] comments = new CommentItem[0];
 	
 	public CommentsScreen(int sourceid, int id) {
 		VikaTouch.needstoRedraw=true;
+		commentscount=-1;
 		title = TextLocal.inst.get("title.comments");
 		hasBackButton = true;
 		this.post_id=id;
@@ -66,6 +68,7 @@ public class CommentsScreen extends MainScreen {
 	
 	private void parse() {
 		VikaTouch.needstoRedraw=true;
+		commentscount=-1;
 		int errst = 0;
 		scrollWithKeys = true;
 		errst = 1;
@@ -164,6 +167,7 @@ public class CommentsScreen extends MainScreen {
 			JSONArray items = response.optJSONArray("items");
 			//VikaTouch.sendLog(String.valueOf(items.length()));
 			//int i=0;
+			commentscount = items.length(); 
 			for (int i=0; i<items.length(); i++)
 			{
 				//if (items.isNull(i)) {
@@ -304,9 +308,9 @@ public class CommentsScreen extends MainScreen {
 		g.setFont(font1);
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		if (!this.lastcommentloaded) {
-			title = TextLocal.inst.get("title.comments")+"...";
+			title = TextLocal.inst.get("title.comments")+ (commentscount!=-1 ? " ("+String.valueOf(commentscount)+")..." : "...");
 		} else {
-			title = TextLocal.inst.get("title.comments");
+			title = TextLocal.inst.get("title.comments")+" "+(commentscount!=-1 ? "("+String.valueOf(commentscount)+")" : "");
 		}
 		g.drawString(TextBreaker.shortText(title, DisplayUtils.width - 50 + yy - 38, font1), 50-yy, (int)Math.floor(0+1*xx), 0);
 

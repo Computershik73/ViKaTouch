@@ -1,12 +1,20 @@
 package vikatouch.screens;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.Random;
+import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.TextField;
+import javax.microedition.media.Manager;
+import javax.microedition.media.MediaException;
+import javax.microedition.media.Player;
+import javax.microedition.media.PlayerListener;
+import javax.microedition.media.control.RecordControl;
 
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
@@ -23,18 +31,22 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import ru.nnproject.vikaui.utils.text.TextBreaker;
+
 import vikatouch.NokiaUIInvoker;
 //import vikatouch.NokiaUITextEditor;
 //import vikatouch.NokiaUITextEditorListener;
 import vikatouch.TestUtils;
 import vikatouch.VikaFileManager;
+import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
 import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.items.chat.ActionItem;
 import vikatouch.items.chat.ChatItem;
 import vikatouch.items.chat.IMessage;
 import vikatouch.items.chat.MsgItem;
+import vikatouch.items.chat.UnsentMsgItem;
 import vikatouch.locale.TextLocal;
+import vikatouch.music.MusicPlayer;
 import vikatouch.screens.menu.ChatMembersScreen;
 import vikatouch.screens.page.GroupPageScreen;
 import vikatouch.screens.page.ProfilePageScreen;
@@ -45,12 +57,13 @@ import vikatouch.utils.VikaUtils;
 import vikatouch.utils.text.CountUtils;
 import vikatouch.utils.text.TextEditor;
 import vikatouch.utils.url.URLBuilder;
+import vikatouch.utils.HttpMultipartRequest;
 
 /**
  * @author Feodor0090
  * 
  */
-public class ChatScreen extends MainScreen {
+public class ChatScreen extends MainScreen implements PlayerListener {
 
 	public boolean ready = false;
 
@@ -70,7 +83,7 @@ public class ChatScreen extends MainScreen {
 	private JSONObject json;
 	private JSONObject chatSettings;
 	private JSONObject conversationinfo;
-
+	public  ChatScreen inst;
 	private String enterMsgStr = "";
 	private String enterMsgStrSel = "";
 	// private String typingStr = "";
@@ -91,6 +104,20 @@ public class ChatScreen extends MainScreen {
 	public static boolean updStop = false;
 
 	public static boolean forceRedraw = false;
+	
+	//Голосовухи
+	
+	public static Player pl;
+	public static RecordControl rec;
+	public boolean isRec = false;
+	public static boolean isRecRunning = false;
+	public static ByteArrayOutputStream output;
+
+	
+	public static String uploadUrl;
+
+	
+	public String status = "...";
 	
 	//private NokiaUITextEditorListener li = null;
 
@@ -131,6 +158,8 @@ public class ChatScreen extends MainScreen {
 
 	private int unread_count;
 
+	public static Thread msgthread;
+
 	private static String peercountry;
 
 	public static String peerlanguage;
@@ -165,6 +194,7 @@ public class ChatScreen extends MainScreen {
 				public void run() {
 					String newText = TextEditor.inputString(TextLocal.inst.get("msg.editing"),
 							msg.text == null ? "" : msg.text, 0);
+					if (!msg.foreign) {
 					URLBuilder url = new URLBuilder("messages.edit").addField("peer_id", c.peerId)
 							.addField("message", newText).addField("keep_forward_messages", "1")
 							.addField("keep_snippets", "1").addField("dont_parse_links", "1");
@@ -183,6 +213,7 @@ public class ChatScreen extends MainScreen {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+					}
 				}
 			};
 			typer.start();
@@ -190,7 +221,9 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public ChatScreen(int peerId, String title, int unread) {
+		VikaTouch.isscrolling=true;
 		VikaTouch.needstoRedraw=true;
+		inst = this;
 		title2 = TextLocal.inst.get("title2.loading");
 		this.title = title;
 		this.peerId = peerId;
@@ -207,11 +240,15 @@ public class ChatScreen extends MainScreen {
 		//li=null;
 		// VikaTouch.sendLog(String.valueOf(this.title) + " " +
 		// String.valueOf(this.peerId));
+		try {
 		parse();
+		} catch (Throwable e) {}
 	}
 
 	public ChatScreen(int peerId) {
+		VikaTouch.isscrolling=true;
 		VikaTouch.needstoRedraw=true;
+		inst = this;
 		VikaTouch.resendingobjectid="";
 		if (DisplayUtils.compact) {
 			topPanelH = 30;
@@ -230,7 +267,9 @@ public class ChatScreen extends MainScreen {
 				this.title = "titledialog";
 			}
 		canWrite=true;
+		try {
 		parse();
+	} catch (Throwable e) {}
 	}
 
 	private void parse() {
@@ -268,12 +307,13 @@ public class ChatScreen extends MainScreen {
 					try {
 						messagesDialog();
 					} catch (InterruptedException e) {
-						return;
-					} catch (IOException e) {
+					//	return;
+					} /*catch (IOException e) {
 						e.printStackTrace();
 						VikaTouch.error(-2, "x1 " + e.toString(), false);
-						ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
-					} catch (Throwable ee) {}
+						ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");*/
+					//} 
+				catch (Throwable ee) {}
 				}
 			}).start();
 			errst = 14;
@@ -315,13 +355,13 @@ public class ChatScreen extends MainScreen {
 						public void run() {
 							try {
 								messagesChat();
-							} catch (InterruptedException e) {
+							} catch (Throwable e) {
 								return;
-							} catch (IOException e) {
+							} /*catch (IOException e) {
 								e.printStackTrace();
 								VikaTouch.error(-2, "x7 " + e.toString(), false);
 								ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
-							}
+							}*/
 						}
 					}).start();
 					errst = 26;
@@ -345,7 +385,7 @@ public class ChatScreen extends MainScreen {
 					canWrite =  new JSONObject(xxx).optJSONObject("response").optJSONArray("items").optJSONObject(0).optJSONObject("can_write").getBoolean("allowed");
 					
 					String x = VikaUtils.download(new URLBuilder("users.get").addField("user_ids", peerId)
-							.addField("fields", "online,country,can_write_private_message").addField("name_case", "nom"));
+							.addField("fields", "online,country,can_write_private_message,sex,last_seen").addField("name_case", "nom"));
 					try {
 						JSONObject jj = new JSONObject(x);
 						
@@ -354,8 +394,38 @@ public class ChatScreen extends MainScreen {
 						//unread_count = json.optInt("unread_count");
 						//VikaTouch.sendLog(String.valueOf(unread_count));
 					//	canWrite =  (json.optInt("can_write_private_message")==1);
-						this.title2 = json.optInt("online") > 0 ? TextLocal.inst.get("msg.online")
-								: TextLocal.inst.get("msg.offline");
+					//	this.title2 = json.optInt("online") > 0 ? TextLocal.inst.get("msg.online")
+					//			: TextLocal.inst.get("msg.offline");
+						int sex = json.optInt("sex");
+						String wasOnlineStr = (sex==1) ? TextLocal.inst.get("femalewasonlinedate") : TextLocal.inst.get("wasonlinedate");
+						String onlineStr = TextLocal.inst.get("online");
+						String minutesAgoStr = TextLocal.inst.get("date.minutesago");
+						String hoursAgoStr = TextLocal.inst.get("date.hoursago");
+						String wasOnlineJustNowStr = wasOnlineStr + " " + TextLocal.inst.get("date.justnow");
+						
+						int lastSeen = 0;
+						try {
+							lastSeen = json.optJSONObject("last_seen").optInt("time");
+						} catch (Throwable e) {
+						}
+						boolean online = json.optInt("online") == 1;
+
+						String visitStr;
+						if (online) {
+							visitStr = onlineStr;
+						} else {
+							int now = (int) (System.currentTimeMillis() / 1000);
+							int r = now - lastSeen;
+							if (r < 90) {
+								visitStr = wasOnlineJustNowStr;
+							} else if (r < 60 * 60) {
+								visitStr = wasOnlineStr + " " + (r / 60) + " " + minutesAgoStr;
+							} else {
+								visitStr = wasOnlineStr + " " + (r / 3600) + " " + hoursAgoStr;
+							}
+						}
+						this.title2 = visitStr;
+						
 						if (json.has("country")) {
 						JSONObject country = json.optJSONObject("country");
 						if (country==null) {
@@ -381,25 +451,39 @@ public class ChatScreen extends MainScreen {
 						break m;
 					}
 
-					(new Thread() {
+					msgthread = (new Thread() {
 						public void run() {
 							try {
 								messagesDialog();
-							} catch (InterruptedException e) {
-								return;
-							} catch (IOException e) {
+							} catch (Throwable e) {
+								//return;
+							}/* catch (IOException e) {
 								e.printStackTrace();
 								ChatScreen.this.title2 = TextLocal.inst.get("msg.failedtoload");
 								VikaTouch.error(-2, "x5 " + e.toString() + " " + e.getMessage(), false);
-							}
+							}*/
 						}
-					}).start();
+					});
+							msgthread.start();
 				} catch (Throwable e) {
 					//VikaTouch.error(-2, "x6 " + e.toString(), false);
 					this.title2 = TextLocal.inst.get("msg.failedtoload");
 				}
 			}
 		}
+		/*while (uiItems.isEmpty() || uiItems==null) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//
+		}*/
+		VikaTouch.isscrolling=false;
+		VikaTouch.needstoRedraw=true;
+	//	VikaUtils.logToFile("f");
+	//	scrollToSelected();
 	}
 
 	int inr = 0, outr = 0;
@@ -414,7 +498,9 @@ public class ChatScreen extends MainScreen {
 
 	private int pinId;
 
-	private void messagesChat() throws IOException, InterruptedException {
+	public static Thread voiceRecorderThread;
+
+	private void messagesChat() throws InterruptedException {
 		VikaTouch.needstoRedraw=true;
 		try {
 			String errst = "f";
@@ -422,7 +508,8 @@ public class ChatScreen extends MainScreen {
 
 			VikaCanvasInst.msgColor = 0xffff0000;
 			// скачка сообщений
-			uiItems = new PressableUIItem[Settings.messagesPerLoad + loadSpace];
+			uiItems = new Vector(Settings.messagesPerLoad);
+			//uiItems = new PressableUIItem[Settings.messagesPerLoad + loadSpace];
 			// VikaTouch.sendLog("Requesting history");
 
 			String x = VikaUtils.download(new URLBuilder("messages.getHistory").addField("peer_id", peerId)
@@ -484,15 +571,18 @@ public class ChatScreen extends MainScreen {
 					} else if (j.optJSONObject("action") != null) {
 						ActionItem act = new ActionItem(j);
 						act.parseJSON();
-						uiItems[uiItems.length - 1 - i - loadSpace] = act;
-						itemsCount = (short) uiItems.length;
+						/*uiItems[uiItems.length - 1 - i - loadSpace] = act;
+						itemsCount = (short) uiItems.length;*/
+						uiItems.insertElementAt(act, 0);
+						itemsCount = (short) uiItems.size();
 					} else {
 						MsgItem m = new MsgItem(j);
 						errst = "msgit" + String.valueOf(i);
 						m.parseJSON();
-						m.loadAtts();
+						//m.loadAtts();
 						errst = "mparse" + String.valueOf(i);
 						int fromId = m.fromid;
+						long date = m.date;
 
 						String name = (fromId < 0 ? "g" : "") + "id" + fromId;
 
@@ -502,19 +592,20 @@ public class ChatScreen extends MainScreen {
 
 						boolean chain = false;
 						if (i + 1 < items.length()) {
-							chain = fromId == items.getJSONObject(i + 1).optInt("from_id");
+							chain = ((fromId == items.getJSONObject(i + 1).optInt("from_id")) && (items.getJSONObject(i + 1).optLong("date")-date>86400000));
 						}
 						m.showName = !chain;
 
 						m.setName(m.foreign ? name : TextLocal.inst.get("msg.you"));
 						errst = "mui" + String.valueOf(i);
-						uiItems[uiItems.length - 1 - i - loadSpace] = m;
+						uiItems.insertElementAt(m, 0);
+						//uiItems[uiItems.length - 1 - i - loadSpace] = m;
 						errst = "mui2" + String.valueOf(i);
 						if (i == 0) {
 							// last = m;
 						}
 						errst = "mui3" + String.valueOf(i);
-						itemsCount = (short) uiItems.length;
+						itemsCount = (short) uiItems.size();
 						errst = "mui4" + String.valueOf(i);
 					}
 				} catch (Throwable e) {
@@ -581,6 +672,29 @@ public class ChatScreen extends MainScreen {
 			 * ""+last.mid).addField("peer_id", peerId)); VikaCanvasInst.msgColor =
 			 * 0xff00ff00; errst="msgauto"; }
 			 */
+			
+			x = null;
+			errst = "msgdisp";
+			//loadAtts();
+			errst = "loadat";
+			//ready = true;
+		
+			try {
+				//itemsCount = (short) uiItems.length;
+				loadAtts();
+				} catch (Throwable eee) {}
+				json.dispose();
+				 
+				
+				this.repaint();
+				ready = true;
+				this.repaint();
+				//scrollToSelected();
+				
+			
+			
+			
+			//scrollToSelected();
 			try {
 				if (Settings.autoMarkAsRead) {
 					VikaCanvasInst.updColor = 0xff00ffff;
@@ -589,12 +703,6 @@ public class ChatScreen extends MainScreen {
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
-			x = null;
-			errst = "msgdisp";
-			loadAtts();
-			errst = "loadat";
-			ready = true;
-
 			// finally
 			// {
 
@@ -603,6 +711,336 @@ public class ChatScreen extends MainScreen {
 			e.printStackTrace();
 		}
 	}
+	 public void startRecord() {
+		 voiceRecorderThread = new Thread(new VoiceRecorder());
+			/*Alert alert = new Alert("Внимание", "Идёт запись...", (Image) null, AlertType.INFO);
+			errstring = 11;
+
+			alert.setCommandListener(vikaInst);
+			alert.setTimeout(-2);
+			sendVoice = new Command("Отправить", 4, 1);
+			alert.addCommand(sendVoice);
+			cancelVoice = new Command("Отмена", 3, 1);
+			alert.addCommand(cancelVoice);
+			errstring = 12;
+			
+			Display.getDisplay(vikaInst).setCurrent(alert);
+			errstring = 13;*/
+			
+			voiceRecorderThread.start();
+		 
+	 } 
+	
+	public void startRecdord()  {
+		//try {
+			String var1 = "";
+			try {
+				var1 = VikaUtils.download(new URLBuilder("docs.getUploadServer").addField("type", "audio_message"));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				//VikaUtils.logToFile("ioo");
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				//VikaUtils.logToFile("inter");
+				e1.printStackTrace();
+			}
+			//VikaUtils.logToFile(var1);
+			uploadUrl = var1.substring(var1.indexOf("upload_url") + 13, var1.length() - 3);
+			//VikaUtils.logToFile("url is "+uploadUrl);
+			if (!VikaTouch.isS40()) {
+				try {
+					pl = Manager.createPlayer("capture://audio?encoding=pcm");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				//	VikaUtils.logToFile("ioio");
+				} catch (MediaException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				//	VikaUtils.logToFile("med");
+				}
+			} else {
+				try {
+					pl = Manager.createPlayer("capture://audio?encoding=pcm&rate=8000&bits=16");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (MediaException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			pl.addPlayerListener(this);
+			try {
+				pl.realize();
+			} catch (MediaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			//	VikaUtils.logToFile("me");
+			}
+			try {
+				pl.prefetch();
+			} catch (MediaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			//	VikaUtils.logToFile("pref");
+			}
+			
+			rec = (RecordControl) pl.getControl("RecordControl");
+			output = new ByteArrayOutputStream();
+			rec.setRecordStream(output);
+			try {
+				pl.start();
+			} catch (MediaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			//	VikaUtils.logToFile("jopa");
+			}
+			rec.startRecord();
+		//	VikaUtils.logToFile("recording...");
+			VikaTouch.needstoRedraw=true;
+			VikaTouch.canvas.serviceRepaints();
+		/*} catch (VikaNetworkError e) {
+
+		} catch (MediaException e) {
+
+		} catch (IOException e) {
+
+		}*/
+	}
+	
+	
+	
+	
+	
+	
+	
+	public void sendRecord()  {
+		voiceRecorderThread.interrupt();
+			try {
+				//rec.stopRecord();
+				
+			rec.commit();
+			
+			} catch (Throwable eee ) {
+				//VikaUtils.logToFile(eee.getMessage());
+				//VikaUtils.logToFile("commit");
+			}
+			/*try {
+				pl.stop();
+			} catch (Throwable e) {
+				VikaUtils.logToFile(e.getMessage());
+				VikaUtils.logToFile("pl.stop");
+			}*/
+
+			
+			/*try {
+			pl.close();
+			pl.deallocate();
+			} catch (Throwable ee) {
+				VikaUtils.logToFile(ee.getMessage());
+				VikaUtils.logToFile("pl.close()");
+			}*/
+			
+			
+			byte[] recorderSoundArray = output.toByteArray();
+			
+			try {
+				output.close();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			uploadUrl = VikaUtils.replace(uploadUrl, "\\/", "/");
+			//VikaUtils.logToFile(uploadUrl + " " + recorderSoundArray.length);
+			String var4 = null;
+			/*try {
+				var4 = VikaUtils.upload(uploadUrl, "upload_field", "bb2.mp3", recorderSoundArray);
+VikaUtils.logToFile(var4);
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}*/
+			
+			
+			Hashtable var3 = new Hashtable();
+			var4 = "";
+
+			try {
+				
+				byte[] var5 = (new HttpMultipartRequest("http://vikamobile.ru:80/upload.php?" + uploadUrl, var3, "upload_field",
+						"audio"+String.valueOf(new Random().nextInt(10000))+".mp3", "multipart/form-data", recorderSoundArray)).send();
+				var4 = new String(var5);
+				//VikaUtils.logToFile(var4);
+			} catch (Exception var152) {
+				var152.printStackTrace();
+			}
+
+			String var178 = null;
+			try {
+				var178 = VikaUtils.downloadE(new URLBuilder("docs.save").addField("file", var4));
+			//	VikaUtils.logToFile(var178);
+			} catch (VikaNetworkError e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			/*String var6 = var178.substring(var178.indexOf("owner_id") + 10,
+					var178.substring(var178.indexOf("owner_id") + 10, var178.length()).indexOf("\"") - 1);
+			String var7 = var178.substring(var178.indexOf("id") + 4,
+					var178.substring(var178.indexOf("id") + 4, var178.length()).indexOf("\"") - 1);*/
+			JSONObject aa = new JSONObject(var178);
+		//	VikaUtils.logToFile("json="+aa.toString()+"\n");
+			JSONObject resp = aa.getJSONObject("response");
+			//VikaUtils.logToFile("resp="+resp.toString()+"\n");
+			JSONObject aud = resp.getJSONObject("audio_message");
+		//	VikaUtils.logToFile("aud="+aud.toString()+"\n");
+			String var6 = aud.getString("owner_id");
+			String var7 = aud.getString("id");
+		//	VikaUtils.logToFile("user"+var6+"user");
+		//	VikaUtils.logToFile("id"+var7+"id");
+			try {
+				String a;
+				//if ((inputedLinesCount == 0 || (NokiaUIInvoker.supportsTextEditor() && (NokiaUIInvoker.getTextEditorContent()==null || NokiaUIInvoker.getTextEditorContent()==""))) && (VikaTouch.resendingobjectid=="" || VikaTouch.resendingobjectid==null)) {
+						a = VikaUtils.downloadE(new URLBuilder("messages.send").addField("peer_id", peerId).addField("attachment",
+						"doc" + var6 + "_" + var7).addField("random_id", new Random().nextInt(1000)));
+				/*} else {
+					try {
+        	        if(NokiaUIInvoker.supportsTextEditor()) {
+        	            if(NokiaUIInvoker.textEditorShown()) {
+        	                inputText = NokiaUIInvoker.getTextEditorContent();
+        	                inputChanged = true;
+        	                //VikaTouch.sendLog(inputText);
+        	               // String code = TestUtils.getEmojiString("1f609");
+        	               
+        	            }
+        	        }
+                } catch (Throwable e) {
+                	
+                }
+					a = VikaUtils.downloadE(new URLBuilder("messages.send").addField("peer_id", peerId).addField("attachment",
+							"doc" + var6 + "_" + var7).addField("random_id", new Random().nextInt(1000)).addField("message", inputText));
+				}*/
+			//	VikaUtils.logToFile(a);
+			} catch (VikaNetworkError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		/*	uploadUrl = VikaUtils.replace(uploadUrl, "\\/", "/");
+			VikaUtils.logToFile("uploading ");
+			String var4 = "uploading";
+			try {
+				var4 = VikaUtils.upload(uploadUrl, "upload_field", "bb2.mp3", recorderSoundArray);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			VikaUtils.logToFile(var4);
+			VikaUtils.logToFile("saving doc...");
+			String var178 = "saving";
+			try {
+				var178 = VikaUtils.download(new URLBuilder("docs.save").addField("file", var4));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			VikaUtils.logToFile(var178);
+			
+			String var6 = var178.substring(var178.indexOf("owner_id") + 10,
+					var178.substring(var178.indexOf("owner_id") + 10, var178.length()).indexOf("\"") - 1);
+			String var7 = var178.substring(var178.indexOf("id") + 4,
+					var178.substring(var178.indexOf("id") + 4, var178.length()).indexOf("\"") - 1);
+
+			String vv = "send";
+			try {
+				vv = VikaUtils.download(new URLBuilder("messages.send").addField("peer_id", peerId).addField("attachment",
+						"doc" + var6 + "_" + var7));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			VikaUtils.logToFile(vv);*/
+		/*} catch (IOException e) {
+			VikaUtils.logToFile("IO");
+		} catch (RuntimeException e) {
+			VikaUtils.logToFile("RuntimeException");
+		} catch (Exception e) {
+			if(e instanceof InterruptedException)
+				throw (InterruptedException) e;
+		} catch (Throwable eee) {
+			VikaUtils.logToFile("Throwable");
+		}*/
+	}
+	
+	
+	
+
+	public void senddRecord() throws InterruptedException {
+		try {
+			rec.commit();
+
+			try {
+				pl.stop();
+			} catch (MediaException e) {
+			}
+
+			byte[] recorderSoundArray = output.toByteArray();
+			pl.close();
+			pl.deallocate();
+
+			uploadUrl = VikaUtils.replace(uploadUrl, "\\/", "/");
+			String var4 = VikaUtils.upload("http://vikamobile.ru:80/upload.php?" + uploadUrl, "upload_field", "bb2.mp3", recorderSoundArray);
+
+			String var178 = VikaUtils.downloadE(new URLBuilder("docs.save").addField("file", var4));
+			String var6 = var178.substring(var178.indexOf("owner_id") + 10,
+					var178.substring(var178.indexOf("owner_id") + 10, var178.length()).indexOf("\"") - 1);
+			String var7 = var178.substring(var178.indexOf("id") + 4,
+					var178.substring(var178.indexOf("id") + 4, var178.length()).indexOf("\"") - 1);
+
+			VikaUtils.downloadE(new URLBuilder("messages.send").addField("peer_id", peerId).addField("attachment",
+					"doc" + var6 + "_" + var7));
+		} catch (IOException e) {
+
+		} catch (VikaNetworkError e) {
+
+		} catch (RuntimeException e) {
+
+		} catch (Exception e) {
+			if(e instanceof InterruptedException)
+				throw (InterruptedException) e;
+		}
+	}
+
+	public void cancelRecord() {
+		voiceRecorderThread.interrupt();
+		try {
+			rec.commit();
+		} catch (Exception e) {
+		}
+		try {
+			pl.stop();
+			pl.close();
+			pl.deallocate();
+		} catch (Exception e) {
+		}
+	}
+	
+	
 
 	private void messagesDialog() throws IOException, InterruptedException {
 		VikaTouch.needstoRedraw=true;
@@ -612,9 +1050,9 @@ public class ChatScreen extends MainScreen {
 		VikaCanvasInst.msgColor = 0xffff0000;
 		// скачка сообщений
 		if (unread_count> Settings.messagesPerLoad) {
-			uiItems = new PressableUIItem[unread_count + loadSpace];
+			uiItems = new Vector(unread_count);
 		} else {
-		uiItems = new PressableUIItem[Settings.messagesPerLoad + loadSpace];
+			uiItems = new Vector(Settings.messagesPerLoad);
 		}
 		// VikaTouch.sendLog("Requesting history");
 		String x = "";
@@ -629,6 +1067,25 @@ public class ChatScreen extends MainScreen {
 		VikaCanvasInst.msgColor = 0xffffff00;
 		JSONObject res = new JSONObject(x).optJSONObject("response");
 		 json = res.optJSONArray("items");
+		 
+		 
+		 JSONArray profiles = res.optJSONArray("profiles");
+			
+		 try {
+				if(profiles != null) {
+					for(int i = 0; i < profiles.length(); i++) {
+						JSONObject profile = profiles.getJSONObject(i);
+						if(!VikaTouch.profiles.containsKey(new IntObject(profile.getInt("id"))) && profile != null)
+							VikaTouch.profiles.put(new IntObject(profile.getInt("id")), 
+									new ProfileObject(profile.getInt("id"), 
+											profile.getString("first_name"), profile.getString("last_name"), 
+											profile.getString("photo_50").indexOf("camera_50") > -1 ? "camera_50." : profile.getString("photo_50"), profile.optString("online")));
+					}
+				}
+			} catch (Throwable e) {
+				
+			}
+		 
 		if(!VikaTouch.profiles.containsKey(new IntObject(peerId)))
 			VikaTouch.profiles.put(new IntObject(peerId), new ProfileObject(localId, title, null));
 		inr = res.optJSONArray("conversations").optJSONObject(0).optInt("in_read");
@@ -640,7 +1097,8 @@ public class ChatScreen extends MainScreen {
 				VikaCanvasInst.msgColor = 0xff00ff00;
 				MsgItem m = new MsgItem(json.getJSONObject(i));
 				m.parseJSON();
-				m.loadAtts();
+				//m.loadAtts();
+				//m.itemDrawHeight=
 				int fromId = m.fromid;
 
 				boolean chain = false;
@@ -650,7 +1108,8 @@ public class ChatScreen extends MainScreen {
 				m.showName = !chain;
 
 				m.setName(m.foreign ? title : TextLocal.inst.get("msg.you"));
-				uiItems[uiItems.length - 1 - i - loadSpace] = m;
+				uiItems.insertElementAt(m, 0);
+				//uiItems[uiItems.length - 1 - i - loadSpace] = m;
 				if (Settings.autoMarkAsRead && i == 0) {
 					VikaCanvasInst.msgColor = 0xffff00ff;
 					VikaUtils.request(new URLBuilder("messages.markAsRead")
@@ -665,44 +1124,125 @@ public class ChatScreen extends MainScreen {
 			}
 		}
 		try {
-		itemsCount = (short) uiItems.length;
+		//itemsCount = (short) uiItems.length;
 		loadAtts();
 		} catch (Throwable eee) {}
+		json.dispose();
+		 
+		
+		this.repaint();
 		ready = true;
-
+		this.repaint();
+		//scrollToSelected();
+		/*if (Settings.unsentmsgs!=null) {
+		int k=-1;
+		for (int h=0; h< Settings.unsentmsgs.length(); h++) {
+			if (Settings.unsentmsgs.getJSONObject(h).optInt("peer_id")==peerId) {
+				k=h;
+			}
+		}
+		if (k!=1) {
+		UnsentMsgItem um = new UnsentMsgItem(Settings.unsentmsgs.getJSONObject(k));
+		uiItems[jl+1]=um;
+		}
+		}*/
+		
 	}
 
+	/*public void loadAtts() {
+		(new Thread() {
+			public void run() {
+				VikaTouch.needstoRedraw=true;
+				VikaCanvasInst.msgColor = 0xff0000ff;
+				VikaTouch.loading = true;
+				int i = 0;
+				int maxnum = 0;
+				try {
+					for (i = 0; i < uiItems.length; i++) {
+						if (uiItems[i] == null)
+							continue;
+						if (uiItems[i] instanceof MsgItem) {
+							maxnum = i;
+							((MsgItem) uiItems[i]).loadAtts();
+							
+						}
+					}
+				} catch (Throwable e) {
+					//VikaTouch.popup(new InfoPopup("Attachments error, msg " + i + " exc " + e.toString(), null));
+				}
+				VikaCanvasInst.msgColor = 0xff00ffff;
+				try {
+					forceRedraw = true;
+					//repaint();
+					//Thread.sleep(50);
+					//repaint();
+					forceRedraw = false;
+					//T//hread.sleep(50);
+					IMessage mi = (IMessage) uiItems[maxnum];
+					//if (mi.getMessageId() == l)
+					currentItem = mi.getMessageId() ;
+							//markMsgs(inr, outr);
+					//scrollToSelected();
+					uiItems[currentItem].setSelected(true);
+					
+						
+					//
+					
+					
+					
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+
+				System.gc();
+				//scrollToSelected();
+			
+				try {
+					while (updStop)
+						Thread.sleep(200);
+					runUpdater();
+					VikaTouch.loading = false;
+					VikaCanvasInst.msgColor = 0xff000000;
+				} catch (InterruptedException e) {
+				} catch (Throwable ee) {}
+				
+			//}}).start();
+			this.repaint();
+			this.serviceRepaints();
+		
+	}*/
+	
+	
 	public void loadAtts() {
-		VikaTouch.needstoRedraw=true;
 		VikaCanvasInst.msgColor = 0xff0000ff;
 		VikaTouch.loading = true;
-		//int i = 0;
-		/*try {
-			for (i = 0; i < uiItems.length; i++) {
-				if (uiItems[i] == null)
+		int i = 0;
+		try {
+			for (i = 0; i < uiItems.size(); i++) {
+				if (uiItems.elementAt(i) == null)
 					continue;
-				if (uiItems[i] instanceof MsgItem) {
-					((MsgItem) uiItems[i]).loadAtts();
+				if (uiItems.elementAt(i) instanceof MsgItem) {
+					((MsgItem) uiItems.elementAt(i)).loadAtts();
+					
 				}
+				VikaTouch.needstoRedraw=true;
+				this.serviceRepaints();
+				VikaTouch.needstoRedraw=true;
 			}
 		} catch (Throwable e) {
-			//VikaTouch.popup(new InfoPopup("Attachments error, msg " + i + " exc " + e.toString(), null));
-		}*/
+			VikaTouch.popup(new InfoPopup("Attachments error, msg " + i + " exc " + e.toString(), null));
+		}
 		VikaCanvasInst.msgColor = 0xff00ffff;
 		try {
 			forceRedraw = true;
-			repaint();
-			Thread.sleep(50);
-			repaint();
+			//repaint();
+			//Thread.sleep(50);
+			//repaint();
 			forceRedraw = false;
-			Thread.sleep(50);
+			//Thread.sleep(50);
 			currentItem = markMsgs(inr, outr);
-			uiItems[currentItem].setSelected(true);
-			
-				
+			((PressableUIItem) uiItems.elementAt(currentItem)).setSelected(true);
 			scrollToSelected();
-			
-			
 			
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -711,23 +1251,48 @@ public class ChatScreen extends MainScreen {
 		System.gc();
 
 		try {
-			while (updStop)
-				Thread.sleep(200);
+			//while (updStop)
+			//	Thread.sleep(200);
 			runUpdater();
 			VikaTouch.loading = false;
 			VikaCanvasInst.msgColor = 0xff000000;
-		} catch (InterruptedException e) {
-		} catch (Throwable ee) {}
+		} catch (Exception e) {
+		}
+	}
+	
+	
+	public int markMsgs(int inRead, int outRead) {
+		try {
+			int l = Math.min(inRead, outRead);
+			boolean r = false;
+			int rn = 0;
+			for (int i = uiItems.size() - 1; i >= 0; i--) {
+				if (uiItems.elementAt(i) != null && uiItems.elementAt(i) instanceof IMessage) {
+					IMessage mi = (IMessage) uiItems.elementAt(i);
+					if (mi.getMessageId() == l) {
+						r = true;
+						rn = i;
+					}
+					mi.setRead(r);
+				}
+			}
+			return rn;
+		} catch (Throwable e) {
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
-	public int markMsgs(int inRead, int outRead) {
+	/*public int markMsgs(int inRead, int outRead) {
 		VikaTouch.needstoRedraw=true;
+		int rn = 0;
+		return 0;
 		try {
 		//	return 0;
 			int l = Math.min(inRead, outRead);
-			// VikaTouch.sendLog("in:"+inRead+" out:"+outRead);
+			//VikaTouch.sendLog("in:"+inRead+" out:"+outRead);
 			boolean r = false;
-			int rn = 0;
+			
 			if (uiItems!=null) {
 			for (int i = uiItems.length - 1; i >= 0; i--) {
 				if (uiItems[i] != null) {
@@ -745,10 +1310,10 @@ public class ChatScreen extends MainScreen {
 			return rn;
 		} catch (Throwable e) {
 			e.printStackTrace();
-			VikaTouch.sendLog("Marking: " + e.toString());
-			return 0;
+			//VikaTouch.sendLog("Marking: " + e.toString());
+			return rn;
 		}
-	}
+	}*/
 
 	public void draw(Graphics g) {
 		update(g);
@@ -761,6 +1326,8 @@ public class ChatScreen extends MainScreen {
 
 			drawHeader(g);
 			drawTextbox(g);
+			
+			
 			/*
 			 * g.setColor(0, 0, 0); g.fillRect(0, 60, 300, 40); g.setColor(200, 200, 200);
 			 * g.drawString(scrlDbg, 0, 60, 0);
@@ -822,7 +1389,45 @@ public class ChatScreen extends MainScreen {
 					} else if (x > DisplayUtils.width - 40) {
 						// отправить
 						//if ((inputText !=null) && (inputText!= "") ){
-						send();
+						if (NokiaUIInvoker.supportsTextEditor()) {
+						if ((inputedLinesCount == 0 || (inputText== "") || (NokiaUIInvoker.supportsTextEditor() && (NokiaUIInvoker.getTextEditorContent()==null || NokiaUIInvoker.getTextEditorContent()==""))) && (VikaTouch.resendingobjectid=="" || VikaTouch.resendingobjectid==null)) {
+							if (isRecRunning==true) {
+								canWrite=true;
+								isRecRunning=false;
+								//title = "Отправка записи";
+								sendRecord();
+								  //  }}).start();
+								//title = "Запись отправлена";
+							} else  {
+								isRecRunning = true;
+								canWrite=false;
+							//title = "Идёт запись";
+							startRecord();
+							}
+						} else {
+							send();
+							
+						}
+						} else {
+							if ((inputedLinesCount == 0 || (inputText== "")) && (VikaTouch.resendingobjectid=="" || VikaTouch.resendingobjectid==null)) {
+								if (isRecRunning==true) {
+									canWrite=true;
+									isRecRunning=false;
+									//title = "Отправка записи";
+									sendRecord();
+									  //  }}).start();
+									//title = "Запись отправлена";
+								} else  {
+									isRecRunning = true;
+									canWrite=false;
+								//title = "Идёт запись";
+								startRecord();
+								}
+							} else {
+								send();
+								
+							}
+						}
 						//} else {
 							//voicescreen
 							//inputText = TextLocal.inst.get("player.recording");
@@ -866,39 +1471,87 @@ public class ChatScreen extends MainScreen {
 
 	public void press(int key) {
 		VikaTouch.needstoRedraw=true;
+		//VikaUtils.logToFile(String.valueOf(key)+ " ");
 		if (key != -12 && key != -20) {
 			keysMode = true;
 		}
 		/*
 		 * if(VikaCanvas.currentAlert!=null) {
-		 * VikaCanvas.currentAlert.press(key); repaint(); return; }
+		 * VikaCanvas.currentAlert.press(key); f; return; }
 		 */
 		if (key == -1) {
+			if (isRecRunning) {
+				return;
+			} 
 			VikaTouch.needstoRedraw=true;
 			up();
+			this.serviceRepaints();
+			VikaTouch.needstoRedraw=true;
 		} else if (key == -2) {
+			if (isRecRunning) {
+				return;
+			} 
 			VikaTouch.needstoRedraw=true;
+			//if (ready) {
 			down();
-		} else if (key == -3) {
+			this.serviceRepaints();
 			VikaTouch.needstoRedraw=true;
-			
+			//}
+		} else if (key == -3) {
+			if (isRecRunning) {
+				return;
+			} 
+			VikaTouch.needstoRedraw=true;
+			// if (ready) {
 			up();
+			// }
 		} else if (key == -4) {
+			if (isRecRunning) {
+				return;
+			} 
 			VikaTouch.needstoRedraw=true;
 			down();
 		} else if (key == -10) {
 			VikaTouch.needstoRedraw=true;
 			if (inputedLinesCount != 0) {
+				if (isRecRunning==true) {
+					isRecRunning=false;
+					canWrite=true;
+					//title = "Отправка записи";
+					sendRecord();
+					  //  }}).start();
+					//title = "Запись отправлена";
+					//return;
+					canWrite=true;
+				} else  {
+					canWrite=false;
+					isRecRunning = true;
+					VikaTouch.needstoRedraw=true;
+					this.serviceRepaints();
+					//this.repaint();
+					
+					VikaTouch.needstoRedraw=true;
+				//title = "Идёт запись";
+				startRecord();
+				this.serviceRepaints();
+				//this.repaint();
+				//return;
+				}
+			} else {
 				send();
-				} else {
+				//return;
+			}
+			/*if (inputedLinesCount != 0) {
+				send();
+				} else {*/
 					//voicescreen
 					//VikaTouch.setDisplay(new CameraScreen(ChatScreen.this), 1);
-				}
+		//		}
 		} else if (key == -5) { // ok
 			VikaTouch.needstoRedraw=true;
 			switch (buttonSelected) {
 			case 0:
-				uiItems[currentItem].keyPress(key);
+				((PressableUIItem) uiItems.elementAt(currentItem)).keyPress(key);
 				break;
 			case 1:
 				// прикреп
@@ -914,24 +1567,57 @@ public class ChatScreen extends MainScreen {
 				VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 				break;
 			case 4:
-				send();
+				
+				if ((inputedLinesCount == 0)) {
+					if (isRecRunning==true) {
+						isRecRunning=false;
+						canWrite=true;
+						//title = "Отправка записи";
+						sendRecord();
+						  //  }}).start();
+						//title = "Запись отправлена";
+					} else  {
+						isRecRunning = true;
+						canWrite=false;
+					//title = "Идёт запись";
+					startRecord();
+					}
+				} else {
+					send();
+				}
+				
+				//send();
 				//buttonSelected = 2;
 				break;
 			}
 		} else if (key == -6) { // lsk
 			VikaTouch.needstoRedraw=true;
+			if (isRecRunning) {
+				return;
+			} else {
 			if (buttonSelected == 0) {
 				buttonSelected = 2;
 			} else {
 				buttonSelected = 0;
 			}
+			}
 		} else if (key == -7) { // rsk
+			if (isRecRunning) {
+				isRecRunning = false;
+				canWrite=true;
+				cancelRecord();
+				VikaTouch.needstoRedraw=true;
+				this.serviceRepaints();
+			} else {
 			VikaTouch.needstoRedraw=true;
 			stopUpdater();
 			VikaTouch.inst.cmdsInst.command(14, this);
+			}
+		} else if (key == 10) {
+			send();
 		}
 		VikaTouch.needstoRedraw=true;
-		repaint();
+		//repaint();
 	}
 
 	private void addAtt() {
@@ -1030,34 +1716,66 @@ public class ChatScreen extends MainScreen {
 	}
 
 	public int getItemY(int n) {
-		VikaTouch.needstoRedraw=true;
 		int y = 0;
-		for (int i = 0; (i < uiItems.length && i < n); i++) {
-			if (uiItems[i] != null) {
-				y += uiItems[i].getDrawHeight();
+		for (int i = 0; (i < uiItems.size() && i < n); i++) {
+			try {
+			if (uiItems.elementAt(i) != null) {
+				VikaTouch.isscrolling=true;
+				if (((PressableUIItem) uiItems.elementAt(i)).getDrawHeight()<=1) {
+					try {
+					((PressableUIItem) uiItems.elementAt(i)).paint(VikaTouch.canvas.getG(), 0, scrolled);
+					} catch (Throwable eee) {
+					//	VikaUtils.logToFile("pizdec");
+					}
+				}
+				y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 				y += msgYMargin;
+				//VikaUtils.logToFile(" itemY " + String.valueOf(i)+ " = " + String.valueOf(((MsgItem) uiItems.elementAt(i)).getDrawHeight() + msgYMargin));
+			}
+			} catch (Throwable eeee) {
+			//	VikaUtils.logToFile(" getItemY error: " + String.valueOf(i));
+				return 0;
 			}
 		}
+		
+		//VikaUtils.logToFile(" getItemY: " + String.valueOf(y + topPanelH));
 		return y + topPanelH;
+	}
+	
+	public void scrollToSelected() {
+		try {
+			//VikaUtils.logToFile("scrolltoselected");
+			VikaTouch.isscrolling=true;
+			scrolled = -(this.getItemY(
+					currentItem
+					//1
+					) 
+					/*- DisplayUtils.height / 2 + (((MsgItem) uiItems.elementAt(
+							currentItem
+							//1
+							)).getDrawHeight() / 2)*/
+					+ MainScreen.topPanelH);
+		} catch (Throwable e) {
+			//VikaUtils.logToFile(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	public void selectCentered() {
-		VikaTouch.needstoRedraw=true;
-		System.out.println("select center in chat");
 		int y = MainScreen.topPanelH;
 		int ye = y;
 		int s = -scrolled + DisplayUtils.height / 2;
-		for (int i = 0; (i < uiItems.length && i < uiItems.length); i++) {
-			if (uiItems[i] == null)
+		for (int i = 0; i < uiItems.size(); i++) {
+			if (uiItems.elementAt(i) == null)
 				return;
-			ye = y + uiItems[i].getDrawHeight();
+			ye = y + ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 			if (y <= s && ye > s) {
 				try {
-					uiItems[currentItem].setSelected(false);
+					((PressableUIItem) uiItems.elementAt(currentItem)).setSelected(false);
 				} catch (Throwable e) {
 				}
 				try {
-					uiItems[i].setSelected(true);
+					((PressableUIItem) uiItems.elementAt(i)).setSelected(true);
 					currentItem = i;
 				} catch (Throwable e) {
 				}
@@ -1078,7 +1796,8 @@ public class ChatScreen extends MainScreen {
 		if (key == -2) {
 			down();
 		}
-		repaint();
+		serviceRepaints();
+		//repaint();
 	}
 
 	public boolean canSend = true;
@@ -1132,7 +1851,7 @@ public class ChatScreen extends MainScreen {
             return;
         canSend = false;
         buttonSelected = 0;
-        inputedLinesCount = 0;
+       // inputedLinesCount = 0;
         
         new Thread() {
             public void run() {
@@ -1148,29 +1867,18 @@ public class ChatScreen extends MainScreen {
         	            }
         	        }
                 } catch (Throwable e) {
-                	VikaTouch.sendLog(e.getMessage());
+                	//VikaTouch.sendLog(e.getMessage());
                 }
                 int e = 0;
-                String res;
+                String res = null;
                 URLBuilder url = null;
-                try {
+                //try {
                 	e=1;
                 	VikaTouch.loading = true;
                 	e=2;
                      url = new URLBuilder("messages.send").addField("random_id", new Random().nextInt(1000))
                             .addField("peer_id", peerId).addField("message", inputText).addField("intent", "default");
-                    if(NokiaUIInvoker.supportsTextEditor()) {
-                    	e=3;
-        	            if(NokiaUIInvoker.textEditorShown()) {
-        	            	e=4;
-                    NokiaUIInvoker.setTextEditorContent("");
-                    inputText="";
-                    inputedLinesCount = 0;
-                    e=5;
-	                inputChanged = true;
-	                e=6;
-        	            }
-                    }
+                    
                /*     inputText="";
                     inputedLinesCount = 0;
                     inputedTextToDraw=null;
@@ -1205,10 +1913,65 @@ public class ChatScreen extends MainScreen {
                 	}
                     
                    // VikaTouch.sendLog(url.toString());
-                    Thread.sleep(200);
+                    try {
+						Thread.sleep(200);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                     e=19;
-                   res = VikaUtils.download(url);
+                   try {
+					res = VikaUtils.download(url);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
                     e=20;
+                    int a=0;
+                    while ((res==null) && (a<10)) {
+                    	try {
+							res = VikaUtils.download(url);
+                    	} catch (Throwable e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+                    	try {
+							sleep(6000);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+                    	a++;
+                    }
+                    if (res==null) {
+                    	JSONObject unsentmsg = new JSONObject();
+                    	unsentmsg.put("url", url);
+                    	unsentmsg.put("peer_id", peerId);
+                    	unsentmsg.put("message", inputText);
+                    	unsentmsg.put("datetime", System.currentTimeMillis());
+                    	if (answerMsgId!=0) {
+                    		unsentmsg.put("message", answerMsgId);
+                    	}
+                    	Settings.unsentmsgs.put(unsentmsg);
+                    	 VikaTouch.needstoRedraw=true;
+                         
+                    	return;
+                    }
+                    if(NokiaUIInvoker.supportsTextEditor()) {
+                    	e=3;
+        	            if(NokiaUIInvoker.textEditorShown()) {
+        	            	e=4;
+                    NokiaUIInvoker.setTextEditorContent("");
+                    inputText="";
+                    inputedLinesCount = 0;
+                    e=5;
+	                inputChanged = true;
+	                e=6;
+        	            }
+                    }
                    // VikaTouch.sendLog(res);
                   /*  if (res == null) {
                     	while (res==null) {
@@ -1239,7 +2002,7 @@ public class ChatScreen extends MainScreen {
                     //} else {
                     //	if (res.indexOf("response")>=0) {
                         inputText = "";
-                        inputChanged = false;
+                        inputChanged = true;
                         inputedTextToDraw=null;
                         inputedLinesCount = 0;
                        /* e=22;
@@ -1256,11 +2019,11 @@ public class ChatScreen extends MainScreen {
                     		}
                     	}*/
                    // }
-                } catch (Throwable ee) {
-                	 canSend = false;
+              //  } catch (Throwable ee) {
+               /* 	 canSend = false;
                 	 VikaTouch.isdownloading=2;
                 	 VikaTouch.needstoRedraw=true;
-                	 VikaTouch.canvas.serviceRepaints();
+                	 VikaTouch.canvas.serviceRepaints();*/
                 	/* while (true) {
                 		 try {
                 		 res = VikaUtils.download(url);
@@ -1273,18 +2036,30 @@ public class ChatScreen extends MainScreen {
 						}
                 	 }*/
                 	//VikaTouch.popup(new InfoPopup(TextLocal.inst.get("msg.senderror") + " - " + ee.toString() + " "+String.valueOf(e), null));
-                } finally {
+              //  } finally {
                     canSend = true;
                     VikaTouch.loading = false;
-                }
+                //}
             }
         }.start();
         buttonSelected = 0;
+        VikaTouch.needstoRedraw=true;
+        this.serviceRepaints();
+        try {
+			Thread.sleep(500);
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        updStop=false;
+        update();
+        VikaTouch.needstoRedraw=true;
+        this.serviceRepaints();
     }
 
 	// Удаляет старые сообщения из списка и пододвигает остальные назад, чтоб все
 	// влезли.
-	private void shiftList() {
+	/*private void shiftList() {
 		currentItem -= loadSpace;
 		int deltaScroll = 0;
 		for (int i = 0; i < loadSpace; i++) {
@@ -1299,10 +2074,12 @@ public class ChatScreen extends MainScreen {
 			uiItems[i] = null;
 		}
 		System.gc();
-	}
+	}*/
 
 	JSONArray temp1;
 	JSONObject temp2;
+
+	private String playertime =  "0:00";
 
 	
 
@@ -1318,11 +2095,14 @@ public class ChatScreen extends MainScreen {
 					return;
 				}
 				VikaCanvasInst.updColor = 0xffff0000;
-				long mid = ((IMessage) uiItems[uiItems.length - hasSpace - 1]).getMessageId();
+				//long mid = ((IMessage) uiItems[uiItems.length - hasSpace - 1]).getMessageId();
+				long mid = ((IMessage) uiItems.lastElement()).getMessageId();
+				VikaTouch.isdownloading=1;
+           	 VikaTouch.needstoRedraw=true;
 				final String x = VikaUtils.download(new URLBuilder("messages.getHistory")
 						.addField("start_message_id", String.valueOf(mid)).addField("peer_id", peerId)
 						.addField("count", 1).addField("offset", -1).addField("extended", 1));
-
+				//VikaTouch.isdownloading=0;
 				JSONArray items;
 				VikaCanvasInst.updColor = 0xffffff00;
 				try {
@@ -1380,10 +2160,10 @@ public class ChatScreen extends MainScreen {
 					VikaCanvasInst.updColor = 0xff00ff00;
 					if (updStop)
 						return;
-					if (newMsgCount >= hasSpace - 1) {
+					/*if (newMsgCount >= hasSpace - 1) {
 						// System.out.println("List shifting");
 						shiftList();
-					}
+					}*/
 					if (type == TYPE_CHAT) {
 						try {
 							JSONObject x2 = new JSONObject(x).getJSONObject("response");
@@ -1473,8 +2253,7 @@ public class ChatScreen extends MainScreen {
 						if (updStop)
 							return;
 						ChatItem m = newMsgs[newMsgCount - i - 1];
-						uiItems[uiItems.length - hasSpace] = m;
-						hasSpace--;
+						uiItems.addElement(m);
 						VikaCanvasInst.updColor = 0xffff00ff;
 					}
 					markMsgs(inRead, outRead);
@@ -1484,10 +2263,16 @@ public class ChatScreen extends MainScreen {
 
 			}
 			refreshOk = true;
+			VikaTouch.isdownloading=0;
+			 VikaTouch.needstoRedraw=true;
 		} catch (JSONException e) {
+			VikaTouch.isdownloading=2;
+			 VikaTouch.needstoRedraw=true;
 			e.printStackTrace();
 			// throw e;
 		} catch (Throwable e) {
+			VikaTouch.isdownloading=2;
+			 VikaTouch.needstoRedraw=true;
 			e.printStackTrace();
 		}
 	}
@@ -1749,7 +2534,7 @@ public class ChatScreen extends MainScreen {
 	
 	
 
-	private void msgClick(int tapY, long tapTime) {
+	/*private void msgClick(int tapY, long tapTime) {
 		VikaTouch.needstoRedraw=true;
 		tapY -= topPanelH;
 		
@@ -1770,10 +2555,32 @@ public class ChatScreen extends MainScreen {
 		//VikaTouch.needstoRedraw=true;
 		
 		//serviceRepaints();
+	}*/
+	
+	
+	private void msgClick(int tapY, long tapTime) {
+		tapY -= topPanelH;
+		if (uiItems == null)
+			return;
+		int y = 0;
+		int gTapY = tapY - scrolled;
+		for (int i = 0; i < uiItems.size(); i++) {
+			if (uiItems.elementAt(i) == null)
+				continue;
+			y += msgYMargin;
+			int y2 = y + ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+			if (y < gTapY && gTapY < y2) {
+				((PressableUIItem) uiItems.elementAt(i)).tap(0, gTapY - y);
+			}
+			y = y2;
+		}
 	}
 
-	private void drawDialog(Graphics g) {
+	/*private void drawDialog(Graphics g) {
 		VikaTouch.needstoRedraw=true;
+		//if (!ready) {
+		//	return;
+		//}
 		if (updStop) {
 			
 				return;
@@ -1788,8 +2595,17 @@ public class ChatScreen extends MainScreen {
 					continue;
 				try {
 					y += msgYMargin;
-					if (y + scrolled < DisplayUtils.height || forceRedraw)
+					if (uiItems[i] instanceof MsgItem) {
+					while (!((MsgItem)uiItems[i]).attsReady) {
+						Thread.yield();
+					}
+					}
+					//if (y + scrolled < DisplayUtils.height || forceRedraw) {
+					VikaTouch.needstoRedraw=true;
 						uiItems[i].paint(g, y, scrolled);
+						VikaTouch.needstoRedraw=true;
+						this.serviceRepaints();
+						VikaTouch.needstoRedraw=true;
 					y += uiItems[i].getDrawHeight();
 				} catch (RuntimeException e) {
 				}
@@ -1798,6 +2614,28 @@ public class ChatScreen extends MainScreen {
 		} catch (Throwable e) {
 			// VikaTouch.error(e, -8);
 			VikaTouch.sendLog(e.getMessage());
+		}
+	}*/
+	
+	
+	private void drawDialog(Graphics g) {
+		if (uiItems == null)
+			return;
+		try {
+			int y = 0;
+			for (int i = 0; i < uiItems.size(); i++) {
+				if (uiItems.elementAt(i) == null)
+					continue;
+				try {
+					y += msgYMargin;
+					if (y + scrolled < DisplayUtils.height || forceRedraw)
+						((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+					y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+				} catch (RuntimeException e) {
+				}
+			}
+			this.itemsh = y + 50;
+		} catch (Throwable e) {
 		}
 	}
 
@@ -1839,7 +2677,7 @@ public class ChatScreen extends MainScreen {
 			} catch (Throwable e) {
 				inputedLinesCount = 0;
 			}
-			inputBoxH = Math.max(48, font.getHeight() * inputedLinesCount + m * 2);
+			inputBoxH = Math.max(48, (font.getHeight() * (inputedLinesCount<=3 ? (inputedLinesCount ) : (3))) + m * 2);
 		}
 		if(NokiaUIInvoker.supportsTextEditor()) {
 			inputBoxH = 69;	
@@ -1911,7 +2749,7 @@ public class ChatScreen extends MainScreen {
         		currY = currY - h;
 			}
 
-			for (int i = 0; i < inputedLinesCount; i++) {
+			for (int i = 0; i < (inputedLinesCount<=3 ? (inputedLinesCount ) : (3)); i++) {
 				if (inputedTextToDraw[i] == null)
 					continue;
 
@@ -2014,6 +2852,25 @@ public class ChatScreen extends MainScreen {
             NokiaUIInvoker.setTextEditorSize(DisplayUtils.width-144, 25);
         }
 		} else {
+			if (isRecRunning) {
+				VikaTouch.needstoRedraw=true;
+				Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
+	    		int h = f.getHeight();
+				g.fillRect(0, DisplayUtils.height - inputBoxH - 1 - h, DisplayUtils.width, 1);
+				ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
+				g.fillRect(0, DisplayUtils.height - inputBoxH -h, DisplayUtils.width, inputBoxH+h);
+				ColorUtils.setcolor(g, ColorUtils.TEXT);
+				g.setFont(f);
+				int stw = f.stringWidth(title);
+				g.drawString("Идёт запись "+  
+				MusicPlayer.time
+					(	pl.getMediaTime() / 1000000L)
+						
+				, 
+						10
+						//(DisplayUtils.width-stw)/2
+						, DisplayUtils.height - (inputBoxH/2) - (h / 2), 0);
+			} else {
 			Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
     		int h = f.getHeight();
 			g.fillRect(0, DisplayUtils.height - inputBoxH - 1 - h, DisplayUtils.width, 1);
@@ -2026,7 +2883,8 @@ public class ChatScreen extends MainScreen {
 					10
 					//(DisplayUtils.width-stw)/2
 					, DisplayUtils.height - (inputBoxH/2) - (h / 2), 0);
-		}
+				}
+			}
         
 	
 	}
@@ -2079,9 +2937,10 @@ public class ChatScreen extends MainScreen {
 			g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_BOLD, Font.SIZE_SMALL));
 			g.drawString(this.refreshErrorStr, 50-yy, (int)Math.floor(0+14*xx), 0);
 		}
-
+		if (VikaTouch.integerUserId!=3225000) {
 		g.drawImage(IconsManager.selIco[IconsManager.BACK], 16-yy, 20-2*yy, 0);
 		g.drawImage(IconsManager.selIco[IconsManager.INFO], DisplayUtils.width - 38+yy, 20-2*yy, 0);
+		}
 		if (hasPinnedMessage) {
 
 			Font font = Font.getFont(0, 0, Font.SIZE_SMALL);
@@ -2141,19 +3000,42 @@ public class ChatScreen extends MainScreen {
 	
 	
 	public void onLeave() {
+	    try { 
+		NokiaUIInvoker.hideTextEditor();
+	    } catch (Throwable eee) {}
 		VikaTouch.needstoRedraw=true;
-        if(NokiaUIInvoker.textEditorShown())
-            NokiaUIInvoker.hideTextEditor();
+		try { 
+		msgthread.interrupt();
+		   } catch (Throwable eee) {}
+       // if(NokiaUIInvoker.textEditorShown())
+		try { 
         stopUpdater();
+		 } catch (Throwable eee) {}
         canSend=true;
+        
         VikaTouch.isresending=false;
         VikaTouch.resendingmid=0;
         VikaTouch.resendingname="";
         VikaTouch.resendingtext=""; 
         VikaTouch.resendingobjectid="";
         uiItems=null;
+        currentItem=0;
+        scrolled=0;
+        inst=null;
         vikatouch.screens.DialogsScreen.titleStr="Сообщения";
     }
+
+	public void playerUpdate(Player player, String event, Object eventData) {
+		// TODO Auto-generated method stub
+		VikaTouch.canvas.serviceRepaints();
+		this.serviceRepaints();
+		//currentItem=0;
+		//this.repaint();
+		VikaTouch.needstoRedraw=true;
+		this.playertime = MusicPlayer.time(pl.getMediaTime() / 1000000L);
+		VikaTouch.needstoRedraw=true;
+		
+	}
 
 	
 }

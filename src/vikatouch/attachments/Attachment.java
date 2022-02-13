@@ -10,9 +10,10 @@ import vikatouch.json.JSONBase;
  */
 public abstract class Attachment extends JSONBase {
 	public String type;
+	public int drawHeight = 0;
 
 	public int getDrawHeight() {
-		return 0;
+		return drawHeight;
 	}
 
 	public int attNumber;
@@ -33,6 +34,7 @@ public abstract class Attachment extends JSONBase {
 			if (type.equals("photo")) {
 				result = new PhotoAttachment();
 				result.json = json.getJSONObject("photo");
+				
 			} else if (type.equals("video")) {
 				result = new VideoAttachment();
 				result.json = json.getJSONObject("video");
@@ -65,6 +67,9 @@ public abstract class Attachment extends JSONBase {
 				result = new UnsupportedAttachment();
 				// result = new GiftAttachment();
 				// result.json = json.getJSONObject("gift");
+			} else if (type.equals("widget")) {
+				result = new WidgetAttachment();
+				result.json = json.getJSONObject("widget");
 			}
 		} catch (Exception e) {
 			if (result == null) {

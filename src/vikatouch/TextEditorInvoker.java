@@ -143,8 +143,8 @@ public class TextEditorInvoker {
 		};
 		textEditorr.setTextEditorListener(listenerrr);
 		} catch (Throwable eee) {
-			VikaTouch.sendLog(eee.toString());
-			VikaTouch.sendLog(eee.getMessage());
+			//VikaTouch.sendLog(eee.toString());
+			//VikaTouch.sendLog(eee.getMessage());
 		}
 	}
 	
@@ -162,8 +162,17 @@ public class TextEditorInvoker {
 		if(VikaTouch.isS40())
 			vikatouch.VikaTouch.canvas.setFullScreenMode(true);
 		try {
-			return textEditor.getContent();
+			textEditor.setFocus(false);
+			textEditor.setParent(null);
+			textEditor = null;
+			return "";
+					//textEditor.getContent();
+			
+			
 		} catch (Throwable e) {
+			textEditor.setFocus(false);
+			textEditor.setParent(null);
+			textEditor = null;
 			return "";
 		} finally {
 			textEditor.setFocus(false);

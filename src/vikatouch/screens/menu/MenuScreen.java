@@ -1,6 +1,7 @@
 package vikatouch.screens.menu;
 
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
@@ -8,6 +9,7 @@ import javax.microedition.lcdui.Image;
 
 import org.json.me.JSONObject;
 
+import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.menu.IMenu;
 import ru.nnproject.vikaui.menu.items.OptionItem;
 import ru.nnproject.vikaui.utils.ColorUtils;
@@ -60,6 +62,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 	protected static String hoursAgoStr;
 	public static String frreqStr;
 	public static String notifStr;
+	public static int sex = 2;
 	int uiih;
 	
 	
@@ -97,15 +100,17 @@ public class MenuScreen extends MainScreen implements IMenu {
 		try {
 			String avaurl;
 			x = VikaUtils.download(new URLBuilder("users.get")/* .addField("user_ids", VikaTouch.userId) */
-					.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status"));
+					.addField("fields", "photo_id,verified,sex,bdate,city,country,has_photo,photo_50,status,online,last_seen"));
 			
-			System.out.println(x);
+			//System.out.println(x);
 			JSONObject profileobj = new JSONObject(x).getJSONArray("response").getJSONObject(0);
+			sex = profileobj.optInt("sex");
 			name = profileobj.optString("first_name");
 			lastname = profileobj.optString("last_name");
 			status = profileobj.optString("status");
 			avaurl = JSONBase.fixJSONString(profileobj.optString("photo_50"));
 			hasAva = profileobj.optInt("has_photo") == 1;
+			
 			VikaTouch.integerUserId = profileobj.optInt("id");
 			VikaTouch.userId = "" + VikaTouch.integerUserId;
 			/*String mycountry = "";
@@ -134,7 +139,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 				onlineStr = TextLocal.inst.get("online");
 				minutesAgoStr = TextLocal.inst.get("date.minutesago");
 				hoursAgoStr = TextLocal.inst.get("date.hoursago");
-				wasOnlineStr = TextLocal.inst.get("wasonlinedate");
+				wasOnlineStr = (sex==1) ? TextLocal.inst.get("femalewasonlinedate") : TextLocal.inst.get("wasonlinedate");
+
 				wasOnlineJustNowStr = wasOnlineStr + " " + TextLocal.inst.get("date.justnow");
 			}
 			
@@ -189,8 +195,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 			VikaTouch.sendLog("Menu profile info: " + a.toString() + " uid:" + VikaTouch.userId);
 			a.printStackTrace();
 		}
-		frreqStr="";
-		notifStr="";
+		frreqStr="0";
+		notifStr="0";
 		try {
 			xy = VikaUtils.download(new URLBuilder("account.getCounters"));
 			
@@ -202,8 +208,8 @@ public class MenuScreen extends MainScreen implements IMenu {
 				notifStr = String.valueOf(stats.optInt("notifications"));
 			}
 		} catch (Throwable eee) {
-			frreqStr="";
-			notifStr="";
+			frreqStr="0";
+			notifStr="0";
 		}
 		/*
 		 * } else { VikaTouch.error(ErrorCodes.MENUNOUSERID, false); }
@@ -223,17 +229,17 @@ public class MenuScreen extends MainScreen implements IMenu {
 		 * }
 		 */
 		 uiih = DisplayUtils.compact ? 30 : 50; // е72, ландшафт 240, СЕ портрет
-		uiItems = new OptionItem[10];
-		uiItems[0] = new OptionItem(this, TextLocal.inst.get("menu.wall"), IconsManager.NEWS, 18, uiih);
-		uiItems[1] = new OptionItem(this, TextLocal.inst.get("menu.friends"), IconsManager.FRIENDS, 4, uiih);
-		uiItems[2] = new OptionItem(this, TextLocal.inst.get("menu.groups"), IconsManager.GROUPS, 5, uiih);
-		uiItems[3] = new MusicMenuItem(this, TextLocal.inst.get("menu.music"), IconsManager.MUSIC, 6, uiih);
-		uiItems[4] = new OptionItem(this, TextLocal.inst.get("menu.videos"), IconsManager.VIDEOS, 7, uiih);
-		uiItems[5] = new OptionItem(this, TextLocal.inst.get("menu.photos"), IconsManager.CAMERA, 8, uiih);
-		uiItems[6] = new OptionItem(this, TextLocal.inst.get("menu.documents"), IconsManager.DOCS, 9, uiih);
-		uiItems[7] = new OptionItem(this, TextLocal.inst.get("menu.search"), IconsManager.SEARCH, 19, uiih);
-		uiItems[8] = new OptionItem(this, TextLocal.inst.get("menu.notifs"), IconsManager.INFO, 19, uiih);
-		uiItems[9] = new OptionItem(this, TextLocal.inst.get("menu.quit"), IconsManager.CLOSE, -1, uiih);
+		 uiItems = new Vector(10);
+		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.wall"), IconsManager.NEWS, 18, uiih));
+		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.friends"), IconsManager.FRIENDS, 4, uiih));
+		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.groups"), IconsManager.GROUPS, 5, uiih));
+		 uiItems.addElement(new MusicMenuItem(this, TextLocal.inst.get("menu.music"), IconsManager.MUSIC, 6, uiih));
+		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.videos"), IconsManager.VIDEOS, 7, uiih));
+		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.photos"), IconsManager.CAMERA, 8, uiih));
+		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.documents"), IconsManager.DOCS, 9, uiih));
+		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.search"), IconsManager.SEARCH, 19, uiih));
+		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.notifs"), IconsManager.INFO, 19, uiih));
+		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.quit"), IconsManager.CLOSE, -1, uiih));
 
 		itemsCount = 10;
 		itemsh = 140 + uiih * itemsCount;
@@ -278,25 +284,25 @@ public class MenuScreen extends MainScreen implements IMenu {
 	protected final void up() {
 		VikaTouch.needstoRedraw=true;
 		if (selectedBtn > 1)
-			uiItems[selectedBtn - 2].setSelected(false);
+			((PressableUIItem) uiItems.elementAt(selectedBtn - 2)).setSelected(false);
 		selectedBtn--;
 		if (selectedBtn < 0)
 			selectedBtn = 0;
 		scrollToSelected();
 		if (selectedBtn > 1)
-			uiItems[selectedBtn - 2].setSelected(true);
+			((PressableUIItem) uiItems.elementAt(selectedBtn - 2)).setSelected(true);
 	}
 
 	protected final void down() {
 		VikaTouch.needstoRedraw=true;
 		if (selectedBtn > 1)
-			uiItems[selectedBtn - 2].setSelected(false);
+			((PressableUIItem) uiItems.elementAt(selectedBtn - 2)).setSelected(false);
 		selectedBtn++;
 		if (selectedBtn > 11)
 			selectedBtn = 11;
 		
 		if (selectedBtn > 1)
-			uiItems[selectedBtn - 2].setSelected(true);
+			((PressableUIItem) uiItems.elementAt(selectedBtn - 2)).setSelected(true);
 		scrollToSelected();
 	}
 
@@ -308,7 +314,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 			return;
 		System.out.println("Y: " + getItemY(selectedBtn - 1));
 		scrolled = -(getItemY(selectedBtn - 1) - DisplayUtils.height / 2
-				+ (uiItems[selectedBtn - 1].getDrawHeight() / 2) + topPanelH + 50);
+				+ (((PressableUIItem) uiItems.elementAt(selectedBtn - 1)).getDrawHeight() / 2) + topPanelH + 50);
 	}
 
 	public final void press(int key) {
@@ -322,7 +328,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 			} else if (selectedBtn == 1) {
 				VikaTouch.inst.cmdsInst.command(16, this);
 			} else {
-				uiItems[selectedBtn - 2].keyPress(-5); // проверял хоть?
+				((PressableUIItem) uiItems.elementAt(selectedBtn - 2)).keyPress(-5); // проверял хоть?
 			}
 		} else
 			super.press(key);
@@ -358,7 +364,13 @@ public class MenuScreen extends MainScreen implements IMenu {
 			g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM));
 			ColorUtils.setcolor(g, ColorUtils.TEXT);
 			g.drawString(name + " " + lastname, 74, topPanelH + 12, 0);
-			g.drawString(status == null ? visitStr : status, 74, topPanelH + 36, 0);
+			//g.drawString(status == null ? visitStr : status, 74, topPanelH + 36, 0);
+			if (status!=null) {
+				g.drawString(status, 74, topPanelH + 30, 0);
+				g.drawString(visitStr, 74, topPanelH + 48, 0);
+			} else {
+				g.drawString(visitStr, 74, topPanelH + 36, 0);
+			}
 			if (selectedBtn == 1 && keysMode) {
 				ColorUtils.setcolor(g, 3);
 				g.drawRect(0, topPanelH + 1, DisplayUtils.width - 1, 72);
@@ -371,24 +383,24 @@ public class MenuScreen extends MainScreen implements IMenu {
 			ColorUtils.setcolor(g, -3);
 			// g.drawRect(0, 140, DisplayUtils.width, 50);
 			try {
-			if (uiItems[1].isSelected()) {
-				uiItems[1] = new OptionItem(this, TextLocal.inst.get("menu.friends") + (!frreqStr.equals("") ? " (+"+frreqStr+")" : ""), IconsManager.FRIENDS, 4, uiih);	
-				uiItems[1].setSelected(true);
+			if (((PressableUIItem)uiItems.elementAt(1)).isSelected()) {
+				uiItems.setElementAt(new OptionItem(this, TextLocal.inst.get("menu.friends") + (!frreqStr.equals("0") ? " (+"+frreqStr+")" : ""), IconsManager.FRIENDS, 4, uiih), 1);	
+				((PressableUIItem)uiItems.elementAt(1)).setSelected(true);
 			} else {
-				uiItems[1] = new OptionItem(this, TextLocal.inst.get("menu.friends") + (!frreqStr.equals("") ? " (+"+frreqStr+")" : ""), IconsManager.FRIENDS, 4, uiih);
+				uiItems.setElementAt(new OptionItem(this, TextLocal.inst.get("menu.friends") + (!frreqStr.equals("0") ? " (+"+frreqStr+")" : ""), IconsManager.FRIENDS, 4, uiih), 1);
 			}
-			if (uiItems[8].isSelected()) {
-			uiItems[8] = new OptionItem(this, TextLocal.inst.get("menu.notifs") + (!notifStr.equals("") ? " (+"+notifStr+")" : ""), IconsManager.INFO, 19, uiih);
-			uiItems[8].setSelected(true);
+			if (((PressableUIItem)uiItems.elementAt(8)).isSelected()) {
+				uiItems.setElementAt(new OptionItem(this, TextLocal.inst.get("menu.notifs") + (!notifStr.equals("0") ? " (+"+notifStr+")" : ""), IconsManager.INFO, 19, uiih), 8);
+				((PressableUIItem)uiItems.elementAt(8)).setSelected(true);
 			} else {
-				uiItems[8] = new OptionItem(this, TextLocal.inst.get("menu.notifs") + (!notifStr.equals("") ? " (+"+notifStr+")" : ""), IconsManager.INFO, 19, uiih);
+				uiItems.setElementAt(new OptionItem(this, TextLocal.inst.get("menu.notifs") + (!notifStr.equals("0") ? " (+"+notifStr+")" : ""), IconsManager.INFO, 19, uiih), 8);
 			}
 			} catch (Throwable eee ) {}
 			if (uiItems != null) {
-				for (int i = 0; i < uiItems.length; i++) {
-					if (uiItems[i] != null) {
-						uiItems[i].paint(g, y, scrolled);
-						y += uiItems[i].getDrawHeight();
+				for (int i = 0; i < uiItems.size(); i++) {
+					if (uiItems.elementAt(i)!= null) {
+						((PressableUIItem)uiItems.elementAt(i)).paint(g, y, scrolled);
+						y += ((PressableUIItem)uiItems.elementAt(i)).getDrawHeight();
 					}
 				}
 			}
@@ -445,7 +457,12 @@ public class MenuScreen extends MainScreen implements IMenu {
 				d3 = 2 - ((d2 - 16) / 2);
 				roundrect = true;
 			}
-			Font f = NokiaUIInvoker.getFont(0, 0, 18, 8);
+			Font f;
+		//	try {
+			// f = NokiaUIInvoker.getFont(0, 0, 18, 8);
+			//} catch (Throwable ee) {
+				 f = Font.getFont(0, 0, Font.SIZE_SMALL);
+			//}
 			g.setFont(f);
 			int d = 16;
 			int fh = f.getHeight();
@@ -744,9 +761,9 @@ public class MenuScreen extends MainScreen implements IMenu {
 				if (y > topPanelH + 82 && y < DisplayUtils.height - bottomPanelH) {
 					int y1 = scrolled + topPanelH + 82;
 					for (int i = 0; i < itemsCount; i++) {
-						int y2 = y1 + uiItems[i].getDrawHeight();
+						int y2 = y1 + ((PressableUIItem)uiItems.elementAt(i)).getDrawHeight();
 						if (y > y1 && y < y2) {
-							uiItems[i].tap(x, y - y1);
+							((PressableUIItem)uiItems.elementAt(i)).tap(x, y - y1);
 							break;
 						}
 						y1 = y2;

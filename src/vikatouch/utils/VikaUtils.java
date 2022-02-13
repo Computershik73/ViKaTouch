@@ -319,6 +319,7 @@ public final class VikaUtils {
 
 	public static String download(String url) throws IOException, InterruptedException {
 		if (VikaTouch.isS40()) {
+			VikaTouch.isdownloading=1;
 			synchronized (downloadLock) {
 				return download0(url);
 			}
@@ -543,11 +544,31 @@ public final class VikaUtils {
 		
 	}
 
-	private static String download0(String var1) throws IOException, InterruptedException {
+	private static String download0(String var1) throws InterruptedException {
+		/*if (System.currentTimeMillis() - VikaTouch.lastsuccessfullupdatetime>16200) {
+			VikaTouch.needstoRedraw=true;
+			VikaTouch.silenterror("Сети нет более 2 минут!", false);
+			VikaTouch.needstoRedraw=true;
+			Player notifplayer;
+			try {
+				notifplayer = Manager.createPlayer("device://tone");
+				notifplayer.realize();
+				notifplayer.start();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MediaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}*/
 		ByteArrayOutputStream var4 = null;
 		HttpConnection var13 = null;
 		InputStream var14 = null;
 		VikaTouch.isdownloading=1;
+		//VikaUtils.logToFile(var1+"\n");
 		try {
 			var4 = new ByteArrayOutputStream();
 			var13 = (HttpConnection) Connector.open(var1, Connector.READ);
@@ -558,6 +579,7 @@ public final class VikaUtils {
 					);
 			int i = var13.getResponseCode();
 			if (i != 200 && i != 401 && i!= 403) {
+				
 				// System.out.println("not 200 and not 401");
 				if (var13.getHeaderField("Location") != null) {
 					String replacedURL = var13.getHeaderField("Location");
@@ -581,7 +603,8 @@ public final class VikaUtils {
 						var4.flush();
 					}
 				} else {
-					
+					Thread.sleep(500);
+					return download0(var1);
 				}
 			} else {
 				var14 = var13.openInputStream();
@@ -611,21 +634,47 @@ public final class VikaUtils {
 					//new String(var4.toByteArray());
 					//, "UTF-8");
 			//str = bytesToStringUTFCustom(var4.toByteArray());
+				if (str.indexOf("per second")>0) {
+					
+				}
 				VikaTouch.isdownloading=0;
 				VikaTouch.needstoRedraw=true;
+				//if (str!=null && str!="") {
+				VikaTouch.lastsuccessfullupdatetime=System.currentTimeMillis();
+				//VikaUtils.logToFile("pizdec");
+				//VikaUtils.logToFile(String.valueOf(VikaTouch.lastsuccessfullupdatetime));
+				//}
 			return str;
 		} catch (Throwable e) {
 			VikaTouch.isdownloading=2;
 			VikaTouch.needstoRedraw=true;
-			throw new IOException(e.toString());
+			//VikaUtils.logToFile(String.valueOf("Throwable " + VikaTouch.lastsuccessfullupdatetime));
+			return null;
+			//throw new IOException(e.toString());
 		} finally {
 			if (var14 != null)
-				var14.close();
+				try {
+					var14.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			if (var13 != null)
-				var13.close();
+				try {
+					var13.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			if (var4 != null)
-				var4.close();
+				try {
+					var4.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
+		
 	}
 	
 	
@@ -923,6 +972,8 @@ public final class VikaUtils {
 		//if (ImageStorage.has(url)) {
 		//	return ImageStorage.get(url);
 		//}
+		
+		
 		Image i;
 		VikaTouch.isdownloading=1;
 		if (VikaTouch.isS40()) {
@@ -959,6 +1010,7 @@ public final class VikaUtils {
 						"https://sun", "http://vk-api-proxy.xtrafrancyz.net/_/sun");
 			// url = replace(url, )
 			// кеширование картинок включается если запрос http
+			//	VikaUtils.logToFile(url+"\n");
 			boolean caching = true;
 			// !startsWith(url, "file") && Settings.cacheImages;
 			if (url.indexOf("camera_50") > -1 || url.indexOf("camera_100") > -1) {
@@ -993,7 +1045,7 @@ public final class VikaUtils {
 				Image image = null;
 				if (ImageStorage.has(filename)) {     
 					image = ImageStorage.get(filename);
-					VikaUtils.logToFile("get image: "+filename+"\n");
+					//VikaUtils.logToFile("get image: "+filename+"\n");
 				}
 				
 				if (image != null) {
@@ -1069,7 +1121,7 @@ public final class VikaUtils {
 				Image image = Image.createImage(cin);
 				if (image != null && caching) {
 					ImageStorage.save(filename, image);
-					VikaUtils.logToFile("save image: " + filename+ "\n");
+					//VikaUtils.logToFile("save image: " + filename+ "\n");
 				}
 				VikaTouch.isdownloading=0;
 				VikaTouch.needstoRedraw=true;
@@ -1403,20 +1455,21 @@ public final class VikaUtils {
 	public static void sendPhoto(int peerId, byte[] var5, String text) throws IOException, InterruptedException {
 		String var11 = VikaUtils.download(VikaTouch.API + "/method/photos.getMessagesUploadServer?access_token="
 				+ VikaTouch.accessToken + "&user_id=" + VikaTouch.userId + "&v=" + VikaTouch.API_VERSION);
-
+		//VikaUtils.logToFile(var11);
 		String aString163 = var11.substring(var11.indexOf("upload_url\":\"") + 13, var11.indexOf("\",\"user_id"));
 
 		aString163 = VikaUtils.replace(aString163, "\\/", "/");
 
 		if (!Settings.https)
 			aString163 = VikaUtils.replace(aString163, "https:", "http:");
-
+		//VikaUtils.logToFile(aString163);
 		JSONObject json;
 		try {
 			json = new JSONObject(upload(aString163, "photo", "bb2.jpg", var5));
 		} catch (Exception e) {
 			throw new IOException(e.toString());
 		}
+		//VikaUtils.logToFile("jsonn "+json.toString());
 		String photo = json.getString("photo");
 		String server = "" + json.getInt("server");
 		String hash = json.getString("hash");
@@ -1429,8 +1482,9 @@ public final class VikaUtils {
 		String var10000 = var17 = VikaUtils.download(
 				VikaTouch.API + "/method/photos.saveMessagesPhoto?photo=" + URLDecoder.encode(photo) + "&server="
 						+ server + "&hash=" + hash + "&access_token=" + VikaTouch.accessToken + "&v=" + VikaTouch.API_VERSION);
-		var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
-
+		//VikaUtils.logToFile(var10000);
+		//var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("has_tags") - 2);
+		var217 = var10000.substring(var10000.indexOf("owner_id") + 10, var17.indexOf("access_key") - 2);
 		var175 = var17.substring(var17.indexOf("\"id") + 5, var17.indexOf("owner_id") - 2);
 		URLBuilder url;
 		if (peerId < 2000000000L) {
@@ -1457,6 +1511,7 @@ public final class VikaUtils {
 				url = url.addField("text", text);
 			}
 		}
+		//VikaUtils.logToFile(url.toString());
 		VikaUtils.download(url);
 	}
 

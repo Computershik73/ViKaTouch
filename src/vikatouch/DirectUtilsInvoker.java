@@ -1,11 +1,11 @@
 package vikatouch;
 
-import javax.microedition.lcdui.Font;
-
-import com.nokia.mid.ui.DirectUtils;
 
 
-class DirectUtilsInvoker {
+//import com.nokia.mid.ui.DirectUtils;
+
+
+/*class DirectUtilsInvoker {
 	
 	static Font getFont(int face, int style, int height) {
 		try {
@@ -22,4 +22,4 @@ class DirectUtilsInvoker {
 		} catch (Throwable ee) {}
 	}
 
-}
+}*/

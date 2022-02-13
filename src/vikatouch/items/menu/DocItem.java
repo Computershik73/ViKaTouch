@@ -16,6 +16,7 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.VikaTouch;
 import vikatouch.attachments.ISocialable;
 import vikatouch.attachments.PhotoSize;
+import vikatouch.items.JSONItem;
 import vikatouch.items.JSONUIItem;
 import vikatouch.screens.menu.DocsScreen;
 import vikatouch.utils.ResizeUtils;
@@ -26,7 +27,7 @@ import vikatouch.utils.error.ErrorCodes;
  * @author Feodor0090
  * 
  */
-public class DocItem extends JSONUIItem implements ISocialable {
+public class DocItem extends JSONItem implements ISocialable {
 	public String name;
 	public String url;
 	private String iconUrl;

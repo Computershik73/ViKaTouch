@@ -9,6 +9,7 @@ import org.json.me.JSONObject;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import vikatouch.VikaTouch;
+import vikatouch.items.JSONItem;
 import vikatouch.items.JSONUIItem;
 import vikatouch.screens.music.MusicScreen;
 import vikatouch.settings.Settings;
@@ -18,7 +19,7 @@ import vikatouch.utils.VikaUtils;
  * @author Feodor0090
  * 
  */
-public class PlaylistItem extends JSONUIItem {
+public class PlaylistItem extends JSONItem {
 	public int id;
 	public int owner_id;
 	public String name;

@@ -4,6 +4,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import ru.nnproject.vikaui.menu.items.PressableUIItem;
 import ru.nnproject.vikaui.screen.ScrollableCanvas;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
@@ -19,6 +20,7 @@ import vikatouch.VikaTouch;
 import vikatouch.screens.menu.MenuScreen;
 import vikatouch.settings.Settings;
 import vikatouch.settings.SettingsScreen;
+import vikatouch.utils.VikaUtils;
 
 /**
  * @author Shinovon
@@ -90,9 +92,13 @@ public abstract class MainScreen extends ScrollableCanvas {
 				}
 			}
 		}
-
+		if ((lastx<50) && (lastx - x>50) && (lasty-y<50)) {
+			VikaTouch.inst.cmdsInst.command(14, this);
+		}
+		
 		super.release(x, y);
 	}
+	
 	
 	protected final void keysScroll(int dir) {
 		VikaTouch.needstoRedraw=true;
@@ -103,13 +109,13 @@ public abstract class MainScreen extends ScrollableCanvas {
 			int topItemY = getItemY(currentItem - 1);
 			int downItemY = thisItemY + 50;
 			int down2ItemY = downItemY + 50;
-			if (currentItem + 1>=uiItems.length) {
-				return;
-			}
+			//if (currentItem + 1>uiItems.size()) {
+			//	return;
+			//}
 			try {
-				downItemY = thisItemY + uiItems[currentItem].getDrawHeight();
+				downItemY = thisItemY + ((PressableUIItem) uiItems.elementAt(currentItem)).getDrawHeight();
 				down2ItemY = downItemY + 50;
-				down2ItemY = downItemY + uiItems[currentItem + 1].getDrawHeight();
+				down2ItemY = downItemY + ((PressableUIItem) uiItems.elementAt(currentItem + 1)).getDrawHeight();
 			} catch (RuntimeException e1) {
 			}
 			int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height * 3 / 4;
@@ -125,7 +131,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 					thisItemY = getItemY(currentItem);
 					topItemY = getItemY(currentItem - 1);
 					try {
-						downItemY = thisItemY + uiItems[currentItem].getDrawHeight();
+						downItemY = thisItemY + ((PressableUIItem) uiItems.elementAt(currentItem)).getDrawHeight();
 					} catch (RuntimeException e1) {
 					}
 				}
@@ -162,12 +168,14 @@ public abstract class MainScreen extends ScrollableCanvas {
 			//scrlDbg += " st" + st + "br" + br + "s" + sc;
 			//System.out.println(scrlDbg);
 			scrollTargetActive = true;
+			VikaTouch.needstoRedraw=true;
+			this.serviceRepaints();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void selectCentered() {
+	/*public void selectCentered() {
 		VikaTouch.needstoRedraw=true;
 		try {
 			System.out.println("select center");
@@ -185,14 +193,82 @@ public abstract class MainScreen extends ScrollableCanvas {
 		} catch (Throwable e) {
 			VikaTouch.sendLog("selectCentered " + e.getMessage());
 		}
+	}*/
+	
+	/*public void scrollToSelected() {
+		if (this instanceof ChatScreen) {
+		if (uiItems[currentItem]!=null) {
+		VikaTouch.needstoRedraw=true;
+		//try {
+		int sc= 0;
+		for (int i=0; i<uiItems.length; i++) {
+			if (uiItems[i]!=null) {
+				sc+=uiItems[i].getDrawHeight();
+				//VikaUtils.logToFile(String.valueOf(uiItems[i].getDrawHeight())+ " ");
+				if (uiItems[i].isSelected()) {
+					currentItem=i;
+					sc-=uiItems[i].getDrawHeight();
+					
+					break;
+				}
+			} else {
+				//break;
+			}
+			
+		}
+			//scrolled = -(getItemY(currentItem) - DisplayUtils.height / 2 + (uiItems[currentItem].getDrawHeight() / 2)
+		//			+ MainScreen.topPanelH);
+		scrolled =  -(sc + uiItems[currentItem].getDrawHeight() / 2  ) - DisplayUtils.height / 2  + MainScreen.topPanelH ;
+		//VikaUtils.logToFile("Scrolled= " + String.valueOf(scrolled)+ " ");
+			//VikaTouch.
+			this.serviceRepaints();
+		} else {
+		//	VikaUtils.logToFile("error scrolling to sel");
+		}
+		} else {
+			try {
+				scrolled = -(getItemY(currentItem) - DisplayUtils.height / 2 + (uiItems[currentItem].getDrawHeight() / 2)
+						+ MainScreen.topPanelH);
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
+		//} catch (Throwable e) {
+			//e.printStackTrace();
+		//}
+	}*/
+	
+	
+	public void selectCentered() {
+		try {
+			int y = MainScreen.topPanelH;
+			int ye = y;
+			int s = -scrolled + DisplayUtils.height / 2;
+			for (int i = 0; i < uiItems.size(); i++) {
+				ye = y + ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+				if (y <= s && ye > s) {
+					select(i);
+					return;
+				}
+				y = ye;
+			}
+		} catch (Throwable e) {
+		}
 	}
 	
 	public void scrollToSelected() {
-		VikaTouch.needstoRedraw=true;
 		try {
-			scrolled = -(getItemY(currentItem) - DisplayUtils.height / 2 + (uiItems[currentItem].getDrawHeight() / 2)
+			//VikaUtils.logToFile("scrolltoselected");
+			scrolled = -(getItemY(
+					currentItem
+					//1
+					) - DisplayUtils.height / 2 + (((PressableUIItem) uiItems.elementAt(
+							currentItem
+							//1
+							)).getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
 		} catch (Throwable e) {
+			//VikaUtils.logToFile(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -253,7 +329,12 @@ public abstract class MainScreen extends ScrollableCanvas {
 			g.drawString(title, DisplayUtils.compact || !hasBackButton || keysMode ? 24 : smallTop ? 56 : 64, topPanelH / 2 - g.getFont().getHeight() / 2, 0);
 		}
 		//Font f = Font.getFont(0, 0, Font.SIZE_SMALL);
-		Font f = NokiaUIInvoker.getFont(0, 0, 18, 8);
+		Font f;
+		//try {
+		// f = NokiaUIInvoker.getFont(0, 0, 18, 8);
+		//} catch (Throwable eee) {
+			 f = Font.getFont(0, 0, Font.SIZE_SMALL);
+		//}
 		g.setFont(f);
 
 		if (showBottomPanel) {

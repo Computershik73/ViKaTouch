@@ -4,11 +4,13 @@
 package ru.nnproject.vikaui.screen;
 
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.media.Player;
 
 import ru.nnproject.vikaui.VikaCanvas;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import vikatouch.VikaTouch;
 import vikatouch.music.MusicPlayer;
+import vikatouch.screens.ChatScreen;
 import vikatouch.utils.VikaUtils;
 
 /**
@@ -70,6 +72,10 @@ public abstract class VikaScreen {
 	}*/
 	
 	public static void paint(Graphics g) {
+		if (ChatScreen.isRecRunning) {
+			VikaTouch.needstoRedraw=true;
+		
+	}
 		if ((DisplayUtils.canvas != null) && (VikaTouch.needstoRedraw) && (VikaCanvas.currentAlert==null)) {
 			DisplayUtils.canvas.paint(g);
 			if (vikatouch.music.MusicPlayer.inst!=null) {
@@ -77,16 +83,22 @@ public abstract class VikaScreen {
 			VikaTouch.needstoRedraw=false;
 			}
 			}
+			
 		}
 	}
 
 	public void repaint() {
 		//if ((DisplayUtils.canvas != null) && (VikaTouch.needstoRedraw)) {
+		if (ChatScreen.isRecRunning) {
+			VikaTouch.needstoRedraw=true;
+		
+		}
 		if (vikatouch.music.MusicPlayer.inst!=null) {
 			if (!(vikatouch.music.MusicPlayer.inst.isPlaying)) { 
 			DisplayUtils.canvas.repaint();
 			}
 		}
+		
 			//VikaTouch.needstoRedraw=true;
 		//}
 	}

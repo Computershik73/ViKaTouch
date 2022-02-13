@@ -46,10 +46,12 @@ public class NokiaUIInvoker {
 				softNotificationsSupported = false;
 			}
 			try {
-				//Class.forName("com.nokia.mid.ui.TextEditor");
+				Class.forName("com.nokia.mid.ui.TextEditor");
 				TextEditorInvoker.init();
 				textEditorSupported = true;
-			
+				if ((VikaTouch.mobilePlatform.indexOf("NokiaC3")>0) || (VikaTouch.mobilePlatform.indexOf("NokiaX3")>0)) {
+					textEditorSupported = false;
+				}
 				if (!vikatouch.VikaTouch.canvas.hasPointerEvents()) {
 				textEditorSupported = false;
 				}
@@ -59,7 +61,9 @@ public class NokiaUIInvoker {
 				textEditorSupported = false;
 			}
 			try {
+				
 				Class.forName("com.nokia.mid.ui.DirectUtils");
+				directUtilsSupported = true;
 				
 			} catch (NoClassDefFoundError e) {
 				directUtilsSupported = false;
@@ -71,8 +75,8 @@ public class NokiaUIInvoker {
 				directUtilsSupported = false;
 			}
 			if (directUtilsSupported == true) {
-				DirectUtilsInvoker.init();
-				directUtilsSupported = true;
+				//DirectUtilsInvoker.init();
+				//directUtilsSupported = true;
 			}
 		} catch (Throwable e) {
 			softNotificationsSupported = false;
@@ -205,20 +209,20 @@ public class NokiaUIInvoker {
 
 	public static Font getFont(int face, int style, int height, int size) {
 		//костыль
-		if(directUtilsSupported)
+		/*if(directUtilsSupported)
 			try {
 				Font f = DirectUtilsInvoker.getFont(face, style, height);
 				if(f != null)
 					return f;
 			} catch (Throwable e) {
 				return Font.getFont(face, style, size);
-			}
+			}*/
 		return Font.getFont(face, style, size);
 	}
 
 	public static Font getFont(int face, int style, int height, int heightEm, int size) {
 		//костыль
-		if(directUtilsSupported)
+		/*if(directUtilsSupported)
 			try {
 				boolean b = EmulatorDetector.isEmulator 
 						&& !(EmulatorDetector.emulatorType == EmulatorDetector.EM_KEMNNMOD && EmulatorDetector.numericversion >= 8);
@@ -227,7 +231,7 @@ public class NokiaUIInvoker {
 				if(f != null)
 					return f;
 			} catch (Throwable e) {
-			}
+			}*/
 		return Font.getFont(face, style, size);
 	}
 	

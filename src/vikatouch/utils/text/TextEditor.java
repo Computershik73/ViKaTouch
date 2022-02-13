@@ -44,7 +44,10 @@ public class TextEditor implements CommandListener {
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.canvas.serviceRepaints();
 		while (!TextEditor.inputFinished) {
+			try {
 			Thread.yield();
+			} catch (Throwable ex) {
+			}
 			try {
 				Thread.sleep(20L);
 			} catch (Exception ex) {

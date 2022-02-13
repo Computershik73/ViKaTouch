@@ -36,10 +36,11 @@ public class VideoAttachment extends ImageAttachment {
 	public int renderH;
 	public int renderW;
 	public Image renderImg = null;
+	public String previewurl;
 
 	public void parseJSON() {
-		// VikaTouch.sendLog(json.toString());
-		sizes = PhotoSize.parseSizes(json.optJSONArray("image"));
+		// VikaUtils.logToFile(json.toString());
+		//sizes = PhotoSize.parseSizes(json.optJSONArray("image"));
 		origwidth = json.optInt("width");
 		origheight = json.optInt("height");
 		id = json.optInt("id");
@@ -51,16 +52,21 @@ public class VideoAttachment extends ImageAttachment {
 	}
 
 	public PhotoSize getMessageImage() {
-		return PhotoSize.searchSmallerSize(sizes,
-				Math.min((int) (DisplayUtils.width * 0.6), MsgItem.msgWidth - MsgItem.attMargin * 2));
+		//return PhotoSize.searchSmallerSize(sizes,
+			//	Math.min((int) (DisplayUtils.width * 0.6), MsgItem.msgWidth - MsgItem.attMargin * 2));
+		return PhotoSize.searchNearestSize(sizes,
+				Math.min((int) (DisplayUtils.width), MsgItem.msgWidth - MsgItem.attMargin * 2));
 	}
 
 	public void loadForMessage() {
 		try {
-			PhotoSize ps = getMessageImage();
-			Image i = VikaUtils.downloadImage(ps.url);
+			//PhotoSize ps = getMessageImage();
+			previewurl = fixJSONString(json.optString("photo_320"));
+			Image i = VikaUtils.downloadImage(previewurl);
+			
+			
 			int w = Math.min((int) (DisplayUtils.width * 0.6), MsgItem.msgWidth - MsgItem.attMargin * 2);
-			if (ps.width > w) {
+			if (i.getWidth() > w) {
 				i = VikaUtils.resize(i, w, -1);
 			}
 
@@ -79,10 +85,11 @@ public class VideoAttachment extends ImageAttachment {
 
 	public void loadForComment() {
 		try {
-			PhotoSize ps = getMessageImage();
-			Image i = VikaUtils.downloadImage(ps.url);
+			//PhotoSize ps = getMessageImage();
+			previewurl = fixJSONString(json.optString("photo_320"));
+			Image i = VikaUtils.downloadImage(previewurl);
 			int w = Math.min((int) (DisplayUtils.width * 0.6), CommentItem.msgWidth - CommentItem.attMargin * 2);
-			if (ps.width > w) {
+			if (i.getWidth() > w) {
 				i = VikaUtils.resize(i, w, -1);
 			}
 
@@ -96,8 +103,9 @@ public class VideoAttachment extends ImageAttachment {
 
 	public void loadForNews() {
 		try {
-			PhotoSize ps = PhotoSize.searchSmallerSize(sizes, DisplayUtils.width);
-			Image i = VikaUtils.downloadImage(ps.url);
+			previewurl = fixJSONString(json.optString("photo_320"));
+			//PhotoSize ps = PhotoSize.searchSmallerSize(sizes, DisplayUtils.width);
+			Image i = VikaUtils.downloadImage(previewurl);
 			renderH = i.getHeight();
 			renderW = i.getWidth();
 			renderImg = i;

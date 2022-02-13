@@ -21,6 +21,7 @@ import vikatouch.attachments.StickerAttachment;
 import vikatouch.attachments.VideoAttachment;
 import vikatouch.attachments.VoiceAttachment;
 import vikatouch.attachments.WallAttachment;
+import vikatouch.items.JSONItem;
 import vikatouch.items.JSONUIItem;
 import vikatouch.items.smile;
 import vikatouch.locale.TextLocal;
@@ -36,7 +37,7 @@ import vikatouch.utils.VikaUtils;
  * @author Shinovon
  * 
  */
-public class CommentItem extends JSONUIItem {
+public class CommentItem extends JSONItem {
 	
 	private int сid;
 	private String[] drawText;
