@@ -409,13 +409,15 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 							continue;
 						if (at instanceof PhotoAttachment && !Settings.isLiteOrSomething) {
 							((PhotoAttachment) at).loadForMessage();
-							attH += at.getDrawHeight();
+							attH += at.getDrawHeight() +  attMargin;
 						}
 						if (at instanceof VideoAttachment && !Settings.isLiteOrSomething) {
 							((VideoAttachment) at).loadForMessage();
+							attH += at.getDrawHeight() +  attMargin;
 						}
 						if (at instanceof VoiceAttachment) {
 							((VoiceAttachment) at).mid = mid;
+							attH += at.getDrawHeight() +  attMargin;;
 						}
 						if (at instanceof StickerAttachment) {
 							int stickerH = DisplayUtils.width > 250 ? 128 : 64;
@@ -425,7 +427,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 						}
 						if (at instanceof WallAttachment) {
 							//((WallAttachment) at).loadForMessage();
-							attH += at.getDrawHeight() +  attMargin;;
+							attH += at.getDrawHeight() +  attMargin;
 						} 
 						
 						

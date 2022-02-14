@@ -1687,7 +1687,16 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			if (!inSeekMode)
 				options();
 		} else if (key == -3) {
+			if (voice != null) {
+				try {
+					player.setMediaTime(1);
+					player.start();
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			} else {
 			prev();
+			}
 		} else if (key == -5) {
 			if (isPlaying) {
 				pause();
