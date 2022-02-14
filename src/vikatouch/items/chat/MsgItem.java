@@ -417,8 +417,13 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 						}
 						if (at instanceof VoiceAttachment) {
 							((VoiceAttachment) at).mid = mid;
-							attH += at.getDrawHeight() +  attMargin;;
+							attH += at.getDrawHeight() +  attMargin;
 						}
+						
+						if (at instanceof AudioAttachment) {	
+							attH += at.getDrawHeight() +  attMargin;
+						}
+						
 						if (at instanceof StickerAttachment) {
 							int stickerH = DisplayUtils.width > 250 ? 128 : 64;
 							attH += stickerH + attMargin;
