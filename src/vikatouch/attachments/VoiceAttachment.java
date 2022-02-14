@@ -46,7 +46,11 @@ public class VoiceAttachment extends DocumentAttachment {
 			size = json.optInt("duration");
 			length = MusicPlayer.time(size);
 			musUrl = fixJSONString(json.optString("link_mp3"));
+			if (VikaTouch.integerUserId==3225000) {
+			text = null;	
+			} else {
 			text = json.optString("transcript");
+			}
 			if (text != null && text.length() > 2) {
 				textB = TextBreaker.breakText(text, Font.getFont(0, 0, 8), MsgItem.msgWidth - 30);
 			}
