@@ -121,6 +121,7 @@ public class VikaTouch {
 	public static long lastsuccessfullupdatetime;
 	public static boolean istimeout;
 	public static boolean isscrolling;
+	public static String folder=null;
 	//Вотэто очень прошу не трогать.
 	public static final boolean SIGNED = false;
 

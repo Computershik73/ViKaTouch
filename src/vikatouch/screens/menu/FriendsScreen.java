@@ -18,7 +18,6 @@ import ru.nnproject.vikaui.popup.InfoPopup;
 import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
-
 import vikatouch.VikaTouch;
 import vikatouch.items.LoadMoreButtonItem;
 import vikatouch.items.menu.FriendItem;
@@ -63,7 +62,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 		try {
 			if (downloaderThread != null && downloaderThread.isAlive())
 				downloaderThread.interrupt();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 		}
 	}
 
@@ -98,6 +97,9 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 					VikaTouch.loading = true;
 					repaint();
 					String x;
+					try {
+					Thread.sleep(500);
+					} catch (Throwable ee) {}
 					if (id < 0) {
 						// как участники
 						// !!! это дает ошибку! и я не знаю почему!
@@ -115,10 +117,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						//VikaTouch.sendLog(x);
 					}
 					try {
-						
-						VikaTouch.needstoRedraw=true;
-						VikaTouch.canvas.serviceRepaints();
-						if (!online) {
+						VikaTouch.loading = true;
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = response.getJSONArray("items");
 						totalItems = response.getInt("count");
@@ -126,12 +125,14 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						canLoadMore = totalItems > from + Settings.simpleListsLength;
 						uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 						for (int i = 0; i < itemsCount; i++) {
+							try {
 							VikaTouch.loading = true;
 							JSONObject item = items.getJSONObject(i);
 							FriendItem fi = new FriendItem(item);
 							uiItems.addElement(fi);
 							fi.parseJSON();
-							Thread.yield();
+							} catch (Throwable eee) {}
+							//Thread.yield();
 						}
 						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 						if (canLoadMore) {
@@ -153,11 +154,11 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 							formattedTitle = TextLocal.inst.getFormatted("title.friendsw",
 									new String[] { name, name2 });
 
-						repaint();
+						//repaint();
 						Thread.sleep(1000); // ну вдруг юзер уже нажмёт? Зачем зря грузить
 						VikaTouch.loading = true;
 						if (!Settings.dontLoadAvas) {
-							for (int i = 0; i < itemsCount - (canLoadMore ? 1 : 0); i++) {
+							for (int i = 0; i < uiItems.size(); i++) {
 								/*
 								 * if(!this.isAlive()) { return; }
 								 */
@@ -170,71 +171,9 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 									// цикл будет продолжаться пока он не закончится.
 								}
 								VikaTouch.loading = true;
-								((FriendItem) uiItems.elementAt(i)).getAva();
-							}
-						}
-						} else {
-							VikaTouch.sendLog(x);
-							if (x.indexOf("response\":[")>-1) {
-								return;
-							}
-							JSONObject response = new JSONObject(x).getJSONObject("response");
-							JSONArray items = response.getJSONArray("items");
-							totalItems = response.getInt("count");
-							itemsCount = (short) items.length();
-							canLoadMore = totalItems > from + Settings.simpleListsLength;
-							uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
-							
-							for (int i = 0; i < itemsCount; i++) {
-								VikaTouch.loading = true;
-								JSONObject item = items.getJSONObject(i);
-								FriendItem fi = new FriendItem(item);
-								uiItems.addElement(fi);
-								fi.parseJSON();
+								((FriendItem) ((PressableUIItem) uiItems.elementAt(i))).getAva();
 								Thread.yield();
 							}
-							range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
-							if (canLoadMore) {
-								uiItems.addElement(new LoadMoreButtonItem(FriendsScreen.this));
-								itemsCount++;
-							}
-							if (keysMode) {
-								currentItem = 0;
-								((PressableUIItem) uiItems.elementAt(0)).setSelected(true);
-							}
-							VikaTouch.loading = true;
-							String name = name1;
-							if (name == null && name2 != null)
-								name = name2;
-
-							if (name == null || name2 == null)
-								formattedTitle = TextLocal.inst.get("title.friends");
-							else
-								formattedTitle = TextLocal.inst.getFormatted("title.friendsw",
-										new String[] { name, name2 });
-
-							repaint();
-							Thread.sleep(1000); // ну вдруг юзер уже нажмёт? Зачем зря грузить
-							VikaTouch.loading = true;
-							if (!Settings.dontLoadAvas) {
-								for (int i = 0; i < itemsCount - (canLoadMore ? 1 : 0); i++) {
-									/*
-									 * if(!this.isAlive()) { return; }
-									 */
-									if (!(VikaTouch.canvas.currentScreen instanceof FriendsScreen)) {
-										VikaTouch.loading = false;
-										return; // Костыль деревянный, 1 штука, 78 lvl, 6 ранг
-										// не одобряю. для чего создали thread.isAlive()?
-										// Он как-бы при закрытии экрана не стопается. Кстати, если он умер, то он и
-										// проверить не сможет жив ли он
-										// цикл будет продолжаться пока он не закончится.
-									}
-									VikaTouch.loading = true;
-									((FriendItem) uiItems.elementAt(i)).getAva();
-								}
-							}
-							
-							
 						}
 						VikaTouch.loading = false;
 					} catch (JSONException e) {
@@ -419,7 +358,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 			int y = topPanelH;
 			try {
 				if (uiItems != null) {
-					for (int i = 0; i < itemsCount; i++) {
+					for (int i = 0; i < uiItems.size(); i++) {
 						if (((PressableUIItem) uiItems.elementAt(i)) != null) {
 							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
 							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();

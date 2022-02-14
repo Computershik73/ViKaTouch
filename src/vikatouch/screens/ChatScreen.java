@@ -1494,6 +1494,7 @@ VikaUtils.logToFile(var4);
 			VikaTouch.needstoRedraw=true;
 			//if (ready) {
 			down();
+			//down();
 			this.serviceRepaints();
 			VikaTouch.needstoRedraw=true;
 			//}
@@ -1503,14 +1504,14 @@ VikaUtils.logToFile(var4);
 			} 
 			VikaTouch.needstoRedraw=true;
 			// if (ready) {
-			up();
+			fullup();
 			// }
 		} else if (key == -4) {
 			if (isRecRunning) {
 				return;
 			} 
 			VikaTouch.needstoRedraw=true;
-			down();
+			fulldown();
 		} else if (key == -10) {
 			VikaTouch.needstoRedraw=true;
 			if (inputedLinesCount != 0) {
@@ -1714,6 +1715,37 @@ VikaUtils.logToFile(var4);
 			buttonSelected--;
 		}
 	}
+	
+	protected void fulldown() {
+		VikaTouch.needstoRedraw=true;
+		if (buttonSelected == 0) {
+			keysScrollmore(-10);
+			/*
+			 * try { uiItems[currentItem].setSelected(false); } catch (Throwable e) { }
+			 * currentItem++; if(currentItem >= uiItems.length || uiItems[currentItem] ==
+			 * null) { currentItem--; buttonSelected = 2; } else scrollToSelected();
+			 * uiItems[currentItem].setSelected(true);
+			 */
+		} else {
+			buttonSelected++;
+			if (buttonSelected > 4)
+				buttonSelected = 4;
+		}
+	}
+
+	protected void fullup() {
+		VikaTouch.needstoRedraw=true;
+		if (buttonSelected == 0) {
+			keysScrollmore(+10);
+			/*
+			 * try { uiItems[currentItem].setSelected(false); } catch (Throwable e) { }
+			 * currentItem--; if(currentItem < 0) { currentItem = 0; } scrollToSelected();
+			 * try { uiItems[currentItem].setSelected(true); } catch (Throwable e) { }
+			 */
+		} else {
+			buttonSelected--;
+		}
+	}
 
 	public int getItemY(int n) {
 		int y = 0;
@@ -1850,12 +1882,17 @@ VikaUtils.logToFile(var4);
         if (!canSend)
             return;
         canSend = false;
+        VikaTouch.needstoRedraw=true;
+        this.serviceRepaints();
+        VikaTouch.needstoRedraw=true;
         buttonSelected = 0;
        // inputedLinesCount = 0;
         
         new Thread() {
             public void run() {
                 setPriority(10);
+                VikaTouch.needstoRedraw=true;
+               
                 try {
         	        if(NokiaUIInvoker.supportsTextEditor()) {
         	            if(NokiaUIInvoker.textEditorShown()) {
@@ -1970,6 +2007,7 @@ VikaUtils.logToFile(var4);
                     e=5;
 	                inputChanged = true;
 	                e=6;
+	                
         	            }
                     }
                    // VikaTouch.sendLog(res);
@@ -2039,6 +2077,7 @@ VikaUtils.logToFile(var4);
               //  } finally {
                     canSend = true;
                     VikaTouch.loading = false;
+                    VikaTouch.needstoRedraw=true;
                 //}
             }
         }.start();

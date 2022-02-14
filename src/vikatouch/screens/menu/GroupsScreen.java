@@ -189,7 +189,8 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 						for (int i = 0; i < uiItems.size(); i++) {
 							VikaTouch.loading = true;
 							((GroupItem) uiItems.elementAt(i)).getAva();
-							Thread.yield();
+							VikaTouch.needstoRedraw=true;
+							//Thread.yield();
 						}
 					}
 					VikaTouch.loading = false;

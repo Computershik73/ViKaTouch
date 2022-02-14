@@ -100,6 +100,85 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 	
 	
+	protected final void keysScrollmore(int dir) {
+		VikaTouch.needstoRedraw=true;
+		try {
+			int delta = DisplayUtils.height / 3;
+			int st = 0;
+			int thisItemY = getItemY(currentItem);
+			int topItemY = getItemY(currentItem - dir);
+			int downItemY = thisItemY + 50;
+			int down2ItemY = downItemY + 50;
+			//if (currentItem + 1>uiItems.size()) {
+			//	return;
+			//}
+			try {
+				downItemY = thisItemY + ((PressableUIItem) uiItems.elementAt(currentItem)).getDrawHeight();
+				down2ItemY = downItemY + 50;
+				down2ItemY = downItemY + ((PressableUIItem) uiItems.elementAt(currentItem + dir)).getDrawHeight();
+			} catch (RuntimeException e1) {
+			}
+			int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height * 3 / 4;
+			//int br = 0;
+			//int sc = 0;
+			//scrlDbg = "dir" + dir + " " + topItemY + " " + thisItemY + " " + downItemY + " " + down2ItemY + " d" + delta
+			//		+ " scry" + scrY;
+			if (dir > 0) {
+				// up
+				if (scrY - thisItemY < 0) {
+					//sc = 1;
+					selectCentered();
+					thisItemY = getItemY(currentItem);
+					topItemY = getItemY(currentItem - dir);
+					try {
+						downItemY = thisItemY + ((PressableUIItem) uiItems.elementAt(currentItem)).getDrawHeight();
+					} catch (RuntimeException e1) {
+					}
+				}
+
+				st = -delta;
+				if (scrY - thisItemY > delta) {
+					//br = 1;
+				} else if (scrY - topItemY > delta) {
+					//br = 2;
+					select(currentItem - dir);
+				} else if (thisItemY < 10) {
+					//br = 7;
+					select(0);
+				} else {
+					//br = 3;
+					st = topItemY - scrY + 1;
+					select(currentItem - dir);
+				}
+			} else {
+				// down
+				st = delta;
+				if (down2ItemY - scrY > delta && downItemY - scrY <= delta) {
+					//br = 5;
+					st = (down2ItemY - scrY - 1);
+					select(currentItem + dir);
+				} else if (downItemY - scrY > delta) {
+					st = (down2ItemY - scrY - 1);
+					select(currentItem + dir);
+					//br = 4;
+				} else {
+					//br = 6;
+					st = (down2ItemY - scrY - 1);
+					select(currentItem + dir);
+				}
+			}
+			scrollTarget = MathUtils.clamp(scrolled - st, -itemsh, 0);
+			//scrlDbg += " st" + st + "br" + br + "s" + sc;
+			//System.out.println(scrlDbg);
+			scrollTargetActive = true;
+			VikaTouch.needstoRedraw=true;
+			this.serviceRepaints();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	protected final void keysScroll(int dir) {
 		VikaTouch.needstoRedraw=true;
 		try {

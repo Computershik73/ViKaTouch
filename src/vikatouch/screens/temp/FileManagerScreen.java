@@ -36,7 +36,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 	
 	private ChatScreen chat;
 	private FileManagerItem selectedItem;
-	private String folder;
+	private String folder=null;
 	private boolean root;
 	private FileConnection fileconn;
 	public static int len;
@@ -51,7 +51,12 @@ public class FileManagerScreen extends ScrollableCanvas {
 	public void load() {
 		VikaTouch.needstoRedraw=true;
 		len = 30;
-		root();
+		folder=VikaTouch.folder;
+		if (folder==null) {
+ 		root();
+		} else {
+			openFolder(folder, 0);
+		}
 	}
 	
 	public void press(int x, int y) {
@@ -308,6 +313,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 		if(path.startsWith("file://"))
 			path = path.substring("file://".length());
 		folder = path;
+		VikaTouch.folder=folder;;
 		try {
 			fileconn = (FileConnection) Connector.open("file://" + path, Connector.READ);
 			Enumeration var3 = fileconn.list("*", true);
