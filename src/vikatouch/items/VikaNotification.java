@@ -105,7 +105,7 @@ public class VikaNotification {
 				try {
 					if (Settings.notifmode == 1) {
 						Display d = Display.getDisplay(VikaTouch.appInst);
-						d.vibrate(1000);
+						d.vibrate(Settings.viblongmes);
 						
 						// Thread.sleep(100);
 						// d.vibrate(1000);
@@ -138,7 +138,7 @@ public class VikaNotification {
 						notifplayer.start();
 					} else if (Settings.notifmode == 6) {
 						Display d = Display.getDisplay(VikaTouch.appInst);
-						d.vibrate(1000);
+						d.vibrate(Settings.viblongmes);
 						Player notifplayer = null;
 						/*if(Settings.qualityNotif)
 							notifplayer = Manager.createPlayer(Connector.openInputStream("http://vikamobile.ru:80/music/bb2.mp3"), "audio/mpeg");

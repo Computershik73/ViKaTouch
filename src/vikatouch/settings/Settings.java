@@ -58,6 +58,8 @@ public class Settings {
 	public static byte dialogsRefreshRate = 0;
 
 	public static final int[] dialogsRefreshRates = new int[] { 0, 5, 10, 20, 30 };
+	
+	public static int viblongmes = 500;
 
 	public static int dialogsLength = 15;
 
@@ -100,6 +102,8 @@ public class Settings {
 	public static JSONObject settingsjson;
 	
 	public static int refreshtimeout = 120;
+	
+	
 	
 	public static final int[] refreshtimeouts = new int[] { 35, 60, 90, 120, 180, 240, 300, 360, 420, 480, 1000};
 
@@ -197,6 +201,8 @@ public class Settings {
 	}
 	
 	public static JSONArray unsentmsgs;
+
+	
 
 	static {
 		loadSettings();
@@ -343,6 +349,14 @@ public class Settings {
 						} else {
 							refreshtimeout = 120;
 						}
+					
+					if (settingsjson.has("vibnewmestimeoutt")) {
+						viblongmes =  settingsjson.optInt("vibnewmestimeoutt");
+						} else {
+							viblongmes = 500;
+						}
+					
+					
 					
 					if (settingsjson.has("audioMode")) {
 						audioMode = (short) settingsjson.optInt("audioMode");
@@ -665,6 +679,7 @@ public class Settings {
 				settingsjson.put("showpics", showpics);
 				settingsjson.put("musicpath", musicpath);
 				settingsjson.put("refreshtimeout", refreshtimeout);
+				settingsjson.put("vibnewmestimeoutt", viblongmes);
 				
 				//VikaUtils.logToFile(settingsjson.toString());
 				os.writeUTF(settingsjson.toString());
@@ -752,6 +767,7 @@ public class Settings {
 
 	public static void loadDefaultSettings() {
 		String x = System.getProperty("microedition.locale");
+		refreshtimeout = 120;
 		nightTheme = false;
 		setted = false;
 		animateTransition = false;

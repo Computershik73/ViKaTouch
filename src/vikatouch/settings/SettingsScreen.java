@@ -32,6 +32,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 	static int refreshValDef = 3;
 	static int[] fpsVals = new int[] { 100, 60, 30, 15};
 	public static final int[] refreshtimeouts = new int[] { 35, 60, 90, 120, 180, 240, 300, 360, 420, 480, 1000};
+	public static final int[] vibnewmeslongs = new int[] { 25, 75, 100, 125, 200, 300, 400, 500, 700, 1000, 1200};
 	private static String titleStr;
 
 	private PressableUIItem[] menuList;
@@ -61,6 +62,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		String[] eOd = new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") };
 		String[] dialogsRR = new String[] { eOd[0], "5", "10", "20", "30" };
 		String[] rrefreshtimeout = new String[] { "35", "60", "90", "120", "180", "240", "300", "360", "420", "480", "1000" };
+		String[] vibnewmeslongstext = new String[] { "25", "75", "100", "125", "200", "300", "400", "500", "700", "1000", "1200"};
 		String[] notifModes = new String[] { TextLocal.inst.get("settings.disabled"),
 				TextLocal.inst.get("settings.vibro"), TextLocal.inst.get("settings.sound"), TextLocal.inst.get("settings.tone"), TextLocal.inst.get("settings.alert"), TextLocal.inst.get("settings.pronouncetext"), TextLocal.inst.get("settings.vibro") +" + "+ TextLocal.inst.get("settings.sound") };
 
@@ -115,6 +117,12 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		for (int i = 0; i < refreshtimeouts.length; i++) {
 			if (refreshtimeouts[i] == Settings.refreshtimeout)
 				j1 = i;
+		}
+		
+		int j2 = -1;
+		for (int i = 0; i < vibnewmeslongs.length; i++) {
+			if (vibnewmeslongs[i] == Settings.viblongmes)
+				j2 = i;
 		}
 		
 		int fc = -1;
@@ -184,6 +192,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 				
 				new SettingMenuItem(this, TextLocal.inst.get("settings.refreshtimeout"), IconsManager.REFRESH, 25,
 						oneitemheight, rrefreshtimeout, j1, null),
+				
+				new SettingMenuItem(this, TextLocal.inst.get("settings.viblongonnewmes"), IconsManager.REFRESH, 26,
+						oneitemheight, vibnewmeslongstext, j2, null),
 
 				new SettingMenuItem(this, TextLocal.inst.get("settings.notificationmode"), IconsManager.REFRESH, 22,
 						oneitemheight, notifModes, Settings.notifmode, null), };
@@ -427,6 +438,11 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		
 		case 25: {
 			Settings.refreshtimeout = refreshtimeouts[var];
+			break;
+		}
+		
+		case 26: {
+			Settings.viblongmes = vibnewmeslongs[var];
 			break;
 		}
 			
