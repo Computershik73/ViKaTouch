@@ -31,6 +31,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 	static int[] refreshVals = new int[] { 0, 2, 5, 8, 10, 15, 200 };
 	static int refreshValDef = 3;
 	static int[] fpsVals = new int[] { 100, 60, 30, 15};
+	public static final int[] refreshtimeouts = new int[] { 35, 60, 90, 120, 180, 240, 300, 360, 420, 480, 1000};
 	private static String titleStr;
 
 	private PressableUIItem[] menuList;
@@ -59,6 +60,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		VikaTouch.needstoRedraw=true;
 		String[] eOd = new String[] { TextLocal.inst.get("settings.disabled"), TextLocal.inst.get("settings.enabled") };
 		String[] dialogsRR = new String[] { eOd[0], "5", "10", "20", "30" };
+		String[] rrefreshtimeout = new String[] { "35", "60", "90", "120", "180", "240", "300", "360", "420", "480", "1000" };
 		String[] notifModes = new String[] { TextLocal.inst.get("settings.disabled"),
 				TextLocal.inst.get("settings.vibro"), TextLocal.inst.get("settings.sound"), TextLocal.inst.get("settings.tone"), TextLocal.inst.get("settings.alert"), TextLocal.inst.get("settings.pronouncetext"), TextLocal.inst.get("settings.vibro") +" + "+ TextLocal.inst.get("settings.sound") };
 
@@ -86,6 +88,8 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			mc = countValDef;
 			Settings.messagesPerLoad = countVals[mc];
 		}
+		
+		
 		// списки
 		int j = -1;
 		for (int i = 0; i < countVals.length; i++) {
@@ -107,6 +111,12 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			Settings.dialogsLength = countVals[j0];
 		}
 
+		int j1 = -1;
+		for (int i = 0; i < refreshtimeouts.length; i++) {
+			if (refreshtimeouts[i] == Settings.refreshtimeout)
+				j1 = i;
+		}
+		
 		int fc = -1;
 		for (int i = 0; i < fpsVals.length; i++) {
 			if (fpsVals[i] == Settings.fpsLimit)
@@ -171,6 +181,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 						oneitemheight, countVals, j0, null),
 				new SettingMenuItem(this, TextLocal.inst.get("settings.dialogsrefreshrate"), IconsManager.REFRESH, 21,
 						oneitemheight, dialogsRR, Settings.dialogsRefreshRate, null),
+				
+				new SettingMenuItem(this, TextLocal.inst.get("settings.refreshtimeout"), IconsManager.REFRESH, 25,
+						oneitemheight, rrefreshtimeout, j1, null),
 
 				new SettingMenuItem(this, TextLocal.inst.get("settings.notificationmode"), IconsManager.REFRESH, 22,
 						oneitemheight, notifModes, Settings.notifmode, null), };
@@ -409,7 +422,14 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		}
 		case 24: {
 			Settings.hideBottom = var == 1;
+			break;
 		}
+		
+		case 25: {
+			Settings.refreshtimeout = refreshtimeouts[var];
+			break;
+		}
+			
 		case 60: {
 			Settings.fpsLimit = fpsVals[var];
 			break;

@@ -11,6 +11,7 @@ import javax.microedition.media.MediaException;
 import javax.microedition.media.Player;
 
 import vikatouch.VikaTouch;
+import vikatouch.settings.Settings;
 import vikatouch.utils.VikaUtils;
 
 /**
@@ -52,7 +53,7 @@ public class UIThread extends Thread {
 		//fpsThread.start();
 		while (true) {
 			
-			if (System.currentTimeMillis() - VikaTouch.lastsuccessfullupdatetime>120000) {
+			if (System.currentTimeMillis() - VikaTouch.lastsuccessfullupdatetime>(Settings.refreshtimeout * 1000)) {
 				//VikaTouch.needstoRedraw=true;
 				VikaTouch.istimeout=true;
 				//VikaTouch.silenterror("Сети нет более 16 секунд!", false);

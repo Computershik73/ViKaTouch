@@ -98,6 +98,10 @@ public class Settings {
 	public static boolean musicviavikaserver;
 	
 	public static JSONObject settingsjson;
+	
+	public static int refreshtimeout = 120;
+	
+	public static final int[] refreshtimeouts = new int[] { 35, 60, 90, 120, 180, 240, 300, 360, 420, 480, 1000};
 
 	// Не нуждаются сохранению (м.б передумаем)
 	public static boolean threaded;
@@ -332,6 +336,12 @@ public class Settings {
 						dialogsRefreshRate = (byte) settingsjson.optInt("dialogsRefreshRate");
 						} else {
 							dialogsRefreshRate = 10;
+						}
+					
+					if (settingsjson.has("refreshtimeout")) {
+						refreshtimeout =  settingsjson.optInt("refreshtimeout");
+						} else {
+							refreshtimeout = 120;
 						}
 					
 					if (settingsjson.has("audioMode")) {
@@ -654,6 +664,7 @@ public class Settings {
 				settingsjson.put("musicviavikaserver", musicviavikaserver);
 				settingsjson.put("showpics", showpics);
 				settingsjson.put("musicpath", musicpath);
+				settingsjson.put("refreshtimeout", refreshtimeout);
 				
 				//VikaUtils.logToFile(settingsjson.toString());
 				os.writeUTF(settingsjson.toString());
