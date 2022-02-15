@@ -178,7 +178,9 @@ final class VoiceRecorder implements Runnable {
 			if (!VikaTouch.isS40()) {
 				ChatScreen.pl = Manager.createPlayer("capture://audio?encoding=pcm");
 			} else {
-				ChatScreen.pl = Manager.createPlayer("capture://audio?encoding=pcm&rate=8000&bits=16");
+				ChatScreen.pl  = Manager.createPlayer("capture://audio");
+		            
+				//ChatScreen.pl = Manager.createPlayer("capture://audio?encoding=pcm&rate=8000&bits=16");
 			}
 			//VikaUtils.logToFile("4");
 			
@@ -206,14 +208,15 @@ final class VoiceRecorder implements Runnable {
 		ChatScreen.output = new ByteArrayOutputStream();
 		//VikaUtils.logToFile("9");
 
+		
+		//VikaUtils.logToFile("10");
+		ChatScreen.rec.setRecordStream(ChatScreen.output);
+		ChatScreen.rec.startRecord();
 		try {
 			ChatScreen.pl.start();
 		} catch (MediaException var3) {
 			var3.printStackTrace();
 		}
-		//VikaUtils.logToFile("10");
-		ChatScreen.rec.setRecordStream(ChatScreen.output);
-		ChatScreen.rec.startRecord();
 	//	VikaUtils.logToFile("11");
 
 		

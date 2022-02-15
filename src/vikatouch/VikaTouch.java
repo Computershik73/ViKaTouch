@@ -1275,11 +1275,11 @@ try {
     }
 
 	public static boolean isS40() {
-		return mobilePlatform.indexOf("S60") < 0 || Runtime.getRuntime().totalMemory() / 1024 == 2048;
+		return mobilePlatform.indexOf("S60") < 0 || Runtime.getRuntime().totalMemory() / 1024 == 2048 || Runtime.getRuntime().totalMemory() / 1024 == 1024;
 	}
 	
 	public static boolean isSymbian93orS40() {
-		return mobilePlatform.indexOf("S60") < 0 || (mobilePlatform.indexOf("3.2") >= 0) || Runtime.getRuntime().totalMemory() / 1024 == 2048;
+		return mobilePlatform.indexOf("S60") < 0 || (mobilePlatform.indexOf("3.2") >= 0) || Runtime.getRuntime().totalMemory() / 1024 == 2048 || Runtime.getRuntime().totalMemory() / 1024 == 1024;
 	}
 
 	public static void popup(VikaNotice popup) {
