@@ -121,6 +121,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 						}
 						itemsCount = 13;
 						int h = oneitemheight = (short) (DisplayUtils.compact ? 30 : 50);
+						uiItems=null;
 						uiItems = new Vector(13);
 						uiItems.addElement(new OptionItem(GroupPageScreen.this,
 								TextLocal.inst.get("menu.members") + " (" + membersCount + ")", IconsManager.GROUPS, 0,

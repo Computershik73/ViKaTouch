@@ -190,6 +190,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 						}
 
 						int h = oneitemheight = (short) (DisplayUtils.compact ? 30 : 50);
+						uiItems=null;
 						if (id == VikaTouch.integerUserId) {
 							itemsCount = 7;
 							uiItems = new Vector(7);

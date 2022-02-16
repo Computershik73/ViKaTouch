@@ -47,7 +47,7 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 	public void load(final int from, final int id, final String name1, final String name2) {
 		VikaTouch.needstoRedraw=true;
 		scrolled = 0;
-		uiItems = null;
+		
 		final int count = Settings.simpleListsLength;
 		fromVid = from;
 		currId = id;
@@ -76,6 +76,7 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 						if (totalVids <= from + count) {
 							canLoadMore = false;
 						}
+						uiItems = null;
 						uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 						for (int i = 0; i < itemsCount; i++) {
 							JSONObject item = items.getJSONObject(i);

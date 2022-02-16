@@ -23,6 +23,7 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 
 import vikatouch.VikaTouch;
 import vikatouch.attachments.AudioAttachment;
+import vikatouch.items.LoadMoreButtonItem;
 import vikatouch.items.music.AudioTrackItem;
 import vikatouch.locale.TextLocal;
 import vikatouch.music.MusicPlayer;
@@ -82,12 +83,15 @@ public static String q;
 	public void load(final int oid, final int albumId, String title) {
 		VikaTouch.needstoRedraw=true;
 		scrolled = 0;
-		uiItems = null;
+		
 		this.albumId = albumId;
 		ownerId = oid;
 		this.title = title;
 		hasBackButton = true;
-
+		
+		 
+		
+		
 		if (downloaderThread != null && downloaderThread.isAlive()) {
 			try {
 			downloaderThread.interrupt();
@@ -95,6 +99,7 @@ public static String q;
 		}
 		downloaderThread = new Thread() {
 			public void run() {
+				
 				try {
 					VikaTouch.loading = true;
 				//	String x = VikaUtils.music(new URLBuilder(Settings.proxyApi, "audio.get", true).addField("owner_id", oid)
@@ -140,20 +145,19 @@ public static String q;
 						//}*/
 					}
 					try {
-						System.out.println(x);
 						VikaTouch.loading = true;
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = response.getJSONArray("items");
 						itemsCount = (short) items.length();
+						uiItems=null;
 						uiItems = new Vector(itemsCount);
 						for (int i = 0; i < itemsCount; i++) {
 							JSONObject item = items.getJSONObject(i);
 							AudioTrackItem ati = new AudioTrackItem(item, MusicScreen.this, i);
-							ati.parseJSON();
 							uiItems.addElement(ati);
-							
-							VikaTouch.needstoRedraw=true;
+							ati.parseJSON();
 							Thread.sleep(15);
+							Thread.yield();
 							// должно не зависать
 						}
 					} catch (JSONException e) {
@@ -162,7 +166,7 @@ public static String q;
 					}
 					VikaTouch.loading = false;
 				} catch (InterruptedException e1) {
-					//return;
+					return;
 				} catch (Exception e) {
 					e.printStackTrace();
 					VikaTouch.error(e, ErrorCodes.MUSICLISTLOAD);
@@ -186,7 +190,7 @@ public static String q;
 	public void load(final String q) {
 		VikaTouch.needstoRedraw=true;
 	    scrolled = 0;
-	    uiItems = null;
+	   
 	    this.title = TextLocal.inst.get("music.searchresult");
 	    this.hasBackButton = true;
 	    if (downloaderThread != null && downloaderThread.isAlive()) {
@@ -232,6 +236,7 @@ public static String q;
 	              JSONObject response = (new JSONObject(x)).getJSONObject("response");
 	              JSONArray items = response.getJSONArray("items");
 	              itemsCount = (short)items.length();
+	              uiItems = null;
 	          	uiItems = new Vector(itemsCount);
 	              for (int i = 0; i < itemsCount; i++) {
 	                JSONObject item = items.getJSONObject(i);
@@ -269,7 +274,7 @@ public static String q;
 	public void loadRecommendations(final String audio_id) {
 		VikaTouch.needstoRedraw=true;
 	    scrolled = 0;
-	    uiItems = null;
+	    
 	    this.title = TextLocal.inst.get("music.recommendations");
 	    this.hasBackButton = true;
 	    if (downloaderThread != null && downloaderThread.isAlive()) {
@@ -327,6 +332,7 @@ public static String q;
 	              JSONObject response = (new JSONObject(x)).getJSONObject("response");
 	              JSONArray items = response.getJSONArray("items");
 	              itemsCount = (short)items.length();
+	              uiItems = null;
 	              uiItems = new Vector(itemsCount);
 	              for (int i = 0; i < itemsCount; i++) {
 	                JSONObject item = items.getJSONObject(i);
@@ -382,7 +388,7 @@ public static String q;
 			int y = topPanelH;
 			try {
 				if (uiItems != null) {
-					for (int i = 0; i < itemsCount; i++) {
+					for (int i = 0; i < uiItems.size(); i++) {
 						if (((PressableUIItem) uiItems.elementAt(i)) != null) {
 							if (y + scrolled > DisplayUtils.height)
 								break;
@@ -392,12 +398,12 @@ public static String q;
 						itemsh = y + 60;
 					}
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				VikaTouch.error(e, ErrorCodes.MUSICITEMDRAW);
 				e.printStackTrace();
 			}
 			g.translate(0, -g.getTranslateY());
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			VikaTouch.error(e, ErrorCodes.MUSICDRAW);
 			e.printStackTrace();
 		}

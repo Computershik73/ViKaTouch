@@ -131,7 +131,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	public void loadGroups(final int from, final int id, final String name1, final String name2) {
 		formattedTitle = TextLocal.inst.get("title.groups");
 		scrolled = 0;
-		uiItems = null;
+		
 		fromG = from;
 		currId = id;
 		whose = name1;
@@ -153,6 +153,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 					totalItems = response.getInt("count");
 					itemsCount = (short) items.length();
 					canLoadMore = totalItems > from + Settings.simpleListsLength;
+					uiItems = null;
 					uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 					for (int i = 0; i < itemsCount; i++) {
 						VikaTouch.loading = true;
