@@ -147,10 +147,10 @@ public class ChatScreen extends MainScreen implements PlayerListener {
 	private byte buttonSelected = 0;
 
 	// данные для сообщения
-	public long answerMsgId = 0;
-	public String objectId = "";
-	public String answerName;
-	public String answerText;
+	public static long answerMsgId = 0;
+	public static String objectId = "";
+	public static String answerName;
+	public static String answerText;
 	public boolean canWrite;
 
 	public boolean refreshOk = true;
@@ -166,21 +166,21 @@ public class ChatScreen extends MainScreen implements PlayerListener {
 
 	public static void attachAnswer(long id, String name, String text) {
 		if (VikaTouch.canvas.currentScreen instanceof ChatScreen) {
-			ChatScreen c = (ChatScreen) VikaTouch.canvas.currentScreen;
-			c.answerMsgId = id;
-			c.answerName = name;
-			c.answerText = text;
+			//ChatScreen c = (ChatScreen) VikaTouch.canvas.currentScreen;
+			ChatScreen.answerMsgId = id;
+			ChatScreen.answerName = name;
+			ChatScreen.answerText = text;
 			//VikaTouch.sendLog("id: "+String.valueOf(id)+" name: "+String.valueOf(name)+" text: "+text);
 		}
 	}
 	
 	public static void attachAnswer(String resendingobjectid, String resendingname, String resendingtext) {
 		if (VikaTouch.canvas.currentScreen instanceof ChatScreen) {
-			ChatScreen c = (ChatScreen) VikaTouch.canvas.currentScreen;
+			//ChatScreen c = (ChatScreen) VikaTouch.canvas.currentScreen;
 			//c.answerMsgId = id;
-			c.objectId=resendingobjectid;
-			c.answerName = resendingname;
-			c.answerText = resendingtext;
+			ChatScreen.objectId=resendingobjectid;
+			ChatScreen.answerName = resendingname;
+			ChatScreen.answerText = resendingtext;
 		}
 		
 	}
@@ -249,7 +249,7 @@ public class ChatScreen extends MainScreen implements PlayerListener {
 		VikaTouch.isscrolling=true;
 		VikaTouch.needstoRedraw=true;
 		inst = this;
-		VikaTouch.resendingobjectid="";
+		//VikaTouch.resendingobjectid="";
 		if (DisplayUtils.compact) {
 			topPanelH = 30;
 		}
@@ -1908,7 +1908,7 @@ VikaUtils.logToFile(var4);
                 }
                 int e = 0;
                 String res = null;
-                URLBuilder url = null;
+                URLBuilder url;
                 //try {
                 	e=1;
                 	VikaTouch.loading = true;
@@ -1922,7 +1922,7 @@ VikaUtils.logToFile(var4);
                     inputChanged = false;*/
                     if (answerMsgId != 0) {
                     	e=7;
-                    	if (VikaTouch.resendingobjectid!="") {
+                    //	if (VikaTouch.resendingobjectid!="") {
                     		e=8;
                        if (VikaTouch.isresending==true) {
                     	   e=9;
@@ -1935,11 +1935,11 @@ VikaUtils.logToFile(var4);
                        }
                        answerMsgId = 0;
                        e=13;
-                    	} 
+                    	//} 
                     	e=14;
                     }
                     
-                    if ((VikaTouch.resendingobjectid!=null) && (VikaTouch.resendingobjectid!="")) {
+                    if ((objectId!=null) && (objectId!="")) {
                     	e=15;
                 		url.addField("attachment", objectId);
                 		e=16;
@@ -1957,6 +1957,7 @@ VikaUtils.logToFile(var4);
 						e1.printStackTrace();
 					}
                     e=19;
+                   // VikaUtils.logToFile(url.toString());
                    try {
 					res = VikaUtils.download(url);
 				} catch (IOException e1) {
@@ -2043,6 +2044,10 @@ VikaUtils.logToFile(var4);
                         inputChanged = true;
                         inputedTextToDraw=null;
                         inputedLinesCount = 0;
+                       answerMsgId = 0;
+                    	objectId = "";
+                    	answerName = "";
+                    	answerText = "";
                        /* e=22;
                     	} else {
                     		int a = res.indexOf("response");
@@ -3057,6 +3062,10 @@ VikaUtils.logToFile(var4);
         VikaTouch.resendingname="";
         VikaTouch.resendingtext=""; 
         VikaTouch.resendingobjectid="";
+        answerMsgId = 0;
+    	objectId = "";
+    	answerName = "";
+    	answerText = "";
         uiItems=null;
         currentItem=0;
         scrolled=0;

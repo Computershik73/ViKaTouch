@@ -1002,6 +1002,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		switch (i) {
 		case -1:
 			ChatScreen.attachAnswer(mid, name, text);
+			
 			VikaTouch.needstoRedraw=true;
 			break; // БРЕАК НА МЕСТЕ!!11!!1!
 		case -2:
