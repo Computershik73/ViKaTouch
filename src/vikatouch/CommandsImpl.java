@@ -131,7 +131,7 @@ public class CommandsImpl implements CommandListener {
 						// Документы
 						if (s instanceof MenuScreen) {
 							DocsScreen docsScr = new DocsScreen();
-							docsScr.loadDocs(0, 0, null, null);
+							docsScr.loadDocs(0, VikaTouch.integerUserId, null, null);
 							VikaTouch.setDisplay(docsScr, 1);
 						}
 						break;

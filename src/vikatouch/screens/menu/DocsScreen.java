@@ -64,7 +64,7 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 		this.name2 = name2;
 		formattedTitle = TextLocal.inst.get("title.docs");
 		scrolled = 0;
-		uiItems = null;
+		
 		current = this;
 		final int count = loadDocsCount;
 		fromDoc = from;
@@ -88,6 +88,7 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 						if (totalDocs <= from + count) {
 							canLoadMore = false;
 						}
+						uiItems = null;
 						uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 						for (int i = 0; i < itemsCount; i++) {
 							JSONObject item = items.getJSONObject(i);
