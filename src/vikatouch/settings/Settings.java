@@ -104,7 +104,7 @@ public class Settings {
 	public static int refreshtimeout = 120;
 	
 	
-	
+	String[] dialogselectcolors = new String[] {"81,129,184", "79,129,182", "138,146,255", "115,167,217", "143,189,233", "168,208,247", "255,126,255", "75,255,255", "114,250,114", "55,231,55", "170,255,170" };
 	public static final int[] refreshtimeouts = new int[] { 35, 60, 90, 120, 180, 240, 300, 360, 420, 480, 1000};
 
 	// Не нуждаются сохранению (м.б передумаем)
@@ -201,6 +201,8 @@ public class Settings {
 	}
 	
 	public static JSONArray unsentmsgs;
+
+	public static String dialogselectcolor;
 
 	
 
@@ -455,6 +457,13 @@ public class Settings {
 							showpics = true;
 						}
 					
+					if (settingsjson.has("dialogselectcolor")) {
+						dialogselectcolor = settingsjson.optString("dialogselectcolor");
+						
+						} else {
+							dialogselectcolor = "81,129,184";
+						}
+					
 					if (settingsjson.has("musicpath")) {
 						musicpath = settingsjson.optString("musicpath");
 						//Settings.mpc = 
@@ -539,6 +548,7 @@ public class Settings {
 						} else {
 							unsentmsgs = null;
 						}
+					
 					
 					
 					/*animateTransition = is.readBoolean();
@@ -680,6 +690,8 @@ public class Settings {
 				settingsjson.put("musicpath", musicpath);
 				settingsjson.put("refreshtimeout", refreshtimeout);
 				settingsjson.put("vibnewmestimeoutt", viblongmes);
+				settingsjson.put("dialogselectcolor", dialogselectcolor);
+				
 				
 				//VikaUtils.logToFile(settingsjson.toString());
 				os.writeUTF(settingsjson.toString());

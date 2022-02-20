@@ -28,6 +28,8 @@ import vikatouch.screens.menu.DocsScreen;
 import vikatouch.screens.menu.FriendsScreen;
 import vikatouch.screens.menu.VideosScreen;
 import vikatouch.screens.music.MusicScreen;
+import vikatouch.settings.Settings;
+import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.url.URLBuilder;
@@ -199,7 +201,12 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 		}
 		if (ava != null) {
 			g.drawImage(ava, 16, topPanelH + 13, 0);
-			g.drawImage(IconsManager.ac, 16, topPanelH + 13, 0);
+			if (!Settings.nightTheme) {
+			ResizeUtils.drawRectWithEmptyCircleInside(g, 255, 255, 255, 16, topPanelH + 13, 25);
+			} else {
+				ResizeUtils.drawRectWithEmptyCircleInside(g, 0, 0, 0, 16, topPanelH + 13, 25);
+			}
+			//g.drawImage(IconsManager.ac, 16, topPanelH + 13, 0);
 		}
 		itemsh = itemsCount * oneitemheight + y;
 		g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM));

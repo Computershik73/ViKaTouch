@@ -34,7 +34,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 	public static final int[] refreshtimeouts = new int[] { 35, 60, 90, 120, 180, 240, 300, 360, 420, 480, 1000};
 	public static final int[] vibnewmeslongs = new int[] { 25, 75, 100, 125, 200, 300, 400, 500, 700, 1000, 1200};
 	private static String titleStr;
-
+	String[] dialogselectcolors = new String[] {"81,129,184" ,"79,129,182", "138,146,255", "115,167,217", "143,189,233", "168,208,247", "255,126,255", "75,255,255", "114,250,114", "55,231,55", "170,255,170" };
 	private PressableUIItem[] menuList;
 	private PressableUIItem[] systemList;
 	private PressableUIItem[] msgList;
@@ -65,7 +65,9 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		String[] vibnewmeslongstext = new String[] { "25", "75", "100", "125", "200", "300", "400", "500", "700", "1000", "1200"};
 		String[] notifModes = new String[] { TextLocal.inst.get("settings.disabled"),
 				TextLocal.inst.get("settings.vibro"), TextLocal.inst.get("settings.sound"), TextLocal.inst.get("settings.tone"), TextLocal.inst.get("settings.alert"), TextLocal.inst.get("settings.pronouncetext"), TextLocal.inst.get("settings.vibro") +" + "+ TextLocal.inst.get("settings.sound") };
-
+		
+		
+		
 		// частота обновления
 		int rr = -1;
 		for (int i = 0; i < refreshVals.length; i++) {
@@ -125,6 +127,12 @@ public class SettingsScreen extends MainScreen implements IMenu {
 				j2 = i;
 		}
 		
+		int j3 = -1;
+		for (int i = 0; i < dialogselectcolors.length; i++) {
+			if (dialogselectcolors[i].equals(Settings.dialogselectcolor))
+				j3 = i;
+		}
+		
 		int fc = -1;
 		for (int i = 0; i < fpsVals.length; i++) {
 			if (fpsVals[i] == Settings.fpsLimit)
@@ -136,7 +144,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			if (musicpathVals[i].equals(Settings.musicpath))
 				Settings.mpc = i;
 		}
-		
+		//Image.rgb(1,1,1);
 		
 		menuList = new PressableUIItem[] {
 				new OptionItem(this, TextLocal.inst.get("settings.system"), IconsManager.DEVICE, -100, oneitemheight),
@@ -262,6 +270,8 @@ public class SettingsScreen extends MainScreen implements IMenu {
 						oneitemheight, eOd, Settings.hideBottom ? 1 : 0, null, true),
 				new SettingMenuItem(this, TextLocal.inst.get("settings.vibontouch"), IconsManager.DEVICE, 19,
 						oneitemheight, eOd, Settings.vibOnTouch ? 1 : 0, null, true),
+				new SettingMenuItem(this, TextLocal.inst.get("settings.dialogselectcolor"), IconsManager.REFRESH, 27,
+						oneitemheight, dialogselectcolors, j3, null),
 				new OnOffItem(this, TextLocal.inst.get("settings.night"), IconsManager.SETTINGS, 99, oneitemheight, Settings.nightTheme) };
 
 	}
@@ -443,6 +453,11 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		
 		case 26: {
 			Settings.viblongmes = vibnewmeslongs[var];
+			break;
+		}
+		
+		case 27: {
+			Settings.dialogselectcolor = dialogselectcolors[var];
 			break;
 		}
 			

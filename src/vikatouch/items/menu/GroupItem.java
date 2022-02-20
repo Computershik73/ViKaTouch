@@ -95,7 +95,12 @@ public class GroupItem extends JSONItem {
 		int tx = 4;
 		if (ava != null) {
 			g.drawImage(ava, 14, y + BORDER, 0);
-			g.drawImage(IconsManager.ac, 14, y + BORDER, 0);
+			if (!Settings.nightTheme) {
+			ResizeUtils.drawRectWithEmptyCircleInside(g, 255, 255, 255, 14, y + BORDER, 25);
+			} else {
+				ResizeUtils.drawRectWithEmptyCircleInside(g, 0, 0, 0, 14, y + BORDER, 25);
+			}
+			//g.drawImage(IconsManager.ac, 14, y + BORDER, 0);
 			tx = 73;
 		}
 

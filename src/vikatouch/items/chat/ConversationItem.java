@@ -105,6 +105,15 @@ public class ConversationItem extends JSONItem {
 	}
 
 	public void paint(Graphics g, int y, int scrolled) {
+		String rgb = Settings.dialogselectcolor;
+		int r = Integer.parseInt(rgb.substring(0, rgb.indexOf(",")));
+	//	VikaUtils.logToFile(rgb.substring(0, rgb.indexOf(","))+ " ");
+		rgb = rgb.substring(rgb.indexOf(",")+1);
+		int gg = Integer.parseInt(rgb.substring(0, rgb.indexOf(",")));
+	//	VikaUtils.logToFile(rgb.substring(0, rgb.indexOf(",")));
+		rgb = rgb.substring(rgb.indexOf(",")+1);
+		int b = Integer.parseInt(rgb); 
+		
 		int h = itemDrawHeight;
 		Font font = Font.getFont(0, 0, 8);
 		Font boldfont = Font.getFont(0, Font.STYLE_BOLD, 8);
@@ -126,7 +135,9 @@ public class ConversationItem extends JSONItem {
 		
 		
 		if (selected) {
-			ColorUtils.setcolor(g, ColorUtils.BUTTONCOLOR);
+			
+			//VikaUtils.logToFile(rgb+ " ");
+			g.setColor(r, gg, b);
 			g.fillRect(0, y - 1, DisplayUtils.width, itemDrawHeight + 1);
 			ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 			// g.drawImage(deleteImg, DisplayUtils.width - 25, y + 17, 0);
@@ -169,12 +180,16 @@ public class ConversationItem extends JSONItem {
 				//System.out.print("F");
 			} else // а что, бывало что оно не загрузилось? лол))
 				if (selected) {
-					g.drawImage(IconsManager.acs, 14, y + 8, 0);
+					//g.drawImage(IconsManager.acs, 14, y + 8, 0);
+					
+					ResizeUtils.drawRectWithEmptyCircleInside(g, r, gg, b, 14, y+8, 25);
 				} else {
 					if (unread > 0) {
-						g.drawImage(IconsManager.acsh, 14, y + 8, 0);
+						ResizeUtils.drawRectWithEmptyCircleInside(g, 243, 244, 246, 14, y+8, 25);
+						//g.drawImage(IconsManager.acsh, 14, y + 8, 0);
 					} else {
-						g.drawImage(IconsManager.ac, 14, y + 8, 0);
+						ResizeUtils.drawRectWithEmptyCircleInside(g, 255, 255, 255, 14, y+8, 25);
+						//g.drawImage(IconsManager.ac, 14, y + 8, 0);
 					}
 				}
 				//g.drawImage(selected ? IconsManager.acs : IconsManager.ac, 14, y + 8, 0); // и

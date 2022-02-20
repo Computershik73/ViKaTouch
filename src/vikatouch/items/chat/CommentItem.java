@@ -471,7 +471,12 @@ public class CommentItem extends JSONItem {
 					//if (unread > 0) {
 					//	g.drawImage(IconsManager.acsh, 14, y + 8, 0);
 					//} else {
-						g.drawImage(IconsManager.ac, 14, y + h1 / 2, 0);
+				if (!Settings.nightTheme) {
+				ResizeUtils.drawRectWithEmptyCircleInside(g, 255, 255, 255, 14, y + h1 / 2, 25);
+				} else {
+					ResizeUtils.drawRectWithEmptyCircleInside(g, 0, 0, 0, 14, y + h1 / 2, 25);
+				}
+				//g.drawImage(IconsManager.ac, 14, y + h1 / 2, 0);
 				//	}
 				//}
 				//g.drawImage(selected ? IconsManager.acs : IconsManager.ac, 14, y + 8, 0); // и

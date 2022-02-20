@@ -31,6 +31,7 @@ import vikatouch.screens.CommentsScreen;
 import vikatouch.screens.DialogsScreen;
 import vikatouch.screens.NewsScreen;
 import vikatouch.settings.Settings;
+import vikatouch.utils.ResizeUtils;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.error.ErrorCodes;
 import vikatouch.utils.text.TextEditor;
@@ -327,7 +328,12 @@ public class PostItem extends JSONItem implements ISocialable, IMenu {
 
 		if (ava != null) {
 			g.drawImage(ava, 10, 5 + y, 0);
-			g.drawImage(IconsManager.ac, 10, 5 + y, 0);
+			if (!Settings.nightTheme) {
+			ResizeUtils.drawRectWithEmptyCircleInside(g, 255, 255, 255, 10, 5 + y, 25);
+			} else {
+				ResizeUtils.drawRectWithEmptyCircleInside(g, 0, 0, 0, 10,  5 + y, 25);
+			}
+			//g.drawImage(IconsManager.ac, 10, 5 + y, 0);
 		}
 
 		ColorUtils.setcolor(g, 5);

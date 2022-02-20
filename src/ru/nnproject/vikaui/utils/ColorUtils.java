@@ -86,7 +86,7 @@ public class ColorUtils {
 		}
 		case BUTTONCOLOR: {
 			if (isNight())
-				g.setGrayScale(30);
+				g.setGrayScale(70);
 			else
 				g.setColor(81, 129, 184);
 			break;

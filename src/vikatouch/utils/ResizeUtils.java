@@ -1,5 +1,6 @@
 package vikatouch.utils;
 
+import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import tube42.lib.imagelib.ImageUtils;
@@ -10,6 +11,8 @@ import vikatouch.settings.Settings;
  * 
  */
 public class ResizeUtils {
+
+	
 
 	public static Image resizeava(Image img) {
 		short h = (short) img.getHeight();
@@ -94,5 +97,34 @@ public class ResizeUtils {
 			// return VikaUtils.resize(img, need, -1);
 		}
 		return img;
+	} 
+	
+	public static void drawRectWithEmptyCircleInside(Graphics g, int r, int gg, int b, int x, int y, int radius) {
+		
+		//if (Settings.nightTheme) {
+		//	g.setColor(0, 0, 0);
+		//} else {
+			g.setColor(r, gg, b);
+		//}
+		int xx = x;
+		int yy = y;
+		//int i=0;
+		while (yy<2*radius+y) {
+			while (xx<2*radius+x) {
+			
+				if (((xx-(x+radius))*(xx-(x+radius))+(yy-(y+radius))*(yy-(y+radius)))>radius*radius) {
+						g.drawLine(xx, yy, xx, yy);
+						
+				}
+			xx++;
+			}
+			xx=x;
+			yy++;
+		}
+		xx=x;
+		yy=y;
 	}
+	
+	
+	
 }

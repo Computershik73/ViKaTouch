@@ -354,7 +354,12 @@ public class MenuScreen extends MainScreen implements IMenu {
 			}
 			if (profileImg != null) {
 				g.drawImage(profileImg, 16, topPanelH + 13, 0);
-				g.drawImage(IconsManager.ac, 16, topPanelH + 13, 0);
+				if (!Settings.nightTheme) {
+				ResizeUtils.drawRectWithEmptyCircleInside(g, 255, 255, 255, 16, topPanelH + 13, 25);
+				} else {
+					ResizeUtils.drawRectWithEmptyCircleInside(g, 0, 0, 0, 16, topPanelH + 13, 25);
+				}
+				//g.drawImage(IconsManager.ac, 16, topPanelH + 13, 0);
 				if (VikaTouch.offlineMode) {
 					g.setColor(200, 0, 0);
 				} else
