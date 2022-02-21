@@ -121,16 +121,7 @@ public class ConversationItem extends JSONItem {
 		int tx = 73;
 		if (DisplayUtils.width <= 240)
 			tx = 4;
-		if (unread > 0) {
-			
-			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
-			g.fillRect(0, y - 1, DisplayUtils.width, itemDrawHeight + 1);
-			
-		}
-		if (unanswered) {
-			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
-			g.fillRect(tx - 2 , (int)(y + h * 3 / 4 - hfh), DisplayUtils.width-5 - tx + 2, hfh * 2 + 3);
-		}
+		
 		
 		
 		
@@ -148,27 +139,28 @@ public class ConversationItem extends JSONItem {
 		 */
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		
-		g.setFont(boldfont);
-		if (title != null) {
-			g.drawString(title, tx, y + h / 4 - hfh, 0);
-		}
-		g.setFont(font);
-		if (!selected) {
-			ColorUtils.setcolor(g, ColorUtils.OUTLINE);
-		}
 		
-		if (VikaTouch.userId.equals("3225000")) {
-			ColorUtils.setcolor(g, 0);
-		}
-		g.drawString(text == null ? TextLocal.inst.get("msg") : text, tx, y + h * 3 / 4 - hfh, 0);
-		if (VikaTouch.userId.equals("3225000")) {
-			ColorUtils.setcolor(g, ColorUtils.TEXT);
-		}
+		
 		
 		
 		if (!selected) {
 			ColorUtils.setcolor(g, 7);
 		}
+		
+		if (unread > 0) {
+			
+			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
+			g.fillRect(0, y - 1, DisplayUtils.width, itemDrawHeight + 1);
+			
+		}
+		
+		
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
+		g.setFont(boldfont);
+		if (title != null) {
+			g.drawString(title, tx, y + h / 4 - hfh, 0);
+		}
+		g.setFont(font);
 
 		if (time != null) {
 			g.drawString(time, DisplayUtils.width - (16 + font.stringWidth(time)), y + h / 4 - hfh, 0);
@@ -181,8 +173,12 @@ public class ConversationItem extends JSONItem {
 			} else // а что, бывало что оно не загрузилось? лол))
 				if (selected) {
 					//g.drawImage(IconsManager.acs, 14, y + 8, 0);
-					
-					ResizeUtils.drawRectWithEmptyCircleInside(g, r, gg, b, 14, y+8, 25);
+					if (unread > 0) {
+						ResizeUtils.drawRectWithEmptyCircleInside(g, 243, 244, 246, 14, y+8, 25);
+						
+					} else {
+						ResizeUtils.drawRectWithEmptyCircleInside(g, r, gg, b, 14, y+8, 25);
+					}
 				} else {
 					if (unread > 0) {
 						ResizeUtils.drawRectWithEmptyCircleInside(g, 243, 244, 246, 14, y+8, 25);
@@ -200,11 +196,7 @@ public class ConversationItem extends JSONItem {
 																							// Приделаю
 																							// костыль.
 		}
-
-		if (!selected) {
-			ColorUtils.setcolor(g, -5);
-			g.fillRect(0, y + itemDrawHeight, DisplayUtils.width, 1);
-		}
+		
 		if (unread > 0) {
 			g.setFont(boldfont);
 			int rh = hfh * 2;
@@ -219,6 +211,31 @@ public class ConversationItem extends JSONItem {
 			g.drawString(s, DisplayUtils.width - 16 - font.stringWidth(s) - hm, y + h * 3 / 4 - hfh, 0);
 			g.setFont(font);
 		}
+		
+		
+		if (unanswered) {
+			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
+			g.fillRect(tx - 2 , (int)(y + h * 3 / 4 - hfh), DisplayUtils.width-5 - tx + 2, hfh * 2 + 3);
+		}
+		
+		if (!selected) {
+			ColorUtils.setcolor(g, ColorUtils.OUTLINE);
+		}
+		ColorUtils.setcolor(g, ColorUtils.TEXT);
+		if (VikaTouch.userId.equals("3225000")) {
+			ColorUtils.setcolor(g, 0);
+		}
+		g.drawString(text == null ? TextLocal.inst.get("msg") : text, tx, y + h * 3 / 4 - hfh, 0);
+		if (VikaTouch.userId.equals("3225000")) {
+			ColorUtils.setcolor(g, ColorUtils.TEXT);
+		}
+		
+
+		if (!selected) {
+			ColorUtils.setcolor(g, -5);
+			g.fillRect(0, y + itemDrawHeight, DisplayUtils.width, 1);
+		}
+		
 		if (online!=null) {
 			if (online.equals("1")) {
 				ColorUtils.setcolor(g, ColorUtils.ONLINE);
