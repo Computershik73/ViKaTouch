@@ -51,7 +51,7 @@ import vikatouch.utils.url.URLDecoder;
 public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 	public MusicScreen playlist;
-	public int current;
+	public static int current;
 	public boolean isPlaying = false;
 	public boolean isReady = false;
 	public boolean stop = false;
@@ -1395,7 +1395,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 	public AudioTrackItem getC() {
 		try {
-			return ((AudioTrackItem) playlist.uiItems.elementAt(currentItem));
+			return ((AudioTrackItem) playlist.uiItems.elementAt(current));
 		} catch (RuntimeException e) {
 			return new AudioTrackItem(); // fake item
 		}
@@ -1465,9 +1465,11 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 
 	public static void launch(MusicScreen list, int track) {
 		try {
+			MusicPlayer.current = track;
 			switch (Settings.audioMode) {
 			case Settings.AUDIO_VLC:
 				String mrl = ((AudioTrackItem) list.uiItems.elementAt(track)).mp3;
+				
 				System.out.println(mrl);
 				if (mrl.indexOf("xtrafrancyz") > -1) {
 					mrl = "https://" + mrl.substring("http://vk-api-proxy.xtrafrancyz.net/_/".length());

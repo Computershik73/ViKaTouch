@@ -123,7 +123,12 @@ public class ConversationItem extends JSONItem {
 			tx = 4;
 		
 		
-		
+		if (unread > 0) {
+			
+			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
+			g.fillRect(0, y - 1, DisplayUtils.width, itemDrawHeight + 1);
+			
+		}
 		
 		if (selected) {
 			
@@ -147,12 +152,7 @@ public class ConversationItem extends JSONItem {
 			ColorUtils.setcolor(g, 7);
 		}
 		
-		if (unread > 0) {
-			
-			ColorUtils.setcolor(g, ColorUtils.UNREAD_MSG_COLOR);
-			g.fillRect(0, y - 1, DisplayUtils.width, itemDrawHeight + 1);
-			
-		}
+		
 		
 		
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
@@ -173,14 +173,16 @@ public class ConversationItem extends JSONItem {
 			} else // а что, бывало что оно не загрузилось? лол))
 				if (selected) {
 					//g.drawImage(IconsManager.acs, 14, y + 8, 0);
-					if (unread > 0) {
-						ResizeUtils.drawRectWithEmptyCircleInside(g, 243, 244, 246, 14, y+8, 25);
+					//if (unread > 0) {
+						//ResizeUtils.drawRectWithEmptyCircleInside(g, 243, 244, 246, 14, y+8, 25);
 						
-					} else {
+					//} else {
+						
 						ResizeUtils.drawRectWithEmptyCircleInside(g, r, gg, b, 14, y+8, 25);
-					}
+					//}
 				} else {
 					if (unread > 0) {
+						
 						ResizeUtils.drawRectWithEmptyCircleInside(g, 243, 244, 246, 14, y+8, 25);
 						//g.drawImage(IconsManager.acsh, 14, y + 8, 0);
 					} else {
