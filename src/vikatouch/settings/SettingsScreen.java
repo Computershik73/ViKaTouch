@@ -753,6 +753,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		scrollToSelected();
 		VikaTouch.needstoRedraw=true;
 		this.repaint();
 		VikaTouch.needstoRedraw=true;
