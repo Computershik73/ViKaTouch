@@ -287,10 +287,14 @@ public class MenuScreen extends MainScreen implements IMenu {
 			((PressableUIItem) uiItems.elementAt(selectedBtn - 2)).setSelected(false);
 		selectedBtn--;
 		if (selectedBtn < 0)
-			selectedBtn = 0;
-		scrollToSelected();
+			selectedBtn = uiItems.size()+1;
+		
 		if (selectedBtn > 1)
 			((PressableUIItem) uiItems.elementAt(selectedBtn - 2)).setSelected(true);
+		scrollToSelected();
+		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
+		VikaTouch.needstoRedraw=true;
 	}
 
 	protected final void down() {
@@ -299,11 +303,14 @@ public class MenuScreen extends MainScreen implements IMenu {
 			((PressableUIItem) uiItems.elementAt(selectedBtn - 2)).setSelected(false);
 		selectedBtn++;
 		if (selectedBtn > 11)
-			selectedBtn = 11;
+			selectedBtn = 0;
 		
 		if (selectedBtn > 1)
 			((PressableUIItem) uiItems.elementAt(selectedBtn - 2)).setSelected(true);
 		scrollToSelected();
+		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
+		VikaTouch.needstoRedraw=true;
 	}
 
 	public void scrollToSelected() {
