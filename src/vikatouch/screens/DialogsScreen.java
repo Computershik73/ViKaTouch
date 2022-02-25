@@ -30,11 +30,9 @@ public class DialogsScreen extends MainScreen {
 
 	public static String titleStr;
 	private int cw;
-	public static DialogsScreen di;
 	
 	public DialogsScreen() {
 		super();
-		di = this;
 		VikaTouch.needstoRedraw=true;
 		// VikaTouch.loading = true;
 
@@ -50,9 +48,7 @@ public class DialogsScreen extends MainScreen {
 		// VikaTouch.loading = true;
 		VikaTouch.needstoRedraw=true;
 		Dialogs.refreshDialogsList(true, false);
-		
 		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
 		// VikaTouch.loading = false;
 	}
 
