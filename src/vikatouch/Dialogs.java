@@ -306,6 +306,18 @@ public class Dialogs extends TimerTask {
 	
 
 	public static void refreshDialogsList(final boolean async, final boolean sendNofs) {
+		int wasSelected = 0;
+		if (Dialogs.itemsCount>0) {
+		for (int i = 0; i < Dialogs.itemsCount; i++) {
+			if (Dialogs.dialogs[i] != null) {
+				if (Dialogs.dialogs[i].selected == true) {
+					wasSelected = i;
+					//break;
+				}
+			}
+		}
+		
+		}
 		System.gc();
 		if (System.currentTimeMillis() - VikaTouch.lastsuccessfullupdatetime>120000) {
 		/*	VikaTouch.needstoRedraw=true;
@@ -403,6 +415,7 @@ public class Dialogs extends TimerTask {
 					//if (dialogs.length != Settings.dialogsLength)
 					if ((dialogs.length) <= 1) {
 						dialogs = new ConversationItem[100];
+						
 					//itemsCount = Settings.dialogsLength;
 					}
 					// if(async) VikaTouch.loading = true;
@@ -517,6 +530,8 @@ public class Dialogs extends TimerTask {
 								//dialogs[i].disposeJson();
 								itemm.dispose();
 							}
+							
+							
 							if (dialogs.length > 1 && dialogs[0] != null
 									&& !String.valueOf(dialogs[0].lastSenderId).equals(VikaTouch.userId)) {
 								VikaTouch.needstoRedraw=true;
@@ -657,6 +672,9 @@ public class Dialogs extends TimerTask {
 		} else {
 			runnable.run();
 		}
+		if (DialogsScreen.keysMode) {
+		Dialogs.dialogs[wasSelected].setSelected(true);
+		}
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.canvas.serviceRepaints();
 	}
@@ -735,6 +753,31 @@ public class Dialogs extends TimerTask {
 		if (!VikaTouch.offlineMode) {
 			VikaTouch.isdownloading=1;
 			refreshDialogsList(true, false);
+			if (DialogsScreen.keysMode) {
+				int wasSelected = 0;
+				if (Dialogs.itemsCount>0) {
+				for (int i = 0; i < Dialogs.itemsCount; i++) {
+					if (Dialogs.dialogs[i] != null) {
+						if (Dialogs.dialogs[i].selected == true) {
+							wasSelected = i;
+							//break;
+						}
+					}
+				}
+				
+				}
+				
+				
+				
+				DialogsScreen.di.currentItem = wasSelected ;
+				if (wasSelected!=0) {
+				Dialogs.dialogs[0].setSelected(false);
+				}
+			Dialogs.dialogs[DialogsScreen.di.currentItem].setSelected(true);
+			}
+			VikaTouch.needstoRedraw=true;
+			DialogsScreen.di.serviceRepaints();
+			VikaTouch.needstoRedraw=true;
 			//VikaTouch.isdownloading=0;
 		}
 	}
