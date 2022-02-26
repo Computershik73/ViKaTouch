@@ -260,10 +260,11 @@ public class PostItem extends JSONItem implements ISocialable, IMenu {
 								b1 = true;
 								JSONObject jo2 = new JSONObject(VikaUtils.download(
 										new URLBuilder("users.get").addField("user_ids", "" + profile.optInt("id"))
-												.addField("fields", "photo_50"))).getJSONArray("response")
+												.addField("fields", "photo_50,sex"))).getJSONArray("response")
 														.getJSONObject(0);
 								avaurl = fixJSONString(jo2.optString("photo_50"));
 								gender = jo2.optInt("sex");
+								
 							}
 							if (b1 && b2) {
 								break;
@@ -276,11 +277,12 @@ public class PostItem extends JSONItem implements ISocialable, IMenu {
 				} else {
 					try {
 					JSONObject u = new JSONObject(VikaUtils.download(
-							new URLBuilder("users.get").addField("user_ids", xx).addField("fields", "photo_50")))
+							new URLBuilder("users.get").addField("user_ids", xx).addField("fields", "photo_50,sex")))
 									.getJSONArray("response").getJSONObject(0);
 					avaurl = fixJSONString(u.optString("photo_50"));
 					name = u.optString("first_name") + " " + u.optString("last_name");
 					gender = u.optInt("sex");
+					
 					} catch (Throwable e) {
 						avaurl=null;
 						name = "";

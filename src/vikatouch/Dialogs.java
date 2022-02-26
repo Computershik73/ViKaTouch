@@ -52,6 +52,8 @@ public class Dialogs extends TimerTask {
 	protected static boolean avasLoaded;
 
 	public static JSONArray items;
+
+	private static int wasSelected;
 	
 	
 	
@@ -306,7 +308,7 @@ public class Dialogs extends TimerTask {
 	
 
 	public static void refreshDialogsList(final boolean async, final boolean sendNofs) {
-		int wasSelected = 0;
+		 Dialogs.wasSelected = 0;
 		if (Dialogs.itemsCount>0) {
 		for (int i = 0; i < Dialogs.itemsCount; i++) {
 			if (Dialogs.dialogs[i] != null) {
@@ -618,7 +620,9 @@ public class Dialogs extends TimerTask {
 					VikaTouch.needstoRedraw=true;
 				}
 				// if(async) VikaTouch.loading = true;
-
+				if (DialogsScreen.keysMode) {
+					Dialogs.dialogs[wasSelected].setSelected(true);
+					}
 				runUpdater();
 				// if(downloaderThread2 != null && downloaderThread2.isAlive())
 				// downloaderThread2.interrupt();
