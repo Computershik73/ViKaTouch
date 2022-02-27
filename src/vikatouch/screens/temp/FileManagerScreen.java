@@ -46,10 +46,12 @@ public class FileManagerScreen extends ScrollableCanvas {
 		this.chat = chat;
 		load();
 		currentItem = 0;
+		this.serviceRepaints();
 	}
 	
 	public void load() {
 		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
 		len = 30;
 		folder=VikaTouch.folder;
 		if (folder==null) {
@@ -223,6 +225,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 
 	public void root() {
 		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
 		selectedItem = null;
 		root = true;
 		folder = "main";
@@ -267,6 +270,8 @@ public class FileManagerScreen extends ScrollableCanvas {
 		}
 		uiItems = new Vector(len);
 		currentItem = 0;
+		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
 		//for(int i = 0; i < len; i++) {
 			if(hasc) {
 				uiItems.addElement(new FolderItem(this, c, "C:"));
@@ -296,6 +301,8 @@ public class FileManagerScreen extends ScrollableCanvas {
 		//}
 		itemsCount = (short) len;
 
+		VikaTouch.needstoRedraw=true;
+		this.serviceRepaints();
 		if(keysMode && uiItems.elementAt(0) != null)
 			((PressableUIItem) uiItems.elementAt(0)).setSelected(true);
 		
@@ -349,6 +356,8 @@ public class FileManagerScreen extends ScrollableCanvas {
 			} else {
 				itemsCount = (short) (i - offset);
 			}
+			VikaTouch.needstoRedraw=true;
+			this.serviceRepaints();
 		} catch (Exception e) {
 			e.printStackTrace();
 			if(e instanceof IOException || e instanceof IllegalArgumentException) {
