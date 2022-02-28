@@ -190,12 +190,12 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener {
 			}
 		}*/
 		String tpath = Settings.musicpath;
-		final String path = tpath + 
+		final String path = this.voice==null ? tpath + 
 				//((tpath.indexOf("C:")>-1) ?
 				//String.valueOf(current) :
-				String.valueOf(getC().id)
+				String.valueOf(getC().id) 
 		//)
-				+"vikaMusicCache.mp3";
+				+"vikaMusicCache.mp3" : tpath + String.valueOf(voice.mid) + "vikaVoiceCache.mp3";
 		System.out.println(path);
 		//for (int i=0; i<99; i++) 
 		if (prevprevsongindex!=-1) 
