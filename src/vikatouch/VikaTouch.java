@@ -1110,6 +1110,8 @@ try {
 		VikaTouch.needstoRedraw=true;
 		SplashScreen.currState = 4;
 		VikaTouch.needstoRedraw=true;
+		VikaTouch.resendingmid=0;
+		VikaTouch.resendingobjectid="";
 		// Выбор сервера
 		if (!Settings.setted) {
 			if (mobilePlatform.indexOf("S60") > -1) {

@@ -144,7 +144,7 @@ public class ChatScreen extends MainScreen implements PlayerListener {
 	}
 
 	// 0 - сообщения, 1 - прикреп, 2 - поле, 3 - смайлы, 4 - отправка
-	private byte buttonSelected = 0;
+	private static byte buttonSelected = 0;
 
 	// данные для сообщения
 	public static long answerMsgId = 0;
@@ -170,6 +170,13 @@ public class ChatScreen extends MainScreen implements PlayerListener {
 			ChatScreen.answerMsgId = id;
 			ChatScreen.answerName = name;
 			ChatScreen.answerText = text;
+			ChatScreen.buttonSelected=2;
+			ChatScreen.showTextBox();
+			VikaTouch.needstoRedraw=true;
+			//serviceRepaints();
+			VikaTouch.canvas.serviceRepaints();
+			VikaTouch.needstoRedraw=true;
+			canSend=true;
 			//VikaTouch.sendLog("id: "+String.valueOf(id)+" name: "+String.valueOf(name)+" text: "+text);
 		}
 	}
@@ -181,6 +188,13 @@ public class ChatScreen extends MainScreen implements PlayerListener {
 			ChatScreen.objectId=resendingobjectid;
 			ChatScreen.answerName = resendingname;
 			ChatScreen.answerText = resendingtext;
+			ChatScreen.buttonSelected=2;
+			ChatScreen.showTextBox();
+			VikaTouch.needstoRedraw=true;
+			//serviceRepaints();
+			VikaTouch.canvas.serviceRepaints();
+			VikaTouch.needstoRedraw=true;
+			canSend=true;
 		}
 		
 	}
@@ -1832,7 +1846,7 @@ VikaUtils.logToFile(var4);
 		//repaint();
 	}
 
-	public boolean canSend = true;
+	public static boolean canSend = true;
 	private static Thread reporter;
 	private static Thread typer;
 
@@ -2507,7 +2521,7 @@ VikaUtils.logToFile(var4);
     }*/
 	
 	
-	private void showTextBox() {
+	private static void showTextBox() {
 		VikaTouch.needstoRedraw=true;
         if (!canSend)
             return;
@@ -3066,6 +3080,7 @@ VikaUtils.logToFile(var4);
     	objectId = "";
     	answerName = "";
     	answerText = "";
+    	buttonSelected=0;
         uiItems=null;
         currentItem=0;
         scrolled=0;
