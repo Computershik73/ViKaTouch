@@ -1964,12 +1964,12 @@ VikaUtils.logToFile(var4);
                 	}
                     
                    // VikaTouch.sendLog(url.toString());
-                    try {
+                   /* try {
 						Thread.sleep(200);
 					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					}
+					}*/
                     e=19;
                    // VikaUtils.logToFile(url.toString());
                    try {
@@ -1990,12 +1990,12 @@ VikaUtils.logToFile(var4);
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-                    	try {
-							sleep(6000);
+                    	/*try {
+							//sleep(6000);
 						} catch (InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
+						}*/
                     	a++;
                     }
                     if (res==null) {
