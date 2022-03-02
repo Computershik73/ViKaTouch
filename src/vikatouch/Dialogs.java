@@ -314,7 +314,7 @@ public class Dialogs extends TimerTask {
 			if (Dialogs.dialogs[i] != null) {
 				if (Dialogs.dialogs[i].selected == true) {
 					wasSelected = i;
-					//break;
+					break;
 				}
 			}
 		}
@@ -621,6 +621,7 @@ public class Dialogs extends TimerTask {
 				}
 				// if(async) VikaTouch.loading = true;
 				if (DialogsScreen.keysMode) {
+					DialogsScreen.unselectAll();
 					Dialogs.dialogs[wasSelected].setSelected(true);
 					}
 				runUpdater();

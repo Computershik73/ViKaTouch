@@ -1906,7 +1906,16 @@ VikaUtils.logToFile(var4);
             public void run() {
                 setPriority(10);
                 VikaTouch.needstoRedraw=true;
-               
+                canSend = false;
+                VikaTouch.canvas.serviceRepaints();
+                VikaTouch.needstoRedraw=true;
+                try {
+					Thread.sleep(200);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                
                 try {
         	        if(NokiaUIInvoker.supportsTextEditor()) {
         	            if(NokiaUIInvoker.textEditorShown()) {
@@ -2094,9 +2103,22 @@ VikaUtils.logToFile(var4);
                 	 }*/
                 	//VikaTouch.popup(new InfoPopup(TextLocal.inst.get("msg.senderror") + " - " + ee.toString() + " "+String.valueOf(e), null));
               //  } finally {
-                    canSend = true;
+                    	VikaTouch.needstoRedraw=true;
+                    	VikaTouch.canvas.serviceRepaints();
+                        try {
+                			Thread.sleep(500);
+                		} catch (Throwable eee) {
+                			// TODO Auto-geneerated catch block
+                			//e.printStackTrace();
+                		}
+                    	updStop=false;
+                         update();
+                    	canSend = true;
                     VikaTouch.loading = false;
                     VikaTouch.needstoRedraw=true;
+                    
+                	VikaTouch.canvas.serviceRepaints();
+                	VikaTouch.needstoRedraw=true;
                 //}
             }
         }.start();
@@ -2109,8 +2131,8 @@ VikaUtils.logToFile(var4);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        updStop=false;
-        update();
+       // updStop=false;
+       // update();
         VikaTouch.needstoRedraw=true;
         this.serviceRepaints();
     }

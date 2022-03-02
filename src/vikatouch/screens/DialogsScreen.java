@@ -79,33 +79,59 @@ public class DialogsScreen extends MainScreen {
 
 	protected final void up() {
 		VikaTouch.needstoRedraw=true;
-		try {
+		/*try {
 			Dialogs.dialogs[currentItem].setSelected(false);
 		} catch (Exception e) {
 
+		}*/
+		for (int i = 0; i < Dialogs.itemsCount; i++) {
+			if (Dialogs.dialogs[i] != null) {
+				Dialogs.dialogs[i].selected = false;
+			}
 		}
+		
 		currentItem--;
 		if (currentItem < 0) {
 			currentItem = 0;
 					//Dialogs.itemsCount--;
 		}
 		try {
-			scrollToSelected();
+			
 			Dialogs.dialogs[currentItem].setSelected(true);
 			VikaTouch.needstoRedraw=true;
 		} catch (Exception e) {
 
 		}
-	}
-
-	protected final void down() {
-		VikaTouch.needstoRedraw=true;
+		
 		try {
-			Dialogs.dialogs[currentItem].setSelected(false);
+			
+			scrollToSelected();
 			VikaTouch.needstoRedraw=true;
 		} catch (Exception e) {
 
 		}
+		
+		
+		
+	}
+
+	protected final void down() {
+		VikaTouch.needstoRedraw=true;
+		/*try {
+			Dialogs.dialogs[currentItem].setSelected(false);
+			VikaTouch.needstoRedraw=true;
+		} catch (Exception e) {
+
+		}*/
+		
+			for (int i = 0; i < Dialogs.itemsCount; i++) {
+				if (Dialogs.dialogs[i] != null) {
+					Dialogs.dialogs[i].selected = false;
+				}
+			}
+			
+	
+		VikaTouch.needstoRedraw=true;
 		currentItem++;
 		if (currentItem >= Dialogs.itemsCount-1) {
 			currentItem = Dialogs.itemsCount-1;
@@ -120,8 +146,15 @@ public class DialogsScreen extends MainScreen {
 			VikaTouch.needstoRedraw=true;
 		}*/
 		try {
-		scrollToSelected();
+		
 		Dialogs.dialogs[currentItem].setSelected(true);
+		VikaTouch.needstoRedraw=true;
+		} catch (Throwable eee) {
+			
+		} 
+		try {
+		scrollToSelected();
+		VikaTouch.needstoRedraw=true;
 		} catch (Throwable eee) {
 			
 		} 
@@ -209,7 +242,7 @@ public class DialogsScreen extends MainScreen {
 																					// во время сплеша. Привет Илье))0)
 	}
 
-	public void unselectAll() {
+	public static void unselectAll() {
 		VikaTouch.needstoRedraw=true;
 		if (Dialogs.selected) {
 			for (int i = 0; i < Dialogs.itemsCount; i++) {
