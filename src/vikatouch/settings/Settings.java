@@ -14,6 +14,7 @@ import org.json.me.JSONObject;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import tube42.lib.imagelib.ImageFxUtils;
+import vikatouch.Dialogs;
 import vikatouch.VikaTouch;
 import vikatouch.utils.VikaUtils;
 import vikatouch.utils.emulatordetect.EmulatorDetector;
@@ -211,6 +212,8 @@ public class Settings {
 	}
 
 	public static void loadSettings() {
+		loadDefaultSettings();
+		saveSettings();
 		try {
 			RecordStore rs = RecordStore.openRecordStore("vikatouchsettings", true);
 			if (rs.getNumRecords() > 0) {
@@ -612,8 +615,11 @@ public class Settings {
 				}
 				is.close();
 				bais.close();
+			} else {
+				loadDefaultSettings();
 			}
 			rs.closeRecordStore();
+			saveSettings();
 		} catch (Exception e) {
 
 		}
@@ -636,7 +642,7 @@ public class Settings {
 	}
 
 	public static void saveSettings() {
-		if (setted) {
+		//if (setted) {
 			try {
 				try {
 					RecordStore.deleteRecordStore("vikatouchsettings");
@@ -757,7 +763,7 @@ public class Settings {
 			} catch (Exception e) {
 				//VikaTouch.error(e, ErrorCodes.SETSSAVE);
 			}
-		}
+		//}
 	}
 	
 	public static void switchLightTheme() {
@@ -779,6 +785,7 @@ public class Settings {
 
 	public static void loadDefaultSettings() {
 		String x = System.getProperty("microedition.locale");
+		
 		refreshtimeout = 120;
 		nightTheme = false;
 		setted = false;
@@ -792,6 +799,7 @@ public class Settings {
 		simpleListsLength = 10;
 		messagesPerLoad = 10;
 		dialogsLength = 10;
+		Dialogs.itemsCount = Settings.dialogsLength;
 		videoResolution = Math.min(DisplayUtils.width, DisplayUtils.height) >= 360 ? "360" : "240";
 		language = "english";
 		cacheImages = true;

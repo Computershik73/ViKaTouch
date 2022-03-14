@@ -2,5 +2,5 @@ eclipse.preferences.version=1
 obfuscate_use_project=true
 pkg_use_project=true
 preverify_config_value=CLDC-1.0
-proguard_options=-overloadaggressively -dontusemixedcaseclassnames -dontwarn -dontnote -dontoptimize -microedition
+proguard_options=-dontusemixedcaseclassnames -dontwarn -dontnote -dontoptimize -microedition
 proguard_use_specified=true

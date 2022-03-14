@@ -603,8 +603,9 @@ public final class VikaUtils {
 						var4.flush();
 					}
 				} else {
-					Thread.sleep(500);
-					return download0(var1);
+					//Thread.sleep(500);
+					//return download0(var1);
+					return null;
 				}
 			} else {
 				var14 = var13.openInputStream();

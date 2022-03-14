@@ -369,7 +369,7 @@ public class VikaTouch {
 				setDisplay(canvas, 1);
 				err=30;
 				//VikaUtils.logToFile("16");
-
+				Dialogs.dialogs = new ConversationItem[50];
 				Dialogs.refreshDialogsList(true, false);
 				err=31;
 				//VikaUtils.logToFile("17");
@@ -1214,19 +1214,21 @@ try {
 				SplashScreen.currState = 6;
 				if (accessToken != "" && !offlineMode) {
 					{
-						if (Dialogs.dialogs!=null) {
+						/*if (Dialogs.dialogs!=null) {
 						if ((Dialogs.dialogs.length != Settings.dialogsLength) || (Dialogs.dialogs.length<=1)) {
 							//Dialogs.dialogs = new ConversationItem[0];
 							Dialogs.dialogs = new ConversationItem[50];
 						}
 							//Dialogs.dialogs = new ConversationItem[200];
-						}
+						}*/
 						
 						
 						
 						
 					}
+					
 					try {
+					Dialogs.dialogs = new ConversationItem[50];
 					Dialogs.refreshDialogsList(true, false);
 					} catch (Throwable eee) {}
 				}

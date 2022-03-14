@@ -246,7 +246,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 
 		// sending stats
 		VikaTouch.sendStats();
-		Dialogs.itemsCount = Settings.dialogsLength;
+		//Dialogs.itemsCount = Settings.dialogsLength;
 		//if (Dialogs.dialogs!=null) {
 		//if ((Dialogs.dialogs.length != Settings.dialogsLength) || (Dialogs.dialogs.length<=1))
 			//Dialogs.dialogs = new ConversationItem[0];
