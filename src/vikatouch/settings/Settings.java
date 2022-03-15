@@ -299,11 +299,7 @@ public class Settings {
 							videoResolution = Math.min(DisplayUtils.width, DisplayUtils.height) >= 360 ? "360" : "240";
 						}
 					
-					if (settingsjson.has("language")) {
-						language = settingsjson.optString("language");
-						} else {
-							language = "english";
-						}
+					
 					
 					if (settingsjson.has("cacheImages")) {
 						cacheImages = settingsjson.optBoolean("cacheImages");
@@ -518,6 +514,12 @@ public class Settings {
 					} catch (Exception e) {
 
 					}
+					
+					if (settingsjson.has("language")) {
+						language = settingsjson.optString("language");
+						} else {
+							language = "english";
+						}
 
 					if (isLiteOrSomething) {
 						alerts = true;
