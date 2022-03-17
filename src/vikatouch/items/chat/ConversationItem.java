@@ -186,7 +186,11 @@ public class ConversationItem extends JSONItem {
 						ResizeUtils.drawRectWithEmptyCircleInside(g, 243, 244, 246, 14, y+8, 25);
 						//g.drawImage(IconsManager.acsh, 14, y + 8, 0);
 					} else {
-						ResizeUtils.drawRectWithEmptyCircleInside(g, 255, 255, 255, 14, y+8, 25);
+						if (Settings.nightTheme) {
+						ResizeUtils.drawRectWithEmptyCircleInside(g, 0, 0, 0, 14, y+8, 25);
+						} else {
+							ResizeUtils.drawRectWithEmptyCircleInside(g, 255, 255, 255, 14, y+8, 25);
+						}
 						//g.drawImage(IconsManager.ac, 14, y + 8, 0);
 					}
 				}

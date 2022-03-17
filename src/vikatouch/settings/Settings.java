@@ -213,7 +213,7 @@ public class Settings {
 
 	public static void loadSettings() {
 		loadDefaultSettings();
-		saveSettings();
+		//saveSettings();
 		try {
 			RecordStore rs = RecordStore.openRecordStore("vikatouchsettings", true);
 			if (rs.getNumRecords() > 0) {
