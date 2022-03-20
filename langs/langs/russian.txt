@@ -49,6 +49,7 @@ menu.discussions=Обсуждения
 menu.about=О программе
 menu.loading=Загрузка...
 menu.search=Поиск
+menu.notifs=Уведомления
 
 about.devs=Разработчики
 about.vendor=Поставщики

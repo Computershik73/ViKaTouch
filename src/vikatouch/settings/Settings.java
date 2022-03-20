@@ -244,11 +244,7 @@ public class Settings {
 
 		}
 		
-		if (settingsjson.has("language")) {
-			language = settingsjson.optString("language");
-			} else {
-				language = "english";
-			}
+		
 
 		if (isLiteOrSomething) {
 			alerts = true;
@@ -547,6 +543,12 @@ public class Settings {
 								}
 							}
 							
+						}
+					
+					if (settingsjson.has("language")) {
+						language = settingsjson.optString("language");
+						} else {
+							language = "english";
 						}
 					
 					

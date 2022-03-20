@@ -1,5 +1,5 @@
-#Український
-#автор: Phantom_Horror
+#Українська
+#автор: Phantom Horror
 #
 #вк автора:
 
@@ -7,33 +7,35 @@
 
 langinfo.name=Українська
 #YYYY.MM.DD
-langinfo.version=2021.09.18
+langinfo.version=2022.2.21
 
-langinfo.hints=1
+langinfo.hints=15
 
-error.outofmem=Недостатньо пам'яті для роботи програми!
+error.outofmem=Бракує пам'яті для роботи застосунку!
 error.errcode=Код помилки
 error=Помилка
-error.additionalinfo=Додаткова інформація
+error.additionalinfo=Дод. інфо
 error.description=Можливий опис
-error.contactdevs=Зверніться до розробника для отримання додаткової інформації.
+error.contactdevs=за докладною інформацією зверніться до розробника.
+error.linksnotfound=Посилання не знайдено або сталася помилка.
 close=Закрити застосунок
 
-online=у мережі
-offline=не в мережі
+online=онлайн
+offline=офлайн
 wasonlinedate=був у мережі
 wasonlinetime=був у мережі о
+femalewasonlinedate=була в мережі о
 
-menu.videos=Відео
+enu.videos=Відео
 menu.music=Музика
 menu.photos=Фотографії
 menu.documents=Документи
 menu.friends=Друзі
-menu.cannotwrite=[не можна записати]
+menu.cannotwrite=[не можна написати]
 menu.wall=Стіна
 menu.info=Інформація
 menu.grleave=Вийти з групи
-menu.grjoin=Вступити до групи
+menu.grjoin=Вступити в групу
 menu.groups=Спільноти
 menu.quit=Вихід
 menu.members=Учасники
@@ -45,10 +47,12 @@ menu.nowebsite=немає
 menu.discussions=Обговорення
 menu.about=Про програму
 menu.loading=Завантаження...
+menu.search=Пошук
+menu.notifs=Сповіщення
 
 about.devs=Розробники
-about.vendor=Власник
-about.testers=Тестувальники
+about.vendor=Постачальники
+about.testers=Бета-тестери
 
 group=Група
 group.s=Групи
@@ -58,10 +62,11 @@ title.people=Люди
 title.chats=Повідомлення
 title.newsfeed=Новини
 title.docs=Документи
-title.docsw=Список документів
+title.docsw=Документи %1
 title.photos=Фотографії
+title.photosw=Фотографії %1
 title.videos=Відео
-title.videosw=Список відео
+title.videosw=Відео %1
 title.loading=завантаження
 title.members=Учасники
 title.login=Вхід
@@ -84,45 +89,45 @@ title.newrequests=Нові заявки
 
 friend.remove=Видалити з друзів
 friend.add=Додати в друзі
-friend.accept=Прийняти запит
-friend.cancel=Запит надіслано (скасувати)
-friends.all=Всі друзі
+friend.accept=Прийняти заявку
+friend.cancel=Заявку надіслано (скасувати)
+friends.all=Усі друзі
 friends.online=Друзі онлайн
 friends.incoming=Вхідні заявки
 friends.outcoming=Вихідні заявки
 
 subscribe=Підписатися
 
-music.all=Вся музика
+music.all=Уся музика
 music.search=Пошук музики
-music.recommendations=рекомендаціi
+music.searchresult=Результати пошуку:
+music.recommendations=Рекомендації
 
 msg=Повідомлення
 msg.online=У мережі
-msg.offline=Не в мережі
+msg.offline=Офлайн 
+msg.attach.photo=Фотографія
 msg.attach.audio=Аудіозапис
+msg.attach.voice=Голосове повідомлення
 msg.attach.reply=Відповідь
 msg.attach.fwd=Переслане повідомлення
-msg.attach.attachments=Вкладення
 msg.attach.attachment=Вкладення
-msg.attach.memory=Прикріпити з телефону
-msg.attach.album=Прикріпити з альбому ВК
+msg.attach.attachments=Вкладення
 msg.attach.video=Відеозапис
-msg.attach.photo=Прикріпити фото
-msg.attach.doc=Прикріпити документ
-msg.attach.voice=Голосове повідомлення
 msg.attach.wall=Запис на стіні
-msg.write=Написати
-msg.entermsg=Введіть повідомлення...
-msg.keyboard=Натисніть OK для введення
-msg.typing=друкує…
+msg.attach.doc=Документ
+msg.attach.memory=З пам'яті
+msg.attach.album=З ВК
+msg.keyboard=Натисніть ОК для введення
+msg.entermsg=Уведіть повідомлення...
+msg.typing=друкує...
 msg.typing2=друкують...
 msg.sending=Надсилання повідомлення...
 msg.editing=Редагування
 msg.failedtoload=Не вдалося завантажити інформацію
 msg.failedtoload2=Не вдалося завантажити повідомлення
-msg.sendneterror=Повідомлення не надіслано через помилку мережі.
-msg.senderror=Помилка надсилання  повідомлення
+msg.sendneterror=Повідомлення не надіслано через мережеву помилку.
+msg.senderror=Помилка під час надсилання повідомлення
 msg.send=Надіслати
 msg.attach=Прикріпити
 msg.stickers=Наліпки
@@ -133,25 +138,26 @@ msg.delete=Видалити
 msg.edit=Редагувати
 msg.markasread=Прочитано
 msg.reply=Відповісти
+msg.write=Написати
 msg.attach.camera=Камера
 msg.attach.gift=Подарунок
-msg.attach.sticker=Стікер
-msg.action.leave= % 1 вийшов
-msg.action.kick=%1 вигнав(а) %2
+msg.attach.sticker=Наліпка
+msg.action.leave=%1 вийшов
+msg.action.kick=%1 вигнав(-ла) %2
 msg.action.invite_user_by_link=%1 зайшов за посиланням
-msg.action.invite_user=%1 пригласил(а) %2
-msg.action.photo_update=%1 поміняв(а) фото
-msg.action.photo_remove=%1 видалив(а) фото
-msg.action.create=%1 створив(а) чат
-msg.action.title_update=%1 оновив (а) назву
-msg.action.pin_message=%1 закріпив(а) повідомлення
-msg.action.unread_message=%1 закріпив(а) повідомлення
+msg.action.invite_user=%1 запросив(-ла) %2
+msg.action.photo_update=%1 поміняв(-ла) фото
+msg.action.photo_remove=%1 видалив(-ла) фото
+msg.action.create=%1 створив(-ла) чат
+msg.action.title_update=%1 оновив(-ла) назву
+msg.action.pin_message=%1 закріпив(-ла) повідомлення
+msg.action.unpin_message=%1 відкріпив(-ла) повідомлення
 msg.attach.action=Дія
-msg.remove0 = Видалити у себе
-msg.remove1=Видалити у всіх
+msg.remove0=Видалити в себе
+msg.remove1=Видалити в усіх
 msg.removed=[видалено]
-msg.your comment=ваш коментар:
-msg.restricted=Відправлення повідомлень обмежена
+msg.yourcomment=Ваш коментар:
+msg.restricted=Надсилання повідомлень обмежен
 
 count.message=повідомлення
 count.messages=повідомлень
@@ -172,7 +178,10 @@ video.addtosebe=Додати до себе
 title2.loading=Завантаження...
 title2.msgloadingfailed=Не вдалося оновити повідомлення!
 
-login.captcharequired=Потрібно ввести капчу!
+title2.loading=Завантаження...
+title2.msgloadingfailed=Не вдалося оновити повідомлення!
+
+login.captcharequired=Потрібне введення капчі!
 login.captcha=Капча
 login.login=Логін
 login.password=Пароль
@@ -203,10 +212,10 @@ settings.transitionanimation=Анімація переходів
 settings.listslength=Кількість елементів у списках
 settings.dontloadavas=Не завантажувати аватарки
 settings.cacheimages=Кешувати картинки
-settings.historycount=Довжина історії чату
+settings.historycount=Довжина історії листування
 settings.refreshrate=Частота оновлення чату (с.)
 settings.telemetry=Надсилання статистики використання
-settings.sendlogs=Надсилання логів та помилок
+settings.sendlogs=Надсилання логів і помилок
 settings.videoresolution=Роздільна здатність відео під час відтворення
 settings.rtsp=Метод відкриття посилань RTSP
 settings.rtspc.0=За промовчанням
@@ -244,17 +253,18 @@ settings.doublebuffer=Подвійна буферизація
 settings.drawpriority=Максимальний пріоритет рендеру
 settings.imagescaling=Якість масштабу зображень
 settings.fast=Швидка
-settings.filtered=Плавне
+settings.filtered=Плавна
+settings.night=Нічна тема
 
 back=Назад
 select=Вибрати
-options=Опції
 up=Нагору
 down=Вниз
+options=Опції
 keyboard=Клавіатура
 close=Закрити
 yes=Так
-ok=Прийняти
+ok=ОК
 cancel=Скасувати
 loadmore=Завантажити ще...
 at=о
@@ -279,14 +289,54 @@ player.hideapp=Згорнути застосунок
 player.troubleshooting=Усунення проблем
 player.updatelinks=Оновити посилання
 player.forcedreboot=Примусово перезапустити
-player.rewindimpossible=Перемотування в онлайн-режимі недоступне через обмеження J2ME.
-player.accessfailed=Медіасервер закрив доступ до аудіофайлу. Спробуйте оновити посилання через меню усунення проблем або перезапустіть застосунок.
-player.playererror=Помилка програвача
+player.rewindimpossible=Перемотування в онлайн режимі недоступне через обмеження J2ME. Використовуйте кешування.
+player.accessfailed=Медіасервер закрив доступ до аудіофайлу. Спробуйте оновити посилання через меню усунення проблем або перезапустити застосунок.
+player.playererror=Помилка плеєра
 player.internalerror=Невідома внутрішня помилка (-2)
 player.cancel=Скасувати завантаження?
+player.recording=Триває запис...
 
 wall.like=Подобається
 wall.unlike=Не подобається
-wall.links=Посилання…
-wall.repost=Поділитися
+wall.links=Посилання...
+wall.repost=Репост
 wall.comments=Коментарі
+wall.towall=Опублікувати на стіні
+wall.tofriend=Надіслати другу
+wall.togroup=Опублікувати в групі
+wall.tochat=Переслати в чат
+wall.updatedprofilephoto=оновив фотографію на сторінці
+wall.updatedprofilephotofemale=оновила фотографію на сторінці
+
+fm.noaccess=Немає доступу
+fm.memorycard=Картка пам'яті
+fm.gallery=Галерея
+fm.root=Коренева тека
+
+popup.unrealized=Ще не реалізовано.
+
+update.available=Доступна нова версія
+update.dl=Завантажити?
+
+splash.emnotsupported=Найімовірніше, ViKa Touch зараз запущена на непідтримуваному емуляторі. Ми рекомендуємо використовувати KEmulator, J2ME Loader, JBed або офіційні емулятори з пакетів для розробників - на інших можливі проблеми з відображенням, функціоналом і безпекою.
+splash.title.3=Підготовка асетів
+splash.title.4=Авторизація
+splash.title.5=Завантаження інформації профілю
+splash.title.6=Завантаження діалогів
+splash.title.7=Готово.
+splash.tip=---- Випадкова підказка ----
+splash.tip.0=Якщо закрити застосунок кнопкою в меню, він повідомить ВКонтакті, що ви вийшли в офлайн.
+splash.tip.1=Якщо в списку документів натиснути на іконку документа-картинки, відкриється його передперегляд.
+splash.tip.2=Біля деяких налаштувань у квадратних дужках зазначено платформу, для якої вони призначені - на інших вони працювати не будуть.
+splash.tip.3=Відео відкриватимуться й завантажуватимуться в тій роздільній здатності, яку вибрано в налаштуваннях.
+splash.tip.4=Метод відкриття відео підбирається автоматично залежно від платформи.
+splash.tip.5=Не відтворюється музика? Спробуйте вибрати в налаштуваннях інший метод, сумісний з вашою платформою. Їх у нас аж 8, щось-бо й запрацює.
+splash.tip.6=Перебуваючи в будь-якому місці історії листування, натисніть ліву софт-клавішу для швидкого переміщення фокуса на поле введення.
+splash.tip.7=Між екранами новин, повідомлень і меню можна переміщуватися кнопками ліворуч/праворуч.
+splash.tip.8=Дані застосунку займають забагато місця? Спробуйте очистити кеш картинок у налаштуваннях.
+splash.tip.9=Завантажити фотографію в первісному розмірі можна, вибравши кнопку завантаження в передперегляді.
+splash.tip.10=Відкриту фотографію можна швидко закрити правою софт-клавішею.
+splash.tip.11=Ми підтримуємо відтворення медіа на KEmulator 1.0.3 - установіть VLC та виберіть його відкриття в налаштуваннях застосунку. Музика й відео відкриватимуться там онлайн. Якщо він, звичайно, захоче.
+splash.tip.12=Для J2ME Loader ми маємо персональну милицю - спробу адаптуватися під місцевий баг сенсора. Увімкніть її в налаштуваннях, якщо відчуваєте проблеми з тапом по кнопках меню.
+splash.tip.13=Якщо застосунок споживає забагато трафіку чи забиває всю смугу пропускання - зменште частоту оновлення повідомлень.
+splash.tip.14=У нас можна відкрити посилання з повідомлень! Підтримується http/https, ftp, smb, rtsp, згадки й посилання на сторінки ВКонтакті. Для цього відкрийте опції повідомлення та виберіть "посилання".
