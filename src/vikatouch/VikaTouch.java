@@ -64,7 +64,7 @@ public class VikaTouch {
 	public static final String API_VERSION = "5.91";
 	public static final String TOKEN_RMS = "vikatouchtoken";
 	public static final String SMILES_RMS = "smiles";
-	public static String API = "http://vk-api-proxy.xtrafrancyz.net:80";
+	public static String API = "http://vk-api-proxy.vikamobile:80";
 	public static String OAUTH = "https://oauth.vk.com:443";
 	public static String accessToken;
 	public static String mobilePlatform;
@@ -1029,7 +1029,7 @@ public class VikaTouch {
 		//VikaUtils.logToFile(a.toString());
 		//KeyCodeAdapter.getInstance();
 		canvas = new VikaCanvasInst();
-		
+		Dialogs.itemsCount=Settings.dialogsLength;
 		code = 5;
 		setDisplay(canvas);
 		code = 6;
@@ -1176,6 +1176,7 @@ try {
 					Settings.https = false;
 				}
 			}
+			Settings.saveSettings();
 		} else {
 			 //API = Settings.https?"https://api.vk.com:443":Settings.proxyApi;
 			//VikaTouch.OAUTH = ((Settings.proxy == false) ? Settings.httpsOAuth : Settings.proxyOAuth);
@@ -1228,6 +1229,7 @@ try {
 					}
 					
 					try {
+						Dialogs.itemsCount = 50;
 					Dialogs.dialogs = new ConversationItem[50];
 					Dialogs.refreshDialogsList(true, false);
 					} catch (Throwable eee) {}

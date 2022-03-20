@@ -309,6 +309,8 @@ public class Dialogs extends TimerTask {
 
 	public static void refreshDialogsList(final boolean async, final boolean sendNofs) {
 		 Dialogs.wasSelected = 0;
+		 try {
+		 if (Dialogs.dialogs!=null) {
 		if (Dialogs.itemsCount>0) {
 		for (int i = 0; i < Dialogs.itemsCount; i++) {
 			if (Dialogs.dialogs[i] != null) {
@@ -320,6 +322,8 @@ public class Dialogs extends TimerTask {
 		}
 		
 		}
+		 }
+		 } catch (Throwable eee) {}
 		System.gc();
 		if (System.currentTimeMillis() - VikaTouch.lastsuccessfullupdatetime>120000) {
 		/*	VikaTouch.needstoRedraw=true;

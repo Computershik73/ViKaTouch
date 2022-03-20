@@ -116,9 +116,9 @@ public class Settings {
 	public static boolean alerts;
 
 	// константы
-	public final static String xtrafrancyzApi = "http://vk-api-proxy.xtrafrancyz.net:80";
+	public final static String xtrafrancyzApi = "http://vk-api-proxy.vikamobile.ru:80";
 
-	public final static String xtrafrancyzOAuth = "http://vk-oauth-proxy.xtrafrancyz.net";
+	public final static String xtrafrancyzOAuth = "http://vk-oauth-proxy.vikamobile.ru:80";
 
 	public final static String httpsApi = "https://api.vk.com:443";
 
@@ -213,6 +213,68 @@ public class Settings {
 
 	public static void loadSettings() {
 		loadDefaultSettings();
+		
+		
+		try {
+			if(isOldLang(language)) {
+				String x = language;
+				String supportedLanguages[] = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA"};
+				language = Settings.setLang(x, supportedLanguages, new String[] {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"});
+				region = Settings.setRegion(x, supportedLanguages, new String[] {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ"});
+			}
+		} catch (Exception e) {
+
+		}
+		if(fpsLimit <= 0) {
+			fpsLimit = 60;
+		}
+		
+		
+		if (!(VikaTouch.supportsHttps())) {
+			loadMusicViaHttp = Settings.AUDIO_HTTP;
+		}
+		
+		String x = System.getProperty("microedition.locale");
+		// язык соотвествующий настройкам устройства
+		try {
+			String supportedLanguages[] = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ", "pl_PL"};
+			language = Settings.setLang(x, supportedLanguages, new String[] {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian", "polish"});
+			region = Settings.setRegion(x, supportedLanguages, new String[] {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ",         "PL"});
+		} catch (Exception e) {
+
+		}
+		
+		if (settingsjson.has("language")) {
+			language = settingsjson.optString("language");
+			} else {
+				language = "english";
+			}
+
+		if (isLiteOrSomething) {
+			alerts = true;
+			videoResolution = "240";
+			proxy = true;
+			https = false;
+			notifmode = 4;
+			// threaded = false;
+		}
+		
+		doubleBufferization = true;
+		drawMaxPriority = true;
+		
+		// настройки для резистивок (аши, тачи с клавами и т.д)
+		try {
+			String d[] = {"Nokia202", "Nokia203", "Nokia300", "Nokia305", "Nokia306", "Nokia308", "Nokia309", "Nokia310", "Nokia311"};
+			for(int i = 0; i < d.length; i++) {
+				if(VikaTouch.mobilePlatform.startsWith(d[i])) {
+					sensorMode = SENSOR_RESISTIVE;
+					break;
+				}
+			}
+		} catch (Exception e) {
+
+		}
+		
 		//saveSettings();
 		try {
 			RecordStore rs = RecordStore.openRecordStore("vikatouchsettings", true);
@@ -486,65 +548,8 @@ public class Settings {
 							}
 							
 						}
-					//dialogsRefreshRate = (byte) (isLiteOrSomething ? 2 : 0);
 					
-					//musicviavikaserver = false;
-					/*if (VikaTouch.isS40()) {
-						fpsLimit = 15;
-						VikaTouch.muscount=30;
-						
-						https = false;
-						}
-					else {
-						VikaTouch.muscount=200;
-						if (VikaTouch.supportsHttps()) {
-							https = true;
-						}
-					}*/
-					if (!(VikaTouch.supportsHttps())) {
-						loadMusicViaHttp = Settings.AUDIO_HTTP;
-					}
 					
-					String x = System.getProperty("microedition.locale");
-					// язык соотвествующий настройкам устройства
-					try {
-						String supportedLanguages[] = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA",     "kk_KZ", "pl_PL"};
-						language = Settings.setLang(x, supportedLanguages, new String[] {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian", "polish"});
-						region = Settings.setRegion(x, supportedLanguages, new String[] {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ",         "PL"});
-					} catch (Exception e) {
-
-					}
-					
-					if (settingsjson.has("language")) {
-						language = settingsjson.optString("language");
-						} else {
-							language = "english";
-						}
-
-					if (isLiteOrSomething) {
-						alerts = true;
-						videoResolution = "240";
-						proxy = true;
-						https = false;
-						notifmode = 4;
-						// threaded = false;
-					}
-					
-					doubleBufferization = true;
-					drawMaxPriority = true;
-					
-					// настройки для резистивок (аши, тачи с клавами и т.д)
-					try {
-						String d[] = {"Nokia202", "Nokia203", "Nokia300", "Nokia305", "Nokia306", "Nokia308", "Nokia309", "Nokia310", "Nokia311"};
-						for(int i = 0; i < d.length; i++) {
-							if(VikaTouch.mobilePlatform.startsWith(d[i])) {
-								sensorMode = SENSOR_RESISTIVE;
-								break;
-							}
-						}
-					} catch (Exception e) {
-
-					}
 					
 
 					if (settingsjson.has("unsentmsgs")) {
@@ -618,7 +623,7 @@ public class Settings {
 				is.close();
 				bais.close();
 			} else {
-				loadDefaultSettings();
+				//loadDefaultSettings();
 			}
 			rs.closeRecordStore();
 			saveSettings();
@@ -626,19 +631,7 @@ public class Settings {
 
 		}
 		
-		try {
-			if(isOldLang(language)) {
-				String x = language;
-				String supportedLanguages[] = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA"};
-				language = Settings.setLang(x, supportedLanguages, new String[] {"english", "english", "russian", "spanish", "belarussian", "ukrainian", "russian"});
-				region = Settings.setRegion(x, supportedLanguages, new String[] {"US",      "UK",      "RU",      "ES",      "BY",          "UA",        "KZ"});
-			}
-		} catch (Exception e) {
-
-		}
-		if(fpsLimit <= 0) {
-			fpsLimit = 60;
-		}
+		
 		
 		switchLightTheme();
 	}

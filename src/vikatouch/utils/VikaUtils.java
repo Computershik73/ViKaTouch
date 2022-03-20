@@ -1006,9 +1006,9 @@ public final class VikaUtils {
 				// url = replace(url, "https:", "http:");
 				// if (vkApi != "https://api.vk.com:443") {
 				url = replace(
-						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.xtrafrancyz.net/_/cs"),
+						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.vikamobile.ru/_/cs"),
 								"https://vk-api", "http://vk-api"), "https:\\/\\/vk-api", "http://vk-api"),
-						"https://sun", "http://vk-api-proxy.xtrafrancyz.net/_/sun");
+						"https://sun", "http://vk-api-proxy.vikamobile.ru/_/sun");
 			// url = replace(url, )
 			// кеширование картинок включается если запрос http
 			//	VikaUtils.logToFile(url+"\n");
@@ -1036,7 +1036,7 @@ public final class VikaUtils {
 						replace(replace(replace(replace(
 								replace(replace(replace(replace(replace(replace(
 										replace(replace(replace(replace(filename, VikaTouch.API, ""),
-												"vk-api-proxy.xtrafrancyz.net", ""), "?ava=1", ""), ".userapi.", ""),
+												"vk-api-proxy.vikamobile.ru", ""), "?ava=1", ""), ".userapi.", ""),
 										"http:", ""), "https:", ""), "=", ""), "?", ""), ":80", ""), "\\", ""),
 								"/", ""), ":443", ""), "_", ""), "vk.comimages", ""),
 						"com", "");
@@ -1780,8 +1780,8 @@ public final class VikaUtils {
 					}
 					
 				} else {
-					byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.xtrafrancyz.net:80/_/vk.com/emoji/e/"
-							//"http://vk-api-proxy.xtrafrancyz.net:80/_/vk.com/images/emoji/"
+					byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.vikamobile.ru:80/_/vk.com/emoji/e/"
+							//"http://vk-api-proxy.vikamobile.ru:80/_/vk.com/images/emoji/"
 						//	"http://vikamobile.ru:80/emoji/"
 					+smilename);
 					//VikaTouch.sendLog("fff "+String.valueOf(bytes.length));
@@ -1944,8 +1944,8 @@ try {
 			 return im;
 		} catch (Throwable e) {
 			try {
-				byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.xtrafrancyz.net:80/_/vk.com/emoji/e/"
-						//"http://vk-api-proxy.xtrafrancyz.net:80/_/vk.com/images/emoji/"
+				byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.vikamobile.ru:80/_/vk.com/emoji/e/"
+						//"http://vk-api-proxy.vikamobile.ru:80/_/vk.com/images/emoji/"
 				//		"http://vikamobile.ru:80/emoji/"
 				+smilePath);
 				FileConnection outConn = (FileConnection) Connector.open(tpath+smilePath, Connector.READ_WRITE);
