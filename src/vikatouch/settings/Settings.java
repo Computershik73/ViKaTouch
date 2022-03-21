@@ -215,7 +215,7 @@ public class Settings {
 		loadDefaultSettings();
 		
 		
-		try {
+		/*try {
 			if(isOldLang(language)) {
 				String x = language;
 				String supportedLanguages[] = {"en_US",   "en_UK",   "ru_RU",   "es_ES",   "by_BY",       "ua_UA"};
@@ -269,7 +269,7 @@ public class Settings {
 			}
 		} catch (Exception e) {
 
-		}
+		}*/
 		
 		//saveSettings();
 		try {
@@ -554,12 +554,12 @@ public class Settings {
 					
 					
 
-					if (settingsjson.has("unsentmsgs")) {
+				/*	if (settingsjson.has("unsentmsgs")) {
 						unsentmsgs = new JSONArray(settingsjson.optString("unsentmsgs"));
 						
 						} else {
 							unsentmsgs = null;
-						}
+						}*/
 					
 					
 					

@@ -1006,7 +1006,7 @@ public final class VikaUtils {
 				// url = replace(url, "https:", "http:");
 				// if (vkApi != "https://api.vk.com:443") {
 				url = replace(
-						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.vikamobile.ru/_/cs"),
+						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.vikamobile.ru:80/_/cs"),
 								"https://vk-api", "http://vk-api"), "https:\\/\\/vk-api", "http://vk-api"),
 						"https://sun", "http://vk-api-proxy.vikamobile.ru/_/sun");
 			// url = replace(url, )

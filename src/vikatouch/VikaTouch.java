@@ -1022,6 +1022,7 @@ public class VikaTouch {
 		EmulatorDetector.checkForEmulator(mobilePlatform);
 		code = 3;
 		Settings.loadSettings();
+		
 		code = 4;
 		//JSONObject a = new JSONObject();
 		//a.put("a", "b");
@@ -1029,7 +1030,9 @@ public class VikaTouch {
 		//VikaUtils.logToFile(a.toString());
 		//KeyCodeAdapter.getInstance();
 		canvas = new VikaCanvasInst();
+		try {
 		Dialogs.itemsCount=Settings.dialogsLength;
+		} catch (Throwable ee) {}
 		code = 5;
 		setDisplay(canvas);
 		code = 6;
@@ -1179,8 +1182,9 @@ try {
 			Settings.saveSettings();
 		} else {
 			 //API = Settings.https?"https://api.vk.com:443":Settings.proxyApi;
-			//VikaTouch.OAUTH = ((Settings.proxy == false) ? Settings.httpsOAuth : Settings.proxyOAuth);
-			//VikaTouch.API = ((Settings.proxy == false) ? Settings.httpsApi : Settings.proxyApi);
+			VikaTouch.OAUTH = ((Settings.proxy == false) ? Settings.httpsOAuth : Settings.proxyOAuth);
+			VikaTouch.API = ((Settings.proxy == false) ? Settings.httpsApi : Settings.proxyApi);
+			Settings.saveSettings();
 			 //VikaUtils.logToFile(String.valueOf(Settings.https)+" "+String.valueOf(Settings.proxy));
 			/*if(Settings.proxy) {
 				OAUTH = Settings.proxyOAuth;
@@ -1229,8 +1233,8 @@ try {
 					}
 					
 					try {
-						Dialogs.itemsCount = 50;
-					Dialogs.dialogs = new ConversationItem[50];
+						//Dialogs.itemsCount = 50;
+					//Dialogs.dialogs = new ConversationItem[50];
 					Dialogs.refreshDialogsList(true, false);
 					} catch (Throwable eee) {}
 				}
@@ -1243,7 +1247,7 @@ try {
 			disposeSplash();
 			setDisplay(canvas, 0);
 			
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}
