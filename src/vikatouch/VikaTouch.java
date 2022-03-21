@@ -207,7 +207,8 @@ public class VikaTouch {
 		canvas.currentScreen = s;
 		canvas.draw();
 		VikaTouch.needstoRedraw=true;
-		VikaTouch.canvas.currentScreen.serviceRepaints();
+		//VikaTouch.canvas.currentScreen.serviceRepaints();
+		VikaTouch.canvas.currentScreen.repaint();
 		VikaTouch.needstoRedraw=true;
 		DisplayUtils.checkdisplay();
 		} catch (Throwable e) {}

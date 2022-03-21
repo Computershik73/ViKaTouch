@@ -761,8 +761,19 @@ public class ChatScreen extends MainScreen implements PlayerListener {
 			}
 			//VikaUtils.logToFile(var1);
 			uploadUrl = var1.substring(var1.indexOf("upload_url") + 13, var1.length() - 3);
+			try {
+			pl = Manager.createPlayer("capture://audio");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			
+			} catch (MediaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			
+			}
 			//VikaUtils.logToFile("url is "+uploadUrl);
-			if (!VikaTouch.isS40()) {
+			/*if (!VikaTouch.isS40()) {
 				try {
 					pl = Manager.createPlayer("capture://audio?encoding=pcm");
 				} catch (IOException e) {
@@ -784,7 +795,7 @@ public class ChatScreen extends MainScreen implements PlayerListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
+			}*/
 			pl.addPlayerListener(this);
 			try {
 				pl.realize();

@@ -162,7 +162,7 @@ final class VoiceRecorder implements Runnable {
 		//VikaUtils.logToFile("1");
 		try {
 			var1 = VikaUtils.download(VikaTouch.API + "/method/docs.getUploadServer?access_token="
-					+ VikaTouch.accessToken + "&type=audio_message&v=5.81");
+					+ VikaTouch.accessToken + "&type=audio_message&v=5.93");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

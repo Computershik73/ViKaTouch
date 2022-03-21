@@ -61,9 +61,12 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 				try {
 					VikaTouch.needstoRedraw=true;
 					VikaTouch.canvas.serviceRepaints();
+					try {
+					Thread.sleep(1000);
+					} catch (Throwable eee) {}
 					String x = VikaUtils.download(new URLBuilder("video.get").addField("owner_id", id)
 							.addField("count", Settings.simpleListsLength).addField("offset", from));
-					//Thread.sleep(5000);
+					
 					//VikaUtils.logToFile(x);
 					try {
 						VikaTouch.loading = true;
@@ -103,7 +106,10 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 						VikaTouch.loading = true;
 						for (int i = 0; i < itemsCount - (canLoadMore ? 1 : 0); i++) {
 							((VideoItem) uiItems.elementAt(i)).loadIcon();
-							Thread.yield();
+							try {
+							//Thread.yield();
+								Thread.sleep(500);
+							} catch (Throwable eee) {}
 							VikaTouch.needstoRedraw=true;
 							VikaTouch.canvas.serviceRepaints();
 						}
@@ -115,8 +121,8 @@ public class VideosScreen extends MainScreen implements INextLoadable {
 
 					VikaTouch.loading = false;
 				} catch (InterruptedException e) {
-					return;
-				} catch (Exception e) {
+					//return;
+				} catch (Throwable e) {
 					e.printStackTrace();
 					VikaTouch.error(e, ErrorCodes.VIDEOSLOAD);
 				}
