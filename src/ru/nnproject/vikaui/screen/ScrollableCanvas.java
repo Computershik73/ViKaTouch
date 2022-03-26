@@ -28,7 +28,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	protected int endx;
 	protected int endy;
 	protected short scroll;
-	public static int scrolled;
+	public int scrolled;
 	protected int lasty;
 	public static boolean dragging;
 	protected boolean canScroll;
@@ -68,6 +68,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 
 	public ScrollableCanvas() {
 		super();
+		scrollTargetActive=false;
+		//scrolled=0;
 		//repaint();
 	}
 

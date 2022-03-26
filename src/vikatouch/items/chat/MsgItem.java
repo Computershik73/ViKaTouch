@@ -1181,6 +1181,24 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 		}
 			break;
 		case -98:
+			boolean okk = false;
+			try {
+				URLBuilder url = new URLBuilder("messages.delete").addField("message_ids", "" + mid)
+						.addField("delete_for_all", i == -99 ? 1 : 0);
+				String x = VikaUtils.download(url);
+				JSONObject res = (new JSONObject(x)).getJSONObject("response");
+				okk = (res.optInt("" + mid) == 1);
+			} catch (Exception e) {
+				e.printStackTrace();
+				okk = false;
+			}
+			if (okk) {
+				text = TextLocal.inst.get("msg.removed");
+				drawText = new String[] { text };
+				linesC = 1;
+			}
+			VikaTouch.needstoRedraw=true;
+			break;
 		case -10:
 			if (this.fromid>0) {
 				VikaTouch.setDisplay(new ProfilePageScreen(this.fromid), 1);

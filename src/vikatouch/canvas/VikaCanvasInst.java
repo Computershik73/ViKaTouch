@@ -175,7 +175,7 @@ public class VikaCanvasInst extends VikaCanvas {
 			if (VikaTouch.integerUserId!=3225000) {
 			g.fillRect(getWidth()/2-2, 0, 5, 5);
 			} else {
-				g.fillRect(getWidth()/2-2, 0, 5, 55);
+				g.fillRect(getWidth()/2-2, 0, 5, 105);
 			}
 			VikaTouch.needstoRedraw=true;
 		}

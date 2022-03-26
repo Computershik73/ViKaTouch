@@ -113,6 +113,7 @@ public abstract class VikaScreen {
 
 	public void onLeave() {
 		VikaTouch.needstoRedraw=true;
+		
 	}
 	
 }

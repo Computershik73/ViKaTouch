@@ -275,6 +275,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 		groups = null;
 		VikaTouch.newsScr = null;
 		}
+		scrollTargetActive=false;
 	}
 
 }

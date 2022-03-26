@@ -609,5 +609,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	// events
 	public void onLeave() {
 		VikaTouch.needstoRedraw=true;
+		scrollTargetActive=false;
+		//scrolled=0;
 	}
 }
