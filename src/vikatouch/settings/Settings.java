@@ -33,6 +33,8 @@ public class Settings {
 	public static boolean proxy;
 
 	public static boolean https;
+	
+	public static boolean isopenvk;
 
 	public static String proxyApi;
 
@@ -123,6 +125,9 @@ public class Settings {
 	public final static String httpsApi = "https://api.vk.com:443";
 
 	public final static String httpsOAuth = "https://oauth.vk.com";
+	
+	public final static String openvkApi = "http://vikamobile.ru:80/proxy.php?https://openvk.su";
+	public final static String openvkOAuth = "http://vikamobile.ru:80/proxy.php?https://openvk.su";
 	
 	public final static String diskC = System.getProperty("fileconn.dir.music");
 	
@@ -551,7 +556,11 @@ public class Settings {
 							language = "english";
 						}
 					
-					
+					if (settingsjson.has("isopenvk")) {
+						isopenvk = settingsjson.optBoolean("isopenvk");
+						} else {
+							isopenvk = false;
+						}
 					
 
 				/*	if (settingsjson.has("unsentmsgs")) {
@@ -694,7 +703,7 @@ public class Settings {
 				settingsjson.put("refreshtimeout", refreshtimeout);
 				settingsjson.put("vibnewmestimeoutt", viblongmes);
 				settingsjson.put("dialogselectcolor", dialogselectcolor);
-				
+				settingsjson.put("isopenvk", isopenvk);
 				
 				//VikaUtils.logToFile(settingsjson.toString());
 				os.writeUTF(settingsjson.toString());
@@ -782,7 +791,7 @@ public class Settings {
 
 	public static void loadDefaultSettings() {
 		String x = System.getProperty("microedition.locale");
-		
+		isopenvk=false;
 		refreshtimeout = 120;
 		nightTheme = false;
 		setted = false;

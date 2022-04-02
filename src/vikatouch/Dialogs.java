@@ -497,10 +497,12 @@ public class Dialogs extends TimerTask {
 									for(int i = 0; i < profiles.length(); i++) {
 										JSONObject profile = profiles.getJSONObject(i);
 										if(!VikaTouch.profiles.containsKey(new IntObject(profile.getInt("id"))) && profile != null) {
+											//if (profile.has("photo_50")) {
 											VikaTouch.profiles.put(new IntObject(profile.getInt("id")), 
 													new ProfileObject(profile.getInt("id"), 
 															profile.getString("first_name"), profile.getString("last_name"), 
 															profile.optString("photo_50"), profile.optString("online")));
+											//} 
 										} else {
 											if (VikaTouch.profiles.containsKey(new IntObject(profile.getInt("id"))) && (profile != null))  {
 												if (!(profile.optString("online").equals(((ProfileObject) VikaTouch.profiles.get(new IntObject(profile.getInt("id")))).getOnline()))) {

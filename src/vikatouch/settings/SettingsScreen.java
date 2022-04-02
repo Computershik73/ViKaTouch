@@ -165,7 +165,11 @@ public class SettingsScreen extends MainScreen implements IMenu {
 						new String[] { TextLocal.inst.get("settings.proxy"),
 								TextLocal.inst.get("settings.directhttps") },
 						Settings.https ? 1 : 0, null),
-
+						new SettingMenuItem(this, TextLocal.inst.get("settings.isopenvk"), IconsManager.LINK, 65,
+								oneitemheight,
+								new String[] { TextLocal.inst.get("no"),
+										TextLocal.inst.get("yes") },
+								Settings.isopenvk ? 1 : 0, null),		
 				// new SettingMenuItem(this, TextLocal.inst.get("settings.cacheimages"),
 				// IconsManager.PHOTOS, 1,
 				// oneitemheight, eOd, Settings.cacheImages?1:0, null, true),
@@ -479,6 +483,13 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		} 
 		case 64 : {
 			Settings.musicpath = musicpathVals[var];
+			break;
+		}
+		case 65 : {
+			Settings.isopenvk = var == 1; 
+			
+			//VikaTouch.OAUTH = ((var == 1) ? Settings.httpsOAuth : Settings.proxyOAuth);
+			//VikaTouch.API = ((var == 1) ? Settings.httpsApi : Settings.proxyApi);
 			break;
 		}
 		}

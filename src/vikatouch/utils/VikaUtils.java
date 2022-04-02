@@ -544,7 +544,7 @@ public final class VikaUtils {
 		
 	}
 
-	private static String download0(String var1) throws InterruptedException {
+	public static String download0(String var1) throws InterruptedException {
 		/*if (System.currentTimeMillis() - VikaTouch.lastsuccessfullupdatetime>16200) {
 			VikaTouch.needstoRedraw=true;
 			VikaTouch.silenterror("Сети нет более 2 минут!", false);

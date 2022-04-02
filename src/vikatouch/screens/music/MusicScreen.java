@@ -5,6 +5,8 @@ import java.util.Vector;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.rms.RecordStore;
+
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
@@ -101,6 +103,29 @@ public static String q;
 			public void run() {
 				
 				try {
+					String m = VikaUtils.download(URLBuilder.makeSimpleURL("audio.get"));
+					
+					if ((m.indexOf("authorization failed")<0) && (m.indexOf("confirmation required") < 0)) {
+						VikaTouch.inst.saveToken();
+					} else {
+						if (m.indexOf("authorization failed") > -1) {
+							try {
+								RecordStore.deleteRecordStore(VikaTouch.TOKEN_RMS);
+							} catch (Exception e) {
+								
+							}
+							VikaTouch.error("Сессия недействительна, перелогиньтесь", true);
+						}
+						if (m.indexOf("confirmation required") > -1) {
+							VikaTouch.accessToken = null;
+							try {
+								RecordStore.deleteRecordStore(VikaTouch.TOKEN_RMS);
+							} catch (Exception e) {
+								
+							}
+							VikaTouch.error("ВК криво залогинил вас и не дал прав на музыку, перезайдите", true);
+						}
+					}
 					VikaTouch.loading = true;
 				//	String x = VikaUtils.music(new URLBuilder(Settings.proxyApi, "audio.get", true).addField("owner_id", oid)
 					//		.addField("album_id", albumId).addField("count", VikaTouch.muscount).addField("offset", 0).toString());
@@ -126,7 +151,7 @@ public static String q;
 					}
 					// VikaTouch.sendLog(x);
 					if (x.indexOf("error") > -1) {
-						VikaTouch.sendLog(x);
+						//VikaTouch.sendLog(x);
 						//if (x.indexOf("deprecated")>-1) {
 						/*	try {
 								VikaTouch.logout();

@@ -136,7 +136,7 @@ public class LoginScreen extends VikaScreen {
 				}
 				thread = new Thread() {
 					public void run() {
-						user = TextEditor.inputString(loginStr, user, 28, false);
+						user = TextEditor.inputString(loginStr, user, 58, false);
 						repaint();
 						VikaTouch.needstoRedraw=true;
 						VikaTouch.canvas.serviceRepaints();
@@ -301,7 +301,7 @@ public class LoginScreen extends VikaScreen {
 			selectedBtn = 1;
 			thread = new Thread() {
 				public void run() {
-					user = TextEditor.inputString(loginStr, user, 28, false);
+					user = TextEditor.inputString(loginStr, user, 58, false);
 					repaint();
 					VikaTouch.needstoRedraw=true;
 					VikaTouch.canvas.serviceRepaints();

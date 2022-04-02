@@ -64,7 +64,7 @@ public class VikaTouch {
 	public static final String API_VERSION = "5.91";
 	public static final String TOKEN_RMS = "vikatouchtoken";
 	public static final String SMILES_RMS = "smiles";
-	public static String API = "http://vk-api-proxy.vikamobile:80";
+	public static String API = "http://vk-api-proxy.vikamobile.ru:80";
 	public static String OAUTH = "https://oauth.vk.com:443";
 	public static String accessToken;
 	public static String mobilePlatform;
@@ -158,9 +158,17 @@ public class VikaTouch {
 				userId = s2.substring(0, s2.indexOf(";"));
 				tokenRMS.closeRecordStore();
 				try {
-				String m = VikaUtils.download(URLBuilder.makeSimpleURL("audio.get"));
+				String m = VikaUtils.download0(URLBuilder.makeSimpleURL("audio.get"));
 				//sendLog(m);
-				if (m.indexOf("confirmation") > -1) {
+				if ((m.indexOf("authorization failed") > -1) || (m.indexOf("timed out") > -1)) {
+					try {
+						RecordStore.deleteRecordStore(VikaTouch.TOKEN_RMS);
+					} catch (Exception e) {
+						
+					}
+					error("Сессия недействительна, перелогиньтесь", false);
+				}
+				/*if (m.indexOf("confirmation required") > -1) {
 					VikaTouch.accessToken = null;
 					
 					try {
@@ -168,17 +176,19 @@ public class VikaTouch {
 					} catch (Exception e) {
 						
 					}
-					error("Перезапустите приложение для завершения обновления", true);
-					return false;
+					error("Перезапустите приложение для завершения обновления", false);
+					return true;
 					
-				}
-				} catch (Throwable eee) { return true; }
+				}*/
+				} catch (Throwable eee) { return false; }
 				
 				// VikaTouch.sendLog("gettoken: "+accessToken);
 				// оптимизация
 				return true;
+			} else {
+				tokenRMS.closeRecordStore();
 			}
-			tokenRMS.closeRecordStore();
+			
 		} catch (Exception e) {
 			VikaTouch.error(e, ErrorCodes.TOKENLOAD);
 		}
@@ -230,6 +240,7 @@ public class VikaTouch {
 		//VikaUtils.logToFile("1");
 		try {
 			err=2;
+			if (!Settings.isopenvk) {
 			if (!Settings.proxy) {
 				Settings.proxy = false;
 				Settings.https = true;
@@ -238,6 +249,10 @@ public class VikaTouch {
 			} else {
 				OAUTH = Settings.proxyOAuth;
 				API = Settings.proxyApi;
+			}
+			} else {
+				OAUTH = Settings.openvkOAuth;
+				API = Settings.openvkApi;
 			}
 			err=3;
 			//VikaUtils.logToFile("2");
@@ -352,7 +367,7 @@ public class VikaTouch {
 				err=24;
 				//VikaUtils.logToFile("10");
 				//VikaUtils.logToFile("10 "+VikaTouch.mobilePlatform);
-				refreshToken();
+				//refreshToken();
 				err=25;
 			//VikaUtils.logToFile("11");
 				saveToken();
@@ -1183,8 +1198,13 @@ try {
 			Settings.saveSettings();
 		} else {
 			 //API = Settings.https?"https://api.vk.com:443":Settings.proxyApi;
+			if (!Settings.isopenvk) {
 			VikaTouch.OAUTH = ((Settings.proxy == false) ? Settings.httpsOAuth : Settings.proxyOAuth);
 			VikaTouch.API = ((Settings.proxy == false) ? Settings.httpsApi : Settings.proxyApi);
+			} else {
+				VikaTouch.OAUTH = Settings.openvkApi;
+				VikaTouch.API = Settings.openvkOAuth;
+			}
 			Settings.saveSettings();
 			 //VikaUtils.logToFile(String.valueOf(Settings.https)+" "+String.valueOf(Settings.proxy));
 			/*if(Settings.proxy) {
