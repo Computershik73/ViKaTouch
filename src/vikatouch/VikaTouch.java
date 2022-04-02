@@ -805,6 +805,7 @@ public class VikaTouch {
 	}
 	*/
 	public static void sendStats() {
+		if (Settings.sendLogs) {
 		(new Thread() {
 			public void run() {
 				try {
@@ -823,6 +824,7 @@ public class VikaTouch {
 				}
 			}
 		}).start();
+		}
 	}
 
 	public static void sendLog(String x) {
