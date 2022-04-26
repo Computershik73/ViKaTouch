@@ -275,10 +275,10 @@ public class VikaTouch {
 								"notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline").toString());
 				*/
 				VikaTouch.OAUTH + "/token?grant_type=password&2fa_supported=1&force_sms=1&username="+URLDecoder.encode(user)+"&password="+URLDecoder.encode(pass) + "&client_id="
-				+ "3140623"
+				+ "6146827"
 				//"6146827"
 						+ "&client_secret="
-						+ "VeWdmVclDCtn6ihuP1nt"
+						+ "qVxWRF1CwHERuIrKBnqe"
 						//"qVxWRF1CwHERuIrKBnqe"
 						+"&scope="+URLDecoder.encode("notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline"));
 			//}
@@ -306,9 +306,9 @@ public class VikaTouch {
 					err=10;
 					tokenAnswer = VikaUtils.download_old(VikaTouch.OAUTH + "/token?grant_type=password&username="+URLDecoder.encode(user)+"&2fa_supported=1&force_sms=1&password="+URLDecoder.encode(pass) + "&client_id="
 							//+ "6146827"
-							+"3140623"
+							+"6146827"
 							+ "&client_secret="
-							+ "VeWdmVclDCtn6ihuP1nt"
+							+ "qVxWRF1CwHERuIrKBnqe"
 							//+ "qVxWRF1CwHERuIrKBnqe"
 							+ "&scope="+URLDecoder.encode("notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline"));
 							/*new URLBuilder(OAUTH, "token").addField("grant_type", "password")
@@ -512,9 +512,9 @@ public class VikaTouch {
 					);*/
 					VikaTouch.OAUTH + "/token?grant_type=password&username="+URLDecoder.encode(user)+"&2fa_supported=1&force_sms=1&password="+URLDecoder.encode(pass) + "&code="+URLDecoder.encode(code)+
 							 "&client_id="
-							 +"3140623"
+							 +"6146827"
 								+ "&client_secret="
-								+ "VeWdmVclDCtn6ihuP1nt"		 
+								+ "qVxWRF1CwHERuIrKBnqe"		 
 					//+ "6146827&client_secret=qVxWRF1CwHERuIrKBnqe"
 							 + "&scope="+URLDecoder.encode("notify,friends,photos,audio,video,docs,notes,pages,status,offers,questions,wall,groups,messages,notifications,stats,ads,offline"));
 			if (tokenUnswer == null) {
@@ -1148,12 +1148,12 @@ try {
 							tokenAnswer = VikaUtils.download(new URLBuilder(OAUTH, "token").addField("grant_type", "password")
 									.addField("client_id", 
 											//"6146827"
-													"3140623"
+													"6146827"
 													
 													
 											).addField("client_secret", 
 													//"qVxWRF1CwHERuIrKBnqe"
-													"VeWdmVclDCtn6ihuP1nt"
+													"qVxWRF1CwHERuIrKBnqe"
 													)
 									.addField("username", "test").addField("password", "test")
 									.addField("2fa_supported", "1").addField("force_sms", "1")
