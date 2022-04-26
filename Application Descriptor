@@ -1,23 +1,23 @@
-Nokia-MIDlet-Category: Application
-Nokia-MIDlet-No-Exit: true
-Manifest-Version: 1.0
-Nokia-MIDlet-Block-Uninstall: true
-MIDlet-Version: 2.9.8
-MIDlet-Info-URL: http://vikamobile.ru
-Nokia-MIDlet-Background-Event: run
-Nokia-MIDlet-On-Screen-Keypad: no
-MIDlet-Icon: vika256.png
-MicroEdition-Configuration: CLDC-1.0
-MIDlet-Jar-URL: vikamobile.jar
-Nokia-MIDlet-UID-1: 0xE02033e8
-MIDlet-Name: ViKa Mobile
-LGE-MIDlet-TargetLCD-Width: 480
-FlipInsensitive: True
-MIDlet-1: ViKa Mobile,/vika256.png,ru.nnproject.vikatouch.VikaTouchApp
-Nokia-UI-Enhancement: CanvasHasBackground,MusicKeysSupported,IgnoreProfilesBasedSoundMuting
 VikaTouch-Edition: openbeta
-Progressive_Download: enabled
-MIDlet-Permissions: javax.microedition.io.Connector.http
+Nokia-MIDlet-Background-Event: run
+MIDlet-Version: 2.9.9
+MIDlet-Info-URL: http://vikamobile.ru
+Nokia-UI-Enhancement: CanvasHasBackground,MusicKeysSupported,IgnoreProfilesBasedSoundMuting
+Manifest-Version: 1.0
+LGE-MIDlet-TargetLCD-Width: 480
+MicroEdition-Configuration: CLDC-1.0
+Nokia-MIDlet-UID-1: 0xE02033e8
+Nokia-MIDlet-Block-Uninstall: true
+MIDlet-Name: ViKa Mobile
+FlipInsensitive: True
+Nokia-MIDlet-On-Screen-Keypad: no
 MIDlet-Vendor: Ilya Vysotsky
-MicroEdition-Profile: MIDP-1.0
+Progressive_Download: enabled
+MIDlet-Icon: vika256.png
+Nokia-MIDlet-Category: Application
 LGE-MIDlet-TargetLCD-Height: 800
+MIDlet-1: ViKa Mobile,/vika256.png,ru.nnproject.vikatouch.VikaTouchApp
+MicroEdition-Profile: MIDP-1.0
+MIDlet-Jar-URL: vikamobile.jar
+MIDlet-Permissions: javax.microedition.io.Connector.http
+Nokia-MIDlet-No-Exit: true
