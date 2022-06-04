@@ -126,8 +126,8 @@ public class Settings {
 
 	public final static String httpsOAuth = "https://oauth.vk.com";
 	
-	public final static String openvkApi = "http://vikamobile.ru:80/proxy.php?https://openvk.su";
-	public final static String openvkOAuth = "http://vikamobile.ru:80/proxy.php?https://openvk.su";
+	public final static String openvkApi = "http://openvk.co";
+	public final static String openvkOAuth = "http://openvk.co";
 	
 	public final static String diskC = System.getProperty("fileconn.dir.music");
 	
@@ -168,6 +168,8 @@ public class Settings {
 	public static final int AUDIO_SYSTEMPLAYER = 5; // только не скачивая.
 	public static final int AUDIO_VLC = 6; // алё, ну чо там с кемулятором // UPD: норм все
 	public static final int AUDIO_DOWNLOAD = 7; // браузер
+
+	public static final short AUDIO_ASYNC = 8;
 	// теперь точно всё, осталось выяснить ГДЕ ВЛЦ и что из этого умеет СЕшка.
 	/*
 	 * Объясняю нахера столько вариков. Понаблюдав чутка за вашей еблей с музыкой и

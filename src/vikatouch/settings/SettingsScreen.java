@@ -217,7 +217,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 						new String[] { TextLocal.inst.get("settings.audioc.0"), TextLocal.inst.get("settings.audioc.1"),
 								TextLocal.inst.get("settings.audioc.2"), TextLocal.inst.get("settings.audioc.3"),
 								TextLocal.inst.get("settings.audioc.4"), TextLocal.inst.get("settings.audioc.5"),
-								TextLocal.inst.get("settings.audioc.6"), TextLocal.inst.get("settings.audioc.7") },
+								TextLocal.inst.get("settings.audioc.6"), TextLocal.inst.get("settings.audioc.7"), TextLocal.inst.get("settings.audioc.8") },
 						Settings.audioMode, null), // Это все способы открыть аудио. В теории. UPD: ну-ну.
 				new SettingMenuItem(this, TextLocal.inst.get("settings.rtsp"), IconsManager.LINK, 13, oneitemheight,
 						new String[] { TextLocal.inst.get("settings.rtspc.0"), TextLocal.inst.get("settings.rtspc.1"),

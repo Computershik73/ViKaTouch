@@ -531,7 +531,7 @@ public final class VikaUtils {
 		var13 = (HttpConnection) Connector.open(oldurl, Connector.READ);
 		var13.setRequestMethod("GET");
 		var13.setRequestProperty("User-Agent",
-				"KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
+				"com.vk.vkclient/12 (unknown, iPhone OS 9.3.5, iPhone, Scale/2.000000)");
 		 i = var13.getResponseCode();
 		 
 		if (var13.getHeaderField("Location") != null) {
