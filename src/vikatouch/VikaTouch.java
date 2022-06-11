@@ -165,7 +165,7 @@ public class VikaTouch {
 					m = VikaUtils.download0(URLBuilder.makeSimpleURL("account.getProfileInfo"));
 					}
 					//sendLog(m);
-					//VikaUtils.logToFile("audio.getRecommendations: "+ m+ "\n");
+					VikaUtils.logToFile("audio.getRecommendations: "+ m+ "\n");
 					if ((m.indexOf("authorization failed") > -1) || (m.indexOf("timed out") > -1)) {
 						try {
 							RecordStore.deleteRecordStore(VikaTouch.TOKEN_RMS);
@@ -175,6 +175,8 @@ public class VikaTouch {
 						error("Сессия недействительна, перелогиньтесь", false);
 						return false;
 					}
+					
+					return true;
 					/*if (m.indexOf("confirmation required") > -1) {
 					VikaTouch.accessToken = null;
 
@@ -188,12 +190,13 @@ public class VikaTouch {
 
 				}*/
 				} catch (Throwable eee) { 
-					VikaUtils.logToFile("pizdec");
+					//VikaUtils.logToFile("pizdec");
+					error("Нет сети!", true);
 					return false; }
 
 				// VikaTouch.sendLog("gettoken: "+accessToken);
 				// оптимизация
-				return true;
+				//return true;
 			} else {
 				
 				tokenRMS.closeRecordStore();
@@ -1242,7 +1245,9 @@ public class VikaTouch {
 		VikaUtils.logToFile("before step 5\n");
 		try {
 			final VikaScreen canvas;
-			if (DEMO_MODE || getToken()) {
+			if (DEMO_MODE || 
+					getToken()
+					) {
 				SplashScreen.currState = 5;
 				if (accessToken != "") {
 					if (userId == null || userId == "" || userId.length() < 2 || userId.length() > 32) {
