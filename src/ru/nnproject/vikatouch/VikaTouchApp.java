@@ -5,8 +5,9 @@ import java.util.Hashtable;
 import javax.microedition.midlet.*;
 
 import vikatouch.Dialogs;
-import vikatouch.NokiaUIInvoker;
+//import vikatouch.NokiaUIInvoker;
 import vikatouch.VikaTouch;
+import vikatouch.cache.CacheManager;
 import vikatouch.screens.ChatScreen;
 
 /**
@@ -18,6 +19,7 @@ public final class VikaTouchApp extends MIDlet implements Runnable {
 	public boolean started = false;
 
 	public void destroyApp(boolean arg0) {
+		CacheManager.removeTempImages();
 		ChatScreen.stopUpdater();
 		VikaTouch.inst.stop();
 		Dialogs.stopUpdater();

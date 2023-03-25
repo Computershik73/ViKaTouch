@@ -66,7 +66,7 @@ public class ChatMembersScreen extends MainScreen {
 	public ChatMembersScreen(final int id, String title, int count) {
 		VikaTouch.needstoRedraw=true;
 		formattedTitle = title;
-		scrolled = 0;
+		scroll = 0;
 		uiItems = null;
 		currId = id;
 		totalItems = count;
@@ -105,7 +105,8 @@ public class ChatMembersScreen extends MainScreen {
 						repaint();
 						if (!Settings.dontLoadAvas) {
 							for (int i = 0; i < uiItems.size(); i++) {
-								((MemberItem) ((PressableUIItem) uiItems.elementAt(i))).getAva();
+								if(uiItems.elementAt(i) instanceof MemberItem)
+									((MemberItem) ((PressableUIItem) uiItems.elementAt(i))).getAva();
 								Thread.yield();
 							}
 						}
@@ -134,7 +135,7 @@ public class ChatMembersScreen extends MainScreen {
 	public void draw(Graphics g) {
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, 8));
-		itemsh = itemsCount * 52;
+		listHeight = itemsCount * 52;
 		try {
 			update(g);
 			int y = topPanelH;
@@ -142,7 +143,7 @@ public class ChatMembersScreen extends MainScreen {
 				if (uiItems != null) {
 					for (int i = 0; i < uiItems.size(); i++) {
 						if (((PressableUIItem) uiItems.elementAt(i)) != null) {
-							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scroll);
 							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						}
 					}
@@ -164,12 +165,12 @@ public class ChatMembersScreen extends MainScreen {
 		super.drawHUD(g, formattedTitle);
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = ((PressableUIItem) uiItems.elementAt(0)).getDrawHeight();
-				int yy1 = y - (scrolled + topPanelH);
+				int yy1 = y - (scroll + topPanelH);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
@@ -181,6 +182,6 @@ public class ChatMembersScreen extends MainScreen {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		super.release(x, y);
+		super.tap(x, y, time);
 	}
 }

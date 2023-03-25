@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Random;
+import java.util.Vector;
 
 import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.io.Connector;
@@ -29,7 +30,7 @@ import ru.nnproject.vikaui.popup.VikaNotice;
 import ru.nnproject.vikaui.screen.VikaScreen;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
-import vikatouch.caching.ImageStorage;
+import vikatouch.cache.CacheManager;
 import vikatouch.canvas.VikaCanvasInst;
 import vikatouch.items.VikaNotification;
 import vikatouch.items.chat.ConversationItem;
@@ -64,7 +65,7 @@ public class VikaTouch {
 	public static final String API_VERSION = "5.91";
 	public static final String TOKEN_RMS = "vikatouchtoken";
 	public static final String SMILES_RMS = "smiles";
-	public static String API = "http://vk-api-proxy.vikamobile.ru:80";
+	public static String API = "http://vk-api-proxy.symbian.live:80";
 	public static String OAUTH = "https://oauth.vk.com:443";
 	public static String accessToken;
 	public static String mobilePlatform;
@@ -88,6 +89,7 @@ public class VikaTouch {
 	public CommandsImpl cmdsInst;
 	private String errReason;
 	public String tokenAnswer;
+	public static Display display;
 	public static SplashScreen splash;
 	public static VikaTouch inst;
 	public static VikaTouchApp appInst;
@@ -122,9 +124,27 @@ public class VikaTouch {
 	public static boolean istimeout;
 	public static boolean isscrolling;
 	public static String folder=null;
+	public static boolean scrolling;
+	public static Vector tasks = new Vector();
 	//Вотэто очень прошу не трогать.
 	public static final boolean SIGNED = false;
-
+	private static Thread taskThread = new Thread() {
+		public void run() {
+			while(true) {
+				if(tasks.size() > 0) {
+					((Runnable) tasks.firstElement()).run();
+					tasks.removeElementAt(0);
+				}
+				try {
+					Thread.sleep(20);
+				} catch (Exception e) {
+					return;
+				}
+				Thread.yield();
+			}
+		}
+	};
+	
 	public void saveToken() {
 		try {
 			try {
@@ -229,11 +249,7 @@ public class VikaTouch {
 			appInst.isPaused = false;
 			//canvas.slide = direction;
 			canvas.currentScreen = s;
-			canvas.draw();
-			VikaTouch.needstoRedraw=true;
-			//VikaTouch.canvas.currentScreen.serviceRepaints();
-			VikaTouch.canvas.currentScreen.repaint();
-			VikaTouch.needstoRedraw=true;
+			VikaTouch.canvas.repaint(true);
 			DisplayUtils.checkdisplay();
 		} catch (Throwable e) {}
 		// loading = true;
@@ -934,7 +950,7 @@ public class VikaTouch {
 			if (i == ErrorCodes.LANGLOAD) {
 				s2 = "Error: \n" + e.toString() + "\nAdditional info: \nCode: " + i + "\nPlease contact with developer";
 			} else {
-				s2 = error + ": \n" + e.toString().substring(0, 100) + "\n" + TextLocal.inst.get("error.additionalinfo") + ":\n"
+				s2 = error + ": \n" + (e.toString().length() > 100 ? e.toString().substring(0, 100) : e.toString()) + "\n" + TextLocal.inst.get("error.additionalinfo") + ":\n"
 						+ TextLocal.inst.get("error.errcode") + ": " + i + "\n"
 						+ TextLocal.inst.get("error.contactdevs");
 			}
@@ -1047,6 +1063,7 @@ public class VikaTouch {
 	public void start() {
 		int code = 0;
 		try {
+			display = Display.getDisplay(appInst);
 			DisplayUtils.checkdisplay();
 			code = 1;
 			Settings.loadDefaultSettings();
@@ -1084,9 +1101,7 @@ public class VikaTouch {
 			code = 8;
 			mainThread.start();
 			code = 9;
-			uiThread = new UIThread(canvas);
-			code = 10;
-			uiThread.start();
+			canvas.repaintThread.start();
 			code = 11;
 			DisplayUtils.checkdisplay();
 			VikaTouch.hash = new Hashtable();
@@ -1099,10 +1114,12 @@ public class VikaTouch {
 	public void threadRun() {
 		splash = new SplashScreen();
 		cmdsInst = new CommandsImpl();
+		taskThread.start();
 		setDisplay(splash, 0);
 		VikaTouch.needstoRedraw=true;
 		SplashScreen.currState = 1;
 		VikaTouch.needstoRedraw=true;
+		CacheManager.init();
 
 		SplashScreen.currState = 2;
 		VikaTouch.needstoRedraw=true;
@@ -1120,11 +1137,11 @@ public class VikaTouch {
 
 		if (EmulatorDetector.emulatorNotSupported)
 			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("splash.emnotsupported"), null));
-		ImageStorage.init();
+		CacheManager.init();
 		SplashScreen.currState = 3;
 		VikaUtils.logToFile("currState 3\n");
 		VikaTouch.needstoRedraw=true;
-		ImageStorage.init();
+		CacheManager.init();
 		VikaUtils.logToFile("ImageStorage.init\n");
 		try {
 			IconsManager.Load();
@@ -1477,4 +1494,16 @@ public class VikaTouch {
 	public static boolean needFilePermission() {
 		return (isS40() || (mobilePlatform.indexOf("S60") > -1 && (mobilePlatform.indexOf("3.0") > -1 || mobilePlatform.indexOf("3.1") > -1 || mobilePlatform.indexOf("3.2") > -1))) && !EmulatorDetector.isEmulator && !SIGNED;
 	}
+
+	public static void needRepaint() {
+		canvas.repaint(false);
+	}
+
+	public static boolean isLowPhone() {
+		return isNotS60() && totalMemory() <= 2048 * 1024;
+	}
+	private static long totalMemory() {
+		return Runtime.getRuntime().totalMemory();
+	}
+	
 }

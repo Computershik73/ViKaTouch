@@ -18,6 +18,8 @@ import vikatouch.utils.VikaUtils;
  * @author Shinovon
  * 
  */
+
+// UNUSED
 public class UIThread extends Thread {
 
 	private VikaCanvas canvas;
@@ -97,7 +99,7 @@ public class UIThread extends Thread {
 			long wastedTime = 0;
 			try {
 				long i = System.currentTimeMillis();
-				canvas.tick();
+				//canvas.tick();
 				wastedTime = System.currentTimeMillis() - i;
 				frames++;
 				canvas.fps = (int) ((1000d - wastedTime) / wastedTime);

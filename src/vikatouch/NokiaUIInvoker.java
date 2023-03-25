@@ -33,16 +33,15 @@ public class NokiaUIInvoker {
 			try {
 				
 				softNotificationsSupported = false;
-				textEditorSupported = true;
-				//Class.forName("com.nokia.mid.ui.SoftNotification"); 
-				{
+				Class.forName("com.nokia.mid.ui.SoftNotification"); 
 				SoftNotificationInvoker.init();
 				softNotificationsSupported = true;
-				}
 				
 			} catch (NoClassDefFoundError e) {
+				e.printStackTrace();
 				softNotificationsSupported = false;
 			} catch (Throwable e) {
+				e.printStackTrace();
 				softNotificationsSupported = false;
 			}
 			try {
@@ -56,8 +55,10 @@ public class NokiaUIInvoker {
 				textEditorSupported = false;
 				}
 			} catch (NoClassDefFoundError e) {
+				e.printStackTrace();
 				textEditorSupported = false;
 			} catch (Throwable e) {
+				e.printStackTrace();
 				textEditorSupported = false;
 			}
 			try {
@@ -66,12 +67,16 @@ public class NokiaUIInvoker {
 				directUtilsSupported = true;
 				
 			} catch (NoClassDefFoundError e) {
+				e.printStackTrace();
 				directUtilsSupported = false;
 			} catch (Exception e) {
+				e.printStackTrace();
 				directUtilsSupported = false;
 			} catch (Error e) {
+				e.printStackTrace();
 				directUtilsSupported = false;
 			} catch (Throwable ee) {
+				ee.printStackTrace();
 				directUtilsSupported = false;
 			}
 			if (directUtilsSupported == true) {
@@ -79,6 +84,7 @@ public class NokiaUIInvoker {
 				//directUtilsSupported = true;
 			}
 		} catch (Throwable e) {
+			//e.printStackTrace();
 			softNotificationsSupported = false;
 			textEditorSupported = false;
 			directUtilsSupported = false;

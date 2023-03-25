@@ -16,7 +16,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 import ru.nnproject.vikaui.utils.images.IconsManager;
 import vikatouch.Dialogs;
-import vikatouch.NokiaUIInvoker;
+
 import vikatouch.VikaTouch;
 import vikatouch.items.chat.ConversationItem;
 import vikatouch.items.music.MusicMenuItem;
@@ -167,7 +167,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 			
 			try {
 				if (!Settings.dontLoadAvas && hasAva && avaurl != null && avaurl != "" && avaurl != "null") {
-					profileImg = ResizeUtils.resizeava(VikaUtils.downloadImage(avaurl));
+					profileImg = ResizeUtils.resizeava(VikaUtils.downloadImage(avaurl, true));
 				}
 			} catch (Throwable e) {
 				VikaTouch.error(ErrorCodes.MENUAVATAR, e.toString(), false);
@@ -242,7 +242,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 		 uiItems.addElement(new OptionItem(this, TextLocal.inst.get("menu.quit"), IconsManager.CLOSE, -1, uiih));
 
 		itemsCount = 10;
-		itemsh = 140 + uiih * itemsCount;
+		listHeight = 140 + uiih * itemsCount;
 
 		// sending stats
 		VikaTouch.sendStats();
@@ -320,7 +320,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 		if (selectedBtn == 1)
 			return;
 		System.out.println("Y: " + getItemY(selectedBtn - 1));
-		scrolled = -(getItemY(selectedBtn - 1) - DisplayUtils.height / 2
+		scroll = -(getItemY(selectedBtn - 1) - DisplayUtils.height / 2
 				+ (((PressableUIItem) uiItems.elementAt(selectedBtn - 1)).getDrawHeight() / 2) + topPanelH + 50);
 	}
 
@@ -376,6 +376,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 			g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM));
 			ColorUtils.setcolor(g, ColorUtils.TEXT);
 			g.drawString(name + " " + lastname, 74, topPanelH + 12, 0);
+			g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_SMALL));
 			//g.drawString(status == null ? visitStr : status, 74, topPanelH + 36, 0);
 			if (status!=null) {
 				g.drawString(status, 74, topPanelH + 30, 0);
@@ -411,7 +412,7 @@ public class MenuScreen extends MainScreen implements IMenu {
 			if (uiItems != null) {
 				for (int i = 0; i < uiItems.size(); i++) {
 					if (uiItems.elementAt(i)!= null) {
-						((PressableUIItem)uiItems.elementAt(i)).paint(g, y, scrolled);
+						((PressableUIItem)uiItems.elementAt(i)).paint(g, y, scroll);
 						y += ((PressableUIItem)uiItems.elementAt(i)).getDrawHeight();
 					}
 				}
@@ -765,13 +766,13 @@ public class MenuScreen extends MainScreen implements IMenu {
 	 * }
 	 */
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.supportsTouch=true;
 		if (!dragging) {
 			try {
 				if (y > topPanelH + 82 && y < DisplayUtils.height - bottomPanelH) {
-					int y1 = scrolled + topPanelH + 82;
+					int y1 = scroll + topPanelH + 82;
 					for (int i = 0; i < itemsCount; i++) {
 						int y2 = y1 + ((PressableUIItem)uiItems.elementAt(i)).getDrawHeight();
 						if (y > y1 && y < y2) {
@@ -780,13 +781,13 @@ public class MenuScreen extends MainScreen implements IMenu {
 						}
 						y1 = y2;
 					}
-				} else if (y > topPanelH - scrolled && y < 140 - scrolled) {
+				} else if (y > topPanelH - scroll && y < 140 - scroll) {
 					VikaTouch.inst.cmdsInst.command(16, this);
 				}
 			} catch (RuntimeException e) {
 			}
 		}
-		super.release(x, y);
+		super.tap(x, y, time);
 	}
 	/*
 	 * public final void release(int x, int y) { if(!dragging) {

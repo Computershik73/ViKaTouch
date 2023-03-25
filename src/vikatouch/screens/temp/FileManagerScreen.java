@@ -61,13 +61,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 		}
 	}
 	
-	public void press(int x, int y) {
-		VikaTouch.needstoRedraw=true;
-		super.press(x, y);
-	}
-	
-	public void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
+	public void tap(int x, int y, int time) {
 		if(y > DisplayUtils.height - 36) {
 			if(x < 36) {
 				back();
@@ -84,7 +78,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 		try {
 			if (y > 24 && y < DisplayUtils.height - 24) {
 				int h = ((PressableUIItem) uiItems.elementAt(0)).getDrawHeight();
-				int yy1 = y - (scrolled + 24);
+				int yy1 = y - (scroll + 24);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
@@ -96,7 +90,6 @@ public class FileManagerScreen extends ScrollableCanvas {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		super.release(x, y);
 	}
 	
 	public void press(int key) {
@@ -137,7 +130,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 	}
 
 	public void draw(Graphics g) {
-		itemsh = itemsCount * (DisplayUtils.compact ? 24 : 50);
+		listHeight = itemsCount * (DisplayUtils.compact ? 24 : 50);
 		ColorUtils.setcolor(g, ColorUtils.BACKGROUND);
 		g.fillRect(0, 0, DisplayUtils.width, DisplayUtils.height);
 		update(g);
@@ -147,7 +140,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 		try {
 			for(int i = 0; i < uiItems.size(); i++) {
 				if(uiItems.elementAt(i) != null) {
-					((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+					((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scroll);
 					y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 				}
 			}
@@ -378,7 +371,7 @@ public class FileManagerScreen extends ScrollableCanvas {
 			itemy += ((PressableUIItem)uiItems.elementAt(i)).getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
 		}
 		if (uiItems.elementAt(currentItem) != null) {
-			scrolled = -(itemy - DisplayUtils.height / 2 + (((PressableUIItem)uiItems.elementAt(currentItem)).getDrawHeight() / 2)
+			scroll = -(itemy - DisplayUtils.height / 2 + (((PressableUIItem)uiItems.elementAt(currentItem)).getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
 			
 		}

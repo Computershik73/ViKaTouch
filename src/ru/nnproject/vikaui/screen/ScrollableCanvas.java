@@ -23,42 +23,28 @@ import vikatouch.items.chat.MsgItem;
 
 public abstract class ScrollableCanvas extends VikaScreen {
 
-	protected int startx;
-	protected int starty;
-	protected int endx;
-	protected int endy;
-	protected short scroll;
-	public int scrolled;
-	protected int lasty;
 	public static boolean dragging;
 	protected boolean canScroll;
 	public static short oneitemheight = 50;
 	public short itemsCount = 5;
-	public int itemsh = itemsCount * oneitemheight;
-	protected int lastx;
-	public static short vmeshautsa = 528;
-	public static final double scrollSpeed = 1.8;
+	public int listHeight = itemsCount * oneitemheight;
+	public int scroll;
 	public Vector uiItems;
 	public short scrollOffset;
 	public int currentItem;
 	public static boolean keysMode;
 	public boolean scrollWithKeys = false;
 
-	public boolean drift;
-	public float driftSpeed;
-	public float driftingTime;
-	protected boolean preDrift;
-	private long pressTime;
 
 	/*
 	 * Целевая координата, к которой будет лерпаться прокрутка.
 	 */
 	public int scrollTarget;
+	private int scrollTimer;
 	/*
 	 * Если false, лерпаться не будет.
 	 */
 	public static boolean scrollTargetActive;
-	private long releaseTime;
 	
 	static {
 		if(DisplayUtils.canvas != null) {
@@ -76,160 +62,40 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	public abstract void draw(Graphics g);
 
 	public final void drag(int x, int y) {
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
-		keysMode = false;
-		/*if (DisplayUtils.canvas.isSensorModeJ2MELoader()) {
-			if (!dragging) {
-				lastx = startx;
-				lasty = starty;
-			}
-			final int deltaX = lastx - x;
-			final int deltaY = lasty - y;
-			final int ndeltaX = Math.abs(deltaX);
-			final int ndeltaY = Math.abs(deltaY);
-			if (ndeltaY > 4 || ndeltaX > 2) {
-				if (canScroll) {
-					if (ndeltaY > ndeltaX) {
-						scroll = (short) ((double) -deltaY * scrollSpeed);
-						preDrift += scroll;
-						driftingTime += Math.abs(scroll) / 14;
-						if (Math.abs(scroll / 3) > Math.abs(driftSpeed))
-							driftSpeed = (short) (scroll / 3);
-					} else {
-						scrollHorizontally(deltaX);
-					}
-				}
-				dragging = true;
-			}
-			lastx = x;
-			lasty = y;
-			pressTime = System.currentTimeMillis();
-		} else */{
-			try {
-				if (!dragging) {
-					//System.out.println("start dragging");
-					if (poorScrolling()) {
-						lastx = startx;
-						lasty = y;
-					} else {
-						lastx = startx;
-						lasty = starty;
-					}
-				}
-				final int deltaX = lastx - x;
-				final int deltaY = lasty - y;
-				//System.out.println("deltaY " + deltaY);
-				final int ndeltaX = Math.abs(deltaX);
-				final int ndeltaY = Math.abs(deltaY);
-				if (canScroll) {
-					if (poorScrolling()) {
-						scroll += (short) -deltaY;
-						if (ndeltaY < ndeltaX - 2) scrollHorizontally(deltaX);
-					} else {
-						float f1 = 10F;
-						float f2 = 3F;
-						if(EmulatorDetector.emulatorType == EmulatorDetector.EM_J2L || DisplayUtils.canvas.isSensorModeJ2MELoader()) f1 = 7F;
-						scroll += (short) -deltaY;
-						//preDrift += -deltaY;
-						preDrift = true;
-						driftingTime += (Math.abs(deltaY) / f1) * 2400F;
-						driftSpeed += -deltaY / f2;
-						if (ndeltaY < ndeltaX - 2) scrollHorizontally(deltaX);
-					}
-				}
-				if (DisplayUtils.canvas.isSensorModeOK()) {
-					if (ndeltaY > 0 || ndeltaX > 0) {
-						dragging = true;
-					}
-				} else {
-					if (ndeltaY > 2 || ndeltaX > 2) {
-						dragging = true;
-					}
-				}
-				if (poorScrolling()) {
-					dragging = true;
-				}
-				lastx = x;
-				lasty = y;
-				VikaTouch.needstoRedraw=true;
-				this.serviceRepaints();
-				VikaTouch.needstoRedraw=true;
-				//if (DisplayUtils.canvas.isSensorModeJ2MELoader()) pressTime = System.currentTimeMillis();
-			} catch (Throwable e) {
+		VikaTouch.needRepaint();
+	}
 
-			}
+	public boolean scroll(int units) {
+		if(listHeight == 0 || listHeight + 100 <= DisplayUtils.height) {
+			scroll = 0;
+			return false;
 		}
+		if(scroll + units < -(listHeight + 100) + DisplayUtils.height) {
+			scroll = -(listHeight + 100) + DisplayUtils.height;
+			return false;
+		}
+		if(units == 0) return false;
+		scroll += units;
+		if (scroll > 0) {
+			scroll = 0;
+			return false;
+		}
+		scrollTimer = 0;
+		scrollTarget = 1;
+		return true;
 	}
-
+	
 	protected abstract void scrollHorizontally(int deltaX);
-
-	public void press(int x, int y) {
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
-		//System.out.println("press");
-		lastx = x;
-		lasty = y;
-		pressTime = System.currentTimeMillis();
-		driftingTime = 0;
-		drift = false;
-		driftSpeed = 0;
-		preDrift = false;
-		keysMode = false;
-		startx = x;
-		starty = y;
-		endx = -1;
-		endy = -1;
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
-	}
 
 	public static boolean poorScrolling() {
 		return DisplayUtils.canvas.poorScrolling();
 	}
 
-	public void release(int x, int y) {
-		try {
-			VikaTouch.needstoRedraw=true;
-			this.serviceRepaints();
-			VikaTouch.needstoRedraw=true;
-			releaseTime = System.currentTimeMillis();
-			/*
-			if (DisplayUtils.canvas.isSensorModeJ2MELoader()) {
-				if (!poorScrolling() && releaseTime - 30 < pressTime) {
-					if (preDrift != 0)
-						drag(x, y);
-					drift = preDrift;
-				}
-			} else*/
-			if (!poorScrolling() && releaseTime - 131 < pressTime) {
-				//if (preDrift)
-				//	drag(x, y);
-				drift = preDrift;
-			} else {
-				drift = false;
-			}
-			preDrift = false;
-			keysMode = false;
-			endx = x;
-			endy = y;
-			dragging = false;
-			VikaTouch.needstoRedraw=true;
-			this.serviceRepaints();
-			VikaTouch.needstoRedraw=true;
-		} catch (Throwable e) {
-
-		}
-		//System.out.println("release drift: " + drift + ", driftingTime: " + driftingTime + " driftSpeed: " + driftSpeed + " dragDuration: " + (releaseTime - pressTime));
+	public void tap(int x, int y, int time) {
+		VikaTouch.needRepaint();
 	}
 
 	public void press(int key) {
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
 		try {
 			if (key != -12 && key != -20) {
 				keysMode = true;
@@ -249,15 +115,10 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			}
 		} catch (Throwable e) {
 		}
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
+		VikaTouch.needRepaint();
 	}
 
 	public void repeat(int key) {
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
 		try {
 			if (key != -12 && key != -20) {
 				keysMode = true;
@@ -271,14 +132,12 @@ public abstract class ScrollableCanvas extends VikaScreen {
 		} catch (Throwable e) {
 
 		}
+		VikaTouch.needRepaint();
 	}
 
 	// private int scrolebd;
 
 	protected void down() {
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
 		if (scrollWithKeys) {
 			keysScroll(-1);
 			return;
@@ -304,7 +163,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 
 				currentItem++;
 				if (currentItem >= itemsCount) {
-					currentItem = 0;
+					currentItem = itemsCount - 1;
+					//currentItem = 0;
 				}
 				scrollToSelected();
 				((PressableUIItem) uiItems.elementAt(currentItem)).setSelected(true);
@@ -312,15 +172,10 @@ public abstract class ScrollableCanvas extends VikaScreen {
 
 			}
 		}
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
+		VikaTouch.needRepaint();
 	}
 
 	protected void up() {
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
 		if (scrollWithKeys) {
 			keysScroll(+1);
 			return;
@@ -334,7 +189,8 @@ public abstract class ScrollableCanvas extends VikaScreen {
 		}
 		currentItem--;
 		if (currentItem < 0) {
-			currentItem = (short) (itemsCount - 1);
+			currentItem = 0;
+			//currentItem = (short) (itemsCount - 1);
 		}
 		scrollToSelected();
 		try {
@@ -343,9 +199,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 			e.printStackTrace();
 
 		}
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
+		VikaTouch.needRepaint();
 	}
 
 	public abstract void scrollToSelected();
@@ -353,9 +207,6 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	public abstract void selectCentered();
 
 	public void select(int i) {
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
 		try {
 			if (i < 0)
 				i = 0;
@@ -374,9 +225,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				System.out.println(i);
 				e.printStackTrace();
 			}
-			VikaTouch.needstoRedraw=true;
-			this.serviceRepaints();
-			VikaTouch.needstoRedraw=true;
+			VikaTouch.needRepaint();
 		} catch (Throwable e) {
 
 		}
@@ -385,77 +234,43 @@ public abstract class ScrollableCanvas extends VikaScreen {
 	protected abstract void keysScroll(int dir);
 
 	protected final void update(Graphics g) {
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
-		try {
-			if (scrollTargetActive) {
-				scroll = 0;
-				if (Math.abs(scrolled - scrollTarget) < 4) {
-					scrolled = scrollTarget;
-					scrollTargetActive = false;
-				} else {
-					scrolled = MathUtils.lerp(scrolled, scrollTarget, 15, 100);
-				}
-				g.translate(0, scrolled);
-				return;
-			}
-			try {
-				if (!poorScrolling()) {
-					long l = System.currentTimeMillis() - releaseTime;
-					if (drift && /*Math.abs(drift) > 0 && */Math.abs(driftSpeed) > 1F && l < driftingTime) {
-						scroll += driftSpeed;
-						//drift += driftSpeed;
-						driftSpeed *= 0.967f;
-						//System.out.println("drifting " + drift + " | " + driftSpeed + " left: " + (l - driftingTime));
-					} else {
-						drift = false;
-					}
-				}
-			} catch (ArithmeticException e) {
-				e.printStackTrace();
-			}
-			int a = DisplayUtils.height;
-			int b = itemsh + 110;
-			if (b > a) {
-				canScroll = true;
+		if(Math.abs(scroll) > 65535) return;
+		if(scrollTarget <= 0) {
+			scrollTimer = 0;
+			VikaTouch.scrolling = true;
+			if (Math.abs(scroll - scrollTarget) < 1) {
+				scroll = scrollTarget;
+				scrollTarget = 1;
+				VikaTouch.scrolling = false;
 			} else {
-				canScroll = false;
-				if (scrolled < 0) {
-					scrolled = 0;
-				}
+				scroll = MathUtils.lerp(scroll, scrollTarget, 4, 20);
 			}
-			if (scroll != 0) {
-				scrolled = scrolled + scroll;
-				if (scrolled > 0) {
-					scrolled = 0;
-					drift = false;
-				}
-				if (scrolled < a - b && scrolled != 0) {
-					scrolled = a - b;
-					drift = false;
-				}
-				g.translate(0, scrolled);
+			if(scroll > 0) {
 				scroll = 0;
-			} else {
-				if (scrolled > 0) {
-					scrolled = 0;
-				}
-				if (scrolled < a - b && scrolled != 0) {
-					scrolled = a - b;
-				}
-				g.translate(0, scrolled);
+				scrollTarget = 1;
+				VikaTouch.scrolling = false;
 			}
-			if (!poorScrolling())
-				scroll = 0;
-		} catch (Throwable e) {
-
+			if(scroll < -(listHeight + 100) + DisplayUtils.height) {
+				scroll = -(listHeight + 100) + DisplayUtils.height;
+				scrollTarget = 1;
+				VikaTouch.scrolling = false;
+			}
 		}
-		VikaTouch.needstoRedraw=true;
-		this.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
+		if(scroll < -(listHeight + 100) + DisplayUtils.height && scroll != 0 && !VikaTouch.scrolling) {
+			scroll = -(listHeight + 100) + DisplayUtils.height;
+		}
+		if(scroll > 0) {
+			scroll = 0;
+		}
+		g.translate(0, scroll);
 	}
 
+	public void smoothlyScrollTo(int i) {
+		if(i > 0) i = 0;
+		scrollTarget = i;
+		repaint();
+	}
+	
 	protected void callRefresh() {
 
 	}
@@ -471,7 +286,7 @@ public abstract class ScrollableCanvas extends VikaScreen {
 				if (uiItems.elementAt(i) != null) {
 					if (((PressableUIItem) uiItems.elementAt(i)).getDrawHeight()<=1) {
 						try {
-						((MsgItem) uiItems.elementAt(i)).paint(VikaTouch.canvas.getG(), 0, scrolled);
+						((MsgItem) uiItems.elementAt(i)).paint(VikaTouch.canvas.getG(), 0, scroll);
 						} catch (Throwable eee) {
 							VikaUtils.logToFile("pizdec");
 						}

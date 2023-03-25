@@ -39,7 +39,7 @@ public class SplashScreen extends MainScreen {
 			logo = Image.createImage(1, 1);
 		}
 
-		header = "ViKa Touch " + VikaTouch.getRelease() + " v" + VikaTouch.getVersion();
+		header = "ViKa Mobile v" + VikaTouch.getVersion();
 	}
 
 	public void draw(Graphics g) {

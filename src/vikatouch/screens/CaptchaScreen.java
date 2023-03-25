@@ -99,7 +99,7 @@ public class CaptchaScreen extends VikaScreen {
 		}
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		if (x > this.x && y > 150 && y < 186 && x < this.x + this.w) {
 			CaptchaScreen.finished = true;
 			VikaTouch.canvas.showCaptcha = false;

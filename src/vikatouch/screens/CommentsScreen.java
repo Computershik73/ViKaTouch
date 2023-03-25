@@ -407,7 +407,7 @@ public class CommentsScreen extends MainScreen {
 			itemy += comments[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
 		}
 		if (comments[currentItem] != null) {
-			scrolled = -(itemy - DisplayUtils.height / 2 + (comments[currentItem].getDrawHeight() / 2)
+			scroll = -(itemy - DisplayUtils.height / 2 + (comments[currentItem].getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
 			//if (scrolled>)
 		}
@@ -428,15 +428,15 @@ public class CommentsScreen extends MainScreen {
 						continue;
 					try {
 						y += msgYMargin;
-						if (y + scrolled < DisplayUtils.height) 
-							comments[i].paint(g, y, scrolled);
+						if (y + scroll < DisplayUtils.height) 
+							comments[i].paint(g, y, scroll);
 						//VikaTouch.sendLog("paint : " + String.valueOf(i));
 						//y += msgYMargin;
 						y += comments[i].getDrawHeight();
 					} catch (RuntimeException e) {
 					}
 				}
-				this.itemsh = y + 50;
+				this.listHeight = y + 50;
 			} catch (Throwable e) {
 				// VikaTouch.error(e, -8);
 				VikaTouch.sendLog(e.getMessage());
@@ -456,7 +456,7 @@ public class CommentsScreen extends MainScreen {
 		for (int i = 0; i < loadSpace; i++) {
 			deltaScroll += comments[i].getDrawHeight() + msgYMargin;
 		}
-		scrolled += deltaScroll;
+		scroll += deltaScroll;
 		hasSpace += loadSpace;
 		for (int i = 0; i < comments.length; i++) {
 			if (i - loadSpace >= 0) {

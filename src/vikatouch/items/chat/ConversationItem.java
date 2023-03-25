@@ -80,7 +80,7 @@ public class ConversationItem extends JSONItem {
 				img = VikaTouch.cameraImg;
 				if (avaurl != null && !Settings.dontLoadAvas) {
 					try {
-						img = VikaUtils.downloadImage(avaurl);
+						img = VikaUtils.downloadImage(avaurl, true);
 					} catch (Exception e) {
 						ava = VikaTouch.cameraImg;
 					}

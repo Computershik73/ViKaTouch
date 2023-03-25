@@ -1536,9 +1536,12 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener, As
 				String mrl = ((AudioTrackItem) list.uiItems.elementAt(track)).mp3;
 
 				System.out.println(mrl);
-				if (mrl.indexOf("xtrafrancyz") > -1) {
-					mrl = "https://" + mrl.substring("http://vk-api-proxy.xtrafrancyz.net/_/".length());
+				if (mrl.indexOf("symbian.live") > -1) {
+					mrl = "https://" + mrl.substring("http://vk-api-proxy.symbian.live/_/".length());
 				}
+				if (mrl.indexOf("vikamobile.ru") > -1) {
+					mrl = "https://" + mrl.substring("http://vk-api-proxy.vikamobile.ru/_/".length());
+				} 
 				mrl = VikaUtils.replace(mrl, "https:///", "https://");
 				String cmd = "vlc.exe \"" + mrl + "\"";
 				boolean res = VikaTouch.appInst.platformRequest(cmd);
@@ -1547,7 +1550,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener, As
 							"Эмулятор понял запрос, но отказался выполнить. Проверьте настройки системы.", null));
 				}
 				System.out.println(cmd);
-				break;
+				break; 
 			case Settings.AUDIO_DOWNLOAD:
 				VikaTouch.appInst.platformRequest(url
 						///((AudioTrackItem) list.uiItems[track]).mp3
@@ -1697,7 +1700,7 @@ public class MusicPlayer extends MainScreen implements IMenu, PlayerListener, As
 		}
 	}
 
-	public void release(int x, int y) {
+	public void tap(int x, int y, int time) {
 		int dw = DisplayUtils.width;
 		int dh = DisplayUtils.height;
 		int hdw = dw / 2;

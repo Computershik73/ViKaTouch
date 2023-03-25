@@ -42,7 +42,7 @@ public class PlaylistsScreen extends MainScreen {
 	public void load(final int id, final String title) {
 		VikaTouch.needstoRedraw=true;
 		this.title = title;
-		scrolled = 0;
+		scroll = 0;
 		uiItems = null;
 		currId = id;
 		if (downloaderThread != null && downloaderThread.isAlive()) {
@@ -128,11 +128,11 @@ public class PlaylistsScreen extends MainScreen {
 				if (uiItems != null) {
 					for (int i = 0; i < itemsCount; i++) {
 						if (uiItems.elementAt(i) != null) {
-							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scroll);
 							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						}
 					}
-					itemsh = y + 100;
+					listHeight = y + 100;
 				}
 			} catch (Exception e) {
 				VikaTouch.error(e, ErrorCodes.DOCUMENTSITEMDRAW);
@@ -149,12 +149,12 @@ public class PlaylistsScreen extends MainScreen {
 		drawHUD(g, uiItems != null ? title : plStr);
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = 102;
-				int yy1 = y - (scrolled + 58);
+				int yy1 = y - (scroll + 58);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
@@ -170,7 +170,7 @@ public class PlaylistsScreen extends MainScreen {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		super.release(x, y);
+		super.tap(x, y, time);
 	}
 
 }

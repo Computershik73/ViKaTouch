@@ -63,7 +63,7 @@ public static String q;
 
 	public void loadAtt(AudioAttachment aa) {
 		itemsCount = 1;
-		scrolled = 0;
+		scroll = 0;
 		this.albumId = 0;
 		ownerId = 0;
 		this.title = TextLocal.inst.get("attachment");
@@ -84,7 +84,7 @@ public static String q;
 
 	public void load(final int oid, final int albumId, String title) {
 		VikaTouch.needstoRedraw=true;
-		scrolled = 0;
+		scroll = 0;
 		
 		this.albumId = albumId;
 		ownerId = oid;
@@ -214,7 +214,7 @@ public static String q;
 	
 	public void load(final String q) {
 		VikaTouch.needstoRedraw=true;
-	    scrolled = 0;
+	    scroll = 0;
 	   
 	    this.title = TextLocal.inst.get("music.searchresult");
 	    this.hasBackButton = true;
@@ -298,7 +298,7 @@ public static String q;
 	
 	public void loadRecommendations(final String audio_id) {
 		VikaTouch.needstoRedraw=true;
-	    scrolled = 0;
+	    scroll = 0;
 	    
 	    this.title = TextLocal.inst.get("music.recommendations");
 	    this.hasBackButton = true;
@@ -415,12 +415,12 @@ public static String q;
 				if (uiItems != null) {
 					for (int i = 0; i < uiItems.size(); i++) {
 						if (((PressableUIItem) uiItems.elementAt(i)) != null) {
-							if (y + scrolled > DisplayUtils.height)
+							if (y + scroll > DisplayUtils.height)
 								break;
-							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scroll);
 							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						}
-						itemsh = y + 60;
+						listHeight = y + 60;
 					}
 				}
 			} catch (Throwable e) {
@@ -438,12 +438,12 @@ public static String q;
 		super.drawHUD(g, uiItems == null ? "(" + loadingStr + "...)" : title);
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		VikaTouch.needstoRedraw=true;
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH && !dragging) {
 				int h = 50;
-				int yy1 = y - (scrolled + topPanelH);
+				int yy1 = y - (scroll + topPanelH);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
@@ -455,9 +455,7 @@ public static String q;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		super.release(x, y);
+		super.tap(x, y, time);
 	}
 
 	public static void open(final int id, final String name, final String name2) {

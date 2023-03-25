@@ -117,7 +117,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 						photos = counters.optInt("photos");
 
 						try {
-							ava = VikaUtils.downloadImage(JSONBase.fixJSONString(res.optString("photo_50")));
+							ava = VikaUtils.downloadImage(JSONBase.fixJSONString(res.optString("photo_50")), true);
 							VikaTouch.needstoRedraw=true;
 						} catch (Exception e) {
 						}
@@ -208,7 +208,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 			}
 			//g.drawImage(IconsManager.ac, 16, topPanelH + 13, 0);
 		}
-		itemsh = itemsCount * oneitemheight + y;
+		listHeight = itemsCount * oneitemheight + y;
 		g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM));
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.drawString(name == null ? loadingStr : name, 74, topPanelH + 16, 0);
@@ -237,7 +237,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 			if (uiItems != null) {
 				for (int i = 0; i < uiItems.size(); i++) {
 					if (((PressableUIItem) uiItems.elementAt(i)) != null) {
-						((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+						((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scroll);
 						y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 					}
 					
@@ -252,12 +252,12 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 		drawHUD(g, link == null ? TextLocal.inst.get("group") : link);
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		VikaTouch.needstoRedraw=true;
 		if (!dragging) {
 			if (y > 58 && y < DisplayUtils.height - 50) {
 				for (int i = 0; i < itemsCount; i++) {
-					int y1 = scrolled + 140 + (i * oneitemheight);
+					int y1 = scroll + 140 + (i * oneitemheight);
 					int y2 = y1 + oneitemheight;
 					if (y > y1 && y < y2) {
 						((PressableUIItem) uiItems.elementAt(i)).tap(x, y - y1);
@@ -267,7 +267,7 @@ public class GroupPageScreen extends MainScreen implements IMenu {
 				}
 			}
 		}
-		super.release(x, y);
+		super.tap(x, y, time);
 	}
 
 	public void onMenuItemPress(int i) {

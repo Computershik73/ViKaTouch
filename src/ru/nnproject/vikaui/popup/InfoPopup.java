@@ -90,7 +90,7 @@ public class InfoPopup extends VikaNotice {
 		VikaTouch.needstoRedraw=true;
 	}
 
-	public void release(int x, int y) {
+	public void tap(int x, int y, int time) {
 		Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
 		int h1 = f.getHeight();
 		int th = h1 * 4 + h1 * linesCount;

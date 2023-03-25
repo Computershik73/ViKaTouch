@@ -67,7 +67,8 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 
 	private String name2;
 
-	private long pressTime;
+	private boolean loadingMore;
+
 
 	/*public void load(final String s) {
 		formattedTitle = TextLocal.inst.get("music.searchresult");
@@ -130,7 +131,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 
 	public void loadGroups(final int from, final int id, final String name1, final String name2) {
 		formattedTitle = TextLocal.inst.get("title.groups");
-		scrolled = 0;
+		scroll = 0;
 		
 		fromG = from;
 		currId = id;
@@ -152,7 +153,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 					JSONArray items = response.optJSONArray("items");
 					totalItems = response.getInt("count");
 					itemsCount = (short) items.length();
-					canLoadMore = totalItems > from + Settings.simpleListsLength;
+					canLoadMore = totalItems > itemsCount;
 					uiItems = null;
 					uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 					for (int i = 0; i < itemsCount; i++) {
@@ -166,7 +167,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 					// err=String.valueOf(i)+" i2";
 					range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
 					// err=String.valueOf(i)+" i3";
-					if (canLoadMore) {
+					if (canLoadMore && VikaTouch.isNotS60()) {
 						uiItems.addElement(new LoadMoreButtonItem(GroupsScreen.this));
 						itemsCount++;
 					}
@@ -189,7 +190,8 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 					if (!Settings.dontLoadAvas) {
 						for (int i = 0; i < uiItems.size(); i++) {
 							VikaTouch.loading = true;
-							((GroupItem) uiItems.elementAt(i)).getAva();
+							if(uiItems.elementAt(i) instanceof GroupItem)
+								((GroupItem) uiItems.elementAt(i)).getAva();
 							VikaTouch.needstoRedraw=true;
 							//Thread.yield();
 						}
@@ -209,6 +211,80 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 
 		downloaderThread.start();
 	}
+	
+	public void loadMoreGroups(final int from, final int id, final String name1, final String name2) {
+		formattedTitle = TextLocal.inst.get("title.groups");
+		
+		fromG = from;
+		currId = id;
+		whose = name1;
+		this.name2 = name2;
+
+		//abortLoading();
+
+		final int oldItemsCount = itemsCount;
+		downloaderThread = new Thread() {
+
+			public void run() {
+				try {
+					VikaTouch.loading = true;
+					String x = VikaUtils.download(new URLBuilder("groups.get").addField("extended", "1")
+							.addField("count", Settings.simpleListsLength).addField("fields", "members_count,counters")
+							.addField("user_id", id).addField("offset", from));
+					VikaTouch.loading = true;
+					JSONObject response = new JSONObject(x).optJSONObject("response");
+					JSONArray items = response.optJSONArray("items");
+					totalItems = response.getInt("count");
+					int iii = (short) items.length();
+					canLoadMore = uiItems.size() < totalItems;
+					for (int i = 0; i < iii; i++) {
+						VikaTouch.loading = true;
+						JSONObject item = items.optJSONObject(i);
+						GroupItem gi = new GroupItem(item);
+						uiItems.addElement(gi);
+						gi.parseJSON();
+						Thread.yield();
+					}
+					// err=String.valueOf(i)+" i2";
+					range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
+					// err=String.valueOf(i)+" i3";
+					VikaTouch.loading = true;
+					String name = name1;
+					if (name == null && name2 != null)
+						name = name2;
+					if (name == null || name2 == null)
+						formattedTitle = TextLocal.inst.get("title.groups");
+					else
+						formattedTitle = TextLocal.inst.getFormatted("title.groupsw", new String[] { name, name2 });
+					//repaint();
+					Thread.sleep(1000);
+					VikaTouch.loading = true;
+					if (!Settings.dontLoadAvas) {
+						for (int i = oldItemsCount; i < uiItems.size(); i++) {
+							VikaTouch.loading = true;
+							if(uiItems.elementAt(i) instanceof GroupItem)
+								((GroupItem) uiItems.elementAt(i)).getAva();
+							VikaTouch.needstoRedraw=true;
+							//Thread.yield();
+						}
+					}
+					VikaTouch.loading = false;
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					return;
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+				itemsCount = (short) uiItems.size();
+				loadingMore = false;
+				VikaTouch.loading = false;
+			}
+		};
+		hasBackButton = true;
+
+		downloaderThread.start();
+	}
 
 	public void draw(Graphics g) {
 		if (uiItems == null) {
@@ -216,23 +292,29 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 		}
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, 8));
-		itemsh = itemsCount * 52;
+		listHeight = itemsCount * 52;
 		try {
 			update(g);
 			int y = topPanelH;
-
 			if (uiItems != null) {
 				for (int i = 0; i < uiItems.size(); i++) {
-					try {
-						if (uiItems.elementAt(i) != null) {
-							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
-							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+					if (((PressableUIItem) uiItems.elementAt(i)) != null) {
+						int ih = ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+						if(scroll +y+ ih > 0 && scroll+y < DisplayUtils.height) {
+							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scroll);
 						}
-					} catch (Throwable e) {
-						VikaTouch.error(e, ErrorCodes.GROUPSITEMDRAW);
+						y += ih;
 					}
-
+					
+					}
+				
+			if(!VikaTouch.isNotS60() && uiItems.size() > 10 && !loadingMore && canLoadMore) {
+				if (-scroll+(DisplayUtils.height)>=listHeight+MenuScreen.bottomPanelH) {
+					System.out.println("LOAD MORE");
+					loadingMore = true;
+					loadMoreGroups(fromG + Settings.simpleListsLength, currId, whose, name2);
 				}
+			}
 			}
 
 			g.translate(0, -g.getTranslateY());
@@ -243,20 +325,14 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 	}
 
 	public final void drawHUD(Graphics g) {
-		drawHUD(g, formattedTitle);
+		drawHUD(g, formattedTitle  + (loadingMore ? " ("+ TextLocal.inst.get("loading") +"...)" : ""));
 	}
 	
-	public final void press(int x, int y) {
-		pressTime = System.currentTimeMillis();
-		super.press(x, y);
-	}
-
-	public final void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
+	public final void tap(int x, int y, int time) {
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = 50;
-				int yy1 = y - (scrolled + topPanelH);
+				int yy1 = y - (scroll + topPanelH);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
@@ -274,7 +350,7 @@ public class GroupsScreen extends MainScreen implements INextLoadable {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		super.release(x, y);
+		super.tap(x, y, time);
 	}
 
 	public void loadNext() {

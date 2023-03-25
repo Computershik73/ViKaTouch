@@ -188,7 +188,7 @@ public class ImagePreview extends VikaNotice {
 		}
 	}
 
-	public void release(int x, int y) {
+	public void tap(int x, int y, int time) {
 		if (y > 24)
 			return;
 

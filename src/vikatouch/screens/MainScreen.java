@@ -15,7 +15,7 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 //import VikaTouch.screens.DialogsScreen;
 //import shizaMobile.screens.NewsScreen;
 import vikatouch.music.MusicPlayer;
-import vikatouch.NokiaUIInvoker;
+
 import vikatouch.VikaTouch;
 import vikatouch.screens.menu.MenuScreen;
 import vikatouch.settings.Settings;
@@ -40,7 +40,6 @@ public abstract class MainScreen extends ScrollableCanvas {
 	}
 
 	protected void scrollHorizontally(int deltaX) {
-		VikaTouch.needstoRedraw=true;
 		if (deltaX < -7) {
 			VikaTouch.inst.cmdsInst.command(10, this);
 		} else if (deltaX > 7) {
@@ -48,7 +47,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 		}
 	}
 
-	public void release(int x, int y) {
+	public void tap(int x, int y, int time) {
 		if (!(this instanceof ChatScreen)) {
 			if (!dragging || !canScroll) {
 				int wyw = DisplayUtils.width / 4;
@@ -92,11 +91,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 				}
 			}
 		}
-		if ((lastx<50) && (lastx - x>50) && (lasty-y<50)) {
-			VikaTouch.inst.cmdsInst.command(14, this);
-		}
 		
-		super.release(x, y);
 	}
 	
 	
@@ -118,7 +113,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 				down2ItemY = downItemY + ((PressableUIItem) uiItems.elementAt(currentItem + dir)).getDrawHeight();
 			} catch (RuntimeException e1) {
 			}
-			int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height * 3 / 4;
+			int scrY = -scroll - MainScreen.topPanelH + DisplayUtils.height * 3 / 4;
 			//int br = 0;
 			//int sc = 0;
 			//scrlDbg = "dir" + dir + " " + topItemY + " " + thisItemY + " " + downItemY + " " + down2ItemY + " d" + delta
@@ -167,7 +162,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 					select(currentItem + dir);
 				}
 			}
-			scrollTarget = MathUtils.clamp(scrolled - st, -itemsh, 0);
+			scrollTarget = MathUtils.clamp(scroll - st, -listHeight, 0);
 			//scrlDbg += " st" + st + "br" + br + "s" + sc;
 			//System.out.println(scrlDbg);
 			scrollTargetActive = true;
@@ -197,7 +192,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 				down2ItemY = downItemY + ((PressableUIItem) uiItems.elementAt(currentItem + 1)).getDrawHeight();
 			} catch (RuntimeException e1) {
 			}
-			int scrY = -scrolled - MainScreen.topPanelH + DisplayUtils.height * 3 / 4;
+			int scrY = -scroll - MainScreen.topPanelH + DisplayUtils.height * 3 / 4;
 			//int br = 0;
 			//int sc = 0;
 			//scrlDbg = "dir" + dir + " " + topItemY + " " + thisItemY + " " + downItemY + " " + down2ItemY + " d" + delta
@@ -243,7 +238,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 					select(currentItem + 1);
 				}
 			}
-			scrollTarget = MathUtils.clamp(scrolled - st, -itemsh, 0);
+			scrollTarget = MathUtils.clamp(scroll - st, -listHeight, 0);
 			//scrlDbg += " st" + st + "br" + br + "s" + sc;
 			//System.out.println(scrlDbg);
 			scrollTargetActive = true;
@@ -322,7 +317,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 		try {
 			int y = MainScreen.topPanelH;
 			int ye = y;
-			int s = -scrolled + DisplayUtils.height / 2;
+			int s = -scroll + DisplayUtils.height / 2;
 			for (int i = 0; i < uiItems.size(); i++) {
 				ye = y + ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 				if (y <= s && ye > s) {
@@ -338,7 +333,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	public void scrollToSelected() {
 		try {
 			//VikaUtils.logToFile("scrolltoselected");
-			scrolled = -(getItemY(
+			scroll = -(getItemY(
 					currentItem
 					//1
 					) - DisplayUtils.height / 2 + (((PressableUIItem) uiItems.elementAt(
@@ -356,7 +351,7 @@ public abstract class MainScreen extends ScrollableCanvas {
 	
 	public void scrollToTop() {
 		VikaTouch.needstoRedraw=true;
-		scrolled = -1000;//getItemY(currentItem);
+		scroll = -1000;//getItemY(currentItem);
 		VikaTouch.needstoRedraw=true;
 		
 	}
@@ -466,8 +461,8 @@ public abstract class MainScreen extends ScrollableCanvas {
 			if(musicHUDShown) {
 				g.drawImage(MusicPlayer.inst.isPlaying ? miniplayerButtons[0] : miniplayerButtons[1], 10, DisplayUtils.height - bottomPanelH + 4, 0);
 				g.drawImage(MusicPlayer.inst.isPlaying ? miniplayerButtons[2] : IconsManager.ico[IconsManager.CLOSE], dw - 32, DisplayUtils.height - bottomPanelH + 4, 0);
-				//g.setFont(f);
-				g.setFont(vikatouch.NokiaUIInvoker.getFont(0, 0, 12, 8));
+				g.setFont(f);
+				//g.setFont(vikatouch.NokiaUIInvoker.getFont(0, 0, 12, 8));
 				ColorUtils.setcolor(g, ColorUtils.TEXT);
 				String s1 = MusicPlayer.inst.title;
 				String s2 = MusicPlayer.inst.artist;

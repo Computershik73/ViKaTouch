@@ -190,7 +190,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 
 						try {
 							
-							ava = VikaUtils.downloadImage(JSONBase.fixJSONString(res.optString("photo_50")));
+							ava = VikaUtils.downloadImage(JSONBase.fixJSONString(res.optString("photo_50")), true);
 						} catch (Exception e) {
 						}
 
@@ -302,7 +302,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 			g.fillArc(16 + 38, topPanelH + 13 + 38, 12, 12, 0, 360);
 			}
 		}
-		itemsh = itemsCount * oneitemheight + y;
+		listHeight = itemsCount * oneitemheight + y;
 		g.setFont(Font.getFont(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM));
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		//drawString(name + " " + lastname, 74, topPanelH + 12, 0);
@@ -321,7 +321,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 		if (uiItems != null) {
 			for (int i = 0; i < uiItems.size(); i++) {
 				if (((PressableUIItem) uiItems.elementAt(i)) != null) {
-					((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
+					((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scroll);
 					y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 				}
 			}
@@ -329,21 +329,21 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 		g.translate(0, -g.getTranslateY());
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		VikaTouch.needstoRedraw=true;
 		if (!dragging) {
 			if (y > 58 && y < DisplayUtils.height - 50) {
 				for (int i = 0; i < itemsCount; i++) {
-					int y1 = scrolled + 140 + (i * oneitemheight);
+					int y1 = scroll + 140 + (i * oneitemheight);
 					int y2 = y1 + oneitemheight;
 					if (y > y1 && y < y2) {
-						onMenuItemPress(i);
+						onMenuItemPress(((OptionItem)uiItems.elementAt(i)).i);
 						break;
 					}
 				}
 			}
 		}
-		super.release(x, y);
+		super.tap(x, y, time);
 	}
 
 	public void onMenuItemPress(int i) {
@@ -376,7 +376,7 @@ public class ProfilePageScreen extends MainScreen implements IMenu {
 				}).start();
 				break;
 			case 2:
-				FriendsScreen.open(VikaTouch.integerUserId, wname, name2);
+				FriendsScreen.open(id, wname, name2);
 				/*FriendsScreen fs = new FriendsScreen();
 				VikaTouch.setDisplay(fs, 1);
 				fs.loadFriends(0, id, wname, name2);*/

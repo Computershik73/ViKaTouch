@@ -42,7 +42,7 @@ public class PhotosScreen extends MainScreen {
 						!Settings.fastImageScaling), (x - (z * y)) * size, topPanelH + y * size, 0);
 			}
 		}
-		itemsh = topPanelH + y * size;
+		listHeight = topPanelH + y * size;
 		g.translate(0, -g.getTranslateY());
 	}
 

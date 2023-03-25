@@ -84,7 +84,7 @@ public class ConfirmBox extends VikaNotice {
 		}
 	}
 
-	public void release(int x, int y) {
+	public void tap(int x, int y, int time) {
 		int width = Math.min(DisplayUtils.width - 20, 300);
 		Font f = Font.getFont(0, 0, Font.SIZE_MEDIUM);
 		int h1 = f.getHeight();

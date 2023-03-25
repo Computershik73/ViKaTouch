@@ -91,7 +91,7 @@ public class FriendItem extends JSONItem {
 	public void getAva() {
 		try {
 			if (!Settings.dontLoadAvas)
-				ava = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(fixJSONString(json.optString("photo_50"))));
+				ava = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(fixJSONString(json.optString("photo_50")), true));
 		} catch (InterruptedException e) {
 
 		} catch (IOException e) {

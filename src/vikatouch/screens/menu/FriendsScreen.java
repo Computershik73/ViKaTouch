@@ -78,12 +78,14 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 	private String name2;
 
 	private String formattedTitle;
+
+	private boolean loadingMore;
 	
 	//"https://api.vk.com/method/execute?code=var%20requests%20%3D%20API.friends.getRequests%28%7B%22sort%22%3A%220%22%2C%22offset%22%3A0%2C%22out%22%3A0%2C%22count%22%3A100%7D%29%3Breturn%20%7Brequests_users%3AAPI.users.get%28%7Buser_ids%3Arequests.items%2Cfields%3A%22photo_50%22%7D%29%2Crequests%3Arequests.count%2C%7D%3B&access_token=bc84aeb68ef499f6ae83485a6fe3f99eb0a90ad3252b7926a9ae36994a612029134238ced39b9a6a2c3bc&v=5.57&lang=ru";
 
 	public void loadFriends(final int from, final int id, final String name1, final String name2, final boolean online) {
 		formattedTitle = TextLocal.inst.get("title.people");
-		scrolled = 0;
+		scroll = 0;
 		
 		fromF = from;
 		currId = id;
@@ -122,7 +124,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						JSONArray items = response.getJSONArray("items");
 						totalItems = response.getInt("count");
 						itemsCount = (short) items.length();
-						canLoadMore = totalItems > from + Settings.simpleListsLength;
+						canLoadMore = totalItems > itemsCount;
 						uiItems = null;
 						uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 						for (int i = 0; i < itemsCount; i++) {
@@ -136,7 +138,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 							//Thread.yield();
 						}
 						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
-						if (canLoadMore) {
+						if (canLoadMore && VikaTouch.isNotS60()) {
 							uiItems.addElement(new LoadMoreButtonItem(FriendsScreen.this));
 							itemsCount++;
 						}
@@ -159,7 +161,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						Thread.sleep(1000); // ну вдруг юзер уже нажмёт? Зачем зря грузить
 						VikaTouch.loading = true;
 						if (!Settings.dontLoadAvas) {
-							for (int i = 0; i < itemsCount - (canLoadMore ? 1 : 0); i++) {
+							for (int i = 0; i < itemsCount; i++) {
 								/*
 								 * if(!this.isAlive()) { return; }
 								 */
@@ -172,6 +174,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 									// цикл будет продолжаться пока он не закончится.
 								}
 								VikaTouch.loading = true;
+								if(uiItems.elementAt(i) instanceof FriendItem)
 								((FriendItem) ((PressableUIItem) uiItems.elementAt(i))).getAva();
 							}
 						}
@@ -184,7 +187,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 							JSONArray items = response.getJSONArray("items");
 							totalItems = response.getInt("count");
 							itemsCount = (short) items.length();
-							canLoadMore = totalItems > from + Settings.simpleListsLength;
+							canLoadMore = totalItems > itemsCount;
 							uiItems = null;
 							uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 							for (int i = 0; i < itemsCount; i++) {
@@ -198,7 +201,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 								//Thread.yield();
 							}
 							range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
-							if (canLoadMore) {
+							if (canLoadMore && VikaTouch.isNotS60()) {
 								uiItems.addElement(new LoadMoreButtonItem(FriendsScreen.this));
 								itemsCount++;
 							}
@@ -221,7 +224,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 							Thread.sleep(1000); // ну вдруг юзер уже нажмёт? Зачем зря грузить
 							VikaTouch.loading = true;
 							if (!Settings.dontLoadAvas) {
-								for (int i = 0; i < itemsCount - (canLoadMore ? 1 : 0); i++) {
+								for (int i = 0; i < itemsCount; i++) {
 									/*
 									 * if(!this.isAlive()) { return; }
 									 */
@@ -234,7 +237,8 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 										// цикл будет продолжаться пока он не закончится.
 									}
 									VikaTouch.loading = true;
-									((FriendItem) ((PressableUIItem) uiItems.elementAt(i))).getAva();
+									if(uiItems.elementAt(i) instanceof FriendItem)
+										((FriendItem) ((PressableUIItem) uiItems.elementAt(i))).getAva();
 									VikaTouch.needstoRedraw=true;
 									
 								}
@@ -247,7 +251,6 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						e.printStackTrace();
 						VikaTouch.error(e, ErrorCodes.FRIENDSPARSE);
 					}
-
 					VikaTouch.loading = false;
 				} catch (NullPointerException e) {
 					e.printStackTrace();
@@ -268,7 +271,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 	
 	public void loadRequests(final int from, final boolean neww) {
 		formattedTitle = TextLocal.inst.get("title.newrequests") + " ("+TextLocal.inst.get("title2.loading")+")";
-		scrolled = 0;
+		scroll = 0;
 		
 		fromF = from;
 		
@@ -297,7 +300,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						JSONArray items = response.getJSONArray("requests_users");
 						totalItems = response.getInt("requests");
 						itemsCount = (short) items.length();
-						canLoadMore = totalItems > from + Settings.simpleListsLength;
+						canLoadMore = totalItems > itemsCount;
 						uiItems = null;
 						uiItems = new Vector(itemsCount + (canLoadMore ? 1 : 0));
 						if (itemsCount>0) {
@@ -310,7 +313,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 							Thread.yield();
 						}
 						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
-						if (canLoadMore) {
+						if (canLoadMore&& VikaTouch.isNotS60()) {
 							uiItems.addElement(new LoadMoreButtonItem(FriendsScreen.this));
 							itemsCount++;
 						}
@@ -325,28 +328,22 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 						
 
 						repaint();
-						Thread.sleep(1000); // ну вдруг юзер уже нажмёт? Зачем зря грузить
+						Thread.sleep(1000);
 						VikaTouch.loading = true;
 						if (!Settings.dontLoadAvas) {
-							for (int i = 0; i < itemsCount - (canLoadMore ? 1 : 0); i++) {
-								/*
-								 * if(!this.isAlive()) { return; }
-								 */
+							for (int i = 0; i < itemsCount; i++) {
 								if (!(VikaTouch.canvas.currentScreen instanceof FriendsScreen)) {
 									VikaTouch.loading = false;
-									return; // Костыль деревянный, 1 штука, 78 lvl, 6 ранг
-									// не одобряю. для чего создали thread.isAlive()?
-									// Он как-бы при закрытии экрана не стопается. Кстати, если он умер, то он и
-									// проверить не сможет жив ли он
-									// цикл будет продолжаться пока он не закончится.
+									return; 
 								}
 								VikaTouch.loading = true;
+								if(uiItems.elementAt(i) instanceof FriendItem)
 								((FriendItem) uiItems.elementAt(i)).getAva();
 							}
 						}
 						} else {
 							formattedTitle = TextLocal.inst.get("title.newrequests") + " (0) ";
-							Thread.sleep(1000); // ну вдруг юзер уже нажмёт? Зачем зря грузить
+							Thread.sleep(1000);
 							VikaTouch.loading = true;
 							repaint();
 						}
@@ -383,11 +380,11 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 				try {
 					if (i == 0) {
 						FriendsScreen friendsScr = new FriendsScreen();
-						friendsScr.loadFriends(id == VikaTouch.integerUserId ? 0 : 0, VikaTouch.integerUserId, name, name2, false);
+						friendsScr.loadFriends(0, id, name, name2, false);
 						VikaTouch.setDisplay(friendsScr, 1);
 					} else if (i == 1) {
 						FriendsScreen friendsScr = new FriendsScreen();
-						friendsScr.loadFriends(id == VikaTouch.integerUserId ? 0 : 0, VikaTouch.integerUserId , name, name2, true);
+						friendsScr.loadFriends(0, id , name, name2, true);
 						VikaTouch.setDisplay(friendsScr, 1);
 					} else if (i == 2) {
 						FriendsScreen friendsScr = new FriendsScreen();
@@ -421,7 +418,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 	public void draw(Graphics g) {
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, 8));
-		itemsh = itemsCount * 52;
+		listHeight = itemsCount * 52;
 		try {
 			update(g);
 			int y = topPanelH;
@@ -429,13 +426,25 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 				if (uiItems != null) {
 					for (int i = 0; i < uiItems.size(); i++) {
 						if (((PressableUIItem) uiItems.elementAt(i)) != null) {
-							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scrolled);
-							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+							int ih = ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
+							if(scroll +y+ ih > 0 && scroll+y < DisplayUtils.height) {
+								((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scroll);
+							}
+							y += ih;
 						}
-						Thread.yield();
+					}
+					if(!VikaTouch.isNotS60() && uiItems.size() > 5 && !loadingMore && canLoadMore) {
+						if (-scroll+(DisplayUtils.height)>=listHeight+MenuScreen.bottomPanelH) {
+							System.out.println("LOAD MORE");
+							loadingMore = true;
+							loadMoreFriends(fromF + Settings.simpleListsLength, currId, whose, name2, false);
+						}
 					}
 				}
+				
+				
 			} catch (Exception e) {
+				e.printStackTrace();
 				VikaTouch.error(e, ErrorCodes.FRIENDSITEMDRAW);
 			}
 			g.translate(0, -g.getTranslateY());
@@ -444,21 +453,178 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public void loadMoreFriends(final int from, final int id, final String name1, final String name2, final boolean online) {
+		//formattedTitle = TextLocal.inst.get("title.people");
+		//scroll = 0;
+		
+		fromF = from;
+		currId = id;
+
+		//abortLoading();
+
+		final int oldItemsCount = itemsCount;
+		downloaderThread = new Thread() {
+			public void run() {
+				try {
+					// System.out.println("Friends list");
+					VikaTouch.loading = true;
+					repaint();
+					String x;
+					if (id < 0) {
+						// как участники
+						// !!! это дает ошибку! и я не знаю почему!
+						// И какую же? У меня ни разу не падало.
+						x = VikaUtils.download(
+								new URLBuilder("groups.getMembers").addField("count", Settings.simpleListsLength)
+										.addField("fields", "domain,last_seen,photo_50").addField("offset", from)
+										.addField("group_id", -id));
+					} else {
+						// как друзья
+						x = VikaUtils
+								.download(new URLBuilder("friends.get"+ (online ? "Online" : "")).addField("count", Settings.simpleListsLength)
+										.addField("fields", "domain,last_seen,photo_50").addField("offset", from)
+										.addField("user_id", id).addField("order", "hints"));
+						//VikaTouch.sendLog(x);
+					}
+					try {
+						
+						VikaTouch.needstoRedraw=true;
+						VikaTouch.canvas.serviceRepaints();
+						if (!online) {
+						JSONObject response = new JSONObject(x).getJSONObject("response");
+						JSONArray items = response.getJSONArray("items");
+						int iii = items.length();
+						totalItems = response.getInt("count");
+						//itemsCount = (short) items.length();
+						
+						canLoadMore = uiItems.size() < totalItems;
+						
+						for (int i = 0; i < iii; i++) {
+							try {
+							VikaTouch.loading = true;
+							JSONObject item = items.getJSONObject(i);
+							FriendItem fi = new FriendItem(item);
+							uiItems.addElement(fi);
+							fi.parseJSON();
+							} catch (Throwable eee) {}
+							//Thread.yield();
+						}
+						range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
+						
+
+						VikaTouch.loading = true;
+						String name = name1;
+						if (name == null && name2 != null)
+							name = name2;
+
+						if (name == null || name2 == null)
+							formattedTitle = TextLocal.inst.get("title.friends");
+						else
+							formattedTitle = TextLocal.inst.getFormatted("title.friendsw",
+									new String[] { name, name2 });
+
+						repaint();
+						Thread.sleep(1000); // ну вдруг юзер уже нажмёт? Зачем зря грузить
+						VikaTouch.loading = true;
+						if (!Settings.dontLoadAvas) {
+							for (int i = oldItemsCount; i < uiItems.size() - (canLoadMore ? 1 : 0); i++) {
+								if (!(VikaTouch.canvas.currentScreen instanceof FriendsScreen)) {
+									VikaTouch.loading = false;
+									return;
+								}
+								VikaTouch.loading = true;
+								((FriendItem) ((PressableUIItem) uiItems.elementAt(i))).getAva();
+							}
+						}
+						} else {
+							JSONObject response = new JSONObject(x).getJSONObject("response");
+							JSONArray items = response.getJSONArray("items");
+							totalItems = response.getInt("count");
+							int iii = (short) items.length();
+							canLoadMore = uiItems.size() < totalItems;
+							
+							for (int i = 0; i < iii; i++) {
+								try {
+								VikaTouch.loading = true;
+								JSONObject item = items.getJSONObject(i);
+								FriendItem fi = new FriendItem(item);
+								uiItems.addElement(fi);
+								fi.parseJSON();
+								} catch (Throwable eee) {}
+								//Thread.yield();
+							}
+							range = " (" + (from + 1) + "-" + (itemsCount + from) + ")";
+							VikaTouch.loading = true;
+							String name = name1;
+							if (name == null && name2 != null)
+								name = name2;
+
+							if (name == null || name2 == null)
+								formattedTitle = TextLocal.inst.get("title.friends");
+							else
+								formattedTitle = TextLocal.inst.getFormatted("title.friendsw",
+										new String[] { name, name2 });
+
+							repaint();
+							VikaTouch.loading = true;
+							if (!Settings.dontLoadAvas) {
+								for (int i = oldItemsCount; i < uiItems.size() - (canLoadMore ? 1 : 0); i++) {
+										
+									if (!(VikaTouch.canvas.currentScreen instanceof FriendsScreen)) {
+										VikaTouch.loading = false;
+										return;
+									}
+									VikaTouch.loading = true;
+									if(uiItems.elementAt(i) instanceof FriendItem)
+										((FriendItem) ((PressableUIItem) uiItems.elementAt(i))).getAva();
+									VikaTouch.needstoRedraw=true;
+									
+								}
+							}
+							
+							
+						}
+						VikaTouch.loading = false;
+					} catch (JSONException e) {
+						e.printStackTrace();
+						VikaTouch.error(e, ErrorCodes.FRIENDSPARSE);
+					}
+					itemsCount = (short) uiItems.size();
+					loadingMore = false;
+					VikaTouch.loading = false;
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					return;
+				} catch (Exception e) {
+					e.printStackTrace();
+					VikaTouch.error(e, ErrorCodes.FRIENDSLOAD);
+				}
+				VikaTouch.loading = false;
+			}
+		};
+		hasBackButton = true;
+
+		downloaderThread.start();
+	}
+	
 
 	public final void drawHUD(Graphics g) {
 		// super.drawHUD(g, uiItems==null?peopleStr+"
 		// ("+loadingStr+"...)":(currId<0?membersStr:friendsStr)/*+(range==null?"":range)*/+"
 		// "+(whose==null?"":whose));
-		super.drawHUD(g, formattedTitle);
+		super.drawHUD(g, formattedTitle + (loadingMore ? " ("+ TextLocal.inst.get("loading") +"...)" : ""));
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		VikaTouch.needstoRedraw=true;
 		VikaTouch.canvas.serviceRepaints();
 		try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = ((PressableUIItem) uiItems.elementAt(0)).getDrawHeight();
-				int yy1 = y - (scrolled + topPanelH);
+				int yy1 = y - (scroll + topPanelH);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
@@ -470,7 +636,7 @@ public class FriendsScreen extends MainScreen implements INextLoadable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		super.release(x, y);
+		super.tap(x, y, time);
 	}
 
 	public void loadNext() {

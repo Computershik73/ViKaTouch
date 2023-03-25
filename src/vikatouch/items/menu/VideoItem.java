@@ -84,7 +84,7 @@ public class VideoItem extends JSONItem {
 						file = fixJSONString(file);
 				}
 				if ((file.indexOf("vkuser")>0) && (file.indexOf("proxy")<0)) {
-					file=VikaUtils.replace(file, "https:", "http://vk-api-proxy.xtrafrancyz.net/_/");
+					file=VikaUtils.replace(file, "https:", "http://vk-api-proxy.symbian.live/_/");
 				}
 			}
 		} catch (Exception e) {
@@ -101,8 +101,7 @@ public class VideoItem extends JSONItem {
 	public void loadIcon() {
 		try {
 			iconImg = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(iconUrl));
-			VikaTouch.needstoRedraw=true;
-			VikaTouch.canvas.serviceRepaints();
+			
 		} catch (Exception e) {
 		}
 	}

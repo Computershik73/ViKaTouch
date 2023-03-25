@@ -63,7 +63,7 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 		this.whose = name1;
 		this.name2 = name2;
 		formattedTitle = TextLocal.inst.get("title.docs");
-		scrolled = 0;
+		scroll = 0;
 		
 		current = this;
 		final int count = loadDocsCount;
@@ -133,7 +133,7 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 	public void draw(Graphics g) {
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, 8));
-		itemsh = itemsCount * 52;
+		listHeight = itemsCount * 52;
 		try {
 			update(g);
 			int y = topPanelH;
@@ -141,7 +141,7 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 				if (uiItems != null)
 					for (int i = 0; i < itemsCount; i++) {
 						if (uiItems.elementAt(i) != null) {
-							((PressableUIItem)uiItems.elementAt(i)).paint(g, y, scrolled);
+							((PressableUIItem)uiItems.elementAt(i)).paint(g, y, scroll);
 							y += ((PressableUIItem)uiItems.elementAt(i)).getDrawHeight();
 						}
 
@@ -176,7 +176,7 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 		drawHUD(g, formattedTitle);
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		try {
 			if (isPreviewShown) {
 				isPreviewShown = false;
@@ -186,7 +186,7 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH) {
 				int h = 48 + (DocItem.BORDER * 2);
-				int yy1 = y - (scrolled + 58);
+				int yy1 = y - (scroll + 58);
 				int i = yy1 / h;
 				if (i < 0)
 					i = 0;
@@ -199,7 +199,7 @@ public class DocsScreen extends MainScreen implements INextLoadable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		super.release(x, y);
+		super.tap(x, y, time);
 	}
 
 	public void loadNext() {

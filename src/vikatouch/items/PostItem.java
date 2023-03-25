@@ -130,7 +130,6 @@ public class PostItem extends JSONItem implements ISocialable, IMenu {
 			try {
 			views = json2.optJSONObject("views").optInt("count");
 			} catch (Throwable e) {
-				e.printStackTrace();
 			}
 			try {
 				JSONObject postSource = json2.optJSONObject("post_source");
@@ -199,7 +198,7 @@ public class PostItem extends JSONItem implements ISocialable, IMenu {
 						
 							
 						
-						xx = from_id;
+						xx = ownerid;
 						
 					
 				}
@@ -474,7 +473,7 @@ public class PostItem extends JSONItem implements ISocialable, IMenu {
 		if (!Settings.dontLoadAvas && avaurl != null && !dontLoadAva) {
 			try {
 				dontLoadAva = true;
-				ava = VikaUtils.downloadImage(avaurl);
+				ava = VikaUtils.downloadImage(avaurl, true);
 			} catch (Exception e) {
 				ava = VikaTouch.cameraImg;
 			}
@@ -530,7 +529,7 @@ public class PostItem extends JSONItem implements ISocialable, IMenu {
 		if (xx == VikaTouch.integerUserId) {
 		o = new OptionItem[keys ? 7 : 4];
 		} else {
-			o = new OptionItem[keys ? 6 : 2];
+			o = new OptionItem[keys ? 7 : 4];
 		}
 		o[0] = new OptionItem(this, name == null ? "Page" : name, IconsManager.FRIENDS, 1, h);
 		o[1] = new OptionItem(this, TextLocal.inst.get("wall.links"), IconsManager.LINK, 2, h);
@@ -543,16 +542,27 @@ public class PostItem extends JSONItem implements ISocialable, IMenu {
 					IconsManager.COMMENTS, 6, h);
 			o[5] = new OptionItem(this, TextLocal.inst.get("wall.opencomments"),
 					IconsManager.COMMENTS, 7, h);
+			
 			if (xx == VikaTouch.integerUserId) {
 				o[6] = new OptionItem(this, TextLocal.inst.get("wall.edit"),
 						IconsManager.EDIT, 5, h);
+			} else {
+				o[6] = new OptionItem(this, TextLocal.inst.get("wall.copytext"),
+						IconsManager.EDIT, 14, h);
 			}
 		} else {
+			o[2] = new OptionItem(this, TextLocal.inst.get("wall.comment"),
+					IconsManager.COMMENTS, 6, h);
 			if (xx == VikaTouch.integerUserId) {
-				o[2] = new OptionItem(this, TextLocal.inst.get("wall.comment"),
-						IconsManager.COMMENTS, 6, h);
+				
 				o[3] = new OptionItem(this, TextLocal.inst.get("wall.edit"),
 						IconsManager.EDIT, 5, h);
+				
+			} else {
+				
+				o[3] = new OptionItem(this, TextLocal.inst.get("wall.copytext"),
+						IconsManager.EDIT, 14, h);
+				
 			}
 		}
 		VikaTouch.popup(new AutoContextMenu(o));
@@ -744,6 +754,11 @@ public class PostItem extends JSONItem implements ISocialable, IMenu {
 			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
 		} else if (i == 13) {
 			VikaTouch.popup(new InfoPopup(TextLocal.inst.get("popup.unrealized"), null));
+		} else if (i == 14) { 
+			String newText = TextEditor.inputString(TextLocal.inst.get("msg.editing"),
+					text == null ? "" : text, 0);
+			VikaTouch.needstoRedraw=true;
+			
 		} else {
 			try {
 				String s = VikaUtils.searchLinks(text)[-i];

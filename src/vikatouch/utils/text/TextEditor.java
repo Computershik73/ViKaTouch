@@ -72,11 +72,15 @@ public class TextEditor implements CommandListener {
 		TextEditor.textBox.setCommandListener((CommandListener) commandListener);
 		VikaTouch.setDisplay((Displayable) TextEditor.textBox);
 		while (!TextEditor.inputFinished) {
+			try {
 			Thread.yield();
+		} catch (Throwable e) {
+			//e.printStackTrace();
+		}
 			try {
 				Thread.sleep(20l);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 		VikaTouch.needstoRedraw=true;

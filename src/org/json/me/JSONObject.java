@@ -1315,6 +1315,60 @@ public class JSONObject {
             throw new JSONException(e);
         }
      }
+     
+     /**
+      * Determine if two JSONObjects are similar.
+      * They must contain the same set of names which must be associated with
+      * similar values.
+      *
+      * @param other The other JSONObject
+      * @return true if they are equal
+      */
+     public boolean similar(Object other) {
+         try {
+             if (!(other instanceof JSONObject)) {
+                 return false;
+             }
+             if (this.length() != ((JSONObject)other).length()) {
+                 return false;
+             }
+             Enumeration e1 = keys();
+             Enumeration e2 = keys();
+             while(e1.hasMoreElements() && e2.hasMoreElements()) {
+            	 if(!e1.nextElement().equals(e2.nextElement())) {
+            		 return false;
+            	 }
+             }
+             if(e1.hasMoreElements() || e2.hasMoreElements()) {
+            	 return false;
+             }
+             for (Enumeration e = keys(); e.hasMoreElements(); ) {
+            	 String name = (String) e.nextElement().toString();
+                 Object valueThis = get(name);
+                 Object valueOther = ((JSONObject)other).get(name);
+                 if(valueThis == valueOther) {
+                     continue;
+                 }
+                 if(valueThis == null) {
+                     return false;
+                 }
+                 if (valueThis instanceof JSONObject) {
+                     if (!((JSONObject)valueThis).similar(valueOther)) {
+                         return false;
+                     }
+                 } else if (valueThis instanceof JSONArray) {
+                     if (!((JSONArray)valueThis).similar(valueOther)) {
+                         return false;
+                     }
+                 } else if (!valueThis.equals(valueOther)) {
+                     return false;
+                 }
+             }
+             return true;
+         } catch (Throwable exception) {
+             return false;
+         }
+     }
 
 	public final String method23(String var1) {
 		String var2 = "";

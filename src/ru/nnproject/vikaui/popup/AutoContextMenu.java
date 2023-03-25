@@ -19,7 +19,6 @@ public class AutoContextMenu extends ContextMenu {
 
 	public AutoContextMenu(OptionItem[] list) {
 		super(list);
-		dragging=true;
 		VikaCanvas.currentAlert = this;
 		VikaTouch.needstoRedraw=true;
 	}

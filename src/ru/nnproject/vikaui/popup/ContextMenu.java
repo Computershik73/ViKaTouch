@@ -25,7 +25,6 @@ public class ContextMenu extends VikaNotice {
 	private boolean opened;
 
 	public ContextMenu(OptionItem[] list) {
-		dragging=true;
 		VikaCanvas.currentAlert = this;
 		VikaTouch.needstoRedraw=true;
 		
@@ -102,29 +101,10 @@ public class ContextMenu extends VikaNotice {
 		VikaTouch.needstoRedraw=true;
 	}
 
-	public void press(int x, int y) {
-		//VikaTouch.needstoRedraw=true;
-		//this.repaint();
-		//this.serviceRepaints();
-		//VikaTouch.needstoRedraw=true;
-		lastx = x;
-		lasty = y;
-		dragging = false;
-	}
-
 	int lastx = 0, lasty = 0;
 
-	public void drag(int x, int y) {
-		VikaTouch.needstoRedraw=true;
-		if (Math.abs(x - lastx) > 6 || Math.abs(y - lasty) > 6) {
-			dragging = true;
-		}
-	}
-
-	public void release(int x, int y) {
+	public void tap(int x, int y, int time) {
 		
-		if (dragging)
-			return;
 		VikaCanvas.currentAlert = this;
 		VikaTouch.needstoRedraw=true;
 		int margin = 8;

@@ -740,7 +740,7 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 			}
 
 			// рендер аттачей
-			if (attH > 0 && attsReady) {
+			if (attH > 0 /*&& attsReady*/) {
 				attY += attMargin;
 				for (int i = 0; i < attachments.length; i++) {
 					Attachment at = attachments[i];
@@ -757,8 +757,9 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 						if (pa.renderImg == null) {
 							if (Settings.isLiteOrSomething) {
 								g.drawString("Фотография", textX, y + attY, 0);
-							} else
+							}/*else
 								g.drawString("Не удалось загрузить изображение", textX, y + attY, 0);
+								*/
 						} else {
 							g.drawImage(pa.renderImg, rx, y + attY, 0);
 						}
@@ -808,8 +809,8 @@ public class MsgItem extends ChatItem implements IMenu, IMessage {
 				}
 			} catch (RuntimeException e) {
 			}
-			//th = attY  + attH + fwdH;
-			//itemDrawHeight = th;
+			th = attY + fwdH;
+			itemDrawHeight = th;
 		} catch (Throwable e) {
 			VikaTouch.sendLog(e.toString());
 		}

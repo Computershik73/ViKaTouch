@@ -10,7 +10,7 @@ import ru.nnproject.vikaui.utils.ColorUtils;
 import ru.nnproject.vikaui.utils.DisplayUtils;
 
 import vikatouch.Dialogs;
-import vikatouch.NokiaUIInvoker;
+
 import vikatouch.VikaTouch;
 import vikatouch.items.VikaNotification;
 import vikatouch.items.chat.ConversationItem;
@@ -170,7 +170,7 @@ public class DialogsScreen extends MainScreen {
 			itemy += Dialogs.dialogs[i].getDrawHeight(); // не УМНОЖИТЬ! айтемы могут быть разной высоты.
 		}
 		if (Dialogs.dialogs[currentItem] != null) {
-			scrolled = -(itemy - DisplayUtils.height / 2 + (Dialogs.dialogs[currentItem].getDrawHeight() / 2)
+			scroll = -(itemy - DisplayUtils.height / 2 + (Dialogs.dialogs[currentItem].getDrawHeight() / 2)
 					+ MainScreen.topPanelH);
 			//if (scrolled>)
 		}
@@ -183,7 +183,7 @@ public class DialogsScreen extends MainScreen {
 		}
 		ColorUtils.setcolor(g, ColorUtils.TEXT);
 		g.setFont(Font.getFont(0, 0, 8));
-		itemsh = Dialogs.itemsCount * 63;
+		listHeight = Dialogs.itemsCount * 63;
 		double multiplier = (double) DisplayUtils.height / 640.0;
 		double ww = 10.0 * multiplier;
 		int w = (int) ww;
@@ -205,7 +205,7 @@ public class DialogsScreen extends MainScreen {
 				try {
 					
 					if (Dialogs.dialogs[i] != null) {
-						Dialogs.dialogs[i].paint(g, y, scrolled);
+						Dialogs.dialogs[i].paint(g, y, scroll);
 						coords+=" , i: "+String.valueOf(i)+", y+g.getTranslateY(): "+String.valueOf(y+g.getTranslateY());
 						cw = Dialogs.dialogs[i].itemDrawHeight;
 						if ((y+g.getTranslateY()<DisplayUtils.height - MainScreen.bottomPanelH) && (y+g.getTranslateY()>=DisplayUtils.height - MainScreen.bottomPanelH - cw-10)  && (i>=Dialogs.itemsCount-1) && (Dialogs.isUpdatingNow==false)) {
@@ -255,22 +255,18 @@ public class DialogsScreen extends MainScreen {
 		VikaTouch.needstoRedraw=true;
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		VikaTouch.needstoRedraw=true;
 		// тача больше нигде нет. Ладно.
 		try {
 			if (Dialogs.dialogs != null) {
 				if (y > MainScreen.topPanelH && y < DisplayUtils.height - MainScreen.bottomPanelH) {
-					int yy1 = (y - MainScreen.topPanelH) - scrolled;
+					int yy1 = (y - MainScreen.topPanelH) - scroll;
 					int i = yy1 / cw;
 					if (i < 0)
 						i = 0;
 					unselectAll();
-					if (!dragging) {
-						Dialogs.dialogs[i].tap(x, yy1 - (63 * i));
-					} else {
-						//if ((yy1-(63*i))>DisplayUtils.height - MainScreen.bottomPanelH-cw) 
-					}
+					Dialogs.dialogs[i].tap(x, yy1 - (63 * i));
 					Dialogs.dialogs[i].released(dragging);
 				}
 			}
@@ -278,7 +274,24 @@ public class DialogsScreen extends MainScreen {
 			e.printStackTrace();
 		}
 		VikaTouch.needstoRedraw=true;
-		super.release(x, y);
+		super.tap(x, y, time);
+	}
+	
+	public void release(int x, int y) {
+		try {
+			if (Dialogs.dialogs != null) {
+				if (y > MainScreen.topPanelH && y < DisplayUtils.height - MainScreen.bottomPanelH) {
+					int yy1 = (y - MainScreen.topPanelH) - scroll;
+					int i = yy1 / cw;
+					if (i < 0)
+						i = 0;
+					unselectAll();
+					Dialogs.dialogs[i].released(dragging);
+				}
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	public final void press(int x, int y) {
@@ -286,7 +299,7 @@ public class DialogsScreen extends MainScreen {
 		try {
 			if (Dialogs.dialogs != null) {
 				if (y > MainScreen.topPanelH && y < DisplayUtils.height - MainScreen.bottomPanelH) {
-					int yy1 = (y - MainScreen.topPanelH) - scrolled;
+					int yy1 = (y - MainScreen.topPanelH) - scroll;
 					int i = yy1 / cw;
 					if (i < 0)
 						i = 0;
@@ -301,7 +314,6 @@ public class DialogsScreen extends MainScreen {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		super.press(x, y);
 		VikaTouch.needstoRedraw=true;
 	}
 

@@ -23,11 +23,7 @@ public abstract class VikaCanvas extends GameCanvas {
 		super(false);
 	}
 
-	public abstract void tick();
-
 	public abstract void callCommand(int i, VikaScreen scrollableCanvas);
-
-	public abstract void draw();
 
 	public abstract boolean isSensorModeOK();
 
@@ -40,14 +36,4 @@ public abstract class VikaCanvas extends GameCanvas {
 	protected abstract boolean drawMaxPriority();
 
 	public abstract boolean isNight();
-	
-	public void flushGraphics() {
-		try {
-		if (VikaTouch.needstoRedraw==true) {
-		super.flushGraphics();
-		VikaTouch.needstoRedraw=false;
-		}
-		} catch (Throwable e) {}
-	}
-
 }

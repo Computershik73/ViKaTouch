@@ -25,7 +25,8 @@ import vikatouch.screens.MainScreen;
  */
 public class SettingsScreen extends MainScreen implements IMenu {
 
-	static int[] countVals = new int[] {1, 2, 3, 5, 8, 10, 15, 20, 30, 50, 80, 100, 150, 200};
+	//static int[] countVals = new int[] {1, 2, 3, 5, 8, 10, 15, 20, 30, 50, 80, 100, 150, 200};
+	static int[] countVals = new int[] {10, 15, 20, 30, 50, 80, 100, 150, 200};
 	static String[] musicpathVals = new String[] {Settings.diskC, Settings.diskE, Settings.diskF, Settings.diskEMMC, Settings.diskMaemoDocs};
 	static int countValDef = 1;
 	static int[] refreshVals = new int[] { 0, 2, 5, 8, 10, 15, 200 };
@@ -287,7 +288,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		if (uiItems != null) {
 			for (int i = 0; i < uiItems.size(); i++) {
 				if (((PressableUIItem) uiItems.elementAt(i)) != null) {
-					((PressableUIItem) uiItems.elementAt(i)).paint(g, y, this.scrolled);
+					((PressableUIItem) uiItems.elementAt(i)).paint(g, y, this.scroll);
 					y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 				}
 			}
@@ -300,7 +301,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		drawHUD(g, titleStr);
 	}
 
-	public final void release(int x, int y) {
+	public final void tap(int x, int y, int time) {
 		VikaTouch.needstoRedraw=true;
 		/*try {
 			if (y > topPanelH && y < DisplayUtils.height - bottomPanelH && uiItems != null && !dragging) {
@@ -329,7 +330,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 				int yy = MainScreen.topPanelH;
 				for (int i = 0; i < this.uiItems.size(); i++) {
 					try {
-						int y1 = this.scrolled + yy;
+						int y1 = this.scroll + yy;
 						int y2 = y1 + ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						yy += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
 						if ((y > y1) && (y < y2)) {
@@ -346,7 +347,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 		//super.release(x, y);
 	
 		VikaTouch.needstoRedraw=true;
-		super.release(x, y);
+		super.tap(x, y, time);
 		VikaTouch.needstoRedraw=true;
 	}
 
@@ -754,7 +755,7 @@ public class SettingsScreen extends MainScreen implements IMenu {
 			for(int i = 0; i < l.length; i++) {
 				uiItems.addElement(l[i]);
 			}
-			this.itemsh = (58 + (oneitemheight + 4) * this.uiItems.size());
+			this.listHeight = (58 + (oneitemheight + 4) * this.uiItems.size());
 			this.itemsCount = ((short) this.uiItems.size());
 			if (keysMode) {
 				this.currentItem = 0;

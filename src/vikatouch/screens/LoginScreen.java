@@ -249,9 +249,9 @@ public class LoginScreen extends VikaScreen {
 				ColorUtils.setcolor(g, ColorUtils.TEXT);
 			g.drawRect(fieldsMargin, tapCoords[2], sw - fieldsMargin * 2, fH);
 			ColorUtils.setcolor(g, ColorUtils.TEXTBOX_OUTLINE);
-			if (loginpressed != null && pressed) {
-				g.drawImage(loginpressed, DisplayUtils.width / 2 - loginpressed.getWidth() / 2, tapCoords[4], 0);
-			} else if (login != null)
+			if (loginpressed != null && (pressed || selectedBtn == 3))
+				g.drawImage(loginpressed, DisplayUtils.width / 2 - login.getWidth() / 2, tapCoords[4], 0);
+			else if (login != null)
 				g.drawImage(login, DisplayUtils.width / 2 - login.getWidth() / 2, tapCoords[4], 0);
 
 			f = Font.getFont(0, 0, Font.SIZE_SMALL);
@@ -278,10 +278,6 @@ public class LoginScreen extends VikaScreen {
 	}
 
 	public final void press(int x, int y) {
-		VikaTouch.needstoRedraw=true;
-		VikaTouch.canvas.currentScreen.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
-		VikaTouch.supportsTouch=true;
 		if (isLoggingInNow)
 			return;
 		if (x > DisplayUtils.width - 50 && y < 50) {
@@ -335,23 +331,57 @@ public class LoginScreen extends VikaScreen {
 		}
 	}
 
-	public final void release(int x, int y) {
-		VikaTouch.needstoRedraw=true;
-		VikaTouch.canvas.currentScreen.serviceRepaints();
-		VikaTouch.needstoRedraw=true;
-		VikaTouch.supportsTouch=true;
+	public final void tap(int x, int y, int time) {
 		if (isLoggingInNow)
 			return;
-		if (pressed) {
-			pressed = false;
-			if (y > tapCoords[4] && y < tapCoords[5]) {
-				login();
-			} else {
-				if (!loginSucsess)
-					repaint();
-				VikaTouch.needstoRedraw=true;
-				VikaTouch.canvas.serviceRepaints();
+		if (x > DisplayUtils.width - 50 && y < 50) {
+			VikaTouch.inst.cmdsInst.command(13, this);
+		}
+		keysMode = false;
+		if (y > tapCoords[4] && y < tapCoords[5]) {
+			login();
+			if (!loginSucsess)
+				repaint();
+		} else if (y > tapCoords[0] && y < tapCoords[1]) {
+			if (thread != null) {
+			try {
+				thread.interrupt();
+			} catch (Throwable ee) {}
 			}
+			selectedBtn = 1;
+			thread = new Thread() {
+				public void run() {
+					user = TextEditor.inputString(loginStr, user, 58, false);
+					repaint();
+					VikaTouch.needstoRedraw=true;
+					VikaTouch.canvas.serviceRepaints();
+					try {
+					interrupt();
+					} catch (Throwable ee) {}
+				}
+			};
+			thread.start();
+		} else if (y > tapCoords[2] && y < tapCoords[3]) {
+			if (thread != null) {
+			try {
+				thread.interrupt();
+			} catch (Throwable ee) {}
+			}
+			selectedBtn = 2;
+			thread = new Thread() {
+				public void run() {
+					pass = TextEditor.inputString(passwordStr, pass, 32, true);
+					repaint();
+					VikaTouch.needstoRedraw=true;
+					VikaTouch.canvas.serviceRepaints();
+					try {
+					interrupt();
+					} catch (Throwable ee) {}
+				}
+			};
+			thread.start();
+		} else {
+			selectedBtn = 0;
 		}
 	}
 }

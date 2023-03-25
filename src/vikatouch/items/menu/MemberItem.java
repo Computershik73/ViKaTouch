@@ -93,7 +93,7 @@ public class MemberItem extends JSONItem {
 	public void getAva() {
 		try {
 			if (!Settings.dontLoadAvas)
-				ava = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(avaurl));
+				ava = ResizeUtils.resizeItemPreview(VikaUtils.downloadImage(avaurl, true));
 		} catch (InterruptedException e) {
 		} catch (IOException e) {
 			e.printStackTrace();

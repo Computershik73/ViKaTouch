@@ -37,7 +37,7 @@ import ru.nnproject.vikaui.utils.images.IconsManager;
 import tube42.lib.imagelib.ImageUtils;
 import vikatouch.VikaNetworkError;
 import vikatouch.VikaTouch;
-import vikatouch.caching.ImageStorage;
+import vikatouch.cache.CacheManager;
 import vikatouch.locale.TextLocal;
 import vikatouch.screens.MainScreen;
 import vikatouch.screens.page.GroupPageScreen;
@@ -60,6 +60,7 @@ public final class VikaUtils {
 	private static Object downloadLock = new Object();
 	public static Thread pronouncer;
 	public static Player playertext;
+	private static String privateDir = System.getProperty("fileconn.dir.private");
 	
 	public static long TimeOffset() {
 		long diff = 0;
@@ -249,9 +250,9 @@ public final class VikaUtils {
 	
 	public static void logToFile(String text) {
 	//return;
-	FileConnection fileCon = null;
+	//FileConnection fileCon = null;
 	
-	try {
+	/*try {
 		fileCon = (FileConnection) Connector.open(System.getProperty("fileconn.dir.music") + "log.txt", 3);
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
@@ -264,7 +265,7 @@ public final class VikaUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	} else {
+	} else {*/
 		/*try {
 			fileCon.delete();
 		} catch (IOException e) {
@@ -277,9 +278,9 @@ public final class VikaUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-	}
+	//}
 
-	OutputStream stream = null;
+	/*OutputStream stream = null;
 	try {
 		stream = fileCon.openOutputStream(fileCon.fileSize());
 	} catch (IOException e) {
@@ -302,7 +303,7 @@ public final class VikaUtils {
 	} catch (Exception e2) {
 		e2.printStackTrace();
 	}
-	
+	*/
 }
 
 	public static String download(URLBuilder url) throws IOException, InterruptedException {
@@ -659,21 +660,21 @@ public final class VikaUtils {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				} catch (Throwable ee) {}
 			if (var13 != null)
 				try {
 					var13.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}  catch (Throwable ee) {}
 			if (var4 != null)
 				try {
 					var4.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}  catch (Throwable ee) {}
 		}
 		
 	}
@@ -830,12 +831,14 @@ public final class VikaUtils {
 		} catch (Throwable e) {
 			//throw new IOException(e.toString());
 		} finally {
+			try {
 			if (var14 != null)
 				var14.close();
 			if (var13 != null)
 				var13.close();
 			if (var4 != null)
 				var4.close();
+		} catch (Throwable ee) {}
 		}
 		return null;
 	}
@@ -970,26 +973,99 @@ public final class VikaUtils {
 	}
 
 	public static Image downloadImage(String url) throws IOException, InterruptedException {
-		//if (ImageStorage.has(url)) {
-		//	return ImageStorage.get(url);
-		//}
-		
-		
-		Image i;
+		return downloadImage(url, false);
+	}
+	
+
+	public static Image downloadImage(String url, boolean longlive) throws IOException, InterruptedException {
 		VikaTouch.isdownloading=1;
 		if (VikaTouch.isS40()) {
 			synchronized (downloadLock) {
-			i = downloadImage0(url);
-			//ImageStorage.save(url, i);
-			
-				return i;
+				return _downloadImage(url, longlive);
 			}
 		} else {
-			i = downloadImage0(url);
-			//ImageStorage.save(url, i);
-			return i;
+			return _downloadImage(url, longlive);
 		}
 	}
+	
+	
+	public static InputStream getStream(HttpConnection http) throws IOException {
+		//System.out.println("getStream pre");
+		http.getResponseCode();
+		try {
+			String s = http.getHeaderField("Content-Encoding");
+			if(s != null) {
+				System.out.println(s + " " + http.getFile());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return http.openInputStream();
+	}
+	public static HttpConnection openHttp(String url, boolean gzip, boolean actLikeAndroid) throws IOException, InterruptedException {
+        try {
+        	if (!Settings.https && startsWith(url, "https://vk-api-proxy.symbian.live/_/")) {
+        		url = "http" + url.substring(5);
+        	}
+        	//if (!Settings.https)
+			//	url = replace(
+			//			replace(replace(replace(url, "https://cs", "http://vk-api-proxy.xtrafrancyz.net/_/cs"),
+			//					"https://vk-api", "http://vk-api"), "https:\\/\\/vk-api", "http://vk-api"),
+			//			"https://sun", "http://vk-api-proxy.xtrafrancyz.net/_/sun");
+            final HttpConnection con = (HttpConnection) Connector.open(url);
+            if(actLikeAndroid)
+            	con.setRequestProperty("User-Agent", "KateMobileAndroid/51.1 lite-442 (Android 4.2.2; SDK 17; x86; LENOVO Lenovo S898t+; ru)");
+            con.setRequestProperty("Accept", "application/json image/png image/jpeg");
+            con.setRequestProperty("Accept-Charset", "utf-8");
+            //System.out.println("open ret");
+            //System.out.println("open ret 2");
+            return con;
+        } catch (Throwable e) {
+        	e.printStackTrace();
+        	if(e instanceof IOException)
+        		throw (IOException) e;
+        	if(e instanceof InterruptedException)
+        		throw (InterruptedException) e;
+        	throw new IOException(e.toString());
+        }
+	}
+	private static Image _downloadImage(String url, boolean longlive) throws IOException, InterruptedException {
+		if (url.indexOf("camera_50") > -1 || url.indexOf("camera_100") > -1) {
+			return VikaTouch.cameraImg;
+		}
+		if (url.indexOf("deactivated_50") > -1 || url.indexOf("deactivated_100") > -1) {
+			return VikaTouch.deactivatedImg;
+		}
+		if(Settings.cacheImages && CacheManager.hasImage(url)) {
+			return CacheManager.getImage(url);
+		}
+		HttpConnection c = openHttp(url, false, true);
+		InputStream is = getStream(c);
+		if(Settings.cacheImages) try {
+			return CacheManager.saveImage(url, is, longlive);
+		} finally {
+			if(c != null)
+				try {
+					c.close();
+				} catch (Exception e) {
+				}
+		}
+		try {
+			return Image.createImage(is);
+		} finally {
+			if(is != null)
+				try {
+					is.close();
+				} catch (Exception e) {
+				}
+			if(c != null)
+				try {
+					c.close();
+				} catch (Exception e) {
+				}
+		}
+	}
+
 	
 	public static void freeMemoryLow() {
 		//tokenRMS = null;
@@ -1006,9 +1082,9 @@ public final class VikaUtils {
 				// url = replace(url, "https:", "http:");
 				// if (vkApi != "https://api.vk.com:443") {
 				url = replace(
-						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.vikamobile.ru:80/_/cs"),
+						replace(replace(replace(url, "https://cs", "http://vk-api-proxy.symbian.live:80/_/cs"),
 								"https://vk-api", "http://vk-api"), "https:\\/\\/vk-api", "http://vk-api"),
-						"https://sun", "http://vk-api-proxy.vikamobile.ru/_/sun");
+						"https://sun", "http://vk-api-proxy.symbian.live_/sun");
 			// url = replace(url, )
 			// кеширование картинок включается если запрос http
 			//	VikaUtils.logToFile(url+"\n");
@@ -1036,7 +1112,7 @@ public final class VikaUtils {
 						replace(replace(replace(replace(
 								replace(replace(replace(replace(replace(replace(
 										replace(replace(replace(replace(filename, VikaTouch.API, ""),
-												"vk-api-proxy.vikamobile.ru", ""), "?ava=1", ""), ".userapi.", ""),
+												"vk-api-proxy.symbian.live", ""), "?ava=1", ""), ".userapi.", ""),
 										"http:", ""), "https:", ""), "=", ""), "?", ""), ":80", ""), "\\", ""),
 								"/", ""), ":443", ""), "_", ""), "vk.comimages", ""),
 						"com", "");
@@ -1044,11 +1120,6 @@ public final class VikaUtils {
 				// System.out.println(filename+" ||| "+url);
 				
 				Image image = null;
-				if (ImageStorage.has(filename)) {     
-					image = ImageStorage.get(filename);
-					//VikaUtils.logToFile("get image: "+filename+"\n");
-				}
-				
 				if (image != null) {
 					return image;
 				}
@@ -1120,10 +1191,10 @@ public final class VikaUtils {
 				ccon = (ContentConnection) Connector.open(url, Connector.READ);
 				cin = (ccon).openDataInputStream();
 				Image image = Image.createImage(cin);
-				if (image != null && caching) {
+				/*if (image != null && caching) {
 					ImageStorage.save(filename, image);
 					//VikaUtils.logToFile("save image: " + filename+ "\n");
-				}
+				}*/
 				VikaTouch.isdownloading=0;
 				VikaTouch.needstoRedraw=true;
 				return image;
@@ -1758,13 +1829,14 @@ public final class VikaUtils {
 		} catch (Throwable e1) {
 		//	VikaTouch.sendLog("errr");
 			//
+			e1.printStackTrace();
 		}
 		er="1";
 		try {
 			if (smilesRMS != null) {
 				if (smilesRMS.getNumRecords() > 0) {
 					try {
-					byte[] aa = smilesRMS.enumerateRecords(null, null, true).nextRecord();
+					byte[] aa = smilesRMS.getRecord(1);
 					
 					Image a =  Image.createImage(aa, 0,aa.length);
 					smilesRMS.closeRecordStore();
@@ -1780,11 +1852,13 @@ public final class VikaUtils {
 					}
 					
 				} else {
-					byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.vikamobile.ru:80/_/vk.com/emoji/e/"
+					byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.symbian.live:80/_/vk.com/emoji/e/"
 							//"http://vk-api-proxy.vikamobile.ru:80/_/vk.com/images/emoji/"
 						//	"http://vikamobile.ru:80/emoji/"
 					+smilename);
 					//VikaTouch.sendLog("fff "+String.valueOf(bytes.length));
+					System.out.println(smilesRMS);
+					System.out.println(bytes);
 					smilesRMS.addRecord(bytes, 0, bytes.length);
 					smilesRMS.closeRecordStore();
 					Image a =  Image.createImage(bytes, 0, bytes.length);
@@ -1794,7 +1868,7 @@ public final class VikaUtils {
 				}		
 			}	
 		} catch (Throwable e) {	
-			VikaTouch.sendLog(e.getMessage());
+			e.printStackTrace();
 		}
 		return null;
    }
@@ -1910,7 +1984,7 @@ try {
 	
 	public static Image loadSmile(String smilePath) {
 		String err="0";
-		String tpath = (System.getProperty("fileconn.dir.private"));
+		String tpath = privateDir;
 		Image im = null;
 		if(VikaTouch.smilestable.containsKey(smilePath)) {
 			return (Image)VikaTouch.smilestable.get(smilePath);
@@ -1944,7 +2018,7 @@ try {
 			 return im;
 		} catch (Throwable e) {
 			try {
-				byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.vikamobile.ru:80/_/vk.com/emoji/e/"
+				byte[] bytes = VikaUtils.downloadBytes("http://vk-api-proxy.symbian.live:80/_/vk.com/emoji/e/"
 						//"http://vk-api-proxy.vikamobile.ru:80/_/vk.com/images/emoji/"
 				//		"http://vikamobile.ru:80/emoji/"
 				+smilePath);
@@ -1977,5 +2051,17 @@ try {
 		}
 		return im;
 		
+	}
+
+	public static byte[] getBytes(InputStream in) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buf = new byte[VikaTouch.isS40() ? 2048 : VikaTouch.isLowPhone() ? 1024 : VikaTouch.isNotS60() ? 4096 : 32768];
+		int i;
+		while ((i = in.read(buf)) != -1) {
+			baos.write(buf, 0, i);
+		}
+		byte[] bytes = baos.toByteArray();
+		baos.close();
+		return bytes;
 	}
 }

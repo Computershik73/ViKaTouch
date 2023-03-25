@@ -118,9 +118,9 @@ public class Settings {
 	public static boolean alerts;
 
 	// константы
-	public final static String xtrafrancyzApi = "http://vk-api-proxy.vikamobile.ru:80";
+	public final static String xtrafrancyzApi = "http://vk-api-proxy.symbian.live:80";
 
-	public final static String xtrafrancyzOAuth = "http://vk-oauth-proxy.vikamobile.ru:80";
+	public final static String xtrafrancyzOAuth = "http://vk-oauth-proxy.symbian.live:80";
 
 	public final static String httpsApi = "https://api.vk.com:443";
 

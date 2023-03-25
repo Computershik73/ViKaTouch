@@ -226,9 +226,25 @@ public class JSONArray {
                  "] is not a number.");
          }
      }
+     
+     /**
+      * Checks if the array contains the value
+      *
+      * @param JSONObject
+      * @return      true if contains, false if not.
+      * 
+      */
 
 
-
+     public boolean hasValue(JSONObject value) {
+    	    for(int i = 0; i < this.length(); i++) {  // iterate through the JsonArray
+    	        // first I get the 'i' JsonElement as a JsonObject, then I get the key as a string and I compare it with the value
+    	        if(this.getJSONObject(i).similar(value)) return true;
+    	    }
+    	    return false;
+    	}
+     
+     
      /**
       * Get the int value associated with an index.
       *
@@ -902,5 +918,36 @@ public class JSONArray {
 		myArrayList = null;
 	}
 
+	public boolean similar(Object other) {
+        if (!(other instanceof JSONArray)) {
+            return false;
+        }
+        int len = this.length();
+        if (len != ((JSONArray)other).length()) {
+            return false;
+        }
+        for (int i = 0; i < len; i += 1) {
+            Object valueThis = this.myArrayList.elementAt(i);
+            Object valueOther = ((JSONArray)other).myArrayList.elementAt(i);
+            if(valueThis == valueOther) {
+            	continue;
+            }
+            if(valueThis == null) {
+            	return false;
+            }
+            if (valueThis instanceof JSONObject) {
+                if (!((JSONObject)valueThis).similar(valueOther)) {
+                    return false;
+                }
+            } else if (valueThis instanceof JSONArray) {
+                if (!((JSONArray)valueThis).similar(valueOther)) {
+                    return false;
+                }
+            } else if (!valueThis.equals(valueOther)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }
