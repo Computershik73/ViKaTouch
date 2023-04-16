@@ -1,6 +1,6 @@
 VikaTouch-Edition: release
 Nokia-MIDlet-Background-Event: run
-MIDlet-Version: 2.9.11
+MIDlet-Version: 2.9.12
 MIDlet-Info-URL: http://vikamobile.ru
 Nokia-UI-Enhancement: CanvasHasBackground,MusicKeysSupported,IgnoreProfilesBasedSoundMuting
 Manifest-Version: 1.0

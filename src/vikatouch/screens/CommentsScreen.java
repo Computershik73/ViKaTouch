@@ -123,7 +123,7 @@ public class CommentsScreen extends MainScreen {
 		}
 		//"https://api.vk.com/method/wall.getComments?access_token=a4ffeaf275bb8e33e1b23c19b3bbe5401968ae66b45cf64a82bbe619ccdbfcb904ac27fddfdf6fbd174de&v=5.130&post_id=770640&owner_id=-36741297&thread_items_count=3&extended=1";
 		
-		
+			System.out.print(x);
 		
 			JSONObject response = new JSONObject(x).optJSONObject("response");
 			//VikaTouch.sendLog(response.toString());
@@ -140,8 +140,8 @@ public class CommentsScreen extends MainScreen {
 						if(!VikaTouch.profiles.containsKey(new IntObject(profile.getInt("id"))) && profile != null)
 							VikaTouch.profiles.put(new IntObject(profile.getInt("id")), 
 									new ProfileObject(profile.getInt("id"), 
-											profile.getString("first_name"), profile.getString("last_name"), 
-											profile.getString("photo_50").indexOf("camera_50") > -1 ? "camera_50." : profile.getString("photo_50"), profile.optString("online")));
+											profile.optString("first_name"), profile.optString("last_name"), 
+											profile.optString("photo_50").indexOf("camera_50") > -1 ? "camera_50." : profile.optString("photo_50"), profile.optString("online")));
 					}
 				}
 			} catch (Exception e) {
@@ -154,8 +154,8 @@ public class CommentsScreen extends MainScreen {
 						if(!VikaTouch.profiles.containsKey(new IntObject(-group.getInt("id"))) && group != null)
 							VikaTouch.profiles.put(new IntObject(-group.getInt("id")), 
 									new ProfileObject(group.getInt("id"), 
-											group.getString("name"), 
-											group.getString("photo_50").indexOf("camera_50") > -1 ? "camera_50." : group.getString("photo_50")));
+											group.optString("name"), 
+											group.optString("photo_50").indexOf("camera_50") > -1 ? "camera_50." : group.optString("photo_50")));
 					}
 				}
 			} catch (Exception e) {

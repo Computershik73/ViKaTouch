@@ -1952,19 +1952,19 @@ VikaUtils.logToFile(var4);
         if (!canSend)
             return;
         canSend = false;
-        VikaTouch.needstoRedraw=true;
+      
         this.serviceRepaints();
-        VikaTouch.needstoRedraw=true;
+      
         buttonSelected = 0;
        // inputedLinesCount = 0;
         
         new Thread() {
             public void run() {
                 setPriority(10);
-                VikaTouch.needstoRedraw=true;
+              
                 canSend = false;
                 VikaTouch.canvas.serviceRepaints();
-                VikaTouch.needstoRedraw=true;
+              
                 try {
 					Thread.sleep(200);
 				} catch (InterruptedException e1) {
@@ -2172,7 +2172,7 @@ VikaUtils.logToFile(var4);
                     	canSend = true;
                     	scrollToLast();
                     VikaTouch.loading = false;
-                    VikaTouch.needstoRedraw=true;
+                  
                     
                 	VikaTouch.canvas.serviceRepaints();
                 	VikaTouch.needstoRedraw=true;
@@ -2180,7 +2180,7 @@ VikaUtils.logToFile(var4);
             }
         }.start();
         buttonSelected = 0;
-        VikaTouch.needstoRedraw=true;
+      
         this.serviceRepaints();
         try {
 			Thread.sleep(500);
@@ -2190,7 +2190,7 @@ VikaUtils.logToFile(var4);
 		}
        // updStop=false;
        // update();
-        VikaTouch.needstoRedraw=true;
+      
         this.serviceRepaints();
     }
 

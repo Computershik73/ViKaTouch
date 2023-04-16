@@ -80,11 +80,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 								.addField("count", count).addField("owner_id", newsSource);
 					}
 					if (!fromLatest && startPost != null) {
-						if (newsSource == 0) {
-							url = url.addField("start_from", startPost);
-						} else {
-							url.addField("offset", offset);
-						}
+						url = url.addField("start_from", startPost);
 					}
 					hasBackButton = newsSource != 0;
 
@@ -102,6 +98,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 						VikaTouch.popup(new InfoPopup(s, null));
 						return;
 					}
+					System.out.println(response);
 					step = 2;
 					JSONArray items = response.getJSONArray("items");
 					step = 3;
@@ -114,7 +111,9 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 					groups = response.getJSONArray("groups");
 					step = 6;
 					startPost = response.optString("next_from", null);
-
+					if(startPost.length() == 0) {
+						startPost = null;
+					}
 					listHeight = 0;
 					for (int i = 0; i < itemsCount; i++) {
 						ii=i;
@@ -176,11 +175,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 								.addField("count", count).addField("owner_id", newsSource);
 					}
 					if (startPost != null) {
-						if (newsSource == 0) {
-							url = url.addField("start_from", startPost);
-						} else {
-							url.addField("offset", offset);
-						}
+						url = url.addField("start_from", startPost);
 					}
 					hasBackButton = newsSource != 0;
 
@@ -198,6 +193,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 						VikaTouch.popup(new InfoPopup(s, null));
 						return;
 					}
+					System.out.println(response);
 					step = 2;
 					JSONArray items = response.getJSONArray("items");
 					step = 3;
@@ -234,6 +230,9 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 					
 					step = 6;
 					startPost = response.optString("next_from", null);
+					if(startPost.length() == 0) {
+						startPost = null;
+					}
 					if(VikaTouch.isNotS60())
 						uiItems.removeElementAt(uiItems.size()-1);
 					//listHeight = 0;
@@ -344,7 +343,7 @@ public class NewsScreen extends MainScreen implements INextLoadable {
 					}
 
 					listHeight = y + 50;
-					if(!VikaTouch.isNotS60()&&!loadingMore&&uiItems.size()>=5) {
+					if(!VikaTouch.isNotS60()&&!loadingMore&&uiItems.size()>0&&startPost != null) {
 					if (-scroll+(DisplayUtils.height+DisplayUtils.height/2)>=y+MenuScreen.bottomPanelH) {
 							loadingMore = true;
 						System.out.println("LOAD MORE");

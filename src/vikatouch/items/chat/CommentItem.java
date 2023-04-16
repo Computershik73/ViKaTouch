@@ -113,7 +113,7 @@ public class CommentItem extends JSONItem {
 			Image img = null;
 			try {
 				img = VikaTouch.cameraImg;
-				if (avaurl != null && !Settings.dontLoadAvas) {
+				if (avaurl != null && !Settings.dontLoadAvas && avaurl!="") {
 					try {
 						img = VikaUtils.downloadImage(avaurl, true);
 					} catch (Exception e) {

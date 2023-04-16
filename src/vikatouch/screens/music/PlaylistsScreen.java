@@ -58,7 +58,7 @@ public class PlaylistsScreen extends MainScreen {
 							.addField("count", 100).addField("offset", 0).toString());
 					//VikaTouch.sendLog(x);
 					try {
-						//System.out.println(x);
+						System.out.println(x);
 						VikaTouch.loading = true;
 						JSONObject response = new JSONObject(x).getJSONObject("response");
 						JSONArray items = null;
@@ -70,19 +70,20 @@ public class PlaylistsScreen extends MainScreen {
 							itemsCount=6;
 						}
 						uiItems = new Vector(itemsCount);
-						uiItems.setElementAt(new PlaylistItem("Для вас", 100, id, -21, null, null), 0);
-						uiItems.setElementAt(new PlaylistItem("Плейлист дня 1", 100, id, -25, null, null), 1);
-						uiItems.setElementAt(new PlaylistItem("Плейлист дня 2", 100, id, -26, null, null), 2);
-						uiItems.setElementAt(new PlaylistItem("Плейлист дня 3", 100, id, -27, null, null), 3);
-						uiItems.setElementAt(new PlaylistItem("Плейлист недели", 100, id, -22, null, null), 4);
-						uiItems.setElementAt(new PlaylistItem("Плейлист месяца", 100, id, -23, null, null), 5);
+						
+						uiItems.addElement(new PlaylistItem("Для вас", 100, id, -21, null, null));
+						uiItems.addElement(new PlaylistItem("Плейлист дня 1", 100, id, -25, null, null));
+						uiItems.addElement(new PlaylistItem("Плейлист дня 2", 100, id, -26, null, null));
+						uiItems.addElement(new PlaylistItem("Плейлист дня 3", 100, id, -27, null, null));
+						uiItems.addElement(new PlaylistItem("Плейлист недели", 100, id, -22, null, null));
+						uiItems.addElement(new PlaylistItem("Плейлист месяца", 100, id, -23, null, null));
 						VikaTouch.needstoRedraw=true;
 						repaint();
 						VikaTouch.needstoRedraw=true;
 						for (int i = 0; i < itemsCount-6; i++) {
 							JSONObject item = items.getJSONObject(i);
 							PlaylistItem pl = new PlaylistItem(item);
-							uiItems.setElementAt(pl, i+6);
+							uiItems.addElement(pl);
 							pl.parseJSON();
 							VikaTouch.needstoRedraw=true;
 						}
@@ -107,6 +108,7 @@ public class PlaylistsScreen extends MainScreen {
 				} catch (InterruptedException e) {
 					return;
 				} catch (Throwable e) {
+					e.printStackTrace();
 					VikaTouch.error(e, ErrorCodes.PLAYLISTSLOAD);
 				}
 				VikaTouch.loading = false;
@@ -126,7 +128,7 @@ public class PlaylistsScreen extends MainScreen {
 			int y = topPanelH;
 			try {
 				if (uiItems != null) {
-					for (int i = 0; i < itemsCount; i++) {
+					for (int i = 0; i < uiItems.size(); i++) {
 						if (uiItems.elementAt(i) != null) {
 							((PressableUIItem) uiItems.elementAt(i)).paint(g, y, scroll);
 							y += ((PressableUIItem) uiItems.elementAt(i)).getDrawHeight();
@@ -135,6 +137,7 @@ public class PlaylistsScreen extends MainScreen {
 					listHeight = y + 100;
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				VikaTouch.error(e, ErrorCodes.DOCUMENTSITEMDRAW);
 			}
 			g.translate(0, -g.getTranslateY());

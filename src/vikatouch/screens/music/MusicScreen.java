@@ -292,7 +292,7 @@ public static String q;
 	        }
 	      };
 	    downloaderThread.start();
-	    VikaTouch.needstoRedraw=true;
+	  
 	  }
 	
 	
@@ -388,7 +388,7 @@ public static String q;
 	        }
 	      };
 	    downloaderThread.start();
-	    VikaTouch.needstoRedraw=true;
+	  
 	  }
 	
 	
